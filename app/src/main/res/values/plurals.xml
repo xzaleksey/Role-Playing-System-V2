@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <plurals name="games_count">
+    <item quantity="one">%d game</item>
+    <item quantity="other">%d games</item>
+  </plurals>
+
+  <plurals name="games_count_mastered">
+    <item quantity="one">%d game</item>
+    <item quantity="other">%d games</item>
+  </plurals>
+  <plurals name="games_count_in">
+    <item quantity="one">%d game</item>
+    <item quantity="other">%d games</item>
+  </plurals>
+</resources>

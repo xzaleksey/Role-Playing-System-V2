@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <plurals name="games_count">
+    <item quantity="one">%d Игра</item>
+    <item quantity="few">%d Игры</item>
+    <item quantity="many">%d Игр</item>
+    <item quantity="other">%d Игр</item>
+  </plurals>
+
+  <plurals name="games_count_mastered">
+    <item quantity="one">%d Игру</item>
+    <item quantity="few">%d Игры</item>
+    <item quantity="many">%d Игр</item>
+    <item quantity="other">%d Игр</item>
+  </plurals>
+
+  <plurals name="games_count_in">
+    <item quantity="one">%d Игре</item>
+    <item quantity="few">%d Играх</item>
+    <item quantity="many">%d Играх</item>
+    <item quantity="other">%d Играх</item>
+  </plurals>
+</resources>
