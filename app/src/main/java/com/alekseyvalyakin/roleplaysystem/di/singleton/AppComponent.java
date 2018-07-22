@@ -11,7 +11,7 @@ import dagger.Component;
  * Base app component
  */
 @Singleton
-@Component(modules = {AppModule.class})
+@Component(modules = {AppModule.class, ProvidersModule.class})
 public interface AppComponent extends SingletonDependencyProvider {
     ActivityComponent activityComponent(ActivityModule activityModule);
 }

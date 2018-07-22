@@ -158,12 +158,16 @@ class AuthView @JvmOverloads constructor(
     }
 
     override fun observeUiEvents(): Observable<AuthInteractor.AuthPresenter.Events> {
-        return Observable.merge(listOf(RxView.clicks(loginBtn).map { AuthInteractor.AuthPresenter.Events.LOGIN },
-                RxView.clicks(googleAuthBtn).map { AuthInteractor.AuthPresenter.Events.GOOGLE_SIGN_IN },
-                RxView.clicks(signUpBtn).map { AuthInteractor.AuthPresenter.Events.SIGN_UP },
-                RxView.clicks(forgotPasswordBtn).map { AuthInteractor.AuthPresenter.Events.FORGOT_PASSWORD },
+        return Observable.merge(listOf(RxView.clicks(loginBtn).map { AuthInteractor.AuthPresenter.Events.LOGIN(getEmail(), getPassword()) },
+                RxView.clicks(googleAuthBtn).map { AuthInteractor.AuthPresenter.Events.GOOGLE_SIGN_IN() },
+                RxView.clicks(signUpBtn).map { AuthInteractor.AuthPresenter.Events.SIGN_UP(getEmail(), getPassword()) },
+                RxView.clicks(forgotPasswordBtn).map { AuthInteractor.AuthPresenter.Events.FORGOT_PASSWORD() },
                 signInAction()))
     }
+
+    private fun getPassword() = password.text.toString()
+
+    private fun getEmail() = email.text.toString()
 
     private fun signInAction(): Observable<AuthInteractor.AuthPresenter.Events> {
         return RxTextView.editorActionEvents(password, {
@@ -172,7 +176,11 @@ class AuthView @JvmOverloads constructor(
                 handled = true
             }
             return@editorActionEvents handled
-        }).map { AuthInteractor.AuthPresenter.Events.LOGIN }
+        }).map { AuthInteractor.AuthPresenter.Events.LOGIN(getEmail(), getPassword()) }
+    }
+
+    override fun showError(localizedMessage: String) {
+        showSnack(localizedMessage)
     }
 
     private object Ids {

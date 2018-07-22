@@ -9,3 +9,7 @@ fun <T> Observable<T>.subscribeWithErrorLogging(onNext: (T) -> Unit): Disposable
         Timber.e(it)
     })
 }
+
+fun <T> Observable<T>.subscribeWithErrorLogging(): Disposable {
+    return this.subscribeWithErrorLogging {}
+}

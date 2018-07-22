@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +70,17 @@ public class KeyboardUtil {
     /**
      * Helper to hide the keyboard
      *
-     * @param act
+     * @param context
      */
-    public static void hideKeyboard(Activity act) {
-        if (act != null && act.getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) act.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(act.getCurrentFocus().getWindowToken(), 0);
+    public static void hideKeyboard(Context context) {
+        if (context instanceof Activity) {
+            Activity act = (Activity) context;
+            if (act.getCurrentFocus() != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) act.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(act.getCurrentFocus().getWindowToken(), 0);
+                }
+            }
         }
     }
 }
