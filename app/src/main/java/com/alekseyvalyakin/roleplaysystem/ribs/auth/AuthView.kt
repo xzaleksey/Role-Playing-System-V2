@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.google.android.gms.common.SignInButton
@@ -37,7 +38,7 @@ class AuthView @JvmOverloads constructor(
     private lateinit var loginBtn: Button
     private lateinit var signUpBtn: Button
     private lateinit var passwordInputLayout: TextInputLayout
-
+    private lateinit var scrollView: ScrollView
     private lateinit var emailInputLayout: TextInputLayout
 
     private val errorInvalidEmail = getString(R.string.error_invalid_email)
@@ -53,7 +54,7 @@ class AuthView @JvmOverloads constructor(
             rightPadding = padding
             topPadding = padding
 
-            val scrollVIew = themedScrollView(R.style.AppTheme_TextWhite, {
+            scrollView = themedScrollView(R.style.AppTheme_TextWhite, {
                 id = Ids.login_form
 
                 linearLayout {
@@ -122,7 +123,7 @@ class AuthView @JvmOverloads constructor(
                     }
                 }
             })
-            scrollVIew.layoutParams = CoordinatorLayout.LayoutParams(matchParent, wrapContent).apply {
+            scrollView.layoutParams = CoordinatorLayout.LayoutParams(matchParent, wrapContent).apply {
                 this.gravity = Gravity.CENTER
             }
         }
