@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.support.annotation.DimenRes
+import android.support.annotation.StringRes
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -15,4 +16,8 @@ fun View.getFloatDimen(@DimenRes res: Int): Float {
 
 fun View.getIntDimen(@DimenRes res: Int): Int {
     return context.getIntDimen(res)
+}
+
+fun View.getString(@StringRes res: Int): String {
+    return context.getString(res)
 }

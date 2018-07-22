@@ -2,7 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.di.ActivityComponent
+import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
+import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
@@ -39,7 +40,7 @@ class RootBuilder(dependency: ActivityComponent) : ViewBuilder<RootView, RootRou
         return RootView(parentViewGroup.context)
     }
 
-    interface ParentComponent {
+    interface ParentComponent : RibDependencyProvider {
 
     }
 
@@ -69,6 +70,7 @@ class RootBuilder(dependency: ActivityComponent) : ViewBuilder<RootView, RootRou
     @dagger.Subcomponent(modules = [(Module::class)])
     interface Component : InteractorBaseComponent<RootInteractor>,
             BuilderComponent,
+            RibDependencyProvider,
             AuthBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder

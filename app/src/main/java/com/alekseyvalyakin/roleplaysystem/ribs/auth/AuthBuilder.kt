@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.auth
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
@@ -38,7 +39,7 @@ class AuthBuilder(dependency: ParentComponent) : ViewBuilder<AuthView, AuthRoute
         return AuthView(parentViewGroup.context)
     }
 
-    interface ParentComponent {
+    interface ParentComponent : RibDependencyProvider {
 
     }
 

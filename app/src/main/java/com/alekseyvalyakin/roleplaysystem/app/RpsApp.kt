@@ -3,9 +3,9 @@ package com.alekseyvalyakin.roleplaysystem.app
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate
 import com.alekseyvalyakin.roleplaysystem.BuildConfig
-import com.alekseyvalyakin.roleplaysystem.di.AppComponent
-import com.alekseyvalyakin.roleplaysystem.di.AppModule
-import com.alekseyvalyakin.roleplaysystem.di.DaggerAppComponent
+import com.alekseyvalyakin.roleplaysystem.di.singleton.AppComponent
+import com.alekseyvalyakin.roleplaysystem.di.singleton.AppModule
+import com.alekseyvalyakin.roleplaysystem.di.singleton.DaggerAppComponent
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import net.danlew.android.joda.JodaTimeAndroid
