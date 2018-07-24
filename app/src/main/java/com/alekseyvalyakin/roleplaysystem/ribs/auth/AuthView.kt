@@ -12,11 +12,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.google.android.gms.common.SignInButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.*
@@ -39,11 +41,13 @@ class AuthView @JvmOverloads constructor(
     private lateinit var signUpBtn: Button
     private lateinit var passwordInputLayout: TextInputLayout
     private lateinit var scrollView: ScrollView
+
     private lateinit var emailInputLayout: TextInputLayout
 
     private val errorInvalidEmail = getString(R.string.error_invalid_email)
     private val errorEmptyField = getString(R.string.error_empty_field)
     private val errorMinSymbols = getString(R.string.error_min_symbols)
+    private val relay = PublishRelay.create<AuthInteractor.AuthPresenter.Events>()
 
     init {
         AnkoContext.createDelegate(this).apply {
@@ -159,16 +163,22 @@ class AuthView @JvmOverloads constructor(
     }
 
     override fun observeUiEvents(): Observable<AuthInteractor.AuthPresenter.Events> {
-        return Observable.merge(listOf(RxView.clicks(loginBtn).map { AuthInteractor.AuthPresenter.Events.LOGIN(getEmail(), getPassword()) },
-                RxView.clicks(googleAuthBtn).map { AuthInteractor.AuthPresenter.Events.GOOGLE_SIGN_IN() },
-                RxView.clicks(signUpBtn).map { AuthInteractor.AuthPresenter.Events.SIGN_UP(getEmail(), getPassword()) },
-                RxView.clicks(forgotPasswordBtn).map { AuthInteractor.AuthPresenter.Events.FORGOT_PASSWORD() },
-                signInAction()))
+        return Observable.merge(listOf(RxView.clicks(loginBtn).map { AuthInteractor.AuthPresenter.Events.Login(getEmail(), getPassword()) },
+                RxView.clicks(googleAuthBtn).map { AuthInteractor.AuthPresenter.Events.GoogleSignIn() },
+                RxView.clicks(signUpBtn).map { AuthInteractor.AuthPresenter.Events.SignUp(getEmail(), getPassword()) },
+                RxView.clicks(forgotPasswordBtn).map { AuthInteractor.AuthPresenter.Events.ForgotPassword() },
+                signInAction(),
+                relay))
     }
 
     private fun getPassword() = password.text.toString()
 
-    private fun getEmail() = email.text.toString()
+    override fun getEmail() = email.text.toString()
+
+    override fun restoreEmail(email: String) {
+        this.email.setText(email)
+        this.email.setSelection(email.length)
+    }
 
     private fun signInAction(): Observable<AuthInteractor.AuthPresenter.Events> {
         return RxTextView.editorActionEvents(password, {
@@ -177,12 +187,24 @@ class AuthView @JvmOverloads constructor(
                 handled = true
             }
             return@editorActionEvents handled
-        }).map { AuthInteractor.AuthPresenter.Events.LOGIN(getEmail(), getPassword()) }
+        }).map { AuthInteractor.AuthPresenter.Events.Login(getEmail(), getPassword()) }
     }
 
     override fun showError(localizedMessage: String) {
         showSnack(localizedMessage)
     }
+
+    override fun showResetPasswordDialog() {
+        MaterialDialog.Builder(context)
+                .title(R.string.reset_password)
+                .content(R.string.reset_password_text)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .onPositive { dialog, which ->
+                    relay.accept(AuthInteractor.AuthPresenter.Events.ResetPassword(getEmail()))
+                }.show()
+    }
+
 
     private object Ids {
         const val auth_button = 1

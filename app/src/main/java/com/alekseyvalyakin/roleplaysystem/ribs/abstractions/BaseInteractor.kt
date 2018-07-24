@@ -18,4 +18,8 @@ open class BaseInteractor<P, R : Router<out Interactor<*, *>, out InteractorBase
         super.willResignActive()
         compositeDisposable.clear()
     }
+
+    protected fun Disposable.addToDisposables() {
+        compositeDisposable.add(this)
+    }
 }

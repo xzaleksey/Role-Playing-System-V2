@@ -9,6 +9,10 @@ public class ValidationUtils {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    public static boolean isValidPassword(CharSequence target) {
+        return isValidLength(target);
+    }
+
     public static boolean isValidLength(CharSequence target) {
         return target.length() >= DEFAULT_MIN_LENGTH;
     }

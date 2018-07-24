@@ -1,6 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import io.reactivex.Scheduler
 
@@ -15,4 +17,8 @@ interface SingletonDependencyProvider {
     fun provideCompScheduler(): Scheduler
 
     fun provideAuthProvider(): AuthProvider
+
+    fun provideLocalKeyValueStorage(): LocalKeyValueStorage
+
+    fun provideStringRepository(): StringRepository
 }

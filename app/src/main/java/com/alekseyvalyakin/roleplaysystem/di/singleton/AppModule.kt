@@ -1,7 +1,15 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
+import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
+import com.alekseyvalyakin.roleplaysystem.data.prefs.SharedPreferencesHelper
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProviderImpl
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import dagger.Module
 import dagger.Provides
@@ -41,6 +49,30 @@ class AppModule(private val mApp: RpsApp) {
     @ThreadConfig(ThreadConfig.TYPE.COMPUTATATION)
     fun provideCompScheduler(): Scheduler {
         return Schedulers.computation()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferencesHelper(sharedPreferences: SharedPreferences): LocalKeyValueStorage {
+        return SharedPreferencesHelper(sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResourceProvider(context: Context): ResourcesProvider {
+        return ResourcesProviderImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStringRepo(resourcesProvider:ResourcesProvider): StringRepository {
+        return StringRepositoryImpl(resourcesProvider)
     }
 
 }

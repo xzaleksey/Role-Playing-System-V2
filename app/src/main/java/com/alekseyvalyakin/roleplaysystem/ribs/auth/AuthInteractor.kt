@@ -2,6 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.auth
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.EmptyAuthResult
+import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
+import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.abstractions.BaseInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -25,6 +27,10 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
     lateinit var presenter: AuthPresenter
     @Inject
     lateinit var authProvider: AuthProvider
+    @Inject
+    lateinit var localKeyValueStorage: LocalKeyValueStorage
+    @Inject
+    lateinit var googleSignInProvider: GoogleSignInProvider
 
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.IO)]
     lateinit var ioScheduler: Scheduler
@@ -34,54 +40,85 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        presenter.restoreEmail(localKeyValueStorage.getLogin())
         presenter.observeUiEvents()
                 .flatMap(this::handleEvent)
                 .subscribeWithErrorLogging()
-                .let { addDisposable(it) }
+                .addToDisposables()
+        googleSignInProvider.subscribeListeningGoogleSignInEvents()
+                .addToDisposables()
     }
 
     private fun handleEvent(events: AuthPresenter.Events): Observable<*> {
-        when (events) {
-            is AuthPresenter.Events.LOGIN -> return handleLogin(events)
-            is AuthPresenter.Events.SIGN_UP -> return handleSignUp(events)
+        Timber.d(events.toString())
+
+
+        val observable = when (events) {
+            is AuthPresenter.Events.Login -> return handleLogin(events)
+            is AuthPresenter.Events.SignUp -> return handleSignUp(events)
+            is AuthPresenter.Events.ForgotPassword -> return handleForgotPassword()
+            is AuthPresenter.Events.GoogleSignIn -> return handleGoogleSignIn()
+            is AuthPresenter.Events.ResetPassword -> return handleResetPassword(events)
+            else -> Observable.just(events)
         }
-        return Observable.just(events)
+        return observable
+                .onErrorReturn { events }
     }
 
-    private fun handleLogin(events: AuthPresenter.Events.LOGIN): Observable<AuthResult> {
+    private fun handleGoogleSignIn(): Observable<*> {
+        return googleSignInProvider.googleSignIn()
+                .observeOn(uiScheduler)
+                .concatMap { result ->
+                    result.throwable?.localizedMessage?.let { e ->
+                        presenter.showError(e)
+                        return@concatMap Observable.empty<Any>()
+                    }
+                    result.googleSignInAccount?.let { account ->
+                        return@concatMap authProvider.loginWithGoogleAccount(account).toObservable()
+                    }
+                }
+    }
+
+    private fun handleForgotPassword(): Observable<*> {
+        return Observable.fromCallable {
+            presenter.showResetPasswordDialog()
+        }
+    }
+
+    private fun handleResetPassword(events: AuthPresenter.Events.ResetPassword): Observable<*> {
+        return authProvider.sendResetPassword(events.email)
+                .observeOn(uiScheduler)
+                .doOnError { presenter.showError(it.localizedMessage) }
+                .onErrorComplete()
+                .toObservable<Any>()
+    }
+
+    private fun handleLogin(events: AuthPresenter.Events.Login): Observable<AuthResult> {
         return authProvider.login(events.email, events.password)
                 .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
-                .doAfterSuccess { r: AuthResult ->
-                    Timber.d(r.user.toString())
-                    Timber.d(r.additionalUserInfo.toString())
-                }
-                .doOnError { t ->
-                    presenter.showError(t.localizedMessage)
-                }
-                .onErrorReturnItem(EmptyAuthResult)
+                .doOnError { presenter.showError(it.localizedMessage) }
+                .onErrorReturn { EmptyAuthResult }
                 .toObservable()
     }
 
-    private fun handleSignUp(events: AuthPresenter.Events.SIGN_UP): Observable<AuthResult> {
+    private fun handleSignUp(events: AuthPresenter.Events.SignUp): Observable<AuthResult> {
         return authProvider.signUp(events.email, events.password)
                 .subscribeOn(ioScheduler)
                 .observeOn(uiScheduler)
-                .doAfterSuccess { r: AuthResult ->
+                .doOnSuccess { r: AuthResult ->
                     Timber.d(r.user.toString())
                     Timber.d(r.additionalUserInfo.toString())
                 }
-                .doOnError { t ->
-                    presenter.showError(t.localizedMessage)
-                }
-                .onErrorReturnItem(EmptyAuthResult)
+                .doOnError { presenter.showError(it.localizedMessage) }
+                .onErrorReturn { EmptyAuthResult }
                 .toObservable()
     }
 
 
     override fun willResignActive() {
         super.willResignActive()
-
+        localKeyValueStorage.setLogin(presenter.getEmail())
     }
 
     /**
@@ -90,13 +127,22 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
     interface AuthPresenter {
         fun observeUiEvents(): Observable<Events>
 
+        fun showError(localizedMessage: String)
+
+        fun showResetPasswordDialog()
+
+        fun getEmail(): String
+
+        fun restoreEmail(email: String)
+
         sealed class Events {
-            class LOGIN(val email: String, val password: String) : Events()
-            class SIGN_UP(val email: String, val password: String) : Events()
-            class GOOGLE_SIGN_IN : Events()
-            class FORGOT_PASSWORD : Events()
+            class Login(val email: String, val password: String) : Events()
+            class SignUp(val email: String, val password: String) : Events()
+            class GoogleSignIn : Events()
+            class ForgotPassword : Events()
+            class ResetPassword(val email: String) : Events()
+
         }
 
-        fun showError(localizedMessage: String)
     }
 }

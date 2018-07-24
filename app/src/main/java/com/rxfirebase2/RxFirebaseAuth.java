@@ -18,6 +18,7 @@ import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Cancellable;
 
 public class RxFirebaseAuth {
@@ -355,6 +356,15 @@ public class RxFirebaseAuth {
             public void subscribe(CompletableEmitter emitter) throws Exception {
                 firebaseAuth.removeIdTokenListener(idTokenListener);
                 emitter.onComplete();
+            }
+        });
+    }
+
+    public static Completable signOut(@NonNull final FirebaseAuth firebaseAuth){
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                firebaseAuth.signOut();
             }
         });
     }

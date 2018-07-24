@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    //noinspection GradleCompatible
     implementation "com.google.firebase:firebase-core:$firebase_core_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
@@ -45,6 +46,7 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$firebase_database_version"
     implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
     implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
+    compile 'com.google.android.gms:play-services-auth:15.0.1'
 
     implementation "io.reactivex.rxjava2:rxjava:$rx_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
@@ -70,6 +72,9 @@ dependencies {
     implementation "org.jetbrains.anko:anko-design-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-constraint-layout:$anko_version"
     implementation  'com.nineoldandroids:library:2.4.0'
+
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+
     annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'
     testImplementation 'com.uber.rib:rib-test-utils:0.9.1'

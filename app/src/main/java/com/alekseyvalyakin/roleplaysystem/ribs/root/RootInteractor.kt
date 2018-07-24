@@ -1,9 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.ribs.abstractions.BaseInteractor
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.Bundle
-import com.uber.rib.core.Interactor
 import com.uber.rib.core.RibInteractor
+import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -13,12 +16,14 @@ import javax.inject.Inject
  * Base router
  */
 @RibInteractor
-class RootInteractor : Interactor<RootInteractor.RootPresenter, RootRouter>() {
+class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>() {
 
     @Inject
     lateinit var presenter: RootPresenter
     @Inject
     lateinit var authProvider: AuthProvider
+    @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
+    lateinit var uiScheduler: Scheduler
 
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
@@ -27,7 +32,17 @@ class RootInteractor : Interactor<RootInteractor.RootPresenter, RootRouter>() {
         if (currentUser != null) {
             Timber.d(currentUser.email)
         }
-        router.attachAuth()
+        authProvider.observeLoggedInState()
+                .observeOn(uiScheduler)
+                .subscribeWithErrorLogging { loggedIn ->
+                    if (!loggedIn) {
+                        router.attachAuth()
+                    } else {
+                        //TODO replace with enter
+                        router.attachAuth()
+                        Timber.d("logged In")
+                    }
+                }.addToDisposables()
     }
 
     override fun willResignActive() {

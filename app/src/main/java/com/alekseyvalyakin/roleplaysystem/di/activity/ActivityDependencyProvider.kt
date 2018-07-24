@@ -1,5 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.di.activity
 
-interface ActivityDependencyProvider {
+import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
 
+interface ActivityDependencyProvider {
+    fun provideGoogleSignInProvider(): GoogleSignInProvider
 }
