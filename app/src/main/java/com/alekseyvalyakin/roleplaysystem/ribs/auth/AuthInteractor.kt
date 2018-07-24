@@ -77,6 +77,10 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
                         return@concatMap authProvider.loginWithGoogleAccount(account).toObservable()
                     }
                 }
+                .observeOn(uiScheduler)
+                .doOnError { presenter.showError(it.localizedMessage) }
+                .onErrorReturn { EmptyAuthResult }
+
     }
 
     private fun handleForgotPassword(): Observable<*> {
