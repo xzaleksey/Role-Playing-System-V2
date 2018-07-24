@@ -7,6 +7,8 @@ import com.alekseyvalyakin.roleplaysystem.di.singleton.AppComponent
 import com.alekseyvalyakin.roleplaysystem.di.singleton.AppModule
 import com.alekseyvalyakin.roleplaysystem.di.singleton.DaggerAppComponent
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import io.fabric.sdk.android.Fabric
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
@@ -23,7 +25,9 @@ class RpsApp : Application() {
             Timber.plant(Timber.DebugTree())
         }
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-
+        FirebaseFirestore.getInstance().firestoreSettings = FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build()
 
     }
 
