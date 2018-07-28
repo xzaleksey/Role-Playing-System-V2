@@ -20,4 +20,7 @@
     <item name="tv_title" type="id" />
     <item name="search_view" type="id" />
     <item name="toolbar_background_image_view" type="id" />
+    <item name="text" type="id" />
+    <item name="divider" type="id" />
+    <item name="top_divider" type="id" />
 </resources>

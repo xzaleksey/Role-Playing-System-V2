@@ -10,7 +10,7 @@ ext {
     firebase_auth_version = '16.0.2'
     firebase_database_version = '16.0.1'
     firebase_storage_version = '16.0.1'
-    firebase_firestore_version = '17.0.3'
+    firebase_firestore_version = '17.0.4'
     anko_version = '0.10.5'
     support_version = '27.1.1'
 }
@@ -80,6 +80,7 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
 
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation "eu.davidea:flexible-adapter:5.0.0-rc1"
 
     annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'

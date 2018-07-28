@@ -8,6 +8,7 @@ import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import android.util.TypedValue
+import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import org.jetbrains.anko.dip
 
 private const val DEFAULT_STATUS_BAR_HEIGHT_NEW = 24
@@ -53,4 +54,8 @@ fun Context.getStatusBarHeight(): Int {
     }
 
     return Math.ceil(result.toDouble()).toInt()
+}
+
+fun Int.dip(): Int {
+    return RpsApp.app.dip(this)
 }

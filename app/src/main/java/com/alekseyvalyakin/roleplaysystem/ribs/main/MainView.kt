@@ -3,16 +3,18 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.flexible.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxrelay2.PublishRelay
+import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
@@ -27,9 +29,10 @@ class MainView @JvmOverloads constructor(
 ) : _CoordinatorLayout(context), MainInteractor.MainPresenter {
 
     private lateinit var searchToolbar: SearchToolbar
-    private lateinit var tvGamesCount: TextView
     private lateinit var fab: FloatingActionButton
+    private lateinit var recyclerView: RecyclerView
     private val relay = PublishRelay.create<MainInteractor.UiEvents>()
+    private val flexibleAdapter: FlexibleAdapter<IFlexible<*>> = FlexibleAdapter(emptyList())
 
     init {
         AnkoContext.createDelegate(this).apply {
@@ -38,18 +41,11 @@ class MainView @JvmOverloads constructor(
                 searchToolbar = searchToolbar {
                 }.lparams(width = matchParent, height = wrapContent)
 
-                tvGamesCount = textView {
-                    id = R.id.tv_games_count
-                    backgroundColor = getCompatColor(R.color.material_light_white)
-                    gravity = Gravity.CENTER
-                    bottomPadding = getIntDimen(R.dimen.dp_8)
-                    topPadding = getIntDimen(R.dimen.dp_8)
-                    visibility = View.GONE
-                }.lparams(width = matchParent)
-                recyclerView {
+                recyclerView = recyclerView {
                     id = R.id.recycler_view
                     isVerticalScrollBarEnabled = true
                     layoutManager = LinearLayoutManager(context)
+                    adapter = flexibleAdapter
                 }.lparams(width = matchParent, height = matchParent)
             }.lparams(width = matchParent, height = matchParent)
 
@@ -63,6 +59,7 @@ class MainView @JvmOverloads constructor(
                 margin = getIntDimen(R.dimen.dp_8)
             }
         }
+        flexibleAdapter.updateDataSet(listOf(SubHeaderViewModel("test")))
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
