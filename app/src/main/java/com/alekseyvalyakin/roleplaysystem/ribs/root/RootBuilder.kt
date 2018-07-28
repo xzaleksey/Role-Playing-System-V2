@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
+import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.ViewBuilder
+import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -18,7 +19,7 @@ import javax.inject.Scope
  *
  * TODO describe this scope's responsibility as a whole.
  */
-class RootBuilder(dependency: ActivityComponent) : ViewBuilder<RootView, RootRouter, ActivityComponent>(dependency) {
+class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, RootRouter, ActivityComponent>(dependency) {
 
     /**
      * Builds a new [RootRouter].
@@ -26,7 +27,7 @@ class RootBuilder(dependency: ActivityComponent) : ViewBuilder<RootView, RootRou
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [RootRouter].
      */
-    fun build(parentViewGroup: ViewGroup): RootRouter {
+    override fun build(parentViewGroup: ViewGroup): RootRouter {
         val view = createView(parentViewGroup)
         val interactor = RootInteractor()
         val component = dependency.builder()
@@ -57,13 +58,15 @@ class RootBuilder(dependency: ActivityComponent) : ViewBuilder<RootView, RootRou
             @RootScope
             @Provides
             @JvmStatic
-            internal fun router(
+            fun router(
                     component: Component,
                     view: RootView,
-                    interactor: RootInteractor): RootRouter {
-                return RootRouter(view, interactor, component, AuthBuilder(component))
+                    interactor: RootInteractor,
+                    routerNavigatorFactory: RouterNavigatorFactory): RootRouter {
+                return RootRouter(view, interactor, component, AuthBuilder(component), routerNavigatorFactory)
             }
         }
+
     }
 
     @RootScope

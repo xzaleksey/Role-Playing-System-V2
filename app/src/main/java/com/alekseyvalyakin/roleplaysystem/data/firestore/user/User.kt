@@ -8,7 +8,9 @@ import com.google.firebase.firestore.Exclude
  */
 data class User(
         var email: String? = null,
-        var photoUrl: String? = null
+        var photoUrl: String? = null,
+        var countOfGamesPlayed: Int = 0,
+        var countOfGamesMastered: Int = 0
 ) : HasId {
 
     @Exclude
@@ -16,9 +18,7 @@ data class User(
     @get:Exclude
     override lateinit var id: String
 
-    var countOfGamesPlayed: Int = 0
-    var countOfGamesMastered: Int = 0
-    var displayName: String? = null
+    lateinit var displayName: String
 
     companion object {
         val EMPTY_USER = User()

@@ -3,8 +3,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.auth
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -16,7 +16,7 @@ import javax.inject.Scope
  *
  * TODO describe this scope's responsibility as a whole.
  */
-class AuthBuilder(dependency: ParentComponent) : ViewBuilder<AuthView, AuthRouter, AuthBuilder.ParentComponent>(dependency) {
+class AuthBuilder(dependency: ParentComponent) : BaseViewBuilder<AuthView, AuthRouter, AuthBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [AuthRouter].
@@ -24,7 +24,7 @@ class AuthBuilder(dependency: ParentComponent) : ViewBuilder<AuthView, AuthRoute
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [AuthRouter].
      */
-    fun build(parentViewGroup: ViewGroup): AuthRouter {
+    override fun build(parentViewGroup: ViewGroup): AuthRouter {
         val view = createView(parentViewGroup)
         val interactor = AuthInteractor()
         val component = DaggerAuthBuilder_Component.builder()

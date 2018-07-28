@@ -2,6 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
+import com.uber.rib.core.DefaultAttachTransition
+import com.uber.rib.core.DefaultDetachTransition
+import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.ViewRouter
 
 /**
@@ -13,23 +16,15 @@ class RootRouter(
         view: RootView,
         interactor: RootInteractor,
         component: RootBuilder.Component,
-        private val authBuilder: AuthBuilder
+        private val authBuilder: AuthBuilder,
+        routerNavigatorFactory: RouterNavigatorFactory
 ) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
-    private var authRouter: AuthRouter? = null
+    private val router = routerNavigatorFactory.create<RootState>(this)!!
+    private val authAttachTransition = object : DefaultAttachTransition<AuthRouter, RootState>(authBuilder, view) {}
+    private val authDetachTransition = object : DefaultDetachTransition<AuthRouter, RootState>(view) {}
 
     fun attachAuth() {
-        if (authRouter == null) {
-            authRouter = authBuilder.build(view)
-            attachChild(authRouter)
-            view.addView(authRouter!!.view)
-        }
-    }
-
-    fun detachAuth() {
-        if (authRouter != null) {
-            authRouter?.let { detachChild(it) }
-            authRouter = null
-        }
+        router.pushTransientState<AuthRouter>(RootState.AUTH, authAttachTransition, authDetachTransition)
     }
 
 }

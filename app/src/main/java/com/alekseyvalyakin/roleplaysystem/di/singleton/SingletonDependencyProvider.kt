@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.uber.rib.core.RouterNavigatorFactory
 import io.reactivex.Scheduler
 
 interface SingletonDependencyProvider {
@@ -24,4 +25,6 @@ interface SingletonDependencyProvider {
     fun provideStringRepository(): StringRepository
 
     fun userRepository(): UserRepository
+
+    fun routerNavigatorFactory(): RouterNavigatorFactory
 }
