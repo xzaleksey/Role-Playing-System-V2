@@ -20,7 +20,7 @@ class SearchToolbar constructor(
 ) : _FrameLayout(context) {
 
     private lateinit var bgImageView: ImageView
-    private lateinit var closeIcon: ImageView
+    private lateinit var clearIcon: ImageView
     private lateinit var leftIcon: ImageView
     private lateinit var rightIcon: ImageView
     private lateinit var tvTitle: TextView
@@ -71,7 +71,7 @@ class SearchToolbar constructor(
                         marginStart = getIntDimen(R.dimen.dp_8)
                     }
 
-                    closeIcon = imageView {
+                    clearIcon = imageView {
                         id = R.id.clear_icon
                         padding = getIntDimen(R.dimen.dp_8)
                         setBackgroundResource(getSelectableItemBorderless())
@@ -134,9 +134,8 @@ class SearchToolbar constructor(
             }
         }
 
-        closeIcon.setOnClickListener {
-            isSearchMode = false
-            turnOffSearchMode()
+        clearIcon.setOnClickListener {
+            searchEditText.setText("")
         }
     }
 
@@ -151,9 +150,9 @@ class SearchToolbar constructor(
     fun observeSearchInput(): Observable<CharSequence> {
         return RxTextView.textChanges(searchEditText).doOnNext { s ->
             if (s.isNullOrEmpty()) {
-                closeIcon.visibility = View.GONE
+                clearIcon.visibility = View.GONE
             } else {
-                closeIcon.visibility = View.VISIBLE
+                clearIcon.visibility = View.VISIBLE
             }
         }
     }
