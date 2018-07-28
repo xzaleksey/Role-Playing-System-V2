@@ -14,6 +14,7 @@
     <dimen name="dp_36">36dp</dimen>
     <dimen name="dp_28">28dp</dimen>
     <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_56">56dp</dimen>
     <dimen name="dp_74">74dp</dimen>d
     <dimen name="status_bar_height">25dp</dimen>
 

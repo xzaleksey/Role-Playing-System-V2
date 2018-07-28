@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.RouterNavigatorFactory
@@ -63,7 +64,9 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                     view: RootView,
                     interactor: RootInteractor,
                     routerNavigatorFactory: RouterNavigatorFactory): RootRouter {
-                return RootRouter(view, interactor, component, AuthBuilder(component), routerNavigatorFactory)
+                return RootRouter(view, interactor, component, routerNavigatorFactory,
+                        AuthBuilder(component),
+                        MainBuilder(component))
             }
         }
 
@@ -74,7 +77,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
     interface Component : InteractorBaseComponent<RootInteractor>,
             BuilderComponent,
             RibDependencyProvider,
-            AuthBuilder.ParentComponent {
+            AuthBuilder.ParentComponent,
+            MainBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

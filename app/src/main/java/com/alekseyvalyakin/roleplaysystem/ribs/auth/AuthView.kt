@@ -59,10 +59,10 @@ class AuthView @JvmOverloads constructor(
             topPadding = padding
 
             scrollView = themedScrollView(R.style.AppTheme_TextWhite, {
-                id = Ids.login_form
+                id = R.id.login_form
 
                 linearLayout {
-                    id = Ids.email_login_form
+                    id = R.id.email_login_form
                     orientation = LinearLayout.VERTICAL
 
                     textView(R.string.app_name) {
@@ -74,12 +74,12 @@ class AuthView @JvmOverloads constructor(
                     }
 
                     emailInputLayout = textInputLayout {
-                        id = Ids.email_input_layout
+                        id = R.id.email_input_layout
                         isErrorEnabled = true
 
                         email = autoCompleteTextView {
                             hint = getString(R.string.prompt_email)
-                            id = Ids.email
+                            id = R.id.email
                             imeOptions = EditorInfo.IME_ACTION_NEXT
                             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
                             maxLines = 1
@@ -87,31 +87,31 @@ class AuthView @JvmOverloads constructor(
                     }.lparams(width = matchParent, height = wrapContent)
                     passwordInputLayout = textInputLayout {
                         hint = getString(R.string.prompt_password)
-                        id = Ids.password_input_layout
+                        id = R.id.password_input_layout
                         isErrorEnabled = true
 
                         password = textInputEditText {
-                            id = Ids.password
-                            setImeActionLabel(getString(R.string.action_sign_in_short), Ids.sign_in_button)
+                            id = R.id.password
+                            setImeActionLabel(getString(R.string.action_sign_in_short), R.id.sign_in_button)
                             imeOptions = EditorInfo.IME_ACTION_DONE
                             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                             maxLines = 1
                         }
                     }.lparams(width = matchParent, height = wrapContent)
                     loginBtn = button(R.string.action_sign_in) {
-                        id = Ids.sign_in_button
+                        id = R.id.sign_in_button
                         backgroundResource = R.drawable.black_btn_selector
                         textResource = R.string.action_sign_in
                     }.lparams(width = matchParent, height = wrapContent)
 
                     signUpBtn = button(R.string.action_sign_up) {
-                        id = Ids.sign_up_button
+                        id = R.id.sign_up_button
                         backgroundResource = R.drawable.black_btn_selector
                         textResource = R.string.action_sign_up
                     }.lparams(width = matchParent, height = wrapContent)
 
                     googleAuthBtn = googleSignInButton({
-                        id = Ids.auth_button
+                        id = R.id.auth_btn
                         gravity = Gravity.CENTER_HORIZONTAL
                     }).lparams(width = wrapContent, height = wrapContent) {
                         topMargin = context.getIntDimen(R.dimen.dp_16)
@@ -119,7 +119,7 @@ class AuthView @JvmOverloads constructor(
 
                     forgotPasswordBtn = button(R.string.forgot_password) {
                         textResource = R.string.forgot_password
-                        id = Ids.forgot_password
+                        id = R.id.forgot_password
                         background = null
                     }.lparams(width = wrapContent, height = wrapContent) {
                         gravity = Gravity.CENTER_HORIZONTAL
@@ -203,19 +203,5 @@ class AuthView @JvmOverloads constructor(
                 .onPositive { dialog, which ->
                     relay.accept(AuthInteractor.AuthPresenter.Events.ResetPassword(getEmail()))
                 }.show()
-    }
-
-
-    private object Ids {
-        const val auth_button = 1
-        const val email = 2
-        const val email_input_layout = 3
-        const val email_login_form = 4
-        const val forgot_password = 5
-        const val login_form = 6
-        const val password = 8
-        const val password_input_layout = 9
-        const val sign_in_button = 10
-        const val sign_up_button = 11
     }
 }
