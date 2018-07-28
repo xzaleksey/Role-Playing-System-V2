@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
@@ -21,4 +22,6 @@ interface SingletonDependencyProvider {
     fun provideLocalKeyValueStorage(): LocalKeyValueStorage
 
     fun provideStringRepository(): StringRepository
+
+    fun userRepository(): UserRepository
 }

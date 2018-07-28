@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.prefs.SharedPreferencesHelper
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
@@ -11,6 +13,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
@@ -71,8 +74,20 @@ class AppModule(private val mApp: RpsApp) {
 
     @Provides
     @Singleton
-    fun provideStringRepo(resourcesProvider:ResourcesProvider): StringRepository {
+    fun provideStringRepo(resourcesProvider: ResourcesProvider): StringRepository {
         return StringRepositoryImpl(resourcesProvider)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRouterNavigatorFactory(): RouterNavigatorFactory {
+        return RouterNavigatorFactory(null)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        return UserRepositoryImpl()
     }
 
 }

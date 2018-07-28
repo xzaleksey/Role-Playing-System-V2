@@ -50,6 +50,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:$rx_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
 
     implementation 'com.google.dagger:dagger:2.15'
     kapt 'com.google.dagger:dagger-android-processor:2.15'
@@ -77,6 +78,9 @@ dependencies {
 
     annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'
+    implementation 'com.uber.rib:rib-workflow:0.9.1'
+    implementation 'com.uber.rib:rib-router-navigator:0.9.1'
+    implementation 'com.uber.rib:rib-screen-stack-base:0.9.1'
     testImplementation 'com.uber.rib:rib-test-utils:0.9.1'
 
     testImplementation 'junit:junit:4.12'

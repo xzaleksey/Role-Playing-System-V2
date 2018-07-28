@@ -25,5 +25,15 @@ object StringUtils {
         return if (s == null) s1 == null else s == s1
     }
 
+    fun usernameFromEmail(email: String?): String {
+        if (email == null) {
+            return StringUtils.EMPTY_STRING
+        }
 
+        return if (email.contains("@")) {
+            email.split("@".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+        } else {
+            email
+        }
+    }
 }

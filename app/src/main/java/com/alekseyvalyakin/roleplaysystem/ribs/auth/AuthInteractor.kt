@@ -3,11 +3,12 @@ package com.alekseyvalyakin.roleplaysystem.ribs.auth
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.EmptyAuthResult
 import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
-import com.alekseyvalyakin.roleplaysystem.ribs.abstractions.BaseInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.google.firebase.auth.AuthResult
+import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
 import io.reactivex.Observable
@@ -31,6 +32,8 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
     lateinit var localKeyValueStorage: LocalKeyValueStorage
     @Inject
     lateinit var googleSignInProvider: GoogleSignInProvider
+    @Inject
+    lateinit var userRepository: UserRepository
 
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.IO)]
     lateinit var ioScheduler: Scheduler
