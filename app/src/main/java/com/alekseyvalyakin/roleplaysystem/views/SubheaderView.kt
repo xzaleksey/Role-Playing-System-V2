@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
 import android.graphics.Typeface
+import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import com.alekseyvalyakin.roleplaysystem.R
@@ -23,14 +24,17 @@ class SubheaderView(context: Context) : _FrameLayout(context) {
             textView {
                 id = R.id.text
                 maxLines = 1
+                gravity = Gravity.START
                 setTextSizeFromRes(R.dimen.sp_14)
-                typeface = Typeface.create("sans-serif-medium",Typeface.NORMAL)
+                typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
                 singleLine = true
             }.lparams {
-                leftMargin = getIntDimen(R.dimen.dp_16)
                 bottomMargin = getIntDimen(R.dimen.dp_8)
                 rightMargin = getIntDimen(R.dimen.dp_16)
+                leftMargin = getIntDimen(R.dimen.dp_16)
                 topMargin = getIntDimen(R.dimen.dp_16)
+
+                gravity = Gravity.START
             }
             view {
                 id = R.id.divider
@@ -40,5 +44,6 @@ class SubheaderView(context: Context) : _FrameLayout(context) {
                 gravity = Gravity.BOTTOM
             }
         }
+        layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
     }
 }

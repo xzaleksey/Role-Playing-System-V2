@@ -13,7 +13,7 @@ class SubHeaderViewModel(
         val color: Int = 0,
         val isDrawBottomDivider: Boolean = false,
         val isDrawTopDivider: Boolean = false,
-        val paddingLeft: Int = 16.dip()
+        val marginLeft: Int = 16.dip()
 ) : AbstractFlexibleItem<SubHeaderViewHolder>(), Serializable {
 
     override fun createViewHolder(adapter: FlexibleAdapter<*>?, inflater: LayoutInflater?,
