@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 open class UrlDrawableProviderImpl(
@@ -22,7 +23,10 @@ open class UrlDrawableProviderImpl(
         val bitmapImageHolderImpl: ImageHolder = BitmapImageHolderImpl(bitmap, resourcesProvider)
 
         return@fromCallable bitmapImageHolderImpl
-    }.subscribeOn(Schedulers.io()).share()
+    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .share()
 
     override fun observeImage(): Observable<ImageHolder> {
         return observable

@@ -9,9 +9,9 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -67,7 +67,14 @@ class MainView @JvmOverloads constructor(
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
-        return Observable.merge(observeSearchInput(), observeSearchRightIconClick(), relay)
+        return Observable.merge(observeSearchInput(),
+                observeSearchRightIconClick(),
+                relay,
+                observeFabClick())
+    }
+
+    private fun observeFabClick(): Observable<MainInteractor.UiEvents> {
+        return RxView.clicks(fab).map { MainInteractor.UiEvents.FabClick() }
     }
 
     private fun observeSearchInput(): Observable<MainInteractor.UiEvents.SearchInput> = searchToolbar.observeSearchInput()

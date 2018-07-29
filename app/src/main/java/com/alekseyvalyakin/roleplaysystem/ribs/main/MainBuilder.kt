@@ -43,6 +43,7 @@ class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainR
     }
 
     interface ParentComponent : RibDependencyProvider {
+        fun mainRibsListener(): MainRibListener
     }
 
     @dagger.Module

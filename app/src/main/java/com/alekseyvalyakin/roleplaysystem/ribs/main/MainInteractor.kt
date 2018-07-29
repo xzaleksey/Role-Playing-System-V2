@@ -30,6 +30,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var mainViewModelProvider: MainViewModelProvider
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
+    @Inject
+    lateinit var mainRibListener: MainRibListener
 
     private val filterRelay = BehaviorRelay.create<FilterModel>()
 
@@ -59,6 +61,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 val value = filterRelay.value
                 filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvents.text))
             }
+            is UiEvents.FabClick -> {
+                mainRibListener.onCreateGamePressed()
+            }
             is UiEvents.Logout -> {
                 return authProvider.signOut().toObservable<Any>()
             }
@@ -86,5 +91,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         class SearchRightIconClick() : UiEvents()
         class Logout() : UiEvents()
         class SearchInput(val text: String) : UiEvents()
+        class FabClick() : UiEvents()
     }
 }
