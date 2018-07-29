@@ -23,4 +23,8 @@
     <item name="text" type="id" />
     <item name="divider" type="id" />
     <item name="top_divider" type="id" />
+    <item name="avatar" type="id" />
+    <item name="arrow_right" type="id" />
+    <item name="primary_line" type="id" />
+    <item name="secondary_line" type="id" />
 </resources>

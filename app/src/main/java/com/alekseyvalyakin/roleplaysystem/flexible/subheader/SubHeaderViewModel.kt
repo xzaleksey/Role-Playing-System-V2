@@ -1,7 +1,8 @@
-package com.alekseyvalyakin.roleplaysystem.flexible
+package com.alekseyvalyakin.roleplaysystem.flexible.subheader
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.utils.dip
 import com.alekseyvalyakin.roleplaysystem.views.SubheaderView
 import eu.davidea.flexibleadapter.FlexibleAdapter

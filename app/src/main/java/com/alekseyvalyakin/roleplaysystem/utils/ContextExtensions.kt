@@ -30,7 +30,7 @@ fun Context.getCompatDrawable(@DrawableRes res: Int): Drawable {
     return ContextCompat.getDrawable(this, res)!!
 }
 
-fun Context.getSelectableItemColor(): Int {
+fun Context.getSelectableItemBackGround(): Int {
     val outValue = TypedValue()
     theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
     return outValue.resourceId

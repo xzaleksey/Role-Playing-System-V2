@@ -2,6 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -61,6 +64,16 @@ class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainR
                     interactor: MainInteractor): MainRouter {
                 return MainRouter(view, interactor, component)
             }
+
+            @MainScope
+            @Provides
+            @JvmStatic
+            internal fun mainViewModelProvider(
+                    userRepository: UserRepository,
+                    resourceProvider: ResourcesProvider,
+                    stringRepo: StringRepository): MainViewModelProvider {
+                return MainViewModelProviderImpl(userRepository, resourceProvider, stringRepo)
+            }
         }
 
     }
@@ -79,6 +92,7 @@ class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainR
             fun view(view: MainView): Builder
 
             fun parentComponent(component: ParentComponent): Builder
+
             fun build(): Component
         }
     }

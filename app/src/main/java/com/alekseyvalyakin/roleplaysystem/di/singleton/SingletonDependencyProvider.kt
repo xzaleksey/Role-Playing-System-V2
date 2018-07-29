@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.di.singleton
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.uber.rib.core.RouterNavigatorFactory
@@ -27,4 +28,6 @@ interface SingletonDependencyProvider {
     fun userRepository(): UserRepository
 
     fun routerNavigatorFactory(): RouterNavigatorFactory
+
+    fun resourceProvider(): ResourcesProvider
 }

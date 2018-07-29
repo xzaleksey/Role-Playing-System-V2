@@ -40,8 +40,8 @@ fun ImageView.tintImage(@ColorRes res: Int) {
     ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(getCompatColor(res)))
 }
 
-fun View.getSelectableItemColor(): Int {
-    return context.getSelectableItemColor()
+fun View.getSelectableItemBackGround(): Int {
+    return context.getSelectableItemBackGround()
 }
 
 fun View.getSelectableItemBorderless(): Int {

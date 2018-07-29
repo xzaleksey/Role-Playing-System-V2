@@ -7,7 +7,7 @@ import com.google.firebase.firestore.Exclude
  * POJO
  */
 data class User(
-        var email: String? = null,
+        var email: String = "",
         var photoUrl: String? = null,
         var countOfGamesPlayed: Int = 0,
         var countOfGamesMastered: Int = 0

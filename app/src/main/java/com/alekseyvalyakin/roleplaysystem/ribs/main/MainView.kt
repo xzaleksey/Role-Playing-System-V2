@@ -9,7 +9,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.flexible.SubHeaderViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxrelay2.PublishRelay
@@ -20,6 +20,7 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import java.util.concurrent.TimeUnit
 
 /**
  * Top level view for {@link MainBuilder.MainScope}.
@@ -59,7 +60,10 @@ class MainView @JvmOverloads constructor(
                 margin = getIntDimen(R.dimen.dp_8)
             }
         }
-        flexibleAdapter.updateDataSet(listOf(SubHeaderViewModel("test")))
+    }
+
+    override fun updateModel(model: MainViewModel) {
+        flexibleAdapter.updateDataSet(model.flexibleItems)
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
@@ -67,6 +71,8 @@ class MainView @JvmOverloads constructor(
     }
 
     private fun observeSearchInput(): Observable<MainInteractor.UiEvents.SearchInput> = searchToolbar.observeSearchInput()
+            .debounce(200L, TimeUnit.MILLISECONDS)
+            .throttleLast(100L, TimeUnit.MILLISECONDS)
             .map { MainInteractor.UiEvents.SearchInput(it.toString()) }
 
     override fun showSearchContextMenu() {

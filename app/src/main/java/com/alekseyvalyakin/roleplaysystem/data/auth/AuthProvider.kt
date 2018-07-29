@@ -21,8 +21,9 @@ import javax.inject.Singleton
 class AuthProviderImpl @Inject constructor(
         private val userRepository: UserRepository
 ) : AuthProvider {
+
     override fun getCurrentUser(): FirebaseUser? {
-        return FirebaseAuth.getInstance().currentUser
+        return userRepository.getCurrentUser()
     }
 
     override fun login(email: String, password: String): Maybe<AuthResult> {
@@ -42,7 +43,7 @@ class AuthProviderImpl @Inject constructor(
     override fun loginWithGoogleAccount(googleSignInAccount: GoogleSignInAccount): Maybe<AuthResult> {
         val credential = GoogleAuthProvider.getCredential(googleSignInAccount.idToken, null)
         return RxFirebaseAuth.signInWithCredential(FirebaseAuth.getInstance(), credential)
-                .updateUser(User(email = googleSignInAccount.email,
+                .updateUser(User(email = googleSignInAccount.email!!,
                         photoUrl = googleSignInAccount.photoUrl.toString()))
     }
 
