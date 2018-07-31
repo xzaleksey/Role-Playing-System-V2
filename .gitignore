@@ -11,3 +11,5 @@ google-services.json
 proguard-rules.pro
 gradle/
 libs/
+.idea/caches/
+.idea/dictionaries/
