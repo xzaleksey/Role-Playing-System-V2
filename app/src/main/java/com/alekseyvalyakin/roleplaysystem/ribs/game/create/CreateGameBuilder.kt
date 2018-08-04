@@ -3,8 +3,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -15,7 +15,7 @@ import javax.inject.Scope
  * Builder for the {@link CreateGameScope}.
  *
  */
-class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameView, CreateGameRouter, CreateGameBuilder.ParentComponent>(dependency) {
+class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGameView, CreateGameRouter, CreateGameBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [CreateGameRouter].
@@ -23,7 +23,7 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [CreateGameRouter].
      */
-    fun build(parentViewGroup: ViewGroup): CreateGameRouter {
+    override fun build(parentViewGroup: ViewGroup): CreateGameRouter {
         val view = createView(parentViewGroup)
         val interactor = CreateGameInteractor()
         val component = DaggerCreateGameBuilder_Component.builder()
@@ -35,7 +35,7 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
     }
 
     override fun inflateView(inflater: LayoutInflater, parentViewGroup: ViewGroup): CreateGameView? {
-        return null
+        return CreateGameView(parentViewGroup.context)
     }
 
     interface ParentComponent : RibDependencyProvider {

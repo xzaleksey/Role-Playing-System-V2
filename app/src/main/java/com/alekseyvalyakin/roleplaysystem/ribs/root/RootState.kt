@@ -11,5 +11,6 @@ data class RootState(val name: String) : RouterNavigatorState {
     companion object {
         val AUTH = RootState("Auth")
         val MAIN = RootState("Main")
+        val CREATE_GAME = RootState("Create game")
     }
 }

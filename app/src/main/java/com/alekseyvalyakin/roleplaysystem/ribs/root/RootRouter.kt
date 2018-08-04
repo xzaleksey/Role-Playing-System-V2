@@ -2,6 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRouter
 import com.uber.rib.core.DefaultAttachTransition
@@ -20,7 +22,8 @@ class RootRouter(
         component: RootBuilder.Component,
         routerNavigatorFactory: RouterNavigatorFactory,
         private val authBuilder: AuthBuilder,
-        private val mainBuilder: MainBuilder
+        private val mainBuilder: MainBuilder,
+        private val createGameBuilder: CreateGameBuilder
 ) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
     private val router = routerNavigatorFactory.create<RootState>(this)!!
     private val authAttachTransition = object : DefaultAttachTransition<AuthRouter, RootState>(authBuilder, view) {}
@@ -29,12 +32,24 @@ class RootRouter(
     private val mainAttachTransition = object : DefaultAttachTransition<MainRouter, RootState>(mainBuilder, view) {}
     private val mainDetachTransition = object : DefaultDetachTransition<MainRouter, RootState>(view) {}
 
+    private val createGameAttachTransition = object : DefaultAttachTransition<CreateGameRouter, RootState>(createGameBuilder, view) {}
+    private val createGameDetachTransition = object : DefaultDetachTransition<CreateGameRouter, RootState>(view) {}
+
     fun attachAuth() {
-        router.pushTransientState<AuthRouter>(RootState.AUTH, authAttachTransition, authDetachTransition)
+        router.pushTransientState(RootState.AUTH, authAttachTransition, authDetachTransition)
     }
 
     fun attachMain() {
-        router.pushTransientState<MainRouter>(RootState.MAIN, mainAttachTransition, mainDetachTransition)
+        router.pushRetainedState(RootState.MAIN, mainAttachTransition, mainDetachTransition)
+    }
+
+    fun attachCreateGame() {
+        router.pushRetainedState(RootState.CREATE_GAME, createGameAttachTransition, createGameDetachTransition)
+    }
+
+    fun onBackPressed(): Boolean {
+        router.popState()
+        return router.peekState() != null
     }
 
 }

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.jakewharton.rxrelay2.PublishRelay
@@ -69,7 +70,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                     routerNavigatorFactory: RouterNavigatorFactory): RootRouter {
                 return RootRouter(view, interactor, component, routerNavigatorFactory,
                         AuthBuilder(component),
-                        MainBuilder(component))
+                        MainBuilder(component),
+                        CreateGameBuilder(component))
             }
 
             @RootScope
@@ -106,7 +108,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             BuilderComponent,
             RibDependencyProvider,
             AuthBuilder.ParentComponent,
-            MainBuilder.ParentComponent {
+            MainBuilder.ParentComponent,
+            CreateGameBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

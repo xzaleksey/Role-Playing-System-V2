@@ -8,7 +8,6 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.*
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -45,7 +44,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                 .subscribeWithErrorLogging { event ->
                     when (event) {
                         is MainRibListener.MainRibEvent.CreateGame -> {
-                            Timber.d("Create game")
+                            router.attachCreateGame()
                         }
                     }
                 }.addToDisposables()
@@ -54,6 +53,10 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
     override fun willResignActive() {
         super.willResignActive()
 
+    }
+
+    override fun handleBackPress(): Boolean {
+        return router.onBackPressed()
     }
 
     override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>) {
