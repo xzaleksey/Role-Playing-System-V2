@@ -1,5 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 interface MainRibListener {
-    fun onCreateGamePressed()
+    fun onMainRibEvent(mainRibEvent: MainRibEvent)
+
+    sealed class MainRibEvent {
+        class CreateGame : MainRibEvent()
+    }
 }

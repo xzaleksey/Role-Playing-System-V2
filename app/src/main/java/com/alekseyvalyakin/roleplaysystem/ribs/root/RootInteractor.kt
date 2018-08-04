@@ -3,9 +3,12 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.*
+import io.reactivex.Observable
 import io.reactivex.Scheduler
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,6 +25,8 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
     lateinit var authProvider: AuthProvider
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
+    @Inject
+    lateinit var mainRibEventObservable: Observable<MainRibListener.MainRibEvent>
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
@@ -32,6 +37,16 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                         router.attachAuth()
                     } else {
                         router.attachMain()
+                    }
+                }.addToDisposables()
+
+        mainRibEventObservable
+                .observeOn(uiScheduler)
+                .subscribeWithErrorLogging { event ->
+                    when (event) {
+                        is MainRibListener.MainRibEvent.CreateGame -> {
+                            Timber.d("Create game")
+                        }
                     }
                 }.addToDisposables()
     }

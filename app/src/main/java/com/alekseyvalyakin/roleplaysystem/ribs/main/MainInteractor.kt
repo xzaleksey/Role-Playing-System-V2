@@ -15,7 +15,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 /**
- * Coordinates Business Logic for [MainScope].
+ * Coordinates Business Logic for [MainBuilder.MainScope].
  *
  * Provides info about user, last games and all games
  */
@@ -62,7 +62,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvents.text))
             }
             is UiEvents.FabClick -> {
-                mainRibListener.onCreateGamePressed()
+                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame())
             }
             is UiEvents.Logout -> {
                 return authProvider.signOut().toObservable<Any>()
@@ -70,10 +70,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
 
         }
         return Observable.just(uiEvents)
-    }
-
-    override fun willResignActive() {
-        super.willResignActive()
     }
 
     /**
@@ -88,9 +84,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     }
 
     sealed class UiEvents {
-        class SearchRightIconClick() : UiEvents()
-        class Logout() : UiEvents()
+        class SearchRightIconClick : UiEvents()
+        class Logout : UiEvents()
         class SearchInput(val text: String) : UiEvents()
-        class FabClick() : UiEvents()
+        class FabClick : UiEvents()
     }
 }

@@ -7,13 +7,14 @@ import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
+import com.jakewharton.rxrelay2.PublishRelay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
-import timber.log.Timber
+import io.reactivex.Observable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -36,11 +37,6 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
         val component = dependency.builder()
                 .view(view)
                 .interactor(interactor)
-                .mainRibListener(object : MainRibListener {
-                    override fun onCreateGamePressed() {
-                        Timber.d("On create game")
-                    }
-                })
                 .build()
         return component.rootRouter()
     }
@@ -75,6 +71,31 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                         AuthBuilder(component),
                         MainBuilder(component))
             }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun mainRibRelay(): PublishRelay<MainRibListener.MainRibEvent> {
+                return PublishRelay.create<MainRibListener.MainRibEvent>()
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun mainRibEventObservable(relay: PublishRelay<MainRibListener.MainRibEvent>): Observable<MainRibListener.MainRibEvent> {
+                return relay
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun mainRibListener(relay: PublishRelay<MainRibListener.MainRibEvent>): MainRibListener {
+                return object : MainRibListener {
+                    override fun onMainRibEvent(mainRibEvent: MainRibListener.MainRibEvent) {
+                        relay.accept(mainRibEvent)
+                    }
+                }
+            }
         }
 
     }
@@ -94,9 +115,6 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
 
             @BindsInstance
             fun view(view: RootView): Builder
-
-            @BindsInstance
-            fun mainRibListener(mainRibListener: MainRibListener): Builder
 
             fun build(): Component
         }
