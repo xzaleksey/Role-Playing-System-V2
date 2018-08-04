@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-kapt'
+apply from: 'master_password.gradle'
 
 ext {
     rx_version = "2.1.10"
@@ -23,6 +24,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "MASTER_PASSWORD", "\"$project.password\"")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

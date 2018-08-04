@@ -3,7 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.di.singleton
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.alekseyvalyakin.roleplaysystem.BuildConfig
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
+import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
+import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
@@ -88,6 +91,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun provideUserRepository(): UserRepository {
         return UserRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSimpleCryptoProvider(): SimpleCryptoProvider {
+        return SimpleCryptoProviderImpl(BuildConfig.MASTER_PASSWORD)
     }
 
 }
