@@ -15,6 +15,7 @@ class RootView @JvmOverloads constructor(
         fitsSystemWindows = true
     }
 
+    @Suppress("OverridingDeprecatedMember")
     override fun fitSystemWindows(insets: Rect?): Boolean {
         insets?.left = 0
         insets?.right = 0

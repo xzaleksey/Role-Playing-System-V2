@@ -56,6 +56,11 @@ fun Context.getStatusBarHeight(): Int {
     return Math.ceil(result.toDouble()).toInt()
 }
 
+fun Context.getToolbarHeight(): Int {
+    val resourceId = resources.getIdentifier("action_bar_size", "dimen", "android")
+    return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else dip(56)
+}
+
 fun Int.dip(): Int {
     return RpsApp.app.dip(this)
 }

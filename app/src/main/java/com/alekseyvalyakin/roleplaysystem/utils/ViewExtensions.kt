@@ -47,3 +47,11 @@ fun View.getSelectableItemBackGround(): Int {
 fun View.getSelectableItemBorderless(): Int {
     return context.getSelectableItemBorderless()
 }
+
+fun View.getStatusBarHeight(): Int {
+    return context.getStatusBarHeight()
+}
+
+fun View.getToolbarHeight(): Int {
+    return context.getToolbarHeight()
+}

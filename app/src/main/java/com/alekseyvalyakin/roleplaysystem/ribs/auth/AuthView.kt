@@ -58,7 +58,7 @@ class AuthView @JvmOverloads constructor(
             rightPadding = padding
             topPadding = padding
 
-            scrollView = themedScrollView(R.style.AppTheme_TextWhite, {
+            scrollView = themedScrollView(R.style.AppTheme_TextWhite) {
                 id = R.id.login_form
 
                 linearLayout {
@@ -110,10 +110,10 @@ class AuthView @JvmOverloads constructor(
                         textResource = R.string.action_sign_up
                     }.lparams(width = matchParent, height = wrapContent)
 
-                    googleAuthBtn = googleSignInButton({
+                    googleAuthBtn = googleSignInButton {
                         id = R.id.auth_btn
                         gravity = Gravity.CENTER_HORIZONTAL
-                    }).lparams(width = wrapContent, height = wrapContent) {
+                    }.lparams(width = wrapContent, height = wrapContent) {
                         topMargin = context.getIntDimen(R.dimen.dp_16)
                     }
 
@@ -126,7 +126,7 @@ class AuthView @JvmOverloads constructor(
                         topMargin = getIntDimen(R.dimen.dp_20)
                     }
                 }
-            })
+            }
             scrollView.layoutParams = CoordinatorLayout.LayoutParams(matchParent, wrapContent).apply {
                 this.gravity = Gravity.CENTER
             }
@@ -181,13 +181,13 @@ class AuthView @JvmOverloads constructor(
     }
 
     private fun signInAction(): Observable<AuthInteractor.AuthPresenter.Events> {
-        return RxTextView.editorActionEvents(password, {
+        return RxTextView.editorActionEvents(password) {
             var handled = false
             if (it.actionId() == EditorInfo.IME_ACTION_DONE) {
                 handled = true
             }
             return@editorActionEvents handled
-        }).map { AuthInteractor.AuthPresenter.Events.Login(getEmail(), getPassword()) }
+        }.map { AuthInteractor.AuthPresenter.Events.Login(getEmail(), getPassword()) }
     }
 
     override fun showError(localizedMessage: String) {
@@ -200,7 +200,7 @@ class AuthView @JvmOverloads constructor(
                 .content(R.string.reset_password_text)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
-                .onPositive { dialog, which ->
+                .onPositive { _, _ ->
                     relay.accept(AuthInteractor.AuthPresenter.Events.ResetPassword(getEmail()))
                 }.show()
     }
