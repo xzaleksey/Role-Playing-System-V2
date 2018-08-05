@@ -2,7 +2,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
-import android.view.Gravity
 import android.widget.EditText
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
@@ -37,49 +36,52 @@ class CreateGameView constructor(
         AnkoContext.createDelegate(this).apply {
             relativeLayout {
 
-                stepTextView = textView {
-                    id = R.id.step_text
-                    textColorResource = R.color.colorWhite
-                    setTextSizeFromRes(R.dimen.sp_16)
-                }.lparams(width = wrapContent, height = wrapContent)
-
-                titleTextView = textView {
-                    id = R.id.title
-                    setSanserifMediumTypeface()
-                    textColorResource = R.color.colorWhite
-                    setTextSizeFromRes(R.dimen.sp_20)
+                fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
+                    id = R.id.fab
+                    imageResource = R.drawable.ic_arrow_right
                 }.lparams(width = wrapContent, height = wrapContent) {
-                    topMargin = getIntDimen(R.dimen.dp_24)
-                    below(stepTextView)
-                }
-
-                inputEditText = themedEditText(R.style.AppTheme_TextWhite) {
-                    id = R.id.input_et
-                    hintTextColor = getCompatColor(R.color.white54)
-                }.lparams(width = matchParent, height = wrapContent) {
-                    leftMargin = -getIntDimen(R.dimen.dp_4)
                     topMargin = getIntDimen(R.dimen.dp_16)
-                    below(titleTextView)
+                    alignParentBottom()
+                    alignParentEnd()
                 }
+                relativeLayout {
 
-                exampleText = themedTextView(R.style.AppTheme_TextWhite) {
-                    id = R.id.text
-                    setTextSizeFromRes(R.dimen.sp_12)
-                }.lparams(width = matchParent, height = wrapContent) {
-                    below(inputEditText)
-                }
+                    stepTextView = textView {
+                        id = R.id.step_text
+                        textColorResource = R.color.colorWhite
+                        setTextSizeFromRes(R.dimen.sp_16)
+                    }.lparams(width = wrapContent, height = wrapContent)
 
-                frameLayout {
-                    fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
-                        imageResource = R.drawable.ic_arrow_right
+                    titleTextView = textView {
+                        id = R.id.title
+                        setSanserifMediumTypeface()
+                        textColorResource = R.color.colorWhite
+                        setTextSizeFromRes(R.dimen.sp_20)
                     }.lparams(width = wrapContent, height = wrapContent) {
-                        gravity = Gravity.BOTTOM or Gravity.END
+                        topMargin = getIntDimen(R.dimen.dp_24)
+                        below(stepTextView)
                     }
-                }.lparams(width = matchParent, height = matchParent) {
-                    topMargin = getIntDimen(R.dimen.dp_16)
-                    below(exampleText)
-                }
 
+                    inputEditText = themedEditText(R.style.AppTheme_TextWhite) {
+                        id = R.id.input_et
+                        hintTextColor = getCompatColor(R.color.white54)
+                    }.lparams(width = matchParent, height = wrapContent) {
+                        leftMargin = -getIntDimen(R.dimen.dp_4)
+                        topMargin = getIntDimen(R.dimen.dp_16)
+                        below(titleTextView)
+                    }
+
+
+
+                    exampleText = themedTextView(R.style.AppTheme_TextWhite) {
+                        id = R.id.text
+                        setTextSizeFromRes(R.dimen.sp_12)
+                    }.lparams(width = matchParent, height = wrapContent) {
+                        below(inputEditText)
+                    }
+                }.lparams( width= matchParent, height = matchParent){
+                    above(fab)
+                }
             }.lparams(width = matchParent, height = matchParent) {
                 topMargin = getIntDimen(R.dimen.dp_32) + getStatusBarHeight()
                 leftMargin = getIntDimen(R.dimen.dp_40)
