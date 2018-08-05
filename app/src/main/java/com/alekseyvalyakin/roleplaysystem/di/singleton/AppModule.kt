@@ -9,6 +9,8 @@ import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.GameRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.prefs.SharedPreferencesHelper
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
@@ -91,6 +93,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun provideUserRepository(): UserRepository {
         return UserRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGameRepository(userRepository: UserRepository): GameRepository {
+        return GameRepositoryImpl(userRepository)
     }
 
     @Provides

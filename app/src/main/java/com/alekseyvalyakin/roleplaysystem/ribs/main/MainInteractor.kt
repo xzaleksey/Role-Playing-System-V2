@@ -2,6 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -26,6 +28,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var presenter: MainPresenter
     @Inject
     lateinit var authProvider: AuthProvider
+    @Inject
+    lateinit var gameRepository: GameRepository
     @Inject
     lateinit var mainViewModelProvider: MainViewModelProvider
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
@@ -53,6 +57,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
         Timber.d(uiEvents.toString())
+        var observable: Observable<*> = Observable.just(uiEvents)
+
         when (uiEvents) {
             is UiEvents.SearchRightIconClick -> {
                 presenter.showSearchContextMenu()
@@ -62,14 +68,30 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvents.text))
             }
             is UiEvents.FabClick -> {
-                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame())
+                observable = getCreateGameObservable()
             }
             is UiEvents.Logout -> {
                 return authProvider.signOut().toObservable<Any>()
             }
 
         }
-        return Observable.just(uiEvents)
+        return observable
+    }
+
+    private fun getCreateGameObservable(): Observable<Game> {
+        return gameRepository.createDraftGame().toObservable()
+                .doOnSubscribe { presenter.showFabLoading(true) }
+                .onErrorReturn {
+                    Timber.e(it)
+                    Game.EMPTY_GAME
+                }
+                .doOnNext { game ->
+                    presenter.showFabLoading(false)
+                    if (game != Game.EMPTY_GAME) {
+                        Timber.d("end chain")
+                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(game))
+                    }
+                }
     }
 
     /**
@@ -81,6 +103,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         fun showSearchContextMenu()
 
         fun updateModel(model: MainViewModel)
+        fun showFabLoading(loading: Boolean)
     }
 
     sealed class UiEvents {

@@ -4,4 +4,6 @@ import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
 
 interface ActivityDependencyProvider {
     fun provideGoogleSignInProvider(): GoogleSignInProvider
+
+    fun provideActivityListener(): ActivityListener
 }

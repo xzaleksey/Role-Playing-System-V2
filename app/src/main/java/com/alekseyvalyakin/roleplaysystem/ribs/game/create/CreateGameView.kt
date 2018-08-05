@@ -2,7 +2,10 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
+import android.text.InputType
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -26,6 +29,7 @@ class CreateGameView constructor(
     private lateinit var titleTextView: TextView
     private lateinit var inputEditText: EditText
     private lateinit var exampleText: TextView
+    private lateinit var backButton: ImageButton
     private lateinit var fab: FloatingActionButton
     private val modelRelay = BehaviorRelay.create<CreateGameViewModel>()
     private val textChangeObservable: Observable<String>
@@ -35,6 +39,16 @@ class CreateGameView constructor(
         backgroundColor = getCompatColor(R.color.colorPrimaryDark)
         AnkoContext.createDelegate(this).apply {
             relativeLayout {
+
+                backButton = imageButton {
+                    id = R.id.back_btn
+                    backgroundResource = getSelectableItemBorderless()
+                    tintImage(R.color.colorWhite)
+                    imageResource = R.drawable.ic_arrow_back
+                }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                    topMargin = getStatusBarHeight()
+                    leftMargin = getIntDimen(R.dimen.dp_8)
+                }
 
                 fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
                     id = R.id.fab
@@ -71,20 +85,19 @@ class CreateGameView constructor(
                         below(titleTextView)
                     }
 
-
-
                     exampleText = themedTextView(R.style.AppTheme_TextWhite) {
                         id = R.id.text
                         setTextSizeFromRes(R.dimen.sp_12)
                     }.lparams(width = matchParent, height = wrapContent) {
                         below(inputEditText)
                     }
-                }.lparams( width= matchParent, height = matchParent){
+                }.lparams(width = matchParent, height = matchParent) {
                     above(fab)
+                    below(backButton)
+                    leftMargin = getIntDimen(R.dimen.dp_40)
+                    topMargin = getIntDimen(R.dimen.dp_32)
                 }
             }.lparams(width = matchParent, height = matchParent) {
-                topMargin = getIntDimen(R.dimen.dp_32) + getStatusBarHeight()
-                leftMargin = getIntDimen(R.dimen.dp_40)
                 rightMargin = getIntDimen(R.dimen.dp_40)
                 bottomMargin = getIntDimen(R.dimen.dp_40)
             }
@@ -94,13 +107,22 @@ class CreateGameView constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        inputEditText.showSoftKeyboard()
+        inputEditText.showSoftKeyboard(0L)
     }
 
     override fun updateView(createGameViewModel: CreateGameViewModel) {
         stepTextView.text = createGameViewModel.stepText
         titleTextView.text = createGameViewModel.title
         inputEditText.hint = createGameViewModel.inputHint
+        inputEditText.maxLines = createGameViewModel.inputMaxLines
+        inputEditText.setSelection(inputEditText.length())
+        if (inputEditText.maxLines == 1) {
+            inputEditText.imeOptions = EditorInfo.IME_ACTION_DONE
+            inputEditText.inputType = InputType.TYPE_CLASS_TEXT
+        } else {
+            inputEditText.imeOptions = EditorInfo.IME_ACTION_UNSPECIFIED
+            inputEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        }
         exampleText.text = createGameViewModel.inputExample
         modelRelay.accept(createGameViewModel)
     }
@@ -118,8 +140,8 @@ class CreateGameView constructor(
     }
 
     override fun observeUiEvents(): Observable<CreateGameUiEvent> {
-        return Observable.merge(RxView.clicks(fab).map {
-            CreateGameUiEvent.ClickNext(inputEditText.text.toString())
-        }, textChangeObservable.map { CreateGameUiEvent.InputChange(inputEditText.text.toString()) })
+        return Observable.merge(RxView.clicks(fab).map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) },
+                textChangeObservable.map { CreateGameUiEvent.InputChange(inputEditText.text.toString()) },
+                RxView.clicks(backButton).map { CreateGameUiEvent.BackPress() })
     }
 }

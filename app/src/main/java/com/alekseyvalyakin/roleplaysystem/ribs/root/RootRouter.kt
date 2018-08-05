@@ -48,6 +48,10 @@ class RootRouter(
     }
 
     fun onBackPressed(): Boolean {
+        val currentRouter = router.peekRouter()
+        if (currentRouter != null && currentRouter.handleBackPress()) {
+            return true
+        }
         router.popState()
         return router.peekState() != null
     }

@@ -8,6 +8,7 @@ data class CreateGameViewModel(
         val stepText: String,
         val step: CreateGameStep,
         val inputText: String,
+        val inputMaxLines: Int,
         val inputHint: String,
         val inputExample: String,
         val required: Boolean
@@ -18,6 +19,7 @@ data class CreateGameViewModel(
             parcel.readString(),
             parcel.readSerializable() as CreateGameStep,
             parcel.readString(),
+            parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
             parcel.readByte() != 0.toByte())
@@ -27,6 +29,7 @@ data class CreateGameViewModel(
         parcel.writeString(stepText)
         parcel.writeSerializable(step)
         parcel.writeString(inputText)
+        parcel.writeInt(inputMaxLines)
         parcel.writeString(inputHint)
         parcel.writeString(inputExample)
         parcel.writeByte(if (required) 1 else 0)

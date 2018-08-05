@@ -18,4 +18,10 @@ class ActivityModule(private val activity: MainActivity) {
         return GoogleSignInProvider(activity, stringRepository)
     }
 
+    @Provides
+    @ActivityScope
+    fun provideActivityListener(): ActivityListener {
+        return ActivityListenerImpl(activity)
+    }
+
 }

@@ -6,8 +6,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
@@ -32,6 +34,7 @@ class MainView @JvmOverloads constructor(
     private lateinit var searchToolbar: SearchToolbar
     private lateinit var fab: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
     private val relay = PublishRelay.create<MainInteractor.UiEvents>()
     private val flexibleAdapter: FlexibleAdapter<IFlexible<*>> = FlexibleAdapter(emptyList())
 
@@ -59,6 +62,14 @@ class MainView @JvmOverloads constructor(
                 gravity = Gravity.BOTTOM or Gravity.END
                 margin = getIntDimen(R.dimen.dp_8)
             }
+
+            progressBar = progressBar {
+                visibility = View.GONE
+            }.lparams {
+                gravity = Gravity.BOTTOM or Gravity.END
+                margin = getIntDimen(R.dimen.dp_8)
+            }
+
         }
     }
 
@@ -81,6 +92,16 @@ class MainView @JvmOverloads constructor(
             .debounce(200L, TimeUnit.MILLISECONDS)
             .throttleLast(100L, TimeUnit.MILLISECONDS)
             .map { MainInteractor.UiEvents.SearchInput(it.toString()) }
+
+    override fun showFabLoading(loading: Boolean) {
+        if (loading) {
+            fab.hide()
+            progressBar.visibility = View.VISIBLE
+        } else {
+            progressBar.visibility = View.GONE
+            fab.show()
+        }
+    }
 
     override fun showSearchContextMenu() {
         val popupMenu = PopupMenu(context, searchToolbar.getPopupViewAnchor())

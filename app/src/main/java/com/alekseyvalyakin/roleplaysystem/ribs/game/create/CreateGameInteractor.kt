@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
+import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
@@ -20,6 +21,8 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     lateinit var presenter: CreateGamePresenter
     @Inject
     lateinit var viewModelProvider: CreateGameViewModelProvider
+    @Inject
+    lateinit var activityListener: ActivityListener
 
     private lateinit var model: CreateGameViewModel
 
@@ -42,7 +45,20 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
             is CreateGameUiEvent.ClickNext -> {
                 Timber.d("Click next")
             }
+            is CreateGameUiEvent.BackPress -> {
+                activityListener.backPress()
+            }
         }
+    }
+
+    override fun handleBackPress(): Boolean {
+        val previousStep = model.step.getPreviousStep()
+        if (previousStep == CreateGameStep.NONE) {
+            return false
+        }
+        model = viewModelProvider.getCreateGameViewModel(previousStep)
+        presenter.updateView(model)
+        return true
     }
 
     private fun initModel(savedInstanceState: Bundle?) {

@@ -9,6 +9,9 @@ import android.view.inputmethod.InputMethodManager
 fun Activity.hideKeyboard(delay: Long = 10L) {
     val view = currentFocus
     view?.postDelayed({
+        if (!view.isAttachedToWindow) {
+            return@postDelayed
+        }
         val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }, delay)
@@ -33,6 +36,9 @@ fun View.showSoftKeyboard(delay: Long = 10L) {
     val context = context
     if (requestFocus()) {
         postDelayed({
+            if (!this.isAttachedToWindow) {
+                return@postDelayed
+            }
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
         }, delay)

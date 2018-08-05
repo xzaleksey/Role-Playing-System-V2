@@ -16,6 +16,7 @@ class CreateGameViewModelProvider constructor(
                         stringRepository.createGameStepText(CreateGameStep.TITLE.value, maxSteps),
                         CreateGameStep.TITLE,
                         StringUtils.EMPTY_STRING,
+                        1,
                         stringRepository.name(),
                         stringRepository.createGameNameExample(),
                         true

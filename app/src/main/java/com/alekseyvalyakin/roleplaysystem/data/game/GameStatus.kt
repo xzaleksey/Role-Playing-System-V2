@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.model
+package com.alekseyvalyakin.roleplaysystem.data.game
 
 enum class GameStatus(val value: Int) {
     DRAFT(1),
