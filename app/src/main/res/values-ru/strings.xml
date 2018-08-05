@@ -105,4 +105,8 @@
     <string name="throw_result">Результат броска</string>
     <string name="details">Детально</string>
     <string name="rethrow">Перебросить</string>
+    <string name="create_game_name_title">Придумайте название для своей игры</string>
+    <string name="steps_format">Шаг %d из %d</string>
+    <string name="create_game_name_example">Пример: Побережье дракона</string>
+
 </resources>

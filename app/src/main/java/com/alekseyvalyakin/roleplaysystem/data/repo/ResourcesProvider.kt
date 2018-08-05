@@ -21,6 +21,8 @@ interface ResourcesProvider {
 
     fun getString(@StringRes stringRes: Int): String
 
+    fun getString(@StringRes stringRes: Int, vararg args: Any): String
+
     fun getDrawable(@DrawableRes drawableRes: Int): Drawable?
 
     fun getBitmap(drawableRes: Int): Bitmap?
@@ -31,6 +33,16 @@ interface ResourcesProvider {
 }
 
 class ResourcesProviderImpl(private val c: Context) : ResourcesProvider {
+
+    override fun getString(stringRes: Int, vararg args: Any): String {
+        try {
+            return c.getString(stringRes, *args)
+        } catch (ignored: Exception) {
+            Timber.e(ignored)
+        }
+        return UNDEFINED
+    }
+
     override fun getContext(): Context {
         return c
     }

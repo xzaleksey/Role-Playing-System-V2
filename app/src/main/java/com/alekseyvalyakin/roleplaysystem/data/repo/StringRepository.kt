@@ -17,6 +17,12 @@ class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : S
     override fun getMax(): String = resourcesProvider.getString(R.string.max)
     override fun getDetails(): String = resourcesProvider.getString(R.string.details)
     override fun getError(): String = resourcesProvider.getString(R.string.error)
+    override fun createGameNameTitle(): String = resourcesProvider.getString(R.string.create_game_name_title)
+    override fun createGameStepText(currentStep: Int, maxSteps: Int): String =
+            resourcesProvider.getString(R.string.steps_format, currentStep, maxSteps)
+
+    override fun name(): String = resourcesProvider.getString(R.string.name)
+    override fun createGameNameExample(): String = resourcesProvider.getString(R.string.create_game_name_example)
 }
 
 interface StringRepository {
@@ -34,4 +40,8 @@ interface StringRepository {
     fun getMax(): String
     fun getDetails(): String
     fun getError(): String
+    fun createGameNameTitle(): String
+    fun createGameStepText(currentStep: Int, maxSteps: Int): String
+    fun name(): String
+    fun createGameNameExample(): String
 }

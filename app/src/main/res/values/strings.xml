@@ -114,4 +114,7 @@
     <string name="throw_result">Throw result</string>
     <string name="details">Details</string>
     <string name="rethrow">Rethrow</string>
+    <string name="create_game_name_title">Think up the name for you game</string>
+    <string name="steps_format">Step %d of %d</string>
+    <string name="create_game_name_example">Example: Dragon\'s beach</string>
 </resources>

@@ -7,6 +7,12 @@ import android.widget.EditText
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxrelay2.BehaviorRelay
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.themedFloatingActionButton
 
@@ -20,8 +26,10 @@ class CreateGameView constructor(
     private lateinit var stepTextView: TextView
     private lateinit var titleTextView: TextView
     private lateinit var inputEditText: EditText
-    private lateinit var fab: FloatingActionButton
     private lateinit var exampleText: TextView
+    private lateinit var fab: FloatingActionButton
+    private val modelRelay = BehaviorRelay.create<CreateGameViewModel>()
+    private val textChangeObservable: Observable<String>
 
     init {
 
@@ -30,14 +38,12 @@ class CreateGameView constructor(
             relativeLayout {
 
                 stepTextView = textView {
-                    text = "test"
                     id = R.id.step_text
                     textColorResource = R.color.colorWhite
                     setTextSizeFromRes(R.dimen.sp_16)
                 }.lparams(width = wrapContent, height = wrapContent)
 
                 titleTextView = textView {
-                    text = "title"
                     id = R.id.title
                     setSanserifMediumTypeface()
                     textColorResource = R.color.colorWhite
@@ -49,15 +55,15 @@ class CreateGameView constructor(
 
                 inputEditText = themedEditText(R.style.AppTheme_TextWhite) {
                     id = R.id.input_et
-                    hint = "hint"
+                    hintTextColor = getCompatColor(R.color.white54)
                 }.lparams(width = matchParent, height = wrapContent) {
-                    leftMargin= - getIntDimen(R.dimen.dp_4)
+                    leftMargin = -getIntDimen(R.dimen.dp_4)
+                    topMargin = getIntDimen(R.dimen.dp_16)
                     below(titleTextView)
                 }
 
                 exampleText = themedTextView(R.style.AppTheme_TextWhite) {
                     id = R.id.text
-                    text = "example"
                     setTextSizeFromRes(R.dimen.sp_12)
                 }.lparams(width = matchParent, height = wrapContent) {
                     below(inputEditText)
@@ -81,5 +87,37 @@ class CreateGameView constructor(
                 bottomMargin = getIntDimen(R.dimen.dp_40)
             }
         }
+        textChangeObservable = RxTextView.textChanges(inputEditText).map { it.toString() }.share()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        inputEditText.showSoftKeyboard()
+    }
+
+    override fun updateView(createGameViewModel: CreateGameViewModel) {
+        stepTextView.text = createGameViewModel.stepText
+        titleTextView.text = createGameViewModel.title
+        inputEditText.hint = createGameViewModel.inputHint
+        exampleText.text = createGameViewModel.inputExample
+        modelRelay.accept(createGameViewModel)
+    }
+
+    override fun updateFabShowDisposable(): Disposable {
+        return Observable.combineLatest(textChangeObservable,
+                modelRelay, BiFunction { text: CharSequence, createGameViewModel: CreateGameViewModel ->
+            if (createGameViewModel.required && text.isBlank()) {
+                fab.hide()
+            } else {
+                fab.show()
+            }
+            return@BiFunction createGameViewModel
+        }).subscribeWithErrorLogging()
+    }
+
+    override fun observeUiEvents(): Observable<CreateGameUiEvent> {
+        return Observable.merge(RxView.clicks(fab).map {
+            CreateGameUiEvent.ClickNext(inputEditText.text.toString())
+        }, textChangeObservable.map { CreateGameUiEvent.InputChange(inputEditText.text.toString()) })
     }
 }

@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -61,6 +62,16 @@ class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGam
                     interactor: CreateGameInteractor): CreateGameRouter {
                 return CreateGameRouter(view, interactor, component)
             }
+
+            @CreateGameScope
+            @Provides
+            @JvmStatic
+            internal fun createGameViewModelProvider(
+                    stringRepository: StringRepository
+            ): CreateGameViewModelProvider {
+                return CreateGameViewModelProvider(stringRepository)
+            }
+
         }
 
     }
