@@ -1,12 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
-import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
 import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
 import org.jetbrains.anko.*
 
@@ -26,7 +26,7 @@ class SubheaderView(context: Context) : _FrameLayout(context) {
                 maxLines = 1
                 gravity = Gravity.START
                 setTextSizeFromRes(R.dimen.sp_14)
-                typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+                setSanserifMediumTypeface()
                 singleLine = true
             }.lparams {
                 bottomMargin = getIntDimen(R.dimen.dp_8)

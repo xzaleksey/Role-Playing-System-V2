@@ -28,4 +28,6 @@
     <item name="primary_line" type="id" />
     <item name="secondary_line" type="id" />
     <item name="step_text" type="id" />
+    <item name="input_et" type="id" />
+    <item name="input_text_layout" type="id" />
 </resources>
