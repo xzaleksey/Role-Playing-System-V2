@@ -5,7 +5,12 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.Interactor
+import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.Router
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import javax.inject.Inject
@@ -44,7 +49,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                 .subscribeWithErrorLogging { event ->
                     when (event) {
                         is MainRibListener.MainRibEvent.CreateGame -> {
-                            router.attachCreateGame()
+                            router.attachCreateGame(event.game)
                         }
                     }
                 }.addToDisposables()
