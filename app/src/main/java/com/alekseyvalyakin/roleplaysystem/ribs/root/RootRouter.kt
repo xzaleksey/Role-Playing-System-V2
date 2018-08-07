@@ -40,7 +40,9 @@ class RootRouter(
     }
 
     fun attachMain() {
-        router.pushRetainedState(RootState.MAIN, mainAttachTransition, mainDetachTransition)
+        if (router.peekState() == null) {
+            router.pushRetainedState(RootState.MAIN, mainAttachTransition, mainDetachTransition)
+        }
     }
 
     fun attachCreateGame(game: Game) {
