@@ -545,6 +545,11 @@ public class RxFirestore {
         });
     }
 
+    @NonNull
+    public static <T> Single<T> getDocumentSingle(@NonNull final DocumentReference ref, Class<T> clazz) {
+        return getDocumentSingle(ref).map(DocumentSnapshotMapper.of(clazz));
+    }
+
     /**
      * Reads the collection referenced by this DocumentReference
      *

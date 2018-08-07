@@ -1,8 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.user
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
+import com.alekseyvalyakin.roleplaysystem.utils.setId
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -13,17 +15,7 @@ class UserRepositoryImpl : UserRepository {
     override fun getCurrentUserSingle(): Single<User> {
         return getCurrentUserId().flatMap { userId ->
             val documentReference = getUsersCollection().document(userId)
-            RxFirestore.getDocument(documentReference, User::class.java)
-                    .map {
-                        it.id = userId
-                        return@map it
-                    }.toSingle(User.EMPTY_USER)
-                    .map {
-                        if (it == User.EMPTY_USER) {
-                            throw RuntimeException("No user found")
-                        }
-                        return@map it
-                    }
+            getUser(documentReference, userId)
         }
     }
 
@@ -34,10 +26,13 @@ class UserRepositoryImpl : UserRepository {
 
     override fun getUser(id: String): Maybe<User> {
         val documentReference = getUsersCollection().document(id)
-        return RxFirestore.getDocument(documentReference, User::class.java).map {
-            it.id = id
-            return@map it
-        }
+        return RxFirestore.getDocument(documentReference, User::class.java)
+                .setId(id)
+    }
+
+    private fun getUser(documentReference: DocumentReference, userId: String): Single<User> {
+        return RxFirestore.getDocumentSingle(documentReference, User::class.java)
+                .setId(userId)
     }
 
     override fun observeCurrentUser(): Flowable<User> {
@@ -46,11 +41,9 @@ class UserRepositoryImpl : UserRepository {
 
         val uid = currentUser.uid
         val documentReference = getUsersCollection().document(uid)
+
         return RxFirestore.observeDocumentRef(documentReference, User::class.java)
-                .map {
-                    it.id = uid
-                    return@map it
-                }
+                .setId(uid)
     }
 
     override fun getCurrentUser(): FirebaseUser? {

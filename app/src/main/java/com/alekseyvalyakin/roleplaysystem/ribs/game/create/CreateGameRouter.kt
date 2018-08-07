@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.ribs.game.model.GameProvider
 import com.uber.rib.core.RestorableRouter
 import com.uber.rib.core.ViewRouter
 import java.io.Serializable
@@ -13,11 +13,11 @@ class CreateGameRouter(
         view: CreateGameView,
         interactor: CreateGameInteractor,
         component: CreateGameBuilder.Component,
-        val game: Game
+        private val gameProvider: GameProvider
 ) : ViewRouter<CreateGameView, CreateGameInteractor, CreateGameBuilder.Component>(view, interactor, component), RestorableRouter {
 
     override fun getRestorableInfo(): Serializable? {
-        return game
+        return gameProvider.getGame()
     }
 
 }

@@ -3,8 +3,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.model.GameProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.model.GameProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
@@ -62,8 +65,18 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
                     component: Component,
                     view: CreateGameView,
                     interactor: CreateGameInteractor,
-                    game: Game): CreateGameRouter {
-                return CreateGameRouter(view, interactor, component, game)
+                    gameProvider: GameProvider): CreateGameRouter {
+                return CreateGameRouter(view, interactor, component, gameProvider)
+            }
+
+            @CreateGameScope
+            @Provides
+            @JvmStatic
+            internal fun createGameProvider(
+                    game: Game,
+                    gameRepository: GameRepository
+            ): GameProvider {
+                return GameProviderImpl(gameRepository, game)
             }
 
             @CreateGameScope
