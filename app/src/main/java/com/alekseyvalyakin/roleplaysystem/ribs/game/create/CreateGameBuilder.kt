@@ -2,10 +2,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
-import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -16,7 +17,7 @@ import javax.inject.Scope
  * Builder for the {@link CreateGameScope}.
  *
  */
-class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGameView, CreateGameRouter, CreateGameBuilder.ParentComponent>(dependency) {
+class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameView, CreateGameRouter, CreateGameBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [CreateGameRouter].
@@ -24,13 +25,14 @@ class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGam
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [CreateGameRouter].
      */
-    override fun build(parentViewGroup: ViewGroup): CreateGameRouter {
+    fun build(parentViewGroup: ViewGroup, game: Game): CreateGameRouter {
         val view = createView(parentViewGroup)
         val interactor = CreateGameInteractor()
         val component = DaggerCreateGameBuilder_Component.builder()
                 .parentComponent(dependency)
                 .view(view)
                 .interactor(interactor)
+                .game(game)
                 .build()
         return component.creategameRouter()
     }
@@ -59,8 +61,9 @@ class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGam
             internal fun router(
                     component: Component,
                     view: CreateGameView,
-                    interactor: CreateGameInteractor): CreateGameRouter {
-                return CreateGameRouter(view, interactor, component)
+                    interactor: CreateGameInteractor,
+                    game: Game): CreateGameRouter {
+                return CreateGameRouter(view, interactor, component, game)
             }
 
             @CreateGameScope
@@ -71,9 +74,7 @@ class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGam
             ): CreateGameViewModelProvider {
                 return CreateGameViewModelProvider(stringRepository)
             }
-
         }
-
     }
 
     @CreateGameScope
@@ -89,6 +90,9 @@ class CreateGameBuilder(dependency: ParentComponent) : BaseViewBuilder<CreateGam
             fun view(view: CreateGameView): Builder
 
             fun parentComponent(component: ParentComponent): Builder
+
+            @BindsInstance
+            fun game(game: Game): Builder
 
             fun build(): Component
         }

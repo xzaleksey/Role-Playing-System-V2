@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
+import java.io.Serializable
 import java.util.*
 
 data class Game(
@@ -14,19 +15,16 @@ data class Game(
         var password: String = EMPTY_STRING,
         @ServerTimestamp var dateCreate: Date? = null,
         var status: Int = GameStatus.DRAFT.value
-) : HasId {
+) : HasId, Serializable {
 
     @Exclude
     @set:Exclude
     @get:Exclude
     override lateinit var id: String
 
-    @Exclude
-    @set:Exclude
-    @get:Exclude
-    lateinit var tempDateCreate: String
-
     companion object {
+        const val serialVersionUID = 1L
+
         val EMPTY_GAME = Game()
     }
 }

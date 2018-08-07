@@ -3,6 +3,7 @@ package com.uber.rib.core
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
+import java.io.Serializable
 
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
 abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> : Interactor<P, R>() {
@@ -15,18 +16,25 @@ abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out Interactor
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        savedInstanceState?.getSerializable<ArrayList<Class<Router<out Interactor<*, *>, out InteractorBaseComponent<*>>>>>(childrenKey)?.forEach {
-            restoreRouter(it)
-        }
-        Timber.d("router children size " + router.children.size)
+        savedInstanceState?.getSerializable<ArrayList<Pair<Class<Router<out Interactor<*, *>, out InteractorBaseComponent<*>>>, Serializable?>>>(childrenKey)
+                ?.forEach { pair ->
+                    restoreRouter(pair.first, pair.second)
+                }
+        Timber.d("router children size %s", router.children.size)
     }
 
-    open fun <T> restoreRouter(clazz: Class<T>) where T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>> {
+    open fun <T> restoreRouter(clazz: Class<T>, childInfo: Serializable?) where T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>> {
 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(childrenKey, ArrayList(router.children.map { r -> r.javaClass }))
+        val pairs = router.children.map { r ->
+            if (r is RestorableRouter) {
+                return@map r.javaClass to r.getRestorableInfo()
+            }
+            return@map r.javaClass to null
+        }
+        outState.putSerializable(childrenKey, ArrayList(pairs))
     }
 
     override fun willResignActive() {

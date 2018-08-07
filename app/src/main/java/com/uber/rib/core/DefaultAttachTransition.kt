@@ -3,9 +3,11 @@ package com.uber.rib.core
 import android.view.ViewGroup
 
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
-abstract class DefaultAttachTransition<R : ViewRouter<*, out Interactor<*, *>, out InteractorBaseComponent<*>>, S : RouterNavigatorState>(
-        private val builder: BaseViewBuilder<*, R, *>,
-        private val view: ViewGroup
+abstract class DefaultAttachTransition<R : ViewRouter<*, out Interactor<*, *>,
+        out InteractorBaseComponent<*>>, S : RouterNavigatorState, out B : BaseViewBuilder<*, R, *>>
+(
+        protected val builder: B,
+        protected val view: ViewGroup
 ) : RouterNavigator.AttachTransition<R, S> {
     override fun buildRouter(): R {
         return builder.build(view)

@@ -6,6 +6,6 @@ interface MainRibListener {
     fun onMainRibEvent(mainRibEvent: MainRibEvent)
 
     sealed class MainRibEvent {
-        class CreateGame(game: Game) : MainRibEvent()
+        class CreateGame(val game: Game) : MainRibEvent()
     }
 }
