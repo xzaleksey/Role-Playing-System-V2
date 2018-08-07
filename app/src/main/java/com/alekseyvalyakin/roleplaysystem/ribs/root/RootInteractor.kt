@@ -1,8 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
-import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
@@ -13,6 +14,8 @@ import com.uber.rib.core.RibInteractor
 import com.uber.rib.core.Router
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import timber.log.Timber
+import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -34,6 +37,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+
         authProvider.observeLoggedInState()
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging { loggedIn ->
@@ -64,9 +68,10 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
         return router.onBackPressed()
     }
 
-    override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>) {
-        if (clazz == AuthRouter::class.java) {
-            router.attachAuth()
+    override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>, childInfo: Serializable?) {
+        if (clazz == CreateGameRouter::class.java) {
+            Timber.d("Restored create game Router")
+            router.attachCreateGame(childInfo as Game)
         }
     }
 

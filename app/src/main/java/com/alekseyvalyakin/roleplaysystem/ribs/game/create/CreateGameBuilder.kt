@@ -32,6 +32,7 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
                 .parentComponent(dependency)
                 .view(view)
                 .interactor(interactor)
+                .game(game)
                 .build()
         return component.creategameRouter()
     }
@@ -60,8 +61,9 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
             internal fun router(
                     component: Component,
                     view: CreateGameView,
-                    interactor: CreateGameInteractor): CreateGameRouter {
-                return CreateGameRouter(view, interactor, component)
+                    interactor: CreateGameInteractor,
+                    game: Game): CreateGameRouter {
+                return CreateGameRouter(view, interactor, component, game)
             }
 
             @CreateGameScope
@@ -72,9 +74,7 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
             ): CreateGameViewModelProvider {
                 return CreateGameViewModelProvider(stringRepository)
             }
-
         }
-
     }
 
     @CreateGameScope
@@ -90,6 +90,9 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
             fun view(view: CreateGameView): Builder
 
             fun parentComponent(component: ParentComponent): Builder
+
+            @BindsInstance
+            fun game(game: Game): Builder
 
             fun build(): Component
         }

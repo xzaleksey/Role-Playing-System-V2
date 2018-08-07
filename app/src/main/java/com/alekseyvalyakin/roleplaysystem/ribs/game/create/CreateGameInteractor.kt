@@ -5,6 +5,8 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.getSerializable
+import com.uber.rib.core.putSerializable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -62,16 +64,13 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     }
 
     private fun initModel(savedInstanceState: Bundle?) {
-        model = if (savedInstanceState == null) {
-            viewModelProvider.getCreateGameViewModel(CreateGameStep.TITLE)
-        } else {
-            savedInstanceState.getParcelable(CreateGameViewModel.KEY) as CreateGameViewModel
-        }
+        model = savedInstanceState?.getSerializable(CreateGameViewModel.KEY)
+                ?: viewModelProvider.getCreateGameViewModel(CreateGameStep.TITLE)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(CreateGameViewModel.KEY, model)
+        outState.putSerializable(CreateGameViewModel.KEY, model)
     }
 
     override fun willResignActive() {
