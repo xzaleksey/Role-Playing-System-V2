@@ -10,6 +10,7 @@ class GameProviderImpl(
         private val gameRepository: GameRepository,
         defaultGame: Game
 ) : GameProvider {
+
     private val relay = BehaviorRelay.createDefault<Game>(defaultGame)
     private val observable = gameRepository.observeGame(relay.value.id).share()
 

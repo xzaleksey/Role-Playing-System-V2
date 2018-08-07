@@ -1,12 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
+import com.alekseyvalyakin.roleplaysystem.ribs.game.model.GameProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.BaseInteractor
-import com.uber.rib.core.Bundle
-import com.uber.rib.core.RibInteractor
-import com.uber.rib.core.getSerializable
-import com.uber.rib.core.putSerializable
+import com.uber.rib.core.*
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -25,6 +22,8 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     lateinit var viewModelProvider: CreateGameViewModelProvider
     @Inject
     lateinit var activityListener: ActivityListener
+    @Inject
+    lateinit var gameProvider: GameProvider
 
     private lateinit var model: CreateGameViewModel
 
@@ -35,6 +34,9 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
                 .addToDisposables()
         presenter.observeUiEvents()
                 .subscribeWithErrorLogging(this::handleEvent)
+                .addToDisposables()
+        gameProvider.observeGame()
+                .subscribeWithErrorLogging { }
                 .addToDisposables()
         presenter.updateView(model)
     }
@@ -58,14 +60,14 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         if (previousStep == CreateGameStep.NONE) {
             return false
         }
-        model = viewModelProvider.getCreateGameViewModel(previousStep)
+        model = viewModelProvider.getCreateGameViewModel(previousStep, gameProvider.getGame())
         presenter.updateView(model)
         return true
     }
 
     private fun initModel(savedInstanceState: Bundle?) {
         model = savedInstanceState?.getSerializable(CreateGameViewModel.KEY)
-                ?: viewModelProvider.getCreateGameViewModel(CreateGameStep.TITLE)
+                ?: viewModelProvider.getCreateGameViewModel(CreateGameStep.TITLE, gameProvider.getGame())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -10,6 +10,7 @@ import io.reactivex.Single
 
 class GameRepositoryImpl(
         private val userRepository: UserRepository) : GameRepository {
+
     override fun observeGame(id: String): Flowable<Game> {
         return RxFirestore.observeDocumentRef(gamesCollection().document(id), Game::class.java)
                 .setId(id)
