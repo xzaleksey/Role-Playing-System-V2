@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
+import android.text.InputType
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
@@ -22,7 +23,8 @@ class CreateGameViewModelProvider constructor(
                         1,
                         stringRepository.name(),
                         stringRepository.createGameNameExample(),
-                        true
+                        true,
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
                 )
             }
             CreateGameStep.DESCRIPTION -> {
@@ -34,7 +36,8 @@ class CreateGameViewModelProvider constructor(
                         Int.MAX_VALUE,
                         stringRepository.description(),
                         stringRepository.createGameDescriptionExample(),
-                        true
+                        true,
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 )
             }
             CreateGameStep.PASSWORD -> {
@@ -45,14 +48,15 @@ class CreateGameViewModelProvider constructor(
                 }
 
                 return CreateGameViewModel(
-                        stringRepository.createGameDescriptionTitle(),
+                        stringRepository.createGamePasswordTitle(),
                         stringRepository.createGameStepText(CreateGameStep.PASSWORD.value, maxSteps),
                         CreateGameStep.PASSWORD,
                         inputText,
                         Int.MAX_VALUE,
-                        stringRepository.description(),
+                        stringRepository.getInputPassword(),
                         StringUtils.EMPTY_STRING,
-                        false
+                        false,
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                 )
             }
             else -> throw UnsupportedOperationException("Unsupported step")

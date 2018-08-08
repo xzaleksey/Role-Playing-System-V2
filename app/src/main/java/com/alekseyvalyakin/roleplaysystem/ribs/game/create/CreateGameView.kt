@@ -2,46 +2,19 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
-import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
-import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
-import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
-import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
-import com.alekseyvalyakin.roleplaysystem.utils.showSoftKeyboard
-import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.alekseyvalyakin.roleplaysystem.utils.tintImage
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko._FrameLayout
-import org.jetbrains.anko.above
-import org.jetbrains.anko.alignParentBottom
-import org.jetbrains.anko.alignParentEnd
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.below
+import org.jetbrains.anko.*
 import org.jetbrains.anko.design.themedFloatingActionButton
-import org.jetbrains.anko.hintTextColor
-import org.jetbrains.anko.imageButton
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.relativeLayout
-import org.jetbrains.anko.textColorResource
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.themedEditText
-import org.jetbrains.anko.themedTextView
-import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link CreateGameBuilder.CreateGameScope}.
@@ -56,7 +29,6 @@ class CreateGameView constructor(
     private lateinit var exampleText: TextView
     private lateinit var backButton: ImageButton
     private lateinit var fab: FloatingActionButton
-    private val modelRelay = BehaviorRelay.create<CreateGameViewModel>()
     private val textChangeObservable: Observable<String>
 
     init {
@@ -144,18 +116,17 @@ class CreateGameView constructor(
         inputEditText.setSelection(inputEditText.length())
         if (inputEditText.maxLines == 1) {
             inputEditText.imeOptions = EditorInfo.IME_ACTION_DONE
-            inputEditText.inputType = InputType.TYPE_CLASS_TEXT
         } else {
             inputEditText.imeOptions = EditorInfo.IME_ACTION_UNSPECIFIED
-            inputEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         }
+        inputEditText.inputType = createGameViewModel.inputType
         exampleText.text = createGameViewModel.inputExample
-        modelRelay.accept(createGameViewModel)
+        inputEditText.setSelection(inputEditText.length())
     }
 
-    override fun updateFabShowDisposable(): Disposable {
+    override fun updateFabShowDisposable(viewModelObservable: Observable<CreateGameViewModel>): Disposable {
         return Observable.combineLatest(textChangeObservable,
-                modelRelay, BiFunction { text: CharSequence, createGameViewModel: CreateGameViewModel ->
+                viewModelObservable, BiFunction { text: CharSequence, createGameViewModel: CreateGameViewModel ->
             if (createGameViewModel.required && text.isBlank()) {
                 fab.hide()
             } else {

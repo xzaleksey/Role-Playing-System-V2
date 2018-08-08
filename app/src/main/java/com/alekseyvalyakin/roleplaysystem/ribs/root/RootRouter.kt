@@ -57,8 +57,16 @@ class RootRouter(
         if (currentRouter != null && currentRouter.handleBackPress()) {
             return true
         }
+
         router.popState()
         return router.peekState() != null
+    }
+
+    fun detachCreateGame(game: Game) {
+        val peekState = router.peekState()
+        if (peekState == RootState.CREATE_GAME) {
+            router.popState()
+        }
     }
 
 }

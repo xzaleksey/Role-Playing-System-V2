@@ -14,18 +14,22 @@ data class Game(
         var description: String = EMPTY_STRING,
         var password: String = EMPTY_STRING,
         @ServerTimestamp var dateCreate: Date? = null,
-        var status: Int = GameStatus.DRAFT.value
+        var status: Int = GameStatus.DRAFT.value,
+
+        @Exclude
+        @set:Exclude
+        @get:Exclude
+        @Volatile
+        override var id: String = ""
 ) : HasId, Serializable {
 
-    @Exclude
-    @set:Exclude
-    @get:Exclude
-    override lateinit var id: String
 
     companion object {
         const val serialVersionUID = 1L
 
         const val FIELD_NAME = "name"
+        const val FIELD_DESCRIPTION = "description"
+        const val FIELD_PASSWORD = "password"
 
         val EMPTY_GAME = Game()
     }

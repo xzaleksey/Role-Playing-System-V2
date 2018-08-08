@@ -46,7 +46,7 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
     }
 
     interface ParentComponent : RibDependencyProvider {
-
+        fun createGameListener(): CreateGameListener
     }
 
     @dagger.Module
@@ -75,9 +75,10 @@ class CreateGameBuilder(dependency: ParentComponent) : ViewBuilder<CreateGameVie
             @JvmStatic
             internal fun createGameProvider(
                     game: Game,
-                    gameRepository: GameRepository
+                    gameRepository: GameRepository,
+                    simpleCryptoProvider: SimpleCryptoProvider
             ): CreateGameProvider {
-                return CreateGameProviderImpl(gameRepository, game)
+                return CreateGameProviderImpl(gameRepository, game, simpleCryptoProvider)
             }
 
             @CreateGameScope

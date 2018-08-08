@@ -116,5 +116,6 @@
     <string name="steps_format">Step %d of %d</string>
     <string name="create_game_name_example">Example: Dragon\'s beach</string>
     <string name="create_game_description_title">Think up game description</string>
-    <string name="create_game_description_example">It is nice wolrd with unicorns…</string>
+    <string name="create_game_description_example">Example: it is nice world with unicorns…</string>
+    <string name="create_game_description_password">Think up a password</string>
 </resources>

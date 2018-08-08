@@ -3,6 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun createGamePasswordTitle(): String {
+        return resourcesProvider.getString(R.string.create_game_description_password)
+    }
+
     override fun createGameDescriptionExample(): String {
         return resourcesProvider.getString(R.string.create_game_description_example)
     }
@@ -108,4 +112,5 @@ interface StringRepository {
     fun description(): String
     fun createGameDescriptionTitle(): String
     fun createGameDescriptionExample(): String
+    fun createGamePasswordTitle(): String
 }

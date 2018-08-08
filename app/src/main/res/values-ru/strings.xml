@@ -112,6 +112,7 @@
     <string name="steps_format">Шаг %d из %d</string>
     <string name="create_game_name_example">Пример: Побережье дракона</string>
     <string name="create_game_description_title">Придумайте описание игры</string>
-    <string name="create_game_description_example">Это приятный мир с единорогами…</string>
+    <string name="create_game_description_example">Пример: это приятный мир с единорогами…</string>
+    <string name="create_game_description_password">Придумайте пароль</string>
 
 </resources>

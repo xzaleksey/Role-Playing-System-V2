@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.jakewharton.rxrelay2.PublishRelay
@@ -85,6 +86,31 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             @Provides
             @JvmStatic
             fun mainRibEventObservable(relay: PublishRelay<MainRibListener.MainRibEvent>): Observable<MainRibListener.MainRibEvent> {
+                return relay
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun createGameRibListener(relay: PublishRelay<CreateGameListener.CreateGameEvent>): CreateGameListener {
+                return object : CreateGameListener {
+                    override fun onCreateGameEvent(createGameEvent: CreateGameListener.CreateGameEvent) {
+                        relay.accept(createGameEvent)
+                    }
+                }
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun createGameRibRelay(): PublishRelay<CreateGameListener.CreateGameEvent> {
+                return PublishRelay.create<CreateGameListener.CreateGameEvent>()
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun createGameRibEventObservable(relay: PublishRelay<CreateGameListener.CreateGameEvent>): Observable<CreateGameListener.CreateGameEvent> {
                 return relay
             }
 
