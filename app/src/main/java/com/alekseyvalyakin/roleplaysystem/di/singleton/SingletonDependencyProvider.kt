@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
+import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
@@ -33,4 +34,6 @@ interface SingletonDependencyProvider {
     fun routerNavigatorFactory(): RouterNavigatorFactory
 
     fun resourceProvider(): ResourcesProvider
+
+    fun sinmpleCryptoRovider(): SimpleCryptoProvider
 }

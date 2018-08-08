@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
-import com.alekseyvalyakin.roleplaysystem.ribs.game.model.GameProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.model.CreateGameProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
@@ -27,7 +27,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     @Inject
     lateinit var activityListener: ActivityListener
     @Inject
-    lateinit var gameProvider: GameProvider
+    lateinit var createGameProvider: CreateGameProvider
 
     private lateinit var model: CreateGameViewModel
 
@@ -37,26 +37,35 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         presenter.updateFabShowDisposable()
                 .addToDisposables()
         presenter.observeUiEvents()
-                .subscribeWithErrorLogging(this::handleEvent)
+                .concatMap(this::handleEvent)
+                .subscribeWithErrorLogging {}
                 .addToDisposables()
-        gameProvider.observeGame()
+        createGameProvider.observeGame()
                 .subscribeWithErrorLogging { }
                 .addToDisposables()
         presenter.updateView(model)
     }
 
-    private fun handleEvent(event: CreateGameUiEvent) {
+    private fun handleEvent(event: CreateGameUiEvent): Observable<*> {
         when (event) {
             is CreateGameUiEvent.InputChange -> {
                 model = model.copy(inputText = event.text)
             }
             is CreateGameUiEvent.ClickNext -> {
-                Timber.d("Click next")
+                val nextStep = model.step.getNextStep()
+                if (nextStep == CreateGameStep.NONE) {
+                    Timber.d("Final step")
+                } else {
+                    model = viewModelProvider.getCreateGameViewModel(nextStep, createGameProvider.getGame())
+                    presenter.updateView(model)
+                    return createGameProvider.onChangeInfo(model.step, event.text).toObservable<Any>()
+                }
             }
             is CreateGameUiEvent.BackPress -> {
                 activityListener.backPress()
             }
         }
+        return Observable.just(event)
     }
 
     override fun handleBackPress(): Boolean {
@@ -64,14 +73,14 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         if (previousStep == CreateGameStep.NONE) {
             return false
         }
-        model = viewModelProvider.getCreateGameViewModel(previousStep, gameProvider.getGame())
+        model = viewModelProvider.getCreateGameViewModel(previousStep, createGameProvider.getGame())
         presenter.updateView(model)
         return true
     }
 
     private fun initModel(savedInstanceState: Bundle?) {
         model = savedInstanceState?.getSerializable(CreateGameViewModel.KEY)
-                ?: viewModelProvider.getCreateGameViewModel(gameProvider.getGame())
+                ?: viewModelProvider.getCreateGameViewModel(createGameProvider.getGame())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

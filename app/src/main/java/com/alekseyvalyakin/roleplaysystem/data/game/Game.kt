@@ -25,6 +25,8 @@ data class Game(
     companion object {
         const val serialVersionUID = 1L
 
+        const val FIELD_NAME = "name"
+
         val EMPTY_GAME = Game()
     }
 }
