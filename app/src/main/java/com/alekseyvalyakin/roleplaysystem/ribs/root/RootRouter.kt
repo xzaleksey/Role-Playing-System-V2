@@ -40,7 +40,8 @@ class RootRouter(
     }
 
     fun attachMain() {
-        if (router.peekState() == null) {
+        val peekState = router.peekState()
+        if (peekState == null || peekState == RootState.AUTH) {
             router.pushRetainedState(RootState.MAIN, mainAttachTransition, mainDetachTransition)
         }
     }
