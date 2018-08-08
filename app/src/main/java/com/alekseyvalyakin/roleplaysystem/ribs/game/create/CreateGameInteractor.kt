@@ -3,7 +3,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.model.GameProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.getSerializable
+import com.uber.rib.core.putSerializable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -67,7 +71,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
 
     private fun initModel(savedInstanceState: Bundle?) {
         model = savedInstanceState?.getSerializable(CreateGameViewModel.KEY)
-                ?: viewModelProvider.getCreateGameViewModel(CreateGameStep.TITLE, gameProvider.getGame())
+                ?: viewModelProvider.getCreateGameViewModel(gameProvider.getGame())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

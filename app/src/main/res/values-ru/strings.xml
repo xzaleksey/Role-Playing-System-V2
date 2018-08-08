@@ -89,10 +89,13 @@
     <string name="dices">Кубы</string>
     <string name="menu">Меню</string>
     <string name="create_your_character">Создайте своего персонажа!</string>
-    <string name="press_add_character">Нажмите на кнопку "Добавить" или выберите из списка свободных персонажей ниже</string>
+    <string name="press_add_character">Нажмите на кнопку "Добавить" или выберите из списка свободных персонажей ниже
+    </string>
     <string name="throw_dice">Бросить</string>
     <string name="save_dices_title">Сохраняйте наборы кубов</string>
-    <string name="save_dices_secondary">Нажмите на кнопку "сохранить набор", чтобы сохранить наиболее часто используемые комбинации кубов</string>
+    <string name="save_dices_secondary">Нажмите на кнопку "сохранить набор", чтобы сохранить наиболее часто используемые
+        комбинации кубов
+    </string>
     <string name="save_set">Сохранить набор</string>
     <string name="new_throw">Новый бросок</string>
     <string name="saved_collections">Сохраненные наборы</string>
@@ -108,5 +111,7 @@
     <string name="create_game_name_title">Придумайте название для своей игры</string>
     <string name="steps_format">Шаг %d из %d</string>
     <string name="create_game_name_example">Пример: Побережье дракона</string>
+    <string name="create_game_description_title">Придумайте описание игры</string>
+    <string name="create_game_description_example">Это приятный мир с единорогами…</string>
 
 </resources>

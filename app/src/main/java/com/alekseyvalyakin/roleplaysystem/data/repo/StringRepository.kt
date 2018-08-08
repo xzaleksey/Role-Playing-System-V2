@@ -3,26 +3,87 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
-    override fun getCharacters(): String = resourcesProvider.getString(R.string.characters)
-    override fun getGames(): String = resourcesProvider.getString(R.string.games)
-    override fun getErrorNetwork(): String = resourcesProvider.getString(R.string.error_network_connection)
-    override fun getProfile(): String = resourcesProvider.getString(R.string.profile)
-    override fun getInputPassword(): String = resourcesProvider.getString(R.string.input_password)
-    override fun getErrorIncorrectPassword(): String = resourcesProvider.getString(R.string.error_incorrect_password)
-    override fun getCreateGame(): String = resourcesProvider.getString(R.string.create_game)
-    override fun getMaster(): String = resourcesProvider.getString(R.string.master)
-    override fun getMyLastGames(): String = resourcesProvider.getString(R.string.my_last_games)
-    override fun getAllGames(): String = resourcesProvider.getString(R.string.all_games)
-    override fun getMyProfile(): String = resourcesProvider.getString(R.string.my_profile)
-    override fun getMax(): String = resourcesProvider.getString(R.string.max)
-    override fun getDetails(): String = resourcesProvider.getString(R.string.details)
-    override fun getError(): String = resourcesProvider.getString(R.string.error)
-    override fun createGameNameTitle(): String = resourcesProvider.getString(R.string.create_game_name_title)
-    override fun createGameStepText(currentStep: Int, maxSteps: Int): String =
-            resourcesProvider.getString(R.string.steps_format, currentStep, maxSteps)
+    override fun createGameDescriptionExample(): String {
+        return resourcesProvider.getString(R.string.create_game_description_example)
+    }
 
-    override fun name(): String = resourcesProvider.getString(R.string.name)
-    override fun createGameNameExample(): String = resourcesProvider.getString(R.string.create_game_name_example)
+    override fun createGameDescriptionTitle(): String {
+        return resourcesProvider.getString(R.string.create_game_description_title)
+    }
+
+    override fun description(): String {
+        return resourcesProvider.getString(R.string.description)
+    }
+
+    override fun getCharacters(): String {
+        return resourcesProvider.getString(R.string.characters)
+    }
+
+    override fun getGames(): String {
+        return resourcesProvider.getString(R.string.games)
+    }
+
+    override fun getErrorNetwork(): String {
+        return resourcesProvider.getString(R.string.error_network_connection)
+    }
+
+    override fun getProfile(): String {
+        return resourcesProvider.getString(R.string.profile)
+    }
+
+    override fun getInputPassword(): String {
+        return resourcesProvider.getString(R.string.input_password)
+    }
+
+    override fun getErrorIncorrectPassword(): String {
+        return resourcesProvider.getString(R.string.error_incorrect_password)
+    }
+
+    override fun getCreateGame(): String {
+        return resourcesProvider.getString(R.string.create_game)
+    }
+
+    override fun getMaster(): String {
+        return resourcesProvider.getString(R.string.master)
+    }
+
+    override fun getMyLastGames(): String = resourcesProvider.getString(R.string.my_last_games)
+
+    override fun getAllGames(): String {
+        return resourcesProvider.getString(R.string.all_games)
+    }
+
+    override fun getMyProfile(): String {
+        return resourcesProvider.getString(R.string.my_profile)
+    }
+
+    override fun getMax(): String {
+        return resourcesProvider.getString(R.string.max)
+    }
+
+    override fun getDetails(): String {
+        return resourcesProvider.getString(R.string.details)
+    }
+
+    override fun getError(): String {
+        return resourcesProvider.getString(R.string.error)
+    }
+
+    override fun createGameNameTitle(): String {
+        return resourcesProvider.getString(R.string.create_game_name_title)
+    }
+
+    override fun createGameStepText(currentStep: Int, maxSteps: Int): String {
+        return resourcesProvider.getString(R.string.steps_format, currentStep, maxSteps)
+    }
+
+    override fun name(): String {
+        return resourcesProvider.getString(R.string.name)
+    }
+
+    override fun createGameNameExample(): String {
+        return resourcesProvider.getString(R.string.create_game_name_example)
+    }
 }
 
 interface StringRepository {
@@ -44,4 +105,7 @@ interface StringRepository {
     fun createGameStepText(currentStep: Int, maxSteps: Int): String
     fun name(): String
     fun createGameNameExample(): String
+    fun description(): String
+    fun createGameDescriptionTitle(): String
+    fun createGameDescriptionExample(): String
 }
