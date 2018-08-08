@@ -8,15 +8,40 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
+import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
+import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
+import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
+import com.alekseyvalyakin.roleplaysystem.utils.showSoftKeyboard
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.alekseyvalyakin.roleplaysystem.utils.tintImage
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko._FrameLayout
+import org.jetbrains.anko.above
+import org.jetbrains.anko.alignParentBottom
+import org.jetbrains.anko.alignParentEnd
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.below
 import org.jetbrains.anko.design.themedFloatingActionButton
+import org.jetbrains.anko.hintTextColor
+import org.jetbrains.anko.imageButton
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.relativeLayout
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.themedEditText
+import org.jetbrains.anko.themedTextView
+import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link CreateGameBuilder.CreateGameScope}.
@@ -114,6 +139,7 @@ class CreateGameView constructor(
         stepTextView.text = createGameViewModel.stepText
         titleTextView.text = createGameViewModel.title
         inputEditText.hint = createGameViewModel.inputHint
+        inputEditText.setText(createGameViewModel.inputText)
         inputEditText.maxLines = createGameViewModel.inputMaxLines
         inputEditText.setSelection(inputEditText.length())
         if (inputEditText.maxLines == 1) {
