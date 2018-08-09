@@ -24,37 +24,41 @@ class MainViewModelProviderImpl(
 ) : MainViewModelProvider {
 
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
-        return observeUser().map {
-            return@map MainViewModel(it)
-        }
-    }
-
-    private fun observeUser(): Flowable<List<IFlexible<*>>> {
-        return Flowable.combineLatest(getUserViewModelFlowable(), getAllGamesFlowable().startWith(emptyList<IFlexible<*>>()),
-                BiFunction { t1: List<IFlexible<*>>, t2: List<IFlexible<*>> ->
+        return Flowable.combineLatest(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable).startWith(emptyList<IFlexible<*>>()),
+                BiFunction { userModels: List<IFlexible<*>>, t2: List<IFlexible<*>> ->
                     val result = mutableListOf<IFlexible<*>>()
-                    result.addAll(t1)
+                    result.addAll(userModels)
                     result.addAll(t2)
-                    return@BiFunction result
+
+                    return@BiFunction MainViewModel(result)
                 })
     }
 
-    private fun getAllGamesFlowable(): Flowable<List<IFlexible<*>>> {
-        return gameRepository.observeAllActiveGames().map { games ->
-            val result = mutableListOf<IFlexible<*>>()
-
-            for (game in games) {
-                result.add(GameListViewModel(
-                        game.id,
-                        game.name,
-                        game.description,
-                        game.masterId == userRepository.getCurrentUser()?.uid,
-                        FlexibleLayoutTypes.GAME.toString(),
-                        game.password.isNotEmpty()
-                ))
-            }
-            return@map result
-        }
+    private fun getAllGamesFlowable(filterFlowable: Flowable<FilterModel>): Flowable<List<IFlexible<*>>> {
+        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllActiveGames(),
+                BiFunction { filterModel, games ->
+                    val result = mutableListOf<IFlexible<*>>()
+                    for (game in games) {
+                        if (game.isFiltered(filterModel.query)) {
+                            result.add(GameListViewModel(
+                                    game.id,
+                                    game.name,
+                                    game.description,
+                                    game.masterId == userRepository.getCurrentUser()?.uid,
+                                    FlexibleLayoutTypes.GAME.toString(),
+                                    game.password.isNotEmpty()
+                            ))
+                        }
+                        if (result.isNotEmpty()) {
+                            result.add(0,
+                                    SubHeaderViewModel(stringRepository.getAllGames(),
+                                            isDrawBottomDivider = true,
+                                            isDrawTopDivider = true))
+                        }
+                    }
+                    return@BiFunction result
+                }
+        )
     }
 
     private fun getUserViewModelFlowable(): Flowable<List<IFlexible<*>>> {

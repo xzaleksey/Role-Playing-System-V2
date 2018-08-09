@@ -4,31 +4,40 @@ import android.content.Context
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getString
+import com.alekseyvalyakin.roleplaysystem.utils.searchToolbar
+import com.alekseyvalyakin.roleplaysystem.utils.tintImage
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
-import org.jetbrains.anko.*
+import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.floatingActionButton
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.progressBar
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.wrapContent
 import java.util.concurrent.TimeUnit
 
 /**
  * Top level view for {@link MainBuilder.MainScope}.
  */
-class MainView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
+class MainView constructor(
+        context: Context
 ) : _CoordinatorLayout(context), MainInteractor.MainPresenter {
 
     private lateinit var searchToolbar: SearchToolbar
@@ -74,7 +83,7 @@ class MainView @JvmOverloads constructor(
     }
 
     override fun updateModel(model: MainViewModel) {
-        flexibleAdapter.updateDataSet(model.flexibleItems)
+        flexibleAdapter.updateDataSet(model.flexibleItems, false)
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
@@ -89,9 +98,10 @@ class MainView @JvmOverloads constructor(
     }
 
     private fun observeSearchInput(): Observable<MainInteractor.UiEvents.SearchInput> = searchToolbar.observeSearchInput()
-            .debounce(200L, TimeUnit.MILLISECONDS)
-            .throttleLast(100L, TimeUnit.MILLISECONDS)
+            .debounce(200L, TimeUnit.MILLISECONDS, Schedulers.computation())
+            .throttleLast(100L, TimeUnit.MILLISECONDS, Schedulers.computation())
             .map { MainInteractor.UiEvents.SearchInput(it.toString()) }
+            .distinctUntilChanged()
 
     override fun showFabLoading(loading: Boolean) {
         if (loading) {

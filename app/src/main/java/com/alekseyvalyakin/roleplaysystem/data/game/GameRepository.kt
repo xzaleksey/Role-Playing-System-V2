@@ -32,7 +32,7 @@ class GameRepositoryImpl(
 
     override fun observeAllActiveGames(): Flowable<List<Game>> {
         val query = gamesCollection()
-                .whereEqualTo(Game.FIELD_STATUS, GameStatus.ACTIVE)
+                .whereEqualTo(Game.FIELD_STATUS, GameStatus.ACTIVE.value)
                 .orderBy(Game.FIELD_DATE)
         return RxFirestore.observeQueryRefHasId(query, Game::class.java)
     }

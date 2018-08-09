@@ -23,6 +23,11 @@ data class Game(
         override var id: String = ""
 ) : HasId, Serializable {
 
+    fun isFiltered(text: String): Boolean {
+        return name.startsWith(text)
+                || description.startsWith(text)
+                || masterName.startsWith(text)
+    }
 
     companion object {
         const val serialVersionUID = 1L
@@ -35,4 +40,5 @@ data class Game(
 
         val EMPTY_GAME = Game()
     }
+
 }

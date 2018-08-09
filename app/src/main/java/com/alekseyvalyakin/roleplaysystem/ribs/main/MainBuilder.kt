@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
@@ -72,8 +73,9 @@ class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainR
             internal fun mainViewModelProvider(
                     userRepository: UserRepository,
                     resourceProvider: ResourcesProvider,
-                    stringRepo: StringRepository): MainViewModelProvider {
-                return MainViewModelProviderImpl(userRepository, resourceProvider, stringRepo)
+                    stringRepo: StringRepository,
+                    gameRepository: GameRepository): MainViewModelProvider {
+                return MainViewModelProviderImpl(userRepository, resourceProvider, stringRepo, gameRepository)
             }
         }
 

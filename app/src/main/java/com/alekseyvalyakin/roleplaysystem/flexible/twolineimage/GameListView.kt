@@ -21,6 +21,7 @@ import org.jetbrains.anko.dip
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.imageView
 import org.jetbrains.anko.leftOf
+import org.jetbrains.anko.leftPadding
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.rightOf
 import org.jetbrains.anko.rightPadding
@@ -29,7 +30,8 @@ import org.jetbrains.anko.textView
 import org.jetbrains.anko.topPadding
 import org.jetbrains.anko.wrapContent
 
-class GameListView(context: Context
+class GameListView(
+        context: Context
 ) : _RelativeLayout(context) {
 
     init {
@@ -38,6 +40,7 @@ class GameListView(context: Context
             setForegroundSelectableItemBackGround()
             bottomPadding = getIntDimen(R.dimen.dp_12)
             rightPadding = getIntDimen(R.dimen.dp_16)
+            leftPadding = getIntDimen(R.dimen.dp_16)
             topPadding = getIntDimen(R.dimen.dp_12)
 
             imageView {
