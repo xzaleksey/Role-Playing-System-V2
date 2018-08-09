@@ -3,11 +3,11 @@ package com.alekseyvalyakin.roleplaysystem.flexible.twolineimage
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageProvider
+import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
 import com.alekseyvalyakin.roleplaysystem.views.TwoLineImageView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
-import java.io.Serializable
 
 class FlexibleAvatarWithTwoLineTextModel(
         val primaryText: String = EMPTY_STRING,
@@ -23,6 +23,10 @@ class FlexibleAvatarWithTwoLineTextModel(
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>?, holder: FlexibleAvatarTwoLineTextViewHolder?, position: Int, payloads: List<*>?) {
         holder!!.bind(this)
+    }
+
+    override fun getLayoutRes(): Int {
+        return FlexibleLayoutTypes.TWO_LINE_WITH_IMAGE
     }
 
     override fun equals(other: Any?): Boolean {

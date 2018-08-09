@@ -30,6 +30,13 @@ class GameRepositoryImpl(
         }
     }
 
+    override fun observeAllActiveGames(): Flowable<List<Game>> {
+        val query = gamesCollection()
+                .whereEqualTo(Game.FIELD_STATUS, GameStatus.ACTIVE)
+                .orderBy(Game.FIELD_DATE)
+        return RxFirestore.observeQueryRefHasId(query, Game::class.java)
+    }
+
     override fun saveName(id: String, text: String): Completable {
         return updateField(id, text, Game.FIELD_NAME)
     }
@@ -47,7 +54,6 @@ class GameRepositoryImpl(
         return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to text))
     }
 
-
     private fun gamesCollection() = FirestoreCollection.GAMES.getDbCollection()
 }
 
@@ -61,4 +67,6 @@ interface GameRepository {
     fun saveDescription(id: String, text: String): Completable
 
     fun savePassword(id: String, text: String): Completable
+
+    fun observeAllActiveGames(): Flowable<List<Game>>
 }

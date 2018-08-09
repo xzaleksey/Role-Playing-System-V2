@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorRes
@@ -46,6 +47,11 @@ fun View.getColorStateListFromColorRes(@ColorRes res: Int): ColorStateList {
 
 fun View.getSelectableItemBackGround(): Int {
     return context.getSelectableItemBackGround()
+}
+
+@SuppressLint("NewApi")
+fun View.setForegroundSelectableItemBackGround() {
+    foreground = context.getCompatDrawable(getSelectableItemBackGround())
 }
 
 fun View.getSelectableItemBorderless(): Int {

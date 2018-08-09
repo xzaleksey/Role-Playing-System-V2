@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="tv_games_count" type="id" />
-    <item name="recycler_view" type="id" />
-    <item name="fab" type="id" />
-    <item name="auth_btn" type="id" />
-    <item name="email" type="id" />
-    <item name="email_input_layout" type="id" />
-    <item name="email_login_form" type="id" />
-    <item name="login_form" type="id" />
-    <item name="password" type="id" />
-    <item name="password_input_layout" type="id" />
-    <item name="sign_in_button" type="id" />
-    <item name="sign_up_button" type="id" />
-    <item name="forgot_password" type="id" />
-    <item name="action_icon" type="id" />
-    <item name="clear_icon" type="id" />
-    <item name="more" type="id" />
-    <item name="top_toolbar_container" type="id" />
-    <item name="tv_title" type="id" />
-    <item name="search_view" type="id" />
-    <item name="toolbar_background_image_view" type="id" />
-    <item name="text" type="id" />
-    <item name="divider" type="id" />
-    <item name="top_divider" type="id" />
-    <item name="avatar" type="id" />
-    <item name="arrow_right" type="id" />
-    <item name="primary_line" type="id" />
-    <item name="secondary_line" type="id" />
-    <item name="step_text" type="id" />
-    <item name="input_et" type="id" />
-    <item name="input_text_layout" type="id" />
-    <item name="back_btn" type="id" />
+    <item name="tv_games_count" type="id"/>
+    <item name="recycler_view" type="id"/>
+    <item name="fab" type="id"/>
+    <item name="auth_btn" type="id"/>
+    <item name="email" type="id"/>
+    <item name="email_input_layout" type="id"/>
+    <item name="email_login_form" type="id"/>
+    <item name="login_form" type="id"/>
+    <item name="password" type="id"/>
+    <item name="password_input_layout" type="id"/>
+    <item name="sign_in_button" type="id"/>
+    <item name="sign_up_button" type="id"/>
+    <item name="forgot_password" type="id"/>
+    <item name="action_icon" type="id"/>
+    <item name="clear_icon" type="id"/>
+    <item name="more" type="id"/>
+    <item name="top_toolbar_container" type="id"/>
+    <item name="tv_title" type="id"/>
+    <item name="search_view" type="id"/>
+    <item name="toolbar_background_image_view" type="id"/>
+    <item name="text" type="id"/>
+    <item name="divider" type="id"/>
+    <item name="top_divider" type="id"/>
+    <item name="avatar" type="id"/>
+    <item name="arrow_right" type="id"/>
+    <item name="primary_line" type="id"/>
+    <item name="secondary_line" type="id"/>
+    <item name="step_text" type="id"/>
+    <item name="input_et" type="id"/>
+    <item name="input_text_layout" type="id"/>
+    <item name="back_btn" type="id"/>
+    <item name="iv_right" type="id"/>
 </resources>

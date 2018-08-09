@@ -1,15 +1,19 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore
 
+import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-enum class FirestoreCollection(val directory: String) {
-    USERS("users"),
-    GAMES("games"),
-    NONE("none");
+enum class FirestoreCollection(
+        private val root: FirestoreCollection? = null,
+        val directory: String
+) {
+    USERS(directory = "users"),
+    GAMES(directory = "games"),
+    NONE(directory = "none");
 
     private fun getFullPath(): String {
-        return directory
+        return root?.getFullPath()?.plus("/") ?: StringUtils.EMPTY_STRING+directory
     }
 
     fun getDbCollection(): CollectionReference {

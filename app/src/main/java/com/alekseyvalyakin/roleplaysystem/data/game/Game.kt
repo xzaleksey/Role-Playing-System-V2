@@ -28,6 +28,8 @@ data class Game(
         const val serialVersionUID = 1L
 
         const val FIELD_NAME = "name"
+        const val FIELD_STATUS = "status"
+        const val FIELD_DATE = "dateCreate"
         const val FIELD_DESCRIPTION = "description"
         const val FIELD_PASSWORD = "password"
 
