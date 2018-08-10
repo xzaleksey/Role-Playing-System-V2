@@ -83,6 +83,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 .doOnSubscribe { presenter.showFabLoading(true) }
                 .onErrorReturn {
                     Timber.e(it)
+                    presenter.showError(it.localizedMessage)
                     Game.EMPTY_GAME
                 }
                 .doOnNext { game ->
@@ -103,7 +104,10 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         fun showSearchContextMenu()
 
         fun updateModel(model: MainViewModel)
+
         fun showFabLoading(loading: Boolean)
+
+        fun showError(message: String)
     }
 
     sealed class UiEvents {

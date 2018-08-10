@@ -26,10 +26,10 @@ class MainViewModelProviderImpl(
 
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
         return Flowable.combineLatest(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable).startWith(emptyList<IFlexible<*>>()),
-                BiFunction { userModels: List<IFlexible<*>>, t2: List<IFlexible<*>> ->
+                BiFunction { userModels: List<IFlexible<*>>, allGames: List<IFlexible<*>> ->
                     val result = mutableListOf<IFlexible<*>>()
                     result.addAll(userModels)
-                    result.addAll(t2)
+                    result.addAll(allGames)
                     result.add(ShadowDividerViewModel(result.size))
                     return@BiFunction MainViewModel(result)
                 })
@@ -50,12 +50,12 @@ class MainViewModelProviderImpl(
                                     game.password.isNotEmpty()
                             ))
                         }
-                        if (result.isNotEmpty()) {
-                            result.add(0,
-                                    SubHeaderViewModel(stringRepository.getAllGames(),
-                                            isDrawBottomDivider = true,
-                                            isDrawTopDivider = true))
-                        }
+                    }
+                    if (result.isNotEmpty()) {
+                        result.add(0,
+                                SubHeaderViewModel(stringRepository.getAllGames(),
+                                        isDrawBottomDivider = true,
+                                        isDrawTopDivider = true))
                     }
                     return@BiFunction result
                 }

@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.utils.setId
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -38,7 +39,7 @@ class GameRepositoryImpl(
     override fun observeAllActiveGames(): Flowable<List<Game>> {
         val query = gamesCollection()
                 .whereEqualTo(Game.FIELD_STATUS, GameStatus.ACTIVE.value)
-                .orderBy(Game.FIELD_DATE)
+                .orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
         return RxFirestore.observeQueryRefHasId(query, Game::class.java)
     }
 

@@ -10,6 +10,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.viewholders.FlexibleViewHolder
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
+import org.jetbrains.anko.image
 
 class FlexibleAvatarTwoLineTextViewHolder(itemView: View, mAdapter: FlexibleAdapter<*>) : FlexibleViewHolder(itemView, mAdapter) {
     private val ivAvatar: ImageView = itemView.findViewById(R.id.avatar)
@@ -25,12 +26,13 @@ class FlexibleAvatarTwoLineTextViewHolder(itemView: View, mAdapter: FlexibleAdap
         tvSecondaryLine.text = avatarWithTwoLineTextModel.secondaryText
         val imageProvider = avatarWithTwoLineTextModel.imageProvider
 
-        if (imageProvider.getId() != lastImageId) {
+        if (ivAvatar.image == null || imageProvider.getId() != lastImageId) {
             disposable.dispose()
             disposable = imageProvider.observeImage()
                     .subscribeWithErrorLogging { i ->
                         ivAvatar.setImageBitmap(i.getBitmap())
                     }
+            lastImageId = imageProvider.getId()
         }
     }
 }
