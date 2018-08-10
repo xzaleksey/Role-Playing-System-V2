@@ -47,6 +47,7 @@ class CreateGameProviderImpl(
                     relay.accept(relay.value.copy(name = text))
                 }
             }
+
             CreateGameStep.DESCRIPTION -> {
                 return gameRepository.saveDescription(relay.value.id, text).doOnComplete {
                     relay.accept(relay.value.copy(description = text))
@@ -57,7 +58,7 @@ class CreateGameProviderImpl(
                 val password = simpleCryptoProvider.getSimpleCrypto(relay.value.id).encrypt(text)
                 return gameRepository.savePassword(relay.value.id, password).doOnComplete {
                     relay.accept(relay.value.copy(password = password))
-                }
+                }.andThen(gameRepository.activateGame(relay.value.id))
             }
 
         }

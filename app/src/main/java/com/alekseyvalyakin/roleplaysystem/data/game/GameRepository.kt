@@ -54,10 +54,20 @@ class GameRepositoryImpl(
         return updateField(id, text, Game.FIELD_PASSWORD)
     }
 
+    override fun activateGame(id: String): Completable {
+        return updateField(id, GameStatus.ACTIVE.value, Game.FIELD_STATUS)
+    }
+
     private fun updateField(id: String, text: String, fieldName: String): Completable {
         val document = gamesCollection().document(id)
         return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to text))
     }
+
+    private fun updateField(id: String, value: Int, fieldName: String): Completable {
+        val document = gamesCollection().document(id)
+        return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to value))
+    }
+
 
     private fun gamesCollection() = FirestoreCollection.GAMES.getDbCollection()
 }
@@ -74,4 +84,6 @@ interface GameRepository {
     fun savePassword(id: String, text: String): Completable
 
     fun observeAllActiveGames(): Flowable<List<Game>>
+
+    fun activateGame(id: String): Completable
 }
