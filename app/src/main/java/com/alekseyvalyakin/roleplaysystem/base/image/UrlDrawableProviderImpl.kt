@@ -13,16 +13,24 @@ open class UrlDrawableProviderImpl(
         private val requestOptions: RequestOptions = RequestOptions()
 ) : DefaultImageProvider(url) {
 
-    private val observable = Observable.fromCallable {
-        val bitmap = Glide.with(resourcesProvider.getContext())
-                .asBitmap()
-                .apply(requestOptions)
-                .load(url)
-                .submit()
-                .get()
-        val bitmapImageHolderImpl: ImageHolder = BitmapImageHolderImpl(bitmap, resourcesProvider)
-
-        return@fromCallable bitmapImageHolderImpl
+    private val observable = Observable.create<ImageHolder> { emitter ->
+        try {
+            val bitmap = Glide.with(resourcesProvider.getContext())
+                    .asBitmap()
+                    .apply(requestOptions)
+                    .load(url)
+                    .submit()
+                    .get()
+            val bitmapImageHolderImpl: ImageHolder = BitmapImageHolderImpl(bitmap, resourcesProvider)
+            if (!emitter.isDisposed) {
+                emitter.onNext(bitmapImageHolderImpl)
+                emitter.onComplete()
+            }
+        } catch (e: Exception) {
+            if (!emitter.isDisposed) {
+                emitter.onError(e)
+            }
+        }
     }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
