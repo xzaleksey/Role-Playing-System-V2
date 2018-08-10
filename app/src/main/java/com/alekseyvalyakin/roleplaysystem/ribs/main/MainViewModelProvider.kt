@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.twolineimage.FlexibleAvatarWithTwoLineTextModel
@@ -29,7 +30,7 @@ class MainViewModelProviderImpl(
                     val result = mutableListOf<IFlexible<*>>()
                     result.addAll(userModels)
                     result.addAll(t2)
-
+                    result.add(ShadowDividerViewModel(result.size))
                     return@BiFunction MainViewModel(result)
                 })
     }
