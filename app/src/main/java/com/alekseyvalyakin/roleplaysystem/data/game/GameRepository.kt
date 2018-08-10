@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.data.game
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.utils.setId
 import com.google.firebase.firestore.DocumentSnapshot
 import com.rxfirebase2.RxFirestore
@@ -10,7 +11,9 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 class GameRepositoryImpl(
-        private val userRepository: UserRepository) : GameRepository {
+        private val userRepository: UserRepository,
+        private val userInGameRepository: UserInGameRepository
+) : GameRepository {
 
     override fun observeGame(id: String): Flowable<Game> {
         return RxFirestore.observeDocumentRef(gamesCollection().document(id), Game::class.java)
@@ -19,12 +22,14 @@ class GameRepositoryImpl(
 
     override fun createDraftGame(): Single<Game> {
         return userRepository.getCurrentUserSingle().flatMap { user ->
-            val game = Game(masterId = user.id, status = GameStatus.DRAFT.value, masterName = user.displayName)
-            return@flatMap RxFirestore.addDocument(gamesCollection(), game)
+            val gameToCreate = Game(masterId = user.id, status = GameStatus.DRAFT.value, masterName = user.displayName)
+            return@flatMap RxFirestore.addDocument(gamesCollection(), gameToCreate)
                     .map {
                         val createdGame = it.toObject(Game::class.java, DocumentSnapshot.ServerTimestampBehavior.ESTIMATE)
                         createdGame!!.id = it.id
                         return@map createdGame
+                    }.flatMap { createdGame ->
+                        userInGameRepository.createUserInGameInfo(createdGame.id).toSingle { createdGame }
                     }
 
         }
