@@ -27,6 +27,7 @@ class RpsApp : Application() {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         FirebaseFirestore.getInstance().firestoreSettings = FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
+                .setTimestampsInSnapshotsEnabled(true)
                 .build()
 
     }

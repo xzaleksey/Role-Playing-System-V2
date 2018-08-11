@@ -10,10 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.rxfirebase2.RxFirebaseAuth
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,12 +25,12 @@ class AuthProviderImpl @Inject constructor(
 
     override fun login(email: String, password: String): Maybe<AuthResult> {
         return RxFirebaseAuth.signInWithEmailAndPassword(FirebaseAuth.getInstance(), email, password)
-                .updateUser(User(email = email))
+                .compose(updateUser(User(email = email)))
     }
 
     override fun signUp(email: String, password: String): Maybe<AuthResult> {
         return RxFirebaseAuth.createUserWithEmailAndPassword(FirebaseAuth.getInstance(), email, password)
-                .updateUser(User(email = email))
+                .compose(updateUser(User(email = email)))
     }
 
     override fun sendResetPassword(email: String): Completable {
@@ -43,8 +40,8 @@ class AuthProviderImpl @Inject constructor(
     override fun loginWithGoogleAccount(googleSignInAccount: GoogleSignInAccount): Maybe<AuthResult> {
         val credential = GoogleAuthProvider.getCredential(googleSignInAccount.idToken, null)
         return RxFirebaseAuth.signInWithCredential(FirebaseAuth.getInstance(), credential)
-                .updateUser(User(email = googleSignInAccount.email!!,
-                        photoUrl = googleSignInAccount.photoUrl.toString()))
+                .compose(updateUser((User(email = googleSignInAccount.email!!,
+                        photoUrl = googleSignInAccount.photoUrl.toString()))))
     }
 
     override fun signOut(): Completable {
@@ -54,32 +51,42 @@ class AuthProviderImpl @Inject constructor(
     override fun observeLoggedInState(): Observable<Boolean> {
         return RxFirebaseAuth.observeAuthState(FirebaseAuth.getInstance())
                 .startWith(FirebaseAuth.getInstance())
-                .map { it.currentUser != null }
+                .switchMap { firebaseAuth ->
+                    if (firebaseAuth.currentUser == null) {
+                        return@switchMap Observable.just(false)
+                    }
+
+                    return@switchMap userRepository.observeCurrentUser().toObservable()
+                            .take(1)
+                            .map { true }
+                }
                 .distinctUntilChanged()
     }
 
-    private fun Maybe<AuthResult>.updateUser(user: User): Maybe<AuthResult> {
-        return this.concatMap { result ->
-            return@concatMap userRepository.getUser(result.user.uid)
-                    .toSingle(EMPTY_USER)
-                    .flatMap { userFromServer ->
-                        val userResult: User
-                        if (userFromServer != EMPTY_USER) {
-                            userResult = userFromServer
-                        } else {
-                            userResult = user
-                            user.displayName = usernameFromEmail(user.email)
-                        }
+    private fun updateUser(user: User): MaybeTransformer<AuthResult, AuthResult> {
+        return MaybeTransformer {
+            return@MaybeTransformer it.flatMap { result ->
+                return@flatMap userRepository.getUser(result.user.uid)
+                        .toSingle(EMPTY_USER)
+                        .flatMap { userFromServer ->
+                            val userResult: User
+                            if (userFromServer != EMPTY_USER) {
+                                userResult = userFromServer
+                            } else {
+                                userResult = user
+                                user.displayName = usernameFromEmail(user.email)
+                            }
 
-                        userResult.id = result.user.uid
+                            userResult.id = result.user.uid
 
-                        if (userResult.photoUrl.isNullOrBlank() && !user.photoUrl.isNullOrBlank()) {
-                            userResult.photoUrl = user.photoUrl
-                        }
+                            if (userResult.photoUrl.isNullOrBlank() && !user.photoUrl.isNullOrBlank()) {
+                                userResult.photoUrl = user.photoUrl
+                            }
 
-                        return@flatMap userRepository.createUser(userResult)
-                                .andThen(Single.just(result))
-                    }.toMaybe()
+                            userRepository.createUser(userResult)
+                                    .andThen(Single.just(result))
+                        }.toMaybe()
+            }
         }
     }
 
