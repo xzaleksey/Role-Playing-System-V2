@@ -70,6 +70,12 @@ class MainView constructor(
                 margin = getIntDimen(R.dimen.dp_8)
             }
         }
+
+        flexibleAdapter.mItemClickListener = FlexibleAdapter.OnItemClickListener { pos ->
+            val item = flexibleAdapter.getItem(pos)
+            relay.accept(MainInteractor.UiEvents.RecyclerItemClick(item))
+            true
+        }
     }
 
     override fun updateModel(model: MainViewModel) {
@@ -88,7 +94,7 @@ class MainView constructor(
     }
 
     private fun observeFabClick(): Observable<MainInteractor.UiEvents> {
-        return RxView.clicks(fab).map { MainInteractor.UiEvents.FabClick() }
+        return RxView.clicks(fab).map { MainInteractor.UiEvents.FabClick }
     }
 
     private fun observeSearchInput(): Observable<MainInteractor.UiEvents.SearchInput> = searchToolbar.observeSearchInput()
@@ -112,7 +118,7 @@ class MainView constructor(
         popupMenu.menu.add(0, LOGOUT, 0, getString(R.string.logout))
         popupMenu.setOnMenuItemClickListener { item ->
             when {
-                item.itemId == LOGOUT -> relay.accept(MainInteractor.UiEvents.Logout())
+                item.itemId == LOGOUT -> relay.accept(MainInteractor.UiEvents.Logout)
             }
             return@setOnMenuItemClickListener true
         }
@@ -120,7 +126,7 @@ class MainView constructor(
     }
 
     private fun observeSearchRightIconClick(): Observable<MainInteractor.UiEvents.SearchRightIconClick> = searchToolbar.observeRightImageClick()
-            .map { MainInteractor.UiEvents.SearchRightIconClick() }
+            .map { MainInteractor.UiEvents.SearchRightIconClick }
 
     companion object {
         private const val LOGOUT = 1

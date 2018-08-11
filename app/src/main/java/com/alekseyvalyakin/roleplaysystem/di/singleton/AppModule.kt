@@ -11,6 +11,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
@@ -99,14 +101,21 @@ class AppModule(private val mApp: RpsApp) {
 
     @Provides
     @Singleton
-    fun provideGameRepository(userRepository: UserRepository, userInGameRepository: UserInGameRepository): GameRepository {
-        return GameRepositoryImpl(userRepository, userInGameRepository)
+    fun provideGameRepository(userRepository: UserRepository,
+                              userInGameRepository: UserInGameRepository, gamesInUserRepository: GamesInUserRepository): GameRepository {
+        return GameRepositoryImpl(userRepository, userInGameRepository, gamesInUserRepository)
     }
 
     @Provides
     @Singleton
     fun provideUserInGameRepository(userRepository: UserRepository): UserInGameRepository {
         return UserInGameRepositoryImpl(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGamesInUserRepository(userRepository: UserRepository): GamesInUserRepository {
+        return GamesInUserRepositoryImpl(userRepository)
     }
 
     @Provides

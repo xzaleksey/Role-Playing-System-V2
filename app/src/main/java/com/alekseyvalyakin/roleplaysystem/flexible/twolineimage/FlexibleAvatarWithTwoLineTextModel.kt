@@ -9,7 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.views.TwoLineImageView
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 
-class FlexibleAvatarWithTwoLineTextModel(
+open class FlexibleAvatarWithTwoLineTextModel(
         val primaryText: String = EMPTY_STRING,
         val secondaryText: String = EMPTY_STRING,
         val imageProvider: ImageProvider,

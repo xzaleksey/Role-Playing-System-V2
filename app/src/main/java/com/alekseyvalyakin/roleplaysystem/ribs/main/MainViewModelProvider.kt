@@ -11,8 +11,8 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
-import com.alekseyvalyakin.roleplaysystem.flexible.twolineimage.FlexibleAvatarWithTwoLineTextModel
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
@@ -81,7 +81,7 @@ class MainViewModelProviderImpl(
                             isDrawBottomDivider = true,
                             isDrawTopDivider = true),
 
-                    FlexibleAvatarWithTwoLineTextModel(
+                    UserProfileViewModel(
                             user.displayName,
                             user.email,
                             imageProvider,

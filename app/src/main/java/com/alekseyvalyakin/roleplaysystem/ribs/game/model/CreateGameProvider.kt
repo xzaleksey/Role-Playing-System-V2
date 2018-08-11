@@ -55,7 +55,12 @@ class CreateGameProviderImpl(
             }
 
             CreateGameStep.PASSWORD -> {
-                val password = simpleCryptoProvider.getSimpleCrypto(relay.value.id).encrypt(text)
+                val password = if (text.isBlank()){
+                    StringUtils.EMPTY_STRING
+                } else{
+                    simpleCryptoProvider.getSimpleCrypto(relay.value.id).encrypt(text)
+                }
+
                 return gameRepository.savePassword(relay.value.id, password).doOnComplete {
                     relay.accept(relay.value.copy(password = password))
                 }.andThen(gameRepository.activateGame(relay.value.id))

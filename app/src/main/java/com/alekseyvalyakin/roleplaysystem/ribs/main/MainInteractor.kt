@@ -5,11 +5,15 @@ import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
+import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -56,7 +60,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
-        Timber.d(uiEvents.toString())
         var observable: Observable<*> = Observable.just(uiEvents)
 
         when (uiEvents) {
@@ -73,17 +76,33 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
             is UiEvents.Logout -> {
                 return authProvider.signOut().toObservable<Any>()
             }
+            is UiEvents.RecyclerItemClick -> {
+                handleRecyclerViewItemClick(uiEvents.item)
+            }
 
         }
         return observable
     }
 
+    private fun handleRecyclerViewItemClick(item: IFlexible<*>) {
+        when (item.layoutRes) {
+            FlexibleLayoutTypes.USER_PROFILE -> {
+                item as UserProfileViewModel
+                Timber.d("Profile clicked")
+            }
+            FlexibleLayoutTypes.GAME -> {
+                item as GameListViewModel
+                Timber.d("Game clicked")
+            }
+        }
+    }
+
     private fun getCreateGameObservable(): Observable<Game> {
         return gameRepository.createDraftGame().toObservable()
                 .doOnSubscribe { presenter.showFabLoading(true) }
-                .onErrorReturn {
-                    Timber.e(it)
-                    presenter.showError(it.localizedMessage)
+                .onErrorReturn { t ->
+                    Timber.e(t)
+                    presenter.showError(t.localizedMessage)
                     Game.EMPTY_GAME
                 }
                 .doOnNext { game ->
@@ -111,9 +130,13 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     }
 
     sealed class UiEvents {
-        class SearchRightIconClick : UiEvents()
-        class Logout : UiEvents()
+        object SearchRightIconClick : UiEvents()
+        object Logout : UiEvents()
+        object FabClick : UiEvents()
+
         class SearchInput(val text: String) : UiEvents()
-        class FabClick : UiEvents()
+
+        class RecyclerItemClick(val item: IFlexible<*>) : UiEvents()
+
     }
 }

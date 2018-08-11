@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
@@ -33,6 +34,8 @@ interface SingletonDependencyProvider {
     fun gameRepository(): GameRepository
 
     fun userInGameRepository(): UserInGameRepository
+
+    fun gamesInGameRepository(): GamesInUserRepository
 
     fun routerNavigatorFactory(): RouterNavigatorFactory
 
