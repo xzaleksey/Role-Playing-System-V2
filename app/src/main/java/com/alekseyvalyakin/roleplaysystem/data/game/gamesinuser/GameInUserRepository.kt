@@ -6,6 +6,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.WriteBatch
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
+import io.reactivex.Flowable
 
 
 class GamesInUserRepositoryImpl(
@@ -27,6 +28,11 @@ class GamesInUserRepositoryImpl(
             ?: throw RuntimeException("No user"))
 
     override fun gamesInUserCollection() = FirestoreCollection.GAMES_IN_USER(currentUser().uid).getDbCollection()
+
+    override fun observeCurrentUserGames(): Flowable<List<GamesInUserInfo>> {
+        val gamesInUserCollection = gamesInUserCollection()
+        return RxFirestore.observeQueryRefHasId(gamesInUserCollection, GamesInUserInfo::class.java)
+    }
 }
 
 interface GamesInUserRepository {
@@ -35,4 +41,6 @@ interface GamesInUserRepository {
     fun gamesInUserCollection(): CollectionReference
 
     fun addGameInUser(writeBatch: WriteBatch, id: String)
+
+    fun observeCurrentUserGames(): Flowable<List<GamesInUserInfo>>
 }

@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImp
 import com.alekseyvalyakin.roleplaysystem.base.image.UrlRoundDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
@@ -16,12 +17,14 @@ import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 
 class MainViewModelProviderImpl(
         private val userRepository: UserRepository,
         private val resourceProvider: ResourcesProvider,
         private val stringRepository: StringRepository,
-        private val gameRepository: GameRepository
+        private val gameRepository: GameRepository,
+        private val gamesInUserRepository: GamesInUserRepository
 ) : MainViewModelProvider {
 
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
@@ -37,11 +40,14 @@ class MainViewModelProviderImpl(
 
     private fun getAllGamesFlowable(filterFlowable: Flowable<FilterModel>): Flowable<List<IFlexible<*>>> {
         return Flowable.combineLatest(filterFlowable, gameRepository.observeAllActiveGames(),
-                BiFunction { filterModel, games ->
-                    val result = mutableListOf<IFlexible<*>>()
+                gamesInUserRepository.observeCurrentUserGames(),
+                Function3 { filterModel, games, gamesInUser ->
+                    val ids = gamesInUser.map { it.id }.toSet()
+                    val gamesInUserList = mutableListOf<IFlexible<*>>()
+                    val allGames = mutableListOf<IFlexible<*>>()
                     for (game in games) {
                         if (game.isFiltered(filterModel.query)) {
-                            result.add(GameListViewModel(
+                            allGames.add(GameListViewModel(
                                     game.id,
                                     game.name,
                                     game.description,
@@ -49,15 +55,33 @@ class MainViewModelProviderImpl(
                                     FlexibleLayoutTypes.GAME.toString(),
                                     game.password.isNotEmpty()
                             ))
+
+                            if (ids.contains(game.id)) {
+                                gamesInUserList.add(GameListViewModel(
+                                        game.id,
+                                        game.name,
+                                        game.description,
+                                        game.masterId == userRepository.getCurrentUser()?.uid,
+                                        FlexibleLayoutTypes.GAMES_IN_USER.toString(),
+                                        game.password.isNotEmpty()
+                                ))
+                            }
                         }
                     }
-                    if (result.isNotEmpty()) {
-                        result.add(0,
+                    if (allGames.isNotEmpty()) {
+                        allGames.add(0,
                                 SubHeaderViewModel(stringRepository.getAllGames(),
                                         isDrawBottomDivider = true,
                                         isDrawTopDivider = true))
                     }
-                    return@BiFunction result
+
+                    if (gamesInUserList.isNotEmpty()) {
+                        gamesInUserList.add(0,
+                                SubHeaderViewModel(stringRepository.getMyLastGames(),
+                                        isDrawBottomDivider = true,
+                                        isDrawTopDivider = true))
+                    }
+                    return@Function3 gamesInUserList + allGames
                 }
         )
     }
