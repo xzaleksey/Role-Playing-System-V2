@@ -51,6 +51,11 @@ class GameRepositoryImpl(
         return RxFirestore.observeQueryRefHasId(query, Game::class.java)
     }
 
+    override fun observeAllGames(): Flowable<List<Game>> {
+        val query = gamesCollection().orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
+        return RxFirestore.observeQueryRefHasId(query, Game::class.java)
+    }
+
     override fun saveName(id: String, text: String): Completable {
         return updateField(id, text, Game.FIELD_NAME)
     }
@@ -94,4 +99,5 @@ interface GameRepository {
     fun observeAllActiveGames(): Flowable<List<Game>>
 
     fun activateGame(id: String): Completable
+    fun observeAllGames(): Flowable<List<Game>>
 }

@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImp
 import com.alekseyvalyakin.roleplaysystem.base.image.UrlRoundDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.GameStatus
 import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
@@ -39,7 +40,7 @@ class MainViewModelProviderImpl(
     }
 
     private fun getAllGamesFlowable(filterFlowable: Flowable<FilterModel>): Flowable<List<IFlexible<*>>> {
-        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllActiveGames(),
+        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGames(),
                 gamesInUserRepository.observeCurrentUserGames(),
                 Function3 { filterModel, games, gamesInUser ->
                     val ids = gamesInUser.map { it.id }.toSet()
@@ -47,14 +48,16 @@ class MainViewModelProviderImpl(
                     val allGames = mutableListOf<IFlexible<*>>()
                     for (game in games) {
                         if (game.isFiltered(filterModel.query)) {
-                            allGames.add(GameListViewModel(
-                                    game.id,
-                                    game.name,
-                                    game.description,
-                                    game.masterId == userRepository.getCurrentUser()?.uid,
-                                    FlexibleLayoutTypes.GAME.toString(),
-                                    game.password.isNotEmpty()
-                            ))
+                            if (game.status == GameStatus.ACTIVE.value) {
+                                allGames.add(GameListViewModel(
+                                        game.id,
+                                        game.name,
+                                        game.description,
+                                        game.masterId == userRepository.getCurrentUser()?.uid,
+                                        FlexibleLayoutTypes.GAME.toString(),
+                                        game.password.isNotEmpty()
+                                ))
+                            }
 
                             if (ids.contains(game.id)) {
                                 gamesInUserList.add(GameListViewModel(
@@ -77,7 +80,7 @@ class MainViewModelProviderImpl(
 
                     if (gamesInUserList.isNotEmpty()) {
                         gamesInUserList.add(0,
-                                SubHeaderViewModel(stringRepository.getMyLastGames(),
+                                SubHeaderViewModel("${stringRepository.getMyLastGames()} (${gamesInUserList.size})",
                                         isDrawBottomDivider = true,
                                         isDrawTopDivider = true))
                     }

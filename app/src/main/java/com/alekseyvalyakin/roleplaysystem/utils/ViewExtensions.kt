@@ -7,7 +7,10 @@ import android.support.annotation.ColorRes
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.ImageViewCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -64,4 +67,14 @@ fun View.getStatusBarHeight(): Int {
 
 fun View.getToolbarHeight(): Int {
     return context.getToolbarHeight()
+}
+
+fun RecyclerView.checkFabShow(fab: FloatingActionButton) {
+    val layoutManager = this.layoutManager
+    if (layoutManager is LinearLayoutManager) {
+        if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0
+                && layoutManager.findLastCompletelyVisibleItemPosition() == this.adapter.itemCount - 1) {
+            fab.show()
+        }
+    }
 }

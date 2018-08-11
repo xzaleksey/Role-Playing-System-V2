@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
+import com.alekseyvalyakin.roleplaysystem.views.recyclerview.HideFablListener
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -76,10 +77,16 @@ class MainView constructor(
             relay.accept(MainInteractor.UiEvents.RecyclerItemClick(item))
             true
         }
+        recyclerView.addOnScrollListener(HideFablListener(fab))
     }
 
     override fun updateModel(model: MainViewModel) {
         flexibleAdapter.updateDataSet(model.flexibleItems, false)
+        recyclerView.post {
+            if (recyclerView.isAttachedToWindow) {
+                recyclerView.checkFabShow(fab)
+            }
+        }
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
