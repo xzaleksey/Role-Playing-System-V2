@@ -70,7 +70,7 @@ class MainViewModelProviderImpl(
                     }
                     if (allGames.isNotEmpty()) {
                         allGames.add(0,
-                                SubHeaderViewModel(stringRepository.getAllGames(),
+                                SubHeaderViewModel("${stringRepository.getAllGames()} (${allGames.size})",
                                         isDrawBottomDivider = true,
                                         isDrawTopDivider = true))
                     }

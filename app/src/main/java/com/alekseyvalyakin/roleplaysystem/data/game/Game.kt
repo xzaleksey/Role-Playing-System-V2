@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.game
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
+import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
@@ -20,13 +21,13 @@ data class Game(
         @set:Exclude
         @get:Exclude
         @Volatile
-        override var id: String = ""
+        override var id: String = StringUtils.EMPTY_STRING
 ) : HasId, Serializable {
 
     fun isFiltered(text: String): Boolean {
-        return name.startsWith(text)
-                || description.startsWith(text)
-                || masterName.startsWith(text)
+        return name.startsWith(text, true)
+                || description.startsWith(text, true)
+                || masterName.startsWith(text, true)
     }
 
     companion object {
