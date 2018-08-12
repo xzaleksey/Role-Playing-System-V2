@@ -1,7 +1,9 @@
 <resources>
     <dimen name="avatar_small_size">32dp</dimen>
     <dimen name="dp_2">2dp</dimen>
+    <dimen name="dp_3">3dp</dimen>
     <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_6">6dp</dimen>
     <dimen name="dp_8">8dp</dimen>
     <dimen name="dp_8_inverse">-8dp</dimen>
     <dimen name="dp_184">184dp</dimen>
@@ -18,6 +20,7 @@
     <dimen name="dp_56">56dp</dimen>
     <dimen name="dp_72">72dp</dimen>
     <dimen name="dp_74">74dp</dimen>
+    <dimen name="dp_100">100dp</dimen>
 
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_14">14sp</dimen>
@@ -26,6 +29,9 @@
     <dimen name="sp_18">18sp</dimen>
     <dimen name="sp_20">20sp</dimen>
     <dimen name="sp_24">24sp</dimen>
+
+    <dimen name="dp_30_inverse">-30dp</dimen>
+    <dimen name="dp_40_inverse">-40dp</dimen>
 
     <dimen name="status_bar_height">25dp</dimen>
     <dimen name="auth_top_padding">100dp</dimen>
@@ -38,4 +44,8 @@
     <dimen name="bottom_text_size">12sp</dimen>
     <dimen name="inner_components_spacing">8dp</dimen>
     <dimen name="bottom_ellipsis_height">4dp</dimen>
+    <dimen name="profile_avatar_top_margin">98dp</dimen>
+    <dimen name="profile_top_content_height">232dp</dimen>
+    <dimen name="profile_background_height">152dp</dimen>
+
 </resources>

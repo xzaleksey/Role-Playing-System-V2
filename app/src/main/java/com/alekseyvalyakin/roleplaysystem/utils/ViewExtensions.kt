@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorRes
@@ -13,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 
@@ -52,9 +52,12 @@ fun View.getSelectableItemBackGround(): Int {
     return context.getSelectableItemBackGround()
 }
 
-@SuppressLint("NewApi")
-fun View.setForegroundSelectableItemBackGround() {
+fun FrameLayout.setForegroundSelectableItemBackGround() {
     foreground = context.getCompatDrawable(getSelectableItemBackGround())
+}
+
+fun FrameLayout.setForegroundSelectableItemBackGroundBorderLess() {
+    foreground = context.getCompatDrawable(getSelectableItemBorderless())
 }
 
 fun View.getSelectableItemBorderless(): Int {

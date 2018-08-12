@@ -52,6 +52,7 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
                 .addToDisposables()
     }
 
+    @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun handleEvent(events: AuthPresenter.Events): Observable<*> {
         Timber.d(events.toString())
 
@@ -124,6 +125,7 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
 
 
     override fun willResignActive() {
+        presenter.hideKeyboard()
         super.willResignActive()
         localKeyValueStorage.setLogin(presenter.getEmail())
     }
@@ -141,6 +143,8 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
         fun getEmail(): String
 
         fun restoreEmail(email: String)
+
+        fun hideKeyboard()
 
         sealed class Events {
             class Login(val email: String, val password: String) : Events()

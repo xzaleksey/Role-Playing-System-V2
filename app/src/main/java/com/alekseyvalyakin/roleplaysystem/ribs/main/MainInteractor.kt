@@ -7,7 +7,6 @@ import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
-import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.BaseInteractor
@@ -87,8 +86,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     private fun handleRecyclerViewItemClick(item: IFlexible<*>) {
         when (item.layoutRes) {
             FlexibleLayoutTypes.USER_PROFILE -> {
-                item as UserProfileViewModel
-                Timber.d("Profile clicked")
+                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.MyProfile)
             }
             FlexibleLayoutTypes.GAME -> {
                 item as GameListViewModel

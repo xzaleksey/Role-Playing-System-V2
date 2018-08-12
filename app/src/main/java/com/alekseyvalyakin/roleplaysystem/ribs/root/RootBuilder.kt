@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
 import com.jakewharton.rxrelay2.PublishRelay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -72,7 +73,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                 return RootRouter(view, interactor, component, routerNavigatorFactory,
                         AuthBuilder(component),
                         MainBuilder(component),
-                        CreateGameBuilder(component))
+                        CreateGameBuilder(component),
+                        ProfileBuilder(component))
             }
 
             @RootScope
@@ -135,7 +137,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             RibDependencyProvider,
             AuthBuilder.ParentComponent,
             MainBuilder.ParentComponent,
-            CreateGameBuilder.ParentComponent {
+            CreateGameBuilder.ParentComponent,
+            ProfileBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

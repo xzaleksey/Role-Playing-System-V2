@@ -194,6 +194,10 @@ class AuthView @JvmOverloads constructor(
         showSnack(localizedMessage)
     }
 
+    override fun hideKeyboard() {
+        hideKeyboard(0L)
+    }
+
     override fun showResetPasswordDialog() {
         MaterialDialog.Builder(context)
                 .title(R.string.reset_password)

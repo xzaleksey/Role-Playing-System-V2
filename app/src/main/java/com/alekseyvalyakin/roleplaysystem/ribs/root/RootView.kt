@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import com.alekseyvalyakin.roleplaysystem.R
+import org.jetbrains.anko.backgroundResource
 
 /**
  * Top level view for {@link RootBuilder.RootScope}.
@@ -11,8 +13,10 @@ import android.widget.FrameLayout
 class RootView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle), RootInteractor.RootPresenter {
+
     init {
         fitsSystemWindows = true
+        backgroundResource = R.color.backgroundColor
     }
 
     @Suppress("OverridingDeprecatedMember")

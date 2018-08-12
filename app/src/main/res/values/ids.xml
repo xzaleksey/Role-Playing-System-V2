@@ -32,4 +32,14 @@
     <item name="input_text_layout" type="id"/>
     <item name="back_btn" type="id"/>
     <item name="iv_right" type="id"/>
+    <item name="iv_edit" type="id" />
+    <item name="display_name" type="id" />
+    <item name="iv_back" type="id" />
+    <item name="tv_email" type="id" />
+    <item name="iv_background" type="id" />
+    <item name="fab_image" type="id" />
+    <item name="tv_total_games_count" type="id" />
+    <item name="tv_master_games_count" type="id" />
+    <item name="main_container" type="id" />
+    <item name="top_actions_container" type="id" />
 </resources>
