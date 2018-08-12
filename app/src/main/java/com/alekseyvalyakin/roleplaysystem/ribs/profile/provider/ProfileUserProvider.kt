@@ -2,6 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.profile.provider
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.jakewharton.rxrelay2.BehaviorRelay
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 
 class ProfileUserProviderImpl(
@@ -9,9 +12,18 @@ class ProfileUserProviderImpl(
         private val userRepository: UserRepository
 ) : ProfileUserProvider {
 
+    private val relay = BehaviorRelay.createDefault<User>(user)
+
+    override fun onNameChanged(name: String): Completable {
+        relay.accept(relay.value.copy(displayName = name))
+        return userRepository.onDisplayNameChanged(name)
+    }
+
     override fun observeCurrentUser(): Flowable<User> {
         return userRepository.observeCurrentUser()
                 .startWith(user)
+                .doOnNext { relay.accept(it) }
+                .flatMap { relay.toFlowable(BackpressureStrategy.LATEST) }
     }
 
     override fun isCurrentUser(): Boolean {
@@ -23,4 +35,6 @@ interface ProfileUserProvider {
     fun observeCurrentUser(): Flowable<User>
 
     fun isCurrentUser(): Boolean
+
+    fun onNameChanged(name: String): Completable
 }

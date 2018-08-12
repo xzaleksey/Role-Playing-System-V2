@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
 import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
+import io.reactivex.Completable
 import io.reactivex.Flowable
 
 class ProfileViewModelProviderImpl(
@@ -22,8 +23,14 @@ class ProfileViewModelProviderImpl(
                             emptyList())
                 }
     }
+
+    override fun onNameChanged(name: String): Completable {
+        return profileUserProvider.onNameChanged(name)
+    }
 }
 
 interface ProfileViewModelProvider {
     fun observeProfileViewModel(): Flowable<ProfileViewModel>
+
+    fun onNameChanged(name: String): Completable
 }

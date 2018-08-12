@@ -134,6 +134,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         fun showError(message: String)
 
         fun showLoadingContent(loading: Boolean)
+
         fun isEmpty(): Boolean
     }
 

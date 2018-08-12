@@ -9,9 +9,12 @@ interface ProfilePresenter {
 
     sealed class Event {
         object BackPress : Event()
+        object EditNamePress : Event()
+        class EditNameConfirm(val name: String) : Event()
     }
 
     fun observeUiEvents(): Observable<Event>
 
     fun updateViewModel(profileViewModel: ProfileViewModel)
+    fun showEditDisplayNameDialog(displayName: String)
 }

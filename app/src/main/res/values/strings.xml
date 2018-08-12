@@ -118,4 +118,5 @@
     <string name="create_game_description_title">Think up game description</string>
     <string name="create_game_description_example">Example: it is nice world with unicorns…</string>
     <string name="create_game_description_password">Think up a password</string>
+    <string name="input_name">Input your name</string>
 </resources>

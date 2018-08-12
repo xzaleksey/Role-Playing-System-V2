@@ -1,20 +1,26 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.afollestad.materialdialogs.DialogAction
+import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+
 
 /**
  * Top level view for {@link ProfileBuilder.ProfileScope}.
@@ -32,6 +38,8 @@ class ProfileView constructor(
     private lateinit var tvDisplayName: TextView
     private lateinit var tvMasterGamesCount: TextView
     private val recyclerView: RecyclerView
+    private var currentDialog: Dialog? = null
+    private val relay = PublishRelay.create<ProfilePresenter.Event>()
 
     init {
         id = R.id.main_container
@@ -206,11 +214,37 @@ class ProfileView constructor(
     }
 
     override fun observeUiEvents(): Observable<ProfilePresenter.Event> {
-        return observeBackPress()
+        return Observable.merge(observeBackPress(), observeEditNamePress(), relay)
     }
 
     private fun observeBackPress(): Observable<ProfilePresenter.Event> {
         return RxView.clicks(btnBack).map { ProfilePresenter.Event.BackPress }
     }
+
+    private fun observeEditNamePress(): Observable<ProfilePresenter.Event> {
+        return RxView.clicks(btnEdit).map { ProfilePresenter.Event.EditNamePress }
+    }
+
+
+    override fun showEditDisplayNameDialog(displayName: String) {
+        if (currentDialog != null) {
+            return
+        }
+        currentDialog = MaterialDialog.Builder(context)
+                .title(R.string.name)
+                .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+                .positiveText(android.R.string.ok)
+                .onPositive { dialog, _ ->
+                    relay.accept(ProfilePresenter.Event.EditNameConfirm(dialog.inputEditText!!.text.toString()))
+                }
+                .negativeText(android.R.string.cancel)
+                .dismissListener { currentDialog = null }
+                .alwaysCallInputCallback()
+                .contentColor(getCompatColor(R.color.colorTextPrimary))
+                .input(getString(R.string.input_name), displayName, { dialog, input ->
+                    dialog.getActionButton(DialogAction.POSITIVE).isEnabled = !input.isBlank()
+                }).show()
+    }
+
 
 }

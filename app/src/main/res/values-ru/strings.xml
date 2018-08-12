@@ -114,5 +114,6 @@
     <string name="create_game_description_title">Придумайте описание игры</string>
     <string name="create_game_description_example">Пример: это приятный мир с единорогами…</string>
     <string name="create_game_description_password">Придумайте пароль</string>
+    <string name="input_name">Введите ваше имя</string>
 
 </resources>

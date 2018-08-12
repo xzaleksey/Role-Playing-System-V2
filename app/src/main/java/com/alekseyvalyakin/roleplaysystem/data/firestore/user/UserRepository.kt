@@ -44,6 +44,12 @@ class UserRepositoryImpl : UserRepository {
         }
     }
 
+    override fun onDisplayNameChanged(name: String): Completable {
+        return getCurrentUserId().flatMapCompletable {
+            updateField(it, name, User.FIELD_DISPLAY_NAME)
+        }
+    }
+
     override fun observeCurrentUser(): Flowable<User> {
         val currentUser = getCurrentFirebaseUser()
                 ?: return Flowable.error(NoUserException)
@@ -81,6 +87,11 @@ class UserRepositoryImpl : UserRepository {
 
     private fun userDocument(userId: String) = getUsersCollection().document(userId)
 
+    private fun updateField(id: String, text: String, fieldName: String): Completable {
+        val document = getUsersCollection().document(id)
+        return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to text))
+    }
+
     private fun getUsersCollection() = FirestoreCollection.USERS.getDbCollection()
 
     private fun updateCache(user: User) {
@@ -104,4 +115,6 @@ interface UserRepository {
     fun observeUser(userId: String): Flowable<User>
 
     fun isCurrentUser(id: String): Boolean
+
+    fun onDisplayNameChanged(name: String): Completable
 }

@@ -82,6 +82,7 @@ class GameRepositoryImpl(
         return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to value))
     }
 
+
     private fun gamesCollection() = FirestoreCollection.GAMES.getDbCollection()
 }
 

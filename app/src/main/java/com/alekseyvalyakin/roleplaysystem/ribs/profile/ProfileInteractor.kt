@@ -26,25 +26,39 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
 
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
+    private var currentModel: ProfileViewModel? = null
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         profileViewModelProvider.observeProfileViewModel()
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
+                    currentModel = it
                     presenter.updateViewModel(it)
                 }
         presenter.observeUiEvents()
+                .observeOn(uiScheduler)
                 .concatMap(this::handleEvent)
                 .subscribeWithErrorLogging().addToDisposables()
     }
 
     private fun handleEvent(event: ProfilePresenter.Event): Observable<*> {
-        when (event) {
+        return when (event) {
             is ProfilePresenter.Event.BackPress -> {
-                return Observable.fromCallable {
+                Observable.fromCallable {
                     activityListener.backPress()
                 }
+            }
+            is ProfilePresenter.Event.EditNamePress -> {
+                Observable.fromCallable {
+                    currentModel?.let {
+                        presenter.showEditDisplayNameDialog(it.displayName)
+                    }
+                }
+            }
+
+            is ProfilePresenter.Event.EditNameConfirm -> {
+                return profileViewModelProvider.onNameChanged(event.name).toObservable<Any>()
             }
         }
     }
