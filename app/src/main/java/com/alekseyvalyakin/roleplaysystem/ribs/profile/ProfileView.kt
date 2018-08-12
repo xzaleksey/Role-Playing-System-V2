@@ -132,7 +132,8 @@ class ProfileView constructor(
 
             tvTotalGamesCount = textView {
                 id = R.id.tv_total_games_count
-                //fontPath = fonts/rufina_regular.ttf //not support attribute
+                text = "2"
+                setRufinaRegularTypeface()
                 gravity = Gravity.CENTER
                 textColor = getCompatColor(R.color.colorPrimary)
                 setTextSizeFromRes(R.dimen.dp_24)
@@ -153,7 +154,9 @@ class ProfileView constructor(
 
             tvMasterGamesCount = textView {
                 id = R.id.tv_master_games_count
-                //fontPath = fonts/rufina_regular.ttf //not support attribute
+
+                text = "1"
+                setRufinaRegularTypeface()
                 gravity = Gravity.CENTER
                 textColor = getCompatColor(R.color.colorPrimary)
                 setTextSizeFromRes(R.dimen.dp_24)

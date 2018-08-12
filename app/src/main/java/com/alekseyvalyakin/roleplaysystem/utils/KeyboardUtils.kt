@@ -27,7 +27,7 @@ fun Context.hideKeyboard(delay: Long = 10L) {
     (this as? Activity)?.hideKeyboard(delay)
 }
 
-fun Activity.forceHideKeyboard(activity: Activity) {
+fun Activity.forceHideKeyboard() {
     hideKeyboard(0L)
 }
 

@@ -72,7 +72,7 @@ class RootRouter(
         return router.peekState() != null
     }
 
-    fun detachCreateGame(game: Game) {
+    fun detachCreateGame() {
         val peekState = router.peekState()
         if (peekState == RootState.CREATE_GAME) {
             router.popState()

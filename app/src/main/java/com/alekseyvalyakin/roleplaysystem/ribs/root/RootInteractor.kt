@@ -64,7 +64,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                 .subscribeWithErrorLogging { event ->
                     when (event) {
                         is CreateGameListener.CreateGameEvent.CompleteCreate -> {
-                            router.detachCreateGame(event.game)
+                            router.detachCreateGame()
                         }
                     }
                 }.addToDisposables()
