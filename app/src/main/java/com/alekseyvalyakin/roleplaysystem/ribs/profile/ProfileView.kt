@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
@@ -19,7 +21,7 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
  */
 class ProfileView constructor(
         context: Context
-) : _LinearLayout(context), ProfileInteractor.ProfilePresenter {
+) : _LinearLayout(context), ProfilePresenter {
 
     private lateinit var btnBack: ImageView
     private lateinit var btnEdit: ImageView
@@ -187,6 +189,28 @@ class ProfileView constructor(
             isVerticalScrollBarEnabled = true
             layoutManager = LinearLayoutManager(context)
         }.lparams(width = matchParent, height = matchParent)
+    }
+
+    override fun updateViewModel(profileViewModel: ProfileViewModel) {
+        tvDisplayName.text = profileViewModel.displayName
+        tvEmail.text = profileViewModel.email
+        tvMasterGamesCount.text = profileViewModel.totalMasterGamesCount
+        tvTotalGamesCount.text = profileViewModel.totalGamesCount
+        if (profileViewModel.isEditor) {
+            btnEdit.visibility = View.VISIBLE
+            btnChooseImage.visibility = View.VISIBLE
+        } else {
+            btnEdit.visibility = View.INVISIBLE
+            btnChooseImage.visibility = View.GONE
+        }
+    }
+
+    override fun observeUiEvents(): Observable<ProfilePresenter.Event> {
+        return observeBackPress()
+    }
+
+    private fun observeBackPress(): Observable<ProfilePresenter.Event> {
+        return RxView.clicks(btnBack).map { ProfilePresenter.Event.BackPress }
     }
 
 }

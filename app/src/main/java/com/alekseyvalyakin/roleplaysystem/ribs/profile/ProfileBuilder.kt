@@ -2,9 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
-import com.uber.rib.core.BaseViewBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -15,7 +19,7 @@ import javax.inject.Scope
  * Builder for the {@link ProfileScope}.
  *
  */
-class ProfileBuilder(dependency: ParentComponent) : BaseViewBuilder<ProfileView, ProfileRouter, ProfileBuilder.ParentComponent>(dependency) {
+class ProfileBuilder(dependency: ParentComponent) : ViewBuilder<ProfileView, ProfileRouter, ProfileBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [ProfileRouter].
@@ -23,12 +27,13 @@ class ProfileBuilder(dependency: ParentComponent) : BaseViewBuilder<ProfileView,
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [ProfileRouter].
      */
-    override fun build(parentViewGroup: ViewGroup): ProfileRouter {
+    fun build(parentViewGroup: ViewGroup, user: User): ProfileRouter {
         val view = createView(parentViewGroup)
         val interactor = ProfileInteractor()
         val component = DaggerProfileBuilder_Component.builder()
                 .parentComponent(dependency)
                 .view(view)
+                .user(user)
                 .interactor(interactor)
                 .build()
         return component.profileRouter()
@@ -45,7 +50,7 @@ class ProfileBuilder(dependency: ParentComponent) : BaseViewBuilder<ProfileView,
 
         @ProfileScope
         @Binds
-        internal abstract fun presenter(view: ProfileView): ProfileInteractor.ProfilePresenter
+        internal abstract fun presenter(view: ProfileView): ProfilePresenter
 
         @dagger.Module
         companion object {
@@ -58,6 +63,20 @@ class ProfileBuilder(dependency: ParentComponent) : BaseViewBuilder<ProfileView,
                     view: ProfileView,
                     interactor: ProfileInteractor): ProfileRouter {
                 return ProfileRouter(view, interactor, component)
+            }
+
+            @ProfileScope
+            @Provides
+            @JvmStatic
+            internal fun profileUserProvider(user: User, userRepository: UserRepository): ProfileUserProvider {
+                return ProfileUserProviderImpl(user, userRepository)
+            }
+
+            @ProfileScope
+            @Provides
+            @JvmStatic
+            internal fun profileViewModelProvider(profileUserProvider: ProfileUserProvider): ProfileViewModelProvider {
+                return ProfileViewModelProviderImpl(profileUserProvider)
             }
         }
 
@@ -74,6 +93,9 @@ class ProfileBuilder(dependency: ParentComponent) : BaseViewBuilder<ProfileView,
 
             @BindsInstance
             fun view(view: ProfileView): Builder
+
+            @BindsInstance
+            fun user(user: User): Builder
 
             fun parentComponent(component: ParentComponent): Builder
 

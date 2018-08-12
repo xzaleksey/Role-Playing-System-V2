@@ -164,9 +164,9 @@ class AuthView @JvmOverloads constructor(
 
     override fun observeUiEvents(): Observable<AuthInteractor.AuthPresenter.Events> {
         return Observable.merge(listOf(RxView.clicks(loginBtn).map { AuthInteractor.AuthPresenter.Events.Login(getEmail(), getPassword()) },
-                RxView.clicks(googleAuthBtn).map { AuthInteractor.AuthPresenter.Events.GoogleSignIn() },
+                RxView.clicks(googleAuthBtn).map { AuthInteractor.AuthPresenter.Events.GoogleSignIn },
                 RxView.clicks(signUpBtn).map { AuthInteractor.AuthPresenter.Events.SignUp(getEmail(), getPassword()) },
-                RxView.clicks(forgotPasswordBtn).map { AuthInteractor.AuthPresenter.Events.ForgotPassword() },
+                RxView.clicks(forgotPasswordBtn).map { AuthInteractor.AuthPresenter.Events.ForgotPassword },
                 signInAction(),
                 relay))
     }

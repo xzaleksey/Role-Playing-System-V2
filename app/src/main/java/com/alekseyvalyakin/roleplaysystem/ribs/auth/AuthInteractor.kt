@@ -149,9 +149,9 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
         sealed class Events {
             class Login(val email: String, val password: String) : Events()
             class SignUp(val email: String, val password: String) : Events()
-            class GoogleSignIn : Events()
-            class ForgotPassword : Events()
             class ResetPassword(val email: String) : Events()
+            object GoogleSignIn : Events()
+            object ForgotPassword : Events()
 
         }
 

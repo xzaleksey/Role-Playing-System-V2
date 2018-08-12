@@ -20,7 +20,7 @@ class AuthProviderImpl @Inject constructor(
 ) : AuthProvider {
 
     override fun getCurrentUser(): FirebaseUser? {
-        return userRepository.getCurrentUser()
+        return userRepository.getCurrentFirebaseUser()
     }
 
     override fun login(email: String, password: String): Maybe<AuthResult> {
@@ -64,10 +64,10 @@ class AuthProviderImpl @Inject constructor(
     }
 
     private fun updateUser(user: User): MaybeTransformer<AuthResult, AuthResult> {
-        return MaybeTransformer {
-            return@MaybeTransformer it.flatMap { result ->
-                return@flatMap userRepository.getUser(result.user.uid)
-                        .toSingle(EMPTY_USER)
+        return MaybeTransformer { authResult ->
+            return@MaybeTransformer authResult.flatMap { result ->
+                return@flatMap userRepository.getCurrentUserSingle()
+                        .onErrorReturn { EMPTY_USER }
                         .flatMap { userFromServer ->
                             val userResult: User
                             if (userFromServer != EMPTY_USER) {

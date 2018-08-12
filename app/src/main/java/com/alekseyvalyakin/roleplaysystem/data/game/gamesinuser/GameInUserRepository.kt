@@ -24,7 +24,7 @@ class GamesInUserRepositoryImpl(
 
     private fun createDocumentReference(gameId: String) = gamesInUserCollection().document(gameId)
 
-    private fun currentUser() = (userRepository.getCurrentUser()
+    private fun currentUser() = (userRepository.getCurrentFirebaseUser()
             ?: throw RuntimeException("No user"))
 
     override fun gamesInUserCollection() = FirestoreCollection.GAMES_IN_USER(currentUser().uid).getDbCollection()

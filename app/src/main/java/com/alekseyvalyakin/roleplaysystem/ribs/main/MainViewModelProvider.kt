@@ -29,7 +29,7 @@ class MainViewModelProviderImpl(
 ) : MainViewModelProvider {
 
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
-        return Flowable.combineLatest(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable).startWith(emptyList<IFlexible<*>>()),
+        return Flowable.combineLatest(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable),
                 BiFunction { userModels: List<IFlexible<*>>, allGames: List<IFlexible<*>> ->
                     val result = mutableListOf<IFlexible<*>>()
                     result.addAll(userModels)
@@ -40,7 +40,7 @@ class MainViewModelProviderImpl(
     }
 
     private fun getAllGamesFlowable(filterFlowable: Flowable<FilterModel>): Flowable<List<IFlexible<*>>> {
-        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGames(),
+        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGames().onErrorReturn { emptyList() },
                 gamesInUserRepository.observeCurrentUserGames(),
                 Function3 { filterModel, games, gamesInUser ->
                     val ids = gamesInUser.map { it.id }.toSet()
@@ -53,7 +53,7 @@ class MainViewModelProviderImpl(
                                         game.id,
                                         game.name,
                                         game.description,
-                                        game.masterId == userRepository.getCurrentUser()?.uid,
+                                        game.masterId == userRepository.getCurrentFirebaseUser()?.uid,
                                         FlexibleLayoutTypes.GAME.toString(),
                                         game.password.isNotEmpty()
                                 ))
@@ -64,7 +64,7 @@ class MainViewModelProviderImpl(
                                         game.id,
                                         game.name,
                                         game.description,
-                                        game.masterId == userRepository.getCurrentUser()?.uid,
+                                        game.masterId == userRepository.getCurrentFirebaseUser()?.uid,
                                         FlexibleLayoutTypes.GAMES_IN_USER.toString(),
                                         game.password.isNotEmpty()
                                 ))
@@ -113,7 +113,8 @@ class MainViewModelProviderImpl(
                             user.email,
                             imageProvider,
                             userId,
-                            true
+                            true,
+                            user
                     ))
         }
     }

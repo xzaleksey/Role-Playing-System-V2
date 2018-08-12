@@ -7,6 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.BaseInteractor
@@ -52,8 +53,14 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 .addToDisposables()
 
         mainViewModelProvider.observeViewModel(filterRelay.toFlowable(BackpressureStrategy.LATEST))
+                .doOnSubscribe {
+                    if (presenter.isEmpty()) {
+                        presenter.showLoadingContent(true)
+                    }
+                }
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
+                    presenter.showLoadingContent(false)
                     presenter.updateModel(it)
                 }.addToDisposables()
     }
@@ -86,7 +93,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     private fun handleRecyclerViewItemClick(item: IFlexible<*>) {
         when (item.layoutRes) {
             FlexibleLayoutTypes.USER_PROFILE -> {
-                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.MyProfile)
+                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.MyProfile((item as UserProfileViewModel).user))
             }
             FlexibleLayoutTypes.GAME -> {
                 item as GameListViewModel
@@ -125,6 +132,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         fun showFabLoading(loading: Boolean)
 
         fun showError(message: String)
+
+        fun showLoadingContent(loading: Boolean)
+        fun isEmpty(): Boolean
     }
 
     sealed class UiEvents {

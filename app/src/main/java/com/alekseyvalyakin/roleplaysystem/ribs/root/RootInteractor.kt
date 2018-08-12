@@ -54,7 +54,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                             router.attachCreateGame(event.game)
                         }
                         is MainRibListener.MainRibEvent.MyProfile -> {
-                            router.attachMyProfile()
+                            router.attachMyProfile(event.user)
                         }
                     }
                 }.addToDisposables()
@@ -73,7 +73,6 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
 
     override fun willResignActive() {
         super.willResignActive()
-
     }
 
     override fun handleBackPress(): Boolean {

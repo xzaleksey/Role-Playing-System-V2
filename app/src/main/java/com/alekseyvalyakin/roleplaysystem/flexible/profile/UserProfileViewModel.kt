@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.flexible.profile
 
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.twolineimage.FlexibleAvatarWithTwoLineTextModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
@@ -10,7 +11,8 @@ class UserProfileViewModel(
         secondaryText: String = EMPTY_STRING,
         imageProvider: ImageProvider,
         id: String,
-        isShowArrowRight: Boolean = false
+        isShowArrowRight: Boolean = false,
+        val user: User
 ) : FlexibleAvatarWithTwoLineTextModel(primaryText,
         secondaryText,
         imageProvider,

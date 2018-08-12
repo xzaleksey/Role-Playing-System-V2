@@ -35,7 +35,8 @@ class MainView constructor(
     private lateinit var searchToolbar: SearchToolbar
     private lateinit var fab: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var progressBarBottom: ProgressBar
+    private lateinit var progressBarCenter: ProgressBar
     private val relay = PublishRelay.create<MainInteractor.UiEvents>()
     private val flexibleAdapter: FlexibleAdapter<IFlexible<*>> = FlexibleAdapter(emptyList())
 
@@ -64,12 +65,19 @@ class MainView constructor(
                 margin = getIntDimen(R.dimen.dp_8)
             }
 
-            progressBar = progressBar {
+            progressBarBottom = progressBar {
                 visibility = View.GONE
             }.lparams {
                 gravity = Gravity.BOTTOM or Gravity.END
                 margin = getIntDimen(R.dimen.dp_8)
             }
+
+            progressBarCenter = progressBar {
+                visibility = View.GONE
+            }.lparams {
+                gravity = Gravity.CENTER
+            }
+
         }
 
         flexibleAdapter.mItemClickListener = FlexibleAdapter.OnItemClickListener { pos ->
@@ -110,14 +118,26 @@ class MainView constructor(
             .map { MainInteractor.UiEvents.SearchInput(it.toString()) }
             .distinctUntilChanged()
 
+    override fun showLoadingContent(loading: Boolean) {
+        if (loading) {
+            progressBarCenter.visibility = View.VISIBLE
+        } else {
+            progressBarCenter.visibility = View.GONE
+        }
+    }
+
     override fun showFabLoading(loading: Boolean) {
         if (loading) {
             fab.hide()
-            progressBar.visibility = View.VISIBLE
+            progressBarBottom.visibility = View.VISIBLE
         } else {
-            progressBar.visibility = View.GONE
+            progressBarBottom.visibility = View.GONE
             fab.show()
         }
+    }
+
+    override fun isEmpty(): Boolean {
+        return flexibleAdapter.isEmpty
     }
 
     override fun showSearchContextMenu() {
