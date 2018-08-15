@@ -8,6 +8,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
@@ -15,6 +17,9 @@ import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Maybe;
 import io.reactivex.MaybeEmitter;
 import io.reactivex.MaybeOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 
 public class RxFirebaseUser {
 
@@ -32,6 +37,17 @@ public class RxFirebaseUser {
             @Override
             public void subscribe(MaybeEmitter<GetTokenResult> emitter) throws Exception {
                 RxHandler.assignOnTask(emitter, firebaseUser.getIdToken(forceRefresh));
+            }
+        });
+    }
+
+
+    @NonNull
+    public static Single<InstanceIdResult> getMessagingToken(final FirebaseInstanceId firebaseInstanceId) {
+        return Single.create(new SingleOnSubscribe<InstanceIdResult>() {
+            @Override
+            public void subscribe(SingleEmitter<InstanceIdResult> emitter) {
+                RxSingleHandler.assignOnTask(emitter, firebaseInstanceId.getInstanceId());
             }
         });
     }

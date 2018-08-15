@@ -18,6 +18,16 @@ fun <T> Observable<T>.subscribeWithErrorLogging(): Disposable {
     return this.subscribeWithErrorLogging {}
 }
 
+fun <T> Single<T>.subscribeWithErrorLogging(onNext: (T) -> Unit): Disposable {
+    return this.subscribe(onNext) {
+        Timber.e(it)
+    }
+}
+
+fun <T> Single<T>.subscribeWithErrorLogging(): Disposable {
+    return this.subscribeWithErrorLogging {}
+}
+
 fun <T> Flowable<T>.subscribeWithErrorLogging(onNext: (T) -> Unit): Disposable {
     return this.subscribe(onNext) {
         Timber.e(it)

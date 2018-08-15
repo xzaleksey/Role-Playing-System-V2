@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.rxfirebase2.RxFirebaseAuth
 import io.reactivex.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,6 +58,7 @@ class AuthProviderImpl @Inject constructor(
                     }
 
                     return@switchMap userRepository.observeCurrentUser().toObservable()
+                            .delay(200L, TimeUnit.MILLISECONDS)
                             .take(1)
                             .map { true }
                 }

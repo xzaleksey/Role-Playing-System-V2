@@ -7,6 +7,8 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.google.firebase.iid.FirebaseInstanceId
+import com.rxfirebase2.RxFirebaseUser
 import com.uber.rib.core.*
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -45,6 +47,11 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                         router.attachMain()
                     }
                 }.addToDisposables()
+
+        RxFirebaseUser.getMessagingToken(FirebaseInstanceId.getInstance())
+                .subscribeWithErrorLogging {
+                    Timber.d(it.id + " token " + it.token)
+                }
 
         mainRibEventObservable
                 .observeOn(uiScheduler)
