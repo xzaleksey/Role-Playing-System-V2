@@ -6,7 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.checkFabShow
 
 class HideFablListener(private val fab: FloatingActionButton) : RecyclerView.OnScrollListener() {
 
-    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         if (dy > 0) {
             // Scroll Down
             if (fab.isShown) {

@@ -76,7 +76,7 @@ fun RecyclerView.checkFabShow(fab: FloatingActionButton) {
     val layoutManager = this.layoutManager
     if (layoutManager is LinearLayoutManager) {
         if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0
-                && layoutManager.findLastCompletelyVisibleItemPosition() == this.adapter.itemCount - 1) {
+                && layoutManager.findLastCompletelyVisibleItemPosition() == this.adapter!!.itemCount - 1) {
             fab.show()
         }
     }
