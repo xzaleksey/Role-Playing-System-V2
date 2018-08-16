@@ -4,7 +4,6 @@ package com.rxfirebase2;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.support.annotation.NonNull;
-
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,12 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
@@ -47,6 +40,11 @@ import io.reactivex.functions.Cancellable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static com.rxfirebase2.DocumentSnapshotMapper.DOCUMENT_EXISTENCE_PREDICATE;
 import static com.rxfirebase2.DocumentSnapshotMapper.QUERY_EXISTENCE_PREDICATE;
@@ -551,6 +549,11 @@ public class RxFirestore {
         return getDocumentSingle(ref).map(DocumentSnapshotMapper.of(clazz));
     }
 
+    @NonNull
+    public static <T extends HasId> Single<T> getDocumentSingleHasId(@NonNull final DocumentReference ref, Class<T> clazz) {
+        return getDocumentSingle(ref).map(DocumentSnapshotMapper.ofHasId(clazz));
+    }
+
     /**
      * Reads the collection referenced by this DocumentReference
      *
@@ -923,6 +926,12 @@ public class RxFirestore {
     public static <T> Flowable<T> observeDocumentRef(@NonNull final DocumentReference ref,
                                                      @NonNull final Class<T> clazz) {
         return observeDocumentRef(ref, DocumentSnapshotMapper.of(clazz));
+    }
+
+    @NonNull
+    public static <T extends HasId> Flowable<T> observeDocumentRefHasId(@NonNull final DocumentReference ref,
+                                                                        @NonNull final Class<T> clazz) {
+        return observeDocumentRef(ref, DocumentSnapshotMapper.ofHasId(clazz));
     }
 
     /**

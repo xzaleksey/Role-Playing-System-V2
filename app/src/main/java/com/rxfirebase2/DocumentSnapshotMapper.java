@@ -2,24 +2,40 @@ package com.rxfirebase2;
 
 
 import android.support.annotation.NonNull;
-
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-
 public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
+
+    static final Predicate<QuerySnapshot> QUERY_EXISTENCE_PREDICATE = new Predicate<QuerySnapshot>() {
+        @Override
+        public boolean test(@NonNull QuerySnapshot querySnapshot) throws Exception {
+            return !querySnapshot.isEmpty();
+        }
+    };
+    static final Predicate<DocumentSnapshot> DOCUMENT_EXISTENCE_PREDICATE = new Predicate<DocumentSnapshot>() {
+        @Override
+        public boolean test(@NonNull DocumentSnapshot documentSnapshot) throws Exception {
+            return documentSnapshot.exists();
+        }
+    };
 
     private DocumentSnapshotMapper() {
     }
 
     public static <U> DocumentSnapshotMapper<DocumentSnapshot, U> of(Class<U> clazz) {
         return new TypedDocumentSnapshotMapper<U>(clazz);
+    }
+
+    public static <U extends HasId> DocumentSnapshotMapper<DocumentSnapshot, U> ofHasId(Class<U> clazz) {
+        return new TypedHasIdDocumentSnapshotMapper<>(clazz);
     }
 
     public static <U> DocumentSnapshotMapper<QuerySnapshot, List<U>> listOf(Class<U> clazz) {
@@ -52,6 +68,22 @@ public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
         }
     }
 
+    private static class TypedHasIdDocumentSnapshotMapper<U extends HasId> extends DocumentSnapshotMapper<DocumentSnapshot, U> {
+
+        private final Class<U> clazz;
+
+        public TypedHasIdDocumentSnapshotMapper(final Class<U> clazz) {
+            this.clazz = clazz;
+        }
+
+        @Override
+        public U apply(final DocumentSnapshot documentSnapshot) {
+            U dataSnapshotTypedValue = getDataSnapshotTypedValue(documentSnapshot, clazz);
+            dataSnapshotTypedValue.setId(documentSnapshot.getId());
+            return dataSnapshotTypedValue;
+        }
+    }
+
     private static class TypedListQuerySnapshotMapper<U> extends DocumentSnapshotMapper<QuerySnapshot, List<U>> {
 
         private final Class<U> clazz;
@@ -71,13 +103,12 @@ public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
             List<U> items = new ArrayList<>();
             for (DocumentSnapshot documentSnapshot : querySnapshot) {
                 items.add(mapper != null
-                    ? mapper.apply(documentSnapshot)
-                    : getDataSnapshotTypedValue(documentSnapshot, clazz));
+                        ? mapper.apply(documentSnapshot)
+                        : getDataSnapshotTypedValue(documentSnapshot, clazz));
             }
             return items;
         }
     }
-
 
     private static class TypedMapQuerySnapshotMapper<U> extends DocumentSnapshotMapper<QuerySnapshot, LinkedHashMap<String, U>> {
 
@@ -96,18 +127,4 @@ public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
             return items;
         }
     }
-
-    static final Predicate<QuerySnapshot> QUERY_EXISTENCE_PREDICATE = new Predicate<QuerySnapshot>() {
-        @Override
-        public boolean test(@NonNull QuerySnapshot querySnapshot) throws Exception {
-            return !querySnapshot.isEmpty();
-        }
-    };
-
-    static final Predicate<DocumentSnapshot> DOCUMENT_EXISTENCE_PREDICATE = new Predicate<DocumentSnapshot>() {
-        @Override
-        public boolean test(@NonNull DocumentSnapshot documentSnapshot) throws Exception {
-            return documentSnapshot.exists();
-        }
-    };
 }

@@ -1,10 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.data.game
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.BaseFireStoreRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
-import com.alekseyvalyakin.roleplaysystem.utils.setId
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.rxfirebase2.RxFirestore
@@ -16,80 +18,59 @@ class GameRepositoryImpl(
         private val userRepository: UserRepository,
         private val userInGameRepository: UserInGameRepository,
         private val gamesInUserRepository: GamesInUserRepository
-) : GameRepository {
+) : BaseFireStoreRepository<Game>(Game::class.java), GameRepository {
 
     private val instance = FirebaseFirestore.getInstance()
 
-    override fun observeGame(id: String): Flowable<Game> {
-        return RxFirestore.observeDocumentRef(gamesCollection().document(id), Game::class.java)
-                .setId(id)
-    }
-
-    override fun createDraftGame(): Single<Game> {
-        return userRepository.getCurrentUserSingle().flatMap { user ->
-            val gameToCreate = Game(masterId = user.id, status = GameStatus.DRAFT.value, masterName = user.displayName)
-            val writeBatch = instance.batch()
-            val gameId = gamesCollection().document().id
-
-            writeBatch.set(gamesCollection().document(gameId), gameToCreate)
-            userInGameRepository.addCurrentUserInGame(writeBatch, gameId)
-            gamesInUserRepository.addGameInUser(writeBatch, gameId)
-
-            return@flatMap RxFirestore.atomicOperation(writeBatch).andThen(getGame(gameId))
-        }
-    }
-
-    private fun getGame(id: String): Single<Game> {
-        return RxFirestore.getDocumentSingle(gamesCollection().document(id), Game::class.java)
-                .setId(id)
-    }
-
     override fun observeAllActiveGames(): Flowable<List<Game>> {
-        val query = gamesCollection()
+        val query = getCollection()
                 .whereEqualTo(Game.FIELD_STATUS, GameStatus.ACTIVE.value)
                 .orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
-        return RxFirestore.observeQueryRefHasId(query, Game::class.java)
+        return observeQueryCollection(query)
     }
 
-    override fun observeAllGames(): Flowable<List<Game>> {
-        val query = gamesCollection().orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
-        return RxFirestore.observeQueryRefHasId(query, Game::class.java)
+    override fun observeAllGamesDescending(): Flowable<List<Game>> {
+        val query = getCollection().orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
+        return observeQueryCollection(query)
     }
 
     override fun saveName(id: String, text: String): Completable {
-        return updateField(id, text, Game.FIELD_NAME)
+        return updateFieldOffline(id, text, Game.FIELD_NAME)
     }
 
     override fun saveDescription(id: String, text: String): Completable {
-        return updateField(id, text, Game.FIELD_DESCRIPTION)
+        return updateFieldOffline(id, text, Game.FIELD_DESCRIPTION)
     }
 
     override fun savePassword(id: String, text: String): Completable {
-        return updateField(id, text, Game.FIELD_PASSWORD)
+        return updateFieldOffline(id, text, Game.FIELD_PASSWORD)
     }
 
     override fun activateGame(id: String): Completable {
-        return updateField(id, GameStatus.ACTIVE.value, Game.FIELD_STATUS)
+        return updateFieldOffline(id, GameStatus.ACTIVE.value, Game.FIELD_STATUS)
     }
 
-    private fun updateField(id: String, text: String, fieldName: String): Completable {
-        val document = gamesCollection().document(id)
-        return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to text))
+    override fun createDocument(): Single<Game> {
+        return userRepository.getCurrentUserSingle().flatMap { user ->
+            val gameToCreate = Game(masterId = user.id, status = GameStatus.DRAFT.value, masterName = user.displayName)
+            val writeBatch = instance.batch()
+            val gameId = getCollection().document().id
+
+            writeBatch.set(getDocumentReference(gameId), gameToCreate)
+            userInGameRepository.addCurrentUserInGame(writeBatch, gameId)
+            gamesInUserRepository.addGameInUser(writeBatch, gameId)
+
+            return@flatMap RxFirestore.atomicOperation(writeBatch)
+                    .andThen(getDocumentSingle(gameId))
+        }
     }
 
-    private fun updateField(id: String, value: Int, fieldName: String): Completable {
-        val document = gamesCollection().document(id)
-        return RxFirestore.updateDocumentOffline(document, mapOf(fieldName to value))
+    override fun getCollection(): CollectionReference {
+        return FirestoreCollection.GAMES.getDbCollection()
     }
-
-
-    private fun gamesCollection() = FirestoreCollection.GAMES.getDbCollection()
 }
 
-interface GameRepository {
-    fun createDraftGame(): Single<Game>
-
-    fun observeGame(id: String): Flowable<Game>
+interface GameRepository : FireStoreRepository<Game> {
 
     fun saveName(id: String, text: String): Completable
 
@@ -100,5 +81,6 @@ interface GameRepository {
     fun observeAllActiveGames(): Flowable<List<Game>>
 
     fun activateGame(id: String): Completable
-    fun observeAllGames(): Flowable<List<Game>>
+
+    fun observeAllGamesDescending(): Flowable<List<Game>>
 }

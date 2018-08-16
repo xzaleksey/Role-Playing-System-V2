@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.user
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
-import com.alekseyvalyakin.roleplaysystem.utils.setId
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.CurrentUserInfo
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.NoUserException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
@@ -18,14 +18,13 @@ class UserRepositoryImpl : UserRepository {
     override fun getCurrentUserSingle(): Single<User> {
         return getCurrentUserId().flatMap { userId ->
             val documentReference = userDocument(userId)
-            getUser(documentReference, userId)
+            getUser(documentReference)
                     .doOnSuccess(::updateCache)
         }
     }
 
-    private fun getUser(documentReference: DocumentReference, userId: String): Single<User> {
-        return RxFirestore.getDocumentSingle(documentReference, User::class.java)
-                .setId(userId)
+    private fun getUser(documentReference: DocumentReference): Single<User> {
+        return RxFirestore.getDocumentSingleHasId(documentReference, User::class.java)
                 .doOnSuccess(::updateCache)
     }
 
@@ -40,7 +39,7 @@ class UserRepositoryImpl : UserRepository {
                 return@flatMap Single.just(user)
             }
 
-            return@flatMap getUser(userDocument(id), id)
+            return@flatMap getUser(userDocument(id))
         }
     }
 
@@ -51,7 +50,7 @@ class UserRepositoryImpl : UserRepository {
     }
 
     override fun observeCurrentUser(): Flowable<User> {
-        val currentUser = getCurrentFirebaseUser()
+        val currentUser = getCurrentUserInfo()
                 ?: return Flowable.error(NoUserException)
 
         return observeUser(currentUser.uid)
@@ -60,25 +59,26 @@ class UserRepositoryImpl : UserRepository {
     override fun observeUser(userId: String): Flowable<User> {
         val documentReference = userDocument(userId)
 
-        return RxFirestore.observeDocumentRef(documentReference, User::class.java)
-                .setId(userId)
+        return RxFirestore.observeDocumentRefHasId(documentReference, User::class.java)
                 .doOnNext(::updateCache)
     }
 
+    override fun getCurrentUserInfo(): CurrentUserInfo? {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+                ?: return null
 
-    override fun getCurrentFirebaseUser(): FirebaseUser? {
-        return FirebaseAuth.getInstance().currentUser
+        return CurrentUserInfo(currentUser)
     }
 
     override fun getCurrentUserId(): Single<String> {
         return Single.fromCallable {
-            getCurrentFirebaseUser()?.uid
+            getCurrentUserInfo()?.uid
                     ?: throw NoUserException
         }
     }
 
     override fun isCurrentUser(id: String): Boolean {
-        getCurrentFirebaseUser()?.let {
+        getCurrentUserInfo()?.let {
             return it.uid == id
         }
 
@@ -100,21 +100,21 @@ class UserRepositoryImpl : UserRepository {
 }
 
 interface UserRepository {
-    fun createUser(user: User): Completable
+    fun getCurrentUserInfo(): CurrentUserInfo?
 
-    fun getCurrentFirebaseUser(): FirebaseUser?
-
-    fun observeCurrentUser(): Flowable<User>
+    fun isCurrentUser(id: String): Boolean
 
     fun getCurrentUserSingle(): Single<User>
+
+    fun createUser(user: User): Completable
+
+    fun observeCurrentUser(): Flowable<User>
 
     fun getCurrentUserId(): Single<String>
 
     fun getCachedCurrentUser(): Single<User>
 
     fun observeUser(userId: String): Flowable<User>
-
-    fun isCurrentUser(id: String): Boolean
 
     fun onDisplayNameChanged(name: String): Completable
 }

@@ -103,7 +103,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     }
 
     private fun getCreateGameObservable(): Observable<Game> {
-        return gameRepository.createDraftGame().toObservable()
+        return gameRepository.createDocument().toObservable()
                 .doOnSubscribe { presenter.showFabLoading(true) }
                 .onErrorReturn { t ->
                     Timber.e(t)

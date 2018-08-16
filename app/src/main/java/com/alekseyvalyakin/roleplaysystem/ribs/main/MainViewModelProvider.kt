@@ -40,7 +40,7 @@ class MainViewModelProviderImpl(
     }
 
     private fun getAllGamesFlowable(filterFlowable: Flowable<FilterModel>): Flowable<List<IFlexible<*>>> {
-        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGames().onErrorReturn { emptyList() },
+        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGamesDescending().onErrorReturn { emptyList() },
                 gamesInUserRepository.observeCurrentUserGames(),
                 Function3 { filterModel, games, gamesInUser ->
                     val ids = gamesInUser.map { it.id }.toSet()
@@ -53,7 +53,7 @@ class MainViewModelProviderImpl(
                                         game.id,
                                         game.name,
                                         game.description,
-                                        game.masterId == userRepository.getCurrentFirebaseUser()?.uid,
+                                        game.masterId == userRepository.getCurrentUserInfo()?.uid,
                                         FlexibleLayoutTypes.GAME.toString(),
                                         game.password.isNotEmpty()
                                 ))
@@ -64,7 +64,7 @@ class MainViewModelProviderImpl(
                                         game.id,
                                         game.name,
                                         game.description,
-                                        game.masterId == userRepository.getCurrentFirebaseUser()?.uid,
+                                        game.masterId == userRepository.getCurrentUserInfo()?.uid,
                                         FlexibleLayoutTypes.GAMES_IN_USER.toString(),
                                         game.password.isNotEmpty()
                                 ))

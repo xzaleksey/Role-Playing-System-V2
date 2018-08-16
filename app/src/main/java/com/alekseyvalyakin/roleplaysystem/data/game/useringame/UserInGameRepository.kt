@@ -23,7 +23,7 @@ class UserInGameRepositoryImpl(
     }
 
     private fun createDocumentReference(gameId: String): DocumentReference {
-        val currentUser = userRepository.getCurrentFirebaseUser()
+        val currentUser = userRepository.getCurrentUserInfo()
                 ?: throw RuntimeException("No user")
         return userInGameCollection(gameId).document(currentUser.uid)
     }

@@ -3,15 +3,18 @@ package com.alekseyvalyakin.roleplaysystem.data.auth
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User.Companion.EMPTY_USER
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.CurrentUserInfo
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.usernameFromEmail
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.rxfirebase2.RxFirebaseAuth
-import io.reactivex.*
-import java.util.concurrent.TimeUnit
+import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.MaybeTransformer
+import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,8 +23,8 @@ class AuthProviderImpl @Inject constructor(
         private val userRepository: UserRepository
 ) : AuthProvider {
 
-    override fun getCurrentUser(): FirebaseUser? {
-        return userRepository.getCurrentFirebaseUser()
+    override fun getCurrentUser(): CurrentUserInfo? {
+        return userRepository.getCurrentUserInfo()
     }
 
     override fun login(email: String, password: String): Maybe<AuthResult> {
@@ -58,7 +61,6 @@ class AuthProviderImpl @Inject constructor(
                     }
 
                     return@switchMap userRepository.observeCurrentUser().toObservable()
-                            .delay(200L, TimeUnit.MILLISECONDS)
                             .take(1)
                             .map { true }
                 }
@@ -85,8 +87,7 @@ class AuthProviderImpl @Inject constructor(
                                 userResult.photoUrl = user.photoUrl
                             }
 
-                            userRepository.createUser(userResult)
-                                    .andThen(Single.just(result))
+                            userRepository.createUser(userResult).andThen(Single.just(result))
                         }.toMaybe()
             }
         }
@@ -99,7 +100,7 @@ interface AuthProvider {
 
     fun signUp(email: String, password: String): Maybe<AuthResult>
 
-    fun getCurrentUser(): FirebaseUser?
+    fun getCurrentUser(): CurrentUserInfo?
 
     fun sendResetPassword(email: String): Completable
 

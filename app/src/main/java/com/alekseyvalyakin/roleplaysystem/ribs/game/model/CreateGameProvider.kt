@@ -19,7 +19,7 @@ class CreateGameProviderImpl(
 ) : CreateGameProvider {
 
     private val relay = BehaviorRelay.createDefault<Game>(defaultGame)
-    private val gameFlowable = gameRepository.observeGame(relay.value.id).share()
+    private val gameFlowable = gameRepository.observeDocument(relay.value.id).share()
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     override fun observeGame(viewModelFlowable: Flowable<CreateGameViewModel>): Flowable<Game> {
