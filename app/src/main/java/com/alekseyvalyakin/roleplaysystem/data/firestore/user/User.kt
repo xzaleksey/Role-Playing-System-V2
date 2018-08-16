@@ -13,6 +13,7 @@ data class User(
         var countOfGamesPlayed: Int = 0,
         var countOfGamesMastered: Int = 0,
         var displayName: String = StringUtils.EMPTY_STRING,
+        var token: String = StringUtils.EMPTY_STRING,
         @Exclude
         @set:Exclude
         @get:Exclude

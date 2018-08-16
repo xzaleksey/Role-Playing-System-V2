@@ -5,16 +5,19 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User.Companion.EMP
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.CurrentUserInfo
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.usernameFromEmail
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.iid.FirebaseInstanceId
 import com.rxfirebase2.RxFirebaseAuth
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.MaybeTransformer
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.rxfirebase2.RxFirebaseUser
+import io.reactivex.*
+import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.zipWith
+import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,18 +26,66 @@ class AuthProviderImpl @Inject constructor(
         private val userRepository: UserRepository
 ) : AuthProvider {
 
+    private val localUser = BehaviorSubject.create<User>()
+    private val observeLoggedInStateInternal: Observable<Boolean> =
+            RxFirebaseAuth.observeAuthState(FirebaseAuth.getInstance())
+                    .startWith(FirebaseAuth.getInstance())
+                    .switchMap { firebaseAuth ->
+                        if (firebaseAuth.currentUser == null) {
+                            return@switchMap Observable.just(false)
+                        }
+
+                        return@switchMap Observable.just(true)
+                    }.distinctUntilChanged().share()
+
+    val updateUserDisposable =
+            Flowable.combineLatest(
+                    observeLoggedInStateInternal
+                            .skip(1)
+                            .toFlowable(BackpressureStrategy.LATEST)
+                            .filter { it }
+                            .map { userRepository.getCurrentUserInfo()!! },
+                    localUser.toFlowable(BackpressureStrategy.LATEST),
+                    BiFunction { currentUserInfo: CurrentUserInfo, localUser: User ->
+                        return@BiFunction userRepository.getCurrentUserSingle()
+                                .onErrorReturn { EMPTY_USER }
+                                .zipWith(RxFirebaseUser.getMessagingToken(FirebaseInstanceId.getInstance()))
+                                .flatMap { userWithToken ->
+                                    val userResult: User
+                                    if (userWithToken.first != EMPTY_USER) {
+                                        userResult = userWithToken.first
+                                    } else {
+                                        userResult = localUser
+                                        userResult.displayName = usernameFromEmail(currentUserInfo.email)
+                                    }
+
+                                    userResult.token = userWithToken.second.token
+
+                                    if (userResult.photoUrl.isNullOrBlank() && !currentUserInfo.photoUrl.isNullOrBlank()) {
+                                        userResult.photoUrl = currentUserInfo.photoUrl
+                                    }
+
+                                    Timber.d("Update user $userResult")
+
+                                    return@flatMap userRepository.createUser(userResult)
+                                            .andThen(Single.just(userResult))
+                                }
+                    })
+                    .flatMap { it.toFlowable() }
+                    .subscribeWithErrorLogging()
+
     override fun getCurrentUser(): CurrentUserInfo? {
         return userRepository.getCurrentUserInfo()
     }
 
     override fun login(email: String, password: String): Maybe<AuthResult> {
+        localUser.onNext(User(email = email))
         return RxFirebaseAuth.signInWithEmailAndPassword(FirebaseAuth.getInstance(), email, password)
-                .compose(updateUser(User(email = email)))
     }
 
     override fun signUp(email: String, password: String): Maybe<AuthResult> {
+        localUser.onNext(User(email = email))
         return RxFirebaseAuth.createUserWithEmailAndPassword(FirebaseAuth.getInstance(), email, password)
-                .compose(updateUser(User(email = email)))
     }
 
     override fun sendResetPassword(email: String): Completable {
@@ -42,10 +93,11 @@ class AuthProviderImpl @Inject constructor(
     }
 
     override fun loginWithGoogleAccount(googleSignInAccount: GoogleSignInAccount): Maybe<AuthResult> {
+        localUser.onNext((User(email = googleSignInAccount.email!!,
+                photoUrl = googleSignInAccount.photoUrl.toString())))
+
         val credential = GoogleAuthProvider.getCredential(googleSignInAccount.idToken, null)
         return RxFirebaseAuth.signInWithCredential(FirebaseAuth.getInstance(), credential)
-                .compose(updateUser((User(email = googleSignInAccount.email!!,
-                        photoUrl = googleSignInAccount.photoUrl.toString()))))
     }
 
     override fun signOut(): Completable {
@@ -65,32 +117,6 @@ class AuthProviderImpl @Inject constructor(
                             .map { true }
                 }
                 .distinctUntilChanged()
-    }
-
-    private fun updateUser(user: User): MaybeTransformer<AuthResult, AuthResult> {
-        return MaybeTransformer { authResult ->
-            return@MaybeTransformer authResult.flatMap { result ->
-                return@flatMap userRepository.getCurrentUserSingle()
-                        .onErrorReturn { EMPTY_USER }
-                        .flatMap { userFromServer ->
-                            val userResult: User
-                            if (userFromServer != EMPTY_USER) {
-                                userResult = userFromServer
-                            } else {
-                                userResult = user
-                                user.displayName = usernameFromEmail(user.email)
-                            }
-
-                            userResult.id = result.user.uid
-
-                            if (userResult.photoUrl.isNullOrBlank() && !user.photoUrl.isNullOrBlank()) {
-                                userResult.photoUrl = user.photoUrl
-                            }
-
-                            userRepository.createUser(userResult).andThen(Single.just(result))
-                        }.toMaybe()
-            }
-        }
     }
 
 }
