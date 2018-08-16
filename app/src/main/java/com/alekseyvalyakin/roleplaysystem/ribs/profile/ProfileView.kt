@@ -11,8 +11,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.InputCallback
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
@@ -230,20 +234,22 @@ class ProfileView constructor(
         if (currentDialog != null) {
             return
         }
-        currentDialog = MaterialDialog.Builder(context)
+        currentDialog = MaterialDialog(context)
                 .title(R.string.name)
-                .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
-                .positiveText(android.R.string.ok)
-                .onPositive { dialog, _ ->
-                    relay.accept(ProfilePresenter.Event.EditNameConfirm(dialog.inputEditText!!.text.toString()))
-                }
-                .negativeText(android.R.string.cancel)
-                .dismissListener { currentDialog = null }
-                .alwaysCallInputCallback()
-                .contentColor(getCompatColor(R.color.colorTextPrimary))
-                .input(getString(R.string.input_name), displayName, { dialog, input ->
-                    dialog.getActionButton(DialogAction.POSITIVE).isEnabled = !input.isBlank()
-                }).show()
+                .positiveButton(res = android.R.string.ok, click = {
+                    relay.accept(ProfilePresenter.Event.EditNameConfirm(it.getInputField()!!.text.toString()))
+                })
+                .negativeButton(res = android.R.string.cancel)
+                .input(hint = getString(R.string.input_name),
+                        waitForPositiveButton = false,
+                        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
+                        prefill = displayName, callback = object : InputCallback {
+                    override fun invoke(dialog: MaterialDialog, text: CharSequence) {
+                        dialog.setActionButtonEnabled(WhichButton.POSITIVE, !text.isBlank())
+                    }
+                })
+        currentDialog?.setOnDismissListener { currentDialog = null }
+        currentDialog?.show()
     }
 
 

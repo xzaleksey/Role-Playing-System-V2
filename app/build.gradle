@@ -86,7 +86,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 
-    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.afollestad.material-dialogs:files:2.0.0-alpha01'
+    implementation 'com.afollestad.material-dialogs:core:2.0.0-alpha01'
+    implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha01'
 
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'
     annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'

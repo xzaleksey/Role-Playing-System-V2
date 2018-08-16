@@ -199,13 +199,13 @@ class AuthView @JvmOverloads constructor(
     }
 
     override fun showResetPasswordDialog() {
-        MaterialDialog.Builder(context)
+        MaterialDialog(context)
                 .title(R.string.reset_password)
-                .content(R.string.reset_password_text)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive { _, _ ->
+                .message(R.string.reset_password_text)
+                .positiveButton(android.R.string.ok, null, {
                     relay.accept(AuthInteractor.AuthPresenter.Events.ResetPassword(getEmail()))
-                }.show()
+                })
+                .negativeButton(android.R.string.cancel)
+                .show()
     }
 }
