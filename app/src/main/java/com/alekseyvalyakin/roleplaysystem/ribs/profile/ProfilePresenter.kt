@@ -11,10 +11,14 @@ interface ProfilePresenter {
         object BackPress : Event()
         object EditNamePress : Event()
         class EditNameConfirm(val name: String) : Event()
+        object ChooseAvatar : Event()
     }
 
     fun observeUiEvents(): Observable<Event>
 
     fun updateViewModel(profileViewModel: ProfileViewModel)
+
     fun showEditDisplayNameDialog(displayName: String)
+
+    fun showLoadingContent(loading: Boolean)
 }

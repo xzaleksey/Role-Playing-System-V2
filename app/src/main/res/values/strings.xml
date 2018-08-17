@@ -39,6 +39,7 @@
     <string name="game_will_be_synched">Game will be synchronized, when network connection is ok</string>
     <string name="info">Info</string>
     <string name="name">Name</string>
+    <string name="user_name">Name</string>
     <string name="super_game">Super game</string>
     <string name="delete_game">Delete game</string>
     <string name="your_message">Your message</string>

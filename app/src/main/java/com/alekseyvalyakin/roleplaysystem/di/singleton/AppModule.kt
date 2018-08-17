@@ -21,7 +21,11 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
+import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
+import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProviderImpl
 import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Module
 import dagger.Provides
@@ -120,8 +124,20 @@ class AppModule(private val mApp: RpsApp) {
 
     @Provides
     @Singleton
+    fun provideUserAvatarRepository(userAvatarRepositoryImpl: UserAvatarRepositoryImpl): UserAvatarRepository {
+        return userAvatarRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
     fun provideSimpleCryptoProvider(): SimpleCryptoProvider {
         return SimpleCryptoProviderImpl(BuildConfig.MASTER_PASSWORD)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileProvider(context: Context): FileInfoProvider {
+        return FileInfoProviderImpl(context)
     }
 
 }

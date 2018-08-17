@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProviderImpl
@@ -75,8 +76,9 @@ class ProfileBuilder(dependency: ParentComponent) : ViewBuilder<ProfileView, Pro
             @ProfileScope
             @Provides
             @JvmStatic
-            internal fun profileViewModelProvider(profileUserProvider: ProfileUserProvider): ProfileViewModelProvider {
-                return ProfileViewModelProviderImpl(profileUserProvider)
+            internal fun profileViewModelProvider(profileUserProvider: ProfileUserProvider,
+                                                  userAvatarRepository: UserAvatarRepository): ProfileViewModelProvider {
+                return ProfileViewModelProviderImpl(profileUserProvider, userAvatarRepository)
             }
         }
 

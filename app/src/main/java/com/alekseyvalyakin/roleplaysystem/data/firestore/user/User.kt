@@ -21,7 +21,8 @@ data class User(
 ) : HasId {
 
     companion object {
-        const val FIELD_DISPLAY_NAME="displayName"
+        const val FIELD_DISPLAY_NAME = "displayName"
+        const val FIELD_PHOTO_URL = "photoUrl"
 
         val EMPTY_USER = User()
     }

@@ -12,7 +12,6 @@ import io.reactivex.Single
 import java.util.concurrent.ConcurrentHashMap
 
 class UserRepositoryImpl : UserRepository {
-
     private val userCache: MutableMap<String, User> = ConcurrentHashMap()
 
     override fun getCurrentUserSingle(): Single<User> {
@@ -85,6 +84,13 @@ class UserRepositoryImpl : UserRepository {
         return false
     }
 
+    override fun updatePhotoUrl(url: String): Completable {
+        return getCurrentUserId().flatMapCompletable {
+            updateField(it, url, User.FIELD_PHOTO_URL)
+        }
+    }
+
+
     private fun userDocument(userId: String) = getUsersCollection().document(userId)
 
     private fun updateField(id: String, text: String, fieldName: String): Completable {
@@ -117,4 +123,6 @@ interface UserRepository {
     fun observeUser(userId: String): Flowable<User>
 
     fun onDisplayNameChanged(name: String): Completable
+
+    fun updatePhotoUrl(url: String): Completable
 }

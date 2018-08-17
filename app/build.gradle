@@ -83,12 +83,15 @@ dependencies {
     implementation "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
     implementation "org.jetbrains.anko:anko-constraint-layout:$anko_version"
     implementation 'com.nineoldandroids:library:2.4.0'
+
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'id.zelory:compressor:1.0.4'
 
-    implementation 'com.afollestad.material-dialogs:files:2.0.0-alpha01'
+    implementation 'com.kbeanie:multipicker:1.5@aar'
     implementation 'com.afollestad.material-dialogs:core:2.0.0-alpha01'
     implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha01'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'
     annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
@@ -101,6 +104,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+configurations {
+    all*.exclude group: 'io.reactivex:rxjava', module: 'rxjava'
+}
+
 
 repositories {
     mavenCentral()

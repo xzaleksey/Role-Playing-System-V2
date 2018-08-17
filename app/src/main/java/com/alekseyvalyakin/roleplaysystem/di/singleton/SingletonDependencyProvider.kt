@@ -9,7 +9,9 @@ import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameReposit
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.uber.rib.core.RouterNavigatorFactory
 import io.reactivex.Scheduler
 
@@ -42,4 +44,8 @@ interface SingletonDependencyProvider {
     fun resourceProvider(): ResourcesProvider
 
     fun sinmpleCryptoRovider(): SimpleCryptoProvider
+
+    fun fileInfoProvider(): FileInfoProvider
+
+    fun userAvatarRepo(): UserAvatarRepository
 }

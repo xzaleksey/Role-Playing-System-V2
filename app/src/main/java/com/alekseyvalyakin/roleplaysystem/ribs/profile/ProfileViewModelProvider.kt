@@ -1,12 +1,13 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
-import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImpl
+import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
 import io.reactivex.Completable
 import io.reactivex.Flowable
 
 class ProfileViewModelProviderImpl(
-        private val profileUserProvider: ProfileUserProvider
+        private val profileUserProvider: ProfileUserProvider,
+        private val userAvatarRepository: UserAvatarRepository
 ) : ProfileViewModelProvider {
 
     override fun observeProfileViewModel(): Flowable<ProfileViewModel> {
@@ -19,7 +20,7 @@ class ProfileViewModelProviderImpl(
                             profileUserProvider.isCurrentUser(),
                             (masterGames + playedGames).toString(),
                             masterGames.toString(),
-                            MaterialDrawableProviderImpl(user.displayName, user.id),
+                            userAvatarRepository.getAvatarImageProvider(),
                             emptyList())
                 }
     }
