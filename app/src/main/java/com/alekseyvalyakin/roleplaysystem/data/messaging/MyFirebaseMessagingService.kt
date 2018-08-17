@@ -8,6 +8,7 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -53,7 +54,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
