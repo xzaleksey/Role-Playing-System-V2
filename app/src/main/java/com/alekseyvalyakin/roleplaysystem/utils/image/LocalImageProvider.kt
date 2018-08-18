@@ -10,13 +10,14 @@ import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback
 import com.kbeanie.multipicker.api.entity.ChosenImage
 import com.uber.rib.core.lifecycle.ActivityCallbackEvent
 import io.reactivex.BackpressureStrategy
-import io.reactivex.Single
+import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 
 
 class LocalImageProviderImpl(
         val activity: MainActivity
 ) : LocalImageProvider {
+
     private val callbacks = activity.callbacks().share()!!
     private var imagePicker = ImagePicker(activity)
     private val relay = PublishRelay.create<ImagesResult>()
@@ -50,12 +51,12 @@ class LocalImageProviderImpl(
                 }
     }
 
-    override fun pickImage(): Single<ImagesResult> {
-        return relay.doOnSubscribe {
-            imagePicker.pickImage()
-        }.take(1)
-                .toFlowable(BackpressureStrategy.LATEST)
-                .singleOrError()
+    override fun pickImage() {
+        imagePicker.pickImage()
+    }
+
+    override fun observeImage(): Flowable<ImagesResult> {
+        return relay.toFlowable(BackpressureStrategy.LATEST)
     }
 
 }
@@ -67,6 +68,7 @@ sealed class ImagesResult {
 }
 
 interface LocalImageProvider {
-    fun pickImage(): Single<ImagesResult>
+    fun pickImage()
+    fun observeImage(): Flowable<ImagesResult>
     fun subscribe(): Disposable
 }

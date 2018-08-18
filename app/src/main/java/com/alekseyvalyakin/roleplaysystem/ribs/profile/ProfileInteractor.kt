@@ -10,9 +10,9 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -50,6 +50,19 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
                     presenter.updateViewModel(it)
                 }.addToDisposables()
 
+        localImageProvider.observeImage().switchMap {
+            if (it is ImagesResult.Success) {
+                return@switchMap userAvatarRepository.uploadAvatar(it.images.first().originalPath)
+                        .doOnSubscribe { _ -> presenter.showLoadingContent(true) }
+                        .doAfterTerminate { presenter.showLoadingContent(false) }
+                        .toFlowable()
+            }
+            return@switchMap Flowable.error<String>(RuntimeException((it as ImagesResult.Error).error))
+        }.onErrorReturn {
+            Timber.e(it)
+            StringUtils.EMPTY_STRING
+        }.subscribeWithErrorLogging()
+                .addToDisposables()
 
         presenter.observeUiEvents()
                 .observeOn(uiScheduler)
@@ -73,20 +86,9 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
             }
 
             is ProfilePresenter.Event.ChooseAvatar -> {
-                return localImageProvider.pickImage()
-                        .flatMap {
-                            if (it is ImagesResult.Success) {
-                                return@flatMap userAvatarRepository.uploadAvatar(it.images.first().originalPath)
-                                        .doOnSubscribe { _ -> presenter.showLoadingContent(true) }
-                                        .doAfterTerminate { presenter.showLoadingContent(false) }
-                            }
-                            return@flatMap Single.error<String>(RuntimeException((it as ImagesResult.Error).error))
-                        }
-                        .onErrorReturn {
-                            Timber.e(it)
-                            StringUtils.EMPTY_STRING
-                        }
-                        .toObservable()
+                return Observable.fromCallable {
+                    localImageProvider.pickImage()
+                }
             }
 
             is ProfilePresenter.Event.EditNameConfirm -> {
