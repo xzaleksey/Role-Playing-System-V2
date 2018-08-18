@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.useravatar
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageProvider
 import com.alekseyvalyakin.roleplaysystem.base.image.ObservableUrlDrawableProviderImpl
@@ -17,8 +18,10 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +37,7 @@ class UserAvatarRepositoryImpl @Inject constructor(
 
     private val avatars = "avatars"
     private val subject = BehaviorSubject.create<String>().toSerialized()
-
+    private var uploadAvatarDisposable = Disposables.disposed()
     private val updateAvatarObservable = userRepository.observeCurrentUser()
             .doOnNext { user ->
                 user?.photoUrl?.let {
@@ -44,15 +47,19 @@ class UserAvatarRepositoryImpl @Inject constructor(
 
     override fun uploadAvatar(filePath: String): Single<String> {
         return Single.create<String> { emitter ->
-            userRepository.getCurrentUserId().zipWith(
+            uploadAvatarDisposable.dispose()
+
+            uploadAvatarDisposable = userRepository.getCurrentUserId().zipWith(
                     createLocalFileCopy(File(filePath)),
                     BiFunction { id: String, file: File -> return@BiFunction id to file })
                     .flatMap { pair ->
                         val reference = FirebaseStorage.getInstance().reference.child(avatars).child(pair.first)
+                        Timber.d("After compress " + pair.second.length())
 
                         return@flatMap RxFirebaseStorage
                                 .putFileAndObserveUri(reference, Uri.fromFile(pair.second))
                                 .flatMap { url ->
+                                    pair.second.delete()
                                     val urlString = url.toString()
                                     userRepository.updatePhotoUrl(urlString)
                                             .toSingleDefault(urlString)
@@ -85,10 +92,12 @@ class UserAvatarRepositoryImpl @Inject constructor(
 
     private fun createLocalFileCopy(file: File): Single<File> {
         return Single.fromCallable {
+            Timber.d("Before compress " + file.length())
             val newDirectory = fileInfoProvider.getFilesPath().absolutePath
             val compressor = Compressor.Builder(context)
                     .setDestinationDirectoryPath(newDirectory)
-                    .setQuality(100)
+                    .setCompressFormat(Bitmap.CompressFormat.PNG)
+                    .setQuality(90)
                     .build()
             compressor.compressToFile(file)
         }
