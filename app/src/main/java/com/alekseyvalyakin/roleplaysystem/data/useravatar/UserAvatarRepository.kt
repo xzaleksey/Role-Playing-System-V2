@@ -98,7 +98,10 @@ class UserAvatarRepositoryImpl @Inject constructor(
                     .setDestinationDirectoryPath(newDirectory)
                     .setCompressFormat(Bitmap.CompressFormat.PNG)
                     .setQuality(90)
-            compressor.compressToFile(file)
+            val compressedFile = compressor.compressToFile(file)
+            file.delete()
+
+            return@fromCallable compressedFile
         }
     }
 }

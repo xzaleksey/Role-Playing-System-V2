@@ -2,6 +2,7 @@ package com.uber.rib.core
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
 import java.io.Serializable
 
@@ -11,7 +12,7 @@ abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out Interactor
     private val childrenKey = "childrenKey"
 
     fun addDisposable(disposable: Disposable) {
-        compositeDisposable.add(disposable)
+        disposable.addTo(compositeDisposable)
     }
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
