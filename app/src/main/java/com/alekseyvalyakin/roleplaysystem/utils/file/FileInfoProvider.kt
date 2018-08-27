@@ -10,8 +10,15 @@ class FileInfoProviderImpl(
     override fun getFilesPath(): File {
         return context.filesDir
     }
+
+    override fun getImagesFilePath(): File {
+        return File(getFilesPath(), "images")
+    }
+
 }
 
 interface FileInfoProvider {
     fun getFilesPath(): File
+
+    fun getImagesFilePath(): File
 }

@@ -92,13 +92,12 @@ class UserAvatarRepositoryImpl @Inject constructor(
 
     private fun createLocalFileCopy(file: File): Single<File> {
         return Single.fromCallable {
-            Timber.d("Before compress " + file.length())
-            val newDirectory = fileInfoProvider.getFilesPath().absolutePath
-            val compressor = Compressor.Builder(context)
+            Timber.d("Before compress %s", file.length())
+            val newDirectory = fileInfoProvider.getImagesFilePath().absolutePath
+            val compressor = Compressor(context)
                     .setDestinationDirectoryPath(newDirectory)
                     .setCompressFormat(Bitmap.CompressFormat.PNG)
                     .setQuality(90)
-                    .build()
             compressor.compressToFile(file)
         }
     }
@@ -106,6 +105,8 @@ class UserAvatarRepositoryImpl @Inject constructor(
 
 interface UserAvatarRepository {
     fun uploadAvatar(filePath: String): Single<String>
+
     fun getAvatarImageProvider(): ImageProvider
+
     fun subscribeForUpdates(): Disposable
 }
