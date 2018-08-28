@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
@@ -35,6 +36,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     @Inject
     lateinit var gameRepository: GameRepository
     @Inject
+    lateinit var userRepository: UserRepository
+    @Inject
     lateinit var mainViewModelProvider: MainViewModelProvider
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
@@ -66,7 +69,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
-        var observable: Observable<*> = Observable.just(uiEvents)
+        var observable: Observable<*> = Observable.empty<Any>()
 
         when (uiEvents) {
             is UiEvents.SearchRightIconClick -> {
@@ -83,23 +86,29 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 return authProvider.signOut().toObservable<Any>()
             }
             is UiEvents.RecyclerItemClick -> {
-                handleRecyclerViewItemClick(uiEvents.item)
+                return handleRecyclerViewItemClick(uiEvents.item)
             }
 
         }
         return observable
     }
 
-    private fun handleRecyclerViewItemClick(item: IFlexible<*>) {
+    private fun handleRecyclerViewItemClick(item: IFlexible<*>): Observable<*> {
         when (item.layoutRes) {
             FlexibleLayoutTypes.USER_PROFILE -> {
                 mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.MyProfile((item as UserProfileViewModel).user))
             }
             FlexibleLayoutTypes.GAME -> {
-                item as GameListViewModel
-                Timber.d("Game clicked")
+                (item as GameListViewModel).game.let {
+                    Timber.d("Game clicked")
+                    if (it.isDraft() && userRepository.isCurrentUser(it.masterId)) {
+                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(it))
+                    }
+                }
             }
         }
+
+        return Observable.empty<Any>()
     }
 
     private fun getCreateGameObservable(): Observable<Game> {

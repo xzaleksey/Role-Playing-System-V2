@@ -30,6 +30,10 @@ data class Game(
                 || masterName.startsWith(text, true)
     }
 
+    fun isDraft(): Boolean {
+        return GameStatus.DRAFT.value == status
+    }
+
     companion object {
         const val serialVersionUID = 1L
 

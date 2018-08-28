@@ -1,7 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.app
 
 import android.app.Application
-import android.support.v7.app.AppCompatDelegate
 import com.alekseyvalyakin.roleplaysystem.BuildConfig
 import com.alekseyvalyakin.roleplaysystem.di.singleton.AppComponent
 import com.alekseyvalyakin.roleplaysystem.di.singleton.AppModule
@@ -24,7 +23,6 @@ class RpsApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         FirebaseFirestore.getInstance().firestoreSettings = FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .setTimestampsInSnapshotsEnabled(true)

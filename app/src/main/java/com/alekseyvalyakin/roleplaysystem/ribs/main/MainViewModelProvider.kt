@@ -55,7 +55,8 @@ class MainViewModelProviderImpl(
                                         game.description,
                                         game.masterId == userRepository.getCurrentUserInfo()?.uid,
                                         FlexibleLayoutTypes.GAME.toString(),
-                                        game.password.isNotEmpty()
+                                        game.password.isNotEmpty(),
+                                        game
                                 ))
                             }
 
@@ -66,7 +67,8 @@ class MainViewModelProviderImpl(
                                         if (game.description.isBlank()) stringRepository.noDescription() else game.description,
                                         game.masterId == userRepository.getCurrentUserInfo()?.uid,
                                         FlexibleLayoutTypes.GAMES_IN_USER.toString(),
-                                        game.password.isNotEmpty()
+                                        game.password.isNotEmpty(),
+                                        game
                                 ))
                             }
                         }
