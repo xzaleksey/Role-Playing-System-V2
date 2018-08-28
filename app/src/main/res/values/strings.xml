@@ -121,4 +121,7 @@
     <string name="create_game_description_password">Think up a password</string>
     <string name="input_name">Input your name</string>
     <string name="default_notification_channel_id">Main</string>
+    <string name="last_games">Last games</string>
+    <string name="no_name">No name</string>
+    <string name="no_description">No description</string>
 </resources>

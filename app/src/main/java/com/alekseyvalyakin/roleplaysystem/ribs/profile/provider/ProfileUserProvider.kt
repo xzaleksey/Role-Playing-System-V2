@@ -26,15 +26,15 @@ class ProfileUserProviderImpl(
                 .flatMap { relay.toFlowable(BackpressureStrategy.LATEST) }
     }
 
-    override fun isCurrentUser(): Boolean {
-        return userRepository.isCurrentUser(user.id)
+    override fun isCurrentUser(id: String): Boolean {
+        return userRepository.isCurrentUser(id)
     }
 }
 
 interface ProfileUserProvider {
     fun observeCurrentUser(): Flowable<User>
 
-    fun isCurrentUser(): Boolean
+    fun isCurrentUser(id: String): Boolean
 
     fun onNameChanged(name: String): Completable
 }

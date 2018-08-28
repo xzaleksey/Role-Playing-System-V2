@@ -4,6 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
@@ -77,8 +80,20 @@ class ProfileBuilder(dependency: ParentComponent) : ViewBuilder<ProfileView, Pro
             @Provides
             @JvmStatic
             internal fun profileViewModelProvider(profileUserProvider: ProfileUserProvider,
-                                                  userAvatarRepository: UserAvatarRepository): ProfileViewModelProvider {
-                return ProfileViewModelProviderImpl(profileUserProvider, userAvatarRepository)
+                                                  userAvatarRepository: UserAvatarRepository,
+                                                  userRepository: UserRepository,
+                                                  gamesInUserRepository: GamesInUserRepository,
+                                                  gameRepository: GameRepository,
+                                                  stringRepository: StringRepository,
+                                                  user: User): ProfileViewModelProvider {
+                return ProfileViewModelProviderImpl(profileUserProvider,
+                        userAvatarRepository,
+                        userRepository,
+                        gamesInUserRepository,
+                        gameRepository,
+                        stringRepository,
+                        user
+                )
             }
         }
 

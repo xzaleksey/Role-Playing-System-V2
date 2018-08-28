@@ -9,5 +9,5 @@ data class ProfileViewModel(
         val isEditor: Boolean,
         val totalGamesCount: String,
         val totalMasterGamesCount: String,
-        val imageProvider: ImageProvider,
-        val items: List<IFlexible<*>>)
+        val imageProvider: ImageProvider = ImageProvider.Empty,
+        val items: List<IFlexible<*>> = emptyList())

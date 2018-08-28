@@ -24,6 +24,8 @@ import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions
+import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import org.jetbrains.anko.*
@@ -51,6 +53,7 @@ class ProfileView constructor(
     private val relay = PublishRelay.create<ProfilePresenter.Event>()
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private var avatarDisposable = Disposables.disposed()
+    private val flexibleAdapter = FlexibleAdapter<IFlexible<*>>(emptyList())
 
     init {
         id = R.id.main_container
@@ -153,7 +156,6 @@ class ProfileView constructor(
 
                 tvTotalGamesCount = textView {
                     id = R.id.tv_total_games_count
-                    text = "2"
                     setRufinaRegularTypeface()
                     gravity = Gravity.CENTER
                     textColor = getCompatColor(R.color.colorPrimary)
@@ -175,8 +177,6 @@ class ProfileView constructor(
 
                 tvMasterGamesCount = textView {
                     id = R.id.tv_master_games_count
-
-                    text = "1"
                     setRufinaRegularTypeface()
                     gravity = Gravity.CENTER
                     textColor = getCompatColor(R.color.colorPrimary)
@@ -207,7 +207,10 @@ class ProfileView constructor(
                 id = R.id.recycler_view
                 isVerticalScrollBarEnabled = true
                 layoutManager = LinearLayoutManager(context)
-            }.lparams(width = matchParent, height = matchParent)
+                adapter = flexibleAdapter
+            }.lparams(width = matchParent, height = matchParent) {
+                topMargin = getIntDimen(R.dimen.dp_3_inverse)
+            }
         }.lparams(width = matchParent, height = matchParent)
 
         progressBarCenter = progressBar {
@@ -236,6 +239,8 @@ class ProfileView constructor(
                         ivAvatar.setImageBitmap(it.getBitmap())
                     }
         }
+
+        flexibleAdapter.updateDataSet(profileViewModel.items, false)
     }
 
     override fun onDetachedFromWindow() {

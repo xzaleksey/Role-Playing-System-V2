@@ -30,6 +30,7 @@
     <dimen name="sp_20">20sp</dimen>
     <dimen name="sp_24">24sp</dimen>
 
+    <dimen name="dp_3_inverse">-3dp</dimen>
     <dimen name="dp_30_inverse">-30dp</dimen>
     <dimen name="dp_40_inverse">-40dp</dimen>
 

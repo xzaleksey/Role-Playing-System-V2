@@ -62,8 +62,8 @@ class MainViewModelProviderImpl(
                             if (ids.contains(game.id)) {
                                 gamesInUserList.add(GameListViewModel(
                                         game.id,
-                                        game.name,
-                                        game.description,
+                                        if (game.name.isBlank()) stringRepository.noName() else game.name,
+                                        if (game.description.isBlank()) stringRepository.noDescription() else game.description,
                                         game.masterId == userRepository.getCurrentUserInfo()?.uid,
                                         FlexibleLayoutTypes.GAMES_IN_USER.toString(),
                                         game.password.isNotEmpty()

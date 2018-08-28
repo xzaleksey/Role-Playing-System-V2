@@ -116,5 +116,8 @@
     <string name="create_game_description_example">Пример: это приятный мир с единорогами…</string>
     <string name="create_game_description_password">Придумайте пароль</string>
     <string name="input_name">Введите ваше имя</string>
+    <string name="last_games">Последние игры</string>
+    <string name="no_name">Нет названия</string>
+    <string name="no_description">Нет описания</string>
 
 </resources>

@@ -22,15 +22,20 @@ class GamesInUserRepositoryImpl(
         writeBatch.set(createDocumentReference(id), GamesInUserInfo())
     }
 
-    private fun createDocumentReference(gameId: String) = gamesInUserCollection().document(gameId)
+    private fun createDocumentReference(gameId: String) = gamesInUserCollection(currentUser().uid).document(gameId)
 
     private fun currentUser() = (userRepository.getCurrentUserInfo()
             ?: throw RuntimeException("No user"))
 
-    override fun gamesInUserCollection() = FirestoreCollection.GAMES_IN_USER(currentUser().uid).getDbCollection()
+    override fun gamesInUserCollection(id: String) = FirestoreCollection.GAMES_IN_USER(id).getDbCollection()
 
     override fun observeCurrentUserGames(): Flowable<List<GamesInUserInfo>> {
-        val gamesInUserCollection = gamesInUserCollection()
+        val gamesInUserCollection = gamesInUserCollection(currentUser().uid)
+        return RxFirestore.observeQueryRefHasId(gamesInUserCollection, GamesInUserInfo::class.java)
+    }
+
+    override fun observeUserGames(uid: String): Flowable<List<GamesInUserInfo>> {
+        val gamesInUserCollection = gamesInUserCollection(uid)
         return RxFirestore.observeQueryRefHasId(gamesInUserCollection, GamesInUserInfo::class.java)
     }
 }
@@ -38,9 +43,11 @@ class GamesInUserRepositoryImpl(
 interface GamesInUserRepository {
     fun createGamesInUserInfo(gameId: String): Completable
 
-    fun gamesInUserCollection(): CollectionReference
+    fun gamesInUserCollection(id: String): CollectionReference
 
     fun addGameInUser(writeBatch: WriteBatch, id: String)
 
     fun observeCurrentUserGames(): Flowable<List<GamesInUserInfo>>
+
+    fun observeUserGames(uid: String): Flowable<List<GamesInUserInfo>>
 }

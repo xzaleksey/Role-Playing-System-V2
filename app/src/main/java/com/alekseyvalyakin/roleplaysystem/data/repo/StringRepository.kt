@@ -53,6 +53,8 @@ class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : S
 
     override fun getMyLastGames(): String = resourcesProvider.getString(R.string.my_last_games)
 
+    override fun getLastGames(): String = resourcesProvider.getString(R.string.last_games)
+
     override fun getAllGames(): String {
         return resourcesProvider.getString(R.string.all_games)
     }
@@ -88,6 +90,15 @@ class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : S
     override fun createGameNameExample(): String {
         return resourcesProvider.getString(R.string.create_game_name_example)
     }
+
+    override fun noName(): String {
+        return resourcesProvider.getString(R.string.no_name)
+    }
+
+    override fun noDescription(): String {
+        return resourcesProvider.getString(R.string.no_description)
+    }
+
 }
 
 interface StringRepository {
@@ -113,4 +124,7 @@ interface StringRepository {
     fun createGameDescriptionTitle(): String
     fun createGameDescriptionExample(): String
     fun createGamePasswordTitle(): String
+    fun getLastGames(): String
+    fun noName(): String
+    fun noDescription(): String
 }
