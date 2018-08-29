@@ -21,4 +21,6 @@ interface ProfilePresenter {
     fun showEditDisplayNameDialog(displayName: String)
 
     fun showLoadingContent(loading: Boolean)
+
+    fun showError(localizedMessage: String)
 }

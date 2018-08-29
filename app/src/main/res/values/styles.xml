@@ -16,7 +16,7 @@
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
         <item name="android:buttonStyle">@style/AppThemeBase.Widget.Button</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="android:autoCompleteTextViewStyle">
             @style/AppThemeBase.Widget.AutoCompleteTextView

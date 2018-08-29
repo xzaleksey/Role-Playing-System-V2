@@ -29,6 +29,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import org.jetbrains.anko.*
+import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
 
@@ -37,7 +38,7 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
  */
 class ProfileView constructor(
         context: Context
-) : _FrameLayout(context), ProfilePresenter {
+) : _CoordinatorLayout(context), ProfilePresenter {
 
     private lateinit var btnBack: ImageView
     private lateinit var btnEdit: ImageView
@@ -241,6 +242,10 @@ class ProfileView constructor(
         }
 
         flexibleAdapter.updateDataSet(profileViewModel.items, false)
+    }
+
+    override fun showError(localizedMessage: String) {
+        showSnack(localizedMessage)
     }
 
     override fun onDetachedFromWindow() {
