@@ -101,7 +101,6 @@ class ProfileView constructor(
                         id = R.id.display_name
                         gravity = Gravity.CENTER
                         maxLines = 1
-                        text = resources.getString(R.string.total_games)
                         textColor = Color.WHITE
                         setTextSizeFromRes(R.dimen.dp_24)
                     }.lparams(width = matchParent) {
@@ -115,7 +114,6 @@ class ProfileView constructor(
                         id = R.id.tv_email
                         gravity = Gravity.CENTER
                         maxLines = 1
-                        text = resources.getString(R.string.total_games)
                         textColor = getCompatColor(R.color.white7)
                         setTextSizeFromRes(R.dimen.dp_16)
                     }.lparams(width = matchParent) {
@@ -210,7 +208,6 @@ class ProfileView constructor(
                 layoutManager = LinearLayoutManager(context)
                 adapter = flexibleAdapter
             }.lparams(width = matchParent, height = matchParent) {
-                topMargin = getIntDimen(R.dimen.dp_3_inverse)
             }
         }.lparams(width = matchParent, height = matchParent)
 
