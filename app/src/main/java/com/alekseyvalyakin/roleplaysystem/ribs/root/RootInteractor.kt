@@ -56,6 +56,9 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                         is MainRibListener.MainRibEvent.CreateGame -> {
                             router.attachCreateGame(event.game)
                         }
+                        is MainRibListener.MainRibEvent.OpenActiveGame -> {
+                            router.attachOpenActiveGame(event.game)
+                        }
                         is MainRibListener.MainRibEvent.MyProfile -> {
                             router.attachMyProfile(event.user)
                         }

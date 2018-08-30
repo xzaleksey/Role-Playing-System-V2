@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
@@ -24,7 +25,6 @@ import javax.inject.Scope
 /**
  * Builder for the {@link RootScope}.
  *
- * TODO describe this scope's responsibility as a whole.
  */
 class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, RootRouter, ActivityComponent>(dependency) {
 
@@ -48,9 +48,7 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
         return RootView(parentViewGroup.context)
     }
 
-    interface ParentComponent : RibDependencyProvider {
-
-    }
+    interface ParentComponent : RibDependencyProvider
 
     @dagger.Module
     abstract class Module {
@@ -74,7 +72,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                         AuthBuilder(component),
                         MainBuilder(component),
                         CreateGameBuilder(component),
-                        ProfileBuilder(component))
+                        ProfileBuilder(component),
+                        ActiveGameBuilder(component))
             }
 
             @RootScope
@@ -138,7 +137,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             AuthBuilder.ParentComponent,
             MainBuilder.ParentComponent,
             CreateGameBuilder.ParentComponent,
-            ProfileBuilder.ParentComponent {
+            ProfileBuilder.ParentComponent,
+            ActiveGameBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

@@ -4,6 +4,9 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGameAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.transition.CreateGameAttachTransition
@@ -30,7 +33,8 @@ class RootRouter(
         private val authBuilder: AuthBuilder,
         private val mainBuilder: MainBuilder,
         private val createGameBuilder: CreateGameBuilder,
-        private val profileBuilder: ProfileBuilder
+        private val profileBuilder: ProfileBuilder,
+        private val activeGameBuilder: ActiveGameBuilder
 ) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
 
     private val router = routerNavigatorFactory.create<RootState>(this)!!
@@ -39,9 +43,10 @@ class RootRouter(
 
     private val mainAttachTransition = object : DefaultAttachTransition<MainRouter, RootState, MainBuilder>(mainBuilder, view) {}
     private val mainDetachTransition = object : DefaultDetachTransition<MainRouter, RootState>(view) {}
-    private val createGameDetachTransition = object : DefaultDetachTransition<CreateGameRouter, RootState>(view) {}
 
+    private val createGameDetachTransition = object : DefaultDetachTransition<CreateGameRouter, RootState>(view) {}
     private val profileDetachTransition = object : DefaultDetachTransition<ProfileRouter, RootState>(view) {}
+    private val activeGameDetachTransition = object : DefaultDetachTransition<ActiveGameRouter, RootState>(view) {}
 
     fun attachAuth() {
         router.pushTransientState(RootState.AUTH, authAttachTransition, authDetachTransition)
@@ -63,6 +68,12 @@ class RootRouter(
     fun attachMyProfile(user: User) {
         router.pushRetainedState(RootState.PROFILE, ProfileAttachTransition(profileBuilder, view, user),
                 profileDetachTransition)
+    }
+
+    fun attachOpenActiveGame(game: Game) {
+        router.pushRetainedState(RootState.ACTIVE_GAME,
+                ActiveGameAttachTransition<RootState>(activeGameBuilder, view, game),
+                activeGameDetachTransition)
     }
 
     fun onBackPressed(): Boolean {

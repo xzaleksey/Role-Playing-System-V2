@@ -103,6 +103,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                     Timber.d("Game clicked")
                     if (it.isDraft() && userRepository.isCurrentUser(it.masterId)) {
                         mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(it))
+                    } else if (it.isActive()) {
+                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenActiveGame(it))
                     }
                 }
             }

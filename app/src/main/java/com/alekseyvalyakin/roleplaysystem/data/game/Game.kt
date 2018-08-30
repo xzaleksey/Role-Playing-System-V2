@@ -34,6 +34,10 @@ data class Game(
         return GameStatus.DRAFT.value == status
     }
 
+    fun isActive(): Boolean {
+        return GameStatus.ACTIVE.value == status
+    }
+
     companion object {
         const val serialVersionUID = 1L
 

@@ -12,4 +12,5 @@ proguard-rules.pro
 gradle/
 libs/
 .idea/caches/
+.idea/modules.xml/
 .idea/dictionaries/

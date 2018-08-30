@@ -9,6 +9,8 @@ interface MainRibListener {
     sealed class MainRibEvent {
         class CreateGame(val game: Game) : MainRibEvent()
 
+        class OpenActiveGame(val game: Game) : MainRibEvent()
+
         class MyProfile(val user: User) : MainRibEvent()
     }
 }
