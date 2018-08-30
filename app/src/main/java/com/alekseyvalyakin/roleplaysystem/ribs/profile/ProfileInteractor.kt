@@ -10,9 +10,9 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -50,18 +50,21 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
                     presenter.updateViewModel(it)
                 }.addToDisposables()
 
-        localImageProvider.observeImage().switchMap {
-            if (it is ImagesResult.Success) {
-                return@switchMap userAvatarRepository.uploadAvatar(it.images.first().originalPath)
+        localImageProvider.observeImage().flatMapSingle {
+            val single = if (it is ImagesResult.Success) {
+                userAvatarRepository.uploadAvatar(it.images.first().originalPath)
                         .doOnSubscribe { _ -> presenter.showLoadingContent(true) }
                         .doAfterTerminate { presenter.showLoadingContent(false) }
-                        .toFlowable()
+            } else {
+                Single.error<String>(RuntimeException((it as ImagesResult.Error).error))
             }
-            return@switchMap Flowable.error<String>(RuntimeException((it as ImagesResult.Error).error))
-        }.onErrorReturn {
-            Timber.e(it)
-            StringUtils.EMPTY_STRING
-        }.subscribeWithErrorLogging()
+            return@flatMapSingle single.onErrorReturn { t ->
+                Timber.e(t)
+                presenter.showError(t.localizedMessage)
+                StringUtils.EMPTY_STRING
+            }
+        }
+                .subscribeWithErrorLogging()
                 .addToDisposables()
 
         presenter.observeUiEvents()

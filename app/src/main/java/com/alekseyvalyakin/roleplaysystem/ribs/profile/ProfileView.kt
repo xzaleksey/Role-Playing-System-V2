@@ -29,6 +29,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import org.jetbrains.anko.*
+import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
 
@@ -37,7 +38,7 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
  */
 class ProfileView constructor(
         context: Context
-) : _FrameLayout(context), ProfilePresenter {
+) : _CoordinatorLayout(context), ProfilePresenter {
 
     private lateinit var btnBack: ImageView
     private lateinit var btnEdit: ImageView
@@ -100,7 +101,6 @@ class ProfileView constructor(
                         id = R.id.display_name
                         gravity = Gravity.CENTER
                         maxLines = 1
-                        text = resources.getString(R.string.total_games)
                         textColor = Color.WHITE
                         setTextSizeFromRes(R.dimen.dp_24)
                     }.lparams(width = matchParent) {
@@ -114,7 +114,6 @@ class ProfileView constructor(
                         id = R.id.tv_email
                         gravity = Gravity.CENTER
                         maxLines = 1
-                        text = resources.getString(R.string.total_games)
                         textColor = getCompatColor(R.color.white7)
                         setTextSizeFromRes(R.dimen.dp_16)
                     }.lparams(width = matchParent) {
@@ -209,7 +208,6 @@ class ProfileView constructor(
                 layoutManager = LinearLayoutManager(context)
                 adapter = flexibleAdapter
             }.lparams(width = matchParent, height = matchParent) {
-                topMargin = getIntDimen(R.dimen.dp_3_inverse)
             }
         }.lparams(width = matchParent, height = matchParent)
 
@@ -241,6 +239,10 @@ class ProfileView constructor(
         }
 
         flexibleAdapter.updateDataSet(profileViewModel.items, false)
+    }
+
+    override fun showError(localizedMessage: String) {
+        showSnack(localizedMessage)
     }
 
     override fun onDetachedFromWindow() {

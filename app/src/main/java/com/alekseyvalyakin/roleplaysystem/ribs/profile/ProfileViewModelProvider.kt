@@ -27,7 +27,7 @@ class ProfileViewModelProviderImpl(
 
     override fun observeProfileViewModel(): Flowable<ProfileViewModel> {
         return Flowable.combineLatest(getUserFlowable(),
-                getGamesFlowable(user.id), BiFunction { user, games ->
+                getGamesFlowable(user.id).startWith(emptyList<IFlexible<*>>()), BiFunction { user, games ->
             val masterGames = user.countOfGamesMastered
             val playedGames = user.countOfGamesPlayed
             ProfileViewModel(user.displayName,
