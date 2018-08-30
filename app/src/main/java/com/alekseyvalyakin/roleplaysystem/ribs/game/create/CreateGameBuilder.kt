@@ -7,8 +7,8 @@ import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
-import com.alekseyvalyakin.roleplaysystem.ribs.game.model.CreateGameProvider
-import com.alekseyvalyakin.roleplaysystem.ribs.game.model.CreateGameProviderImpl
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds

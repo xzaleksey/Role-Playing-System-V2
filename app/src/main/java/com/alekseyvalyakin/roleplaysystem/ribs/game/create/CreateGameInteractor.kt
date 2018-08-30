@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
-import com.alekseyvalyakin.roleplaysystem.ribs.game.model.CreateGameProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.*

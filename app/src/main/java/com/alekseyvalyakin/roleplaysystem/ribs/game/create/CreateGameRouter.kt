@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.model.CreateGameProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProvider
 import com.uber.rib.core.RestorableRouter
 import com.uber.rib.core.ViewRouter
 import java.io.Serializable
