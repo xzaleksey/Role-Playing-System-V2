@@ -18,7 +18,6 @@ class ActiveGameView constructor(
     init {
         relativeLayout {
             bottomNavigationView {
-                inflateMenu()
             }.lparams(width = matchParent, height = wrapContent){
                 alignParentBottom()
             }
