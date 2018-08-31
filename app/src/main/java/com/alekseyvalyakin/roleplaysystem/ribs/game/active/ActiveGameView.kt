@@ -1,9 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
 import android.content.Context
-import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import org.jetbrains.anko.alignParentBottom
 import org.jetbrains.anko.design._CoordinatorLayout
+import org.jetbrains.anko.design.bottomNavigationView
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.relativeLayout
+import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link ActiveGameBuilder.ActiveGameScope}.
@@ -13,6 +16,12 @@ class ActiveGameView constructor(
 ) : _CoordinatorLayout(context), ActiveGameInteractor.ActiveGamePresenter {
 
     init {
-        setBackgroundColor(getCompatColor(R.color.blackColor54))
+        relativeLayout {
+            bottomNavigationView {
+                inflateMenu()
+            }.lparams(width = matchParent, height = wrapContent){
+                alignParentBottom()
+            }
+        }
     }
 }
