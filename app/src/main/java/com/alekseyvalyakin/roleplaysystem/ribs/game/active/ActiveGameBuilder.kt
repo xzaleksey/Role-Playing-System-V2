@@ -53,7 +53,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
 
         @ActiveGameScope
         @Binds
-        internal abstract fun presenter(view: ActiveGameView): ActiveGameInteractor.ActiveGamePresenter
+        internal abstract fun presenter(view: ActiveGameView): ActiveGamePresenter
 
         @dagger.Module
         companion object {

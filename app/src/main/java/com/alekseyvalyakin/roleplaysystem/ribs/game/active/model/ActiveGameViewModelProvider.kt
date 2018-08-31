@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.base.image.ResourceImageHolderImpl
 import com.alekseyvalyakin.roleplaysystem.base.model.BottomItem
 import com.alekseyvalyakin.roleplaysystem.base.model.BottomPanelMenu
+import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
@@ -17,23 +18,30 @@ class ActiveGameViewModelProviderImpl(
 ) : ActiveGameViewModelProvider {
 
     override fun getActiveGameViewModel(): ActiveGameViewModel {
-        return ActiveGameViewModel(BottomPanelMenu(listOf(
-                BottomItem(R.id.bottom_menu_characters,
+        return ActiveGameViewModel(
+                userRepository.isCurrentUser(game.masterId),
+                bottomPanelMenu())
+    }
+
+    private fun bottomPanelMenu(): BottomPanelMenu {
+        return BottomPanelMenu(listOf(
+                BottomItem(NavigationId.CHARACTERS,
                         stringRepository.getCharacters(),
                         ResourceImageHolderImpl(R.drawable.bottom_bar_characters, resourcesProvider)
                 ),
-                BottomItem(R.id.bottom_menu_dices,
+                BottomItem(NavigationId.DICES,
                         stringRepository.getDices(),
                         ResourceImageHolderImpl(R.drawable.bottom_bar_dice, resourcesProvider)
                 ),
-                BottomItem(R.id.bottom_menu_photos,
+                BottomItem(NavigationId.PICTURES,
                         stringRepository.getPictures(),
                         ResourceImageHolderImpl(R.drawable.bottom_bar_pictures, resourcesProvider)
                 ),
-                BottomItem(R.id.bottom_menu_other,
+                BottomItem(NavigationId.MENU,
                         stringRepository.getMenu(),
                         ResourceImageHolderImpl(R.drawable.bottom_bar_menu, resourcesProvider)
-                )), 0))
+                )),
+                0)
     }
 
 }

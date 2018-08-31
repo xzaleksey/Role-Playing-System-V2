@@ -1,10 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
+import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
-import com.uber.rib.core.Interactor
 import com.uber.rib.core.RibInteractor
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -13,7 +15,7 @@ import javax.inject.Inject
  * TODO describe the logic of this scope.
  */
 @RibInteractor
-class ActiveGameInteractor : Interactor<ActiveGameInteractor.ActiveGamePresenter, ActiveGameRouter>() {
+class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRouter>() {
 
     @Inject
     lateinit var presenter: ActiveGamePresenter
@@ -23,12 +25,14 @@ class ActiveGameInteractor : Interactor<ActiveGameInteractor.ActiveGamePresenter
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         presenter.showModel(viewModelProvider.getActiveGameViewModel())
+        presenter.observeUiEvents()
+                .subscribeWithErrorLogging {
+                    when (it) {
+                        is ActiveGamePresenter.Event.Navigate -> {
+                            Timber.d("id %s", NavigationId.findById(it.id))
+                        }
+                    }
+                }.addToDisposables()
     }
 
-    /**
-     * Presenter interface implemented by this RIB's view.
-     */
-    interface ActiveGamePresenter {
-        fun showModel(viewModel: ActiveGameViewModel)
-    }
 }

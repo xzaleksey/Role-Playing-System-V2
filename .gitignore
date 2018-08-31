@@ -17,3 +17,5 @@ libs/
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+src/main/java/anko/
+src/main/res/layout/
