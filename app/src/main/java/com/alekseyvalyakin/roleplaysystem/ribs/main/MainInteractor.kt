@@ -44,11 +44,10 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     @Inject
     lateinit var mainRibListener: MainRibListener
 
-    private val filterRelay = BehaviorRelay.create<FilterModel>()
+    private val filterRelay = BehaviorRelay.createDefault<FilterModel>(FilterModel())
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        filterRelay.accept(FilterModel())
 
         presenter.observeUiEvents()
                 .concatMap(this::handleEvent)
