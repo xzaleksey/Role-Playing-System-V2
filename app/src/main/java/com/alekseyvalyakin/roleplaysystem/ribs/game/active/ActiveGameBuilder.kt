@@ -2,8 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
@@ -62,6 +67,17 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                     interactor: ActiveGameInteractor): ActiveGameRouter {
                 return ActiveGameRouter(view, interactor, component)
             }
+
+            @ActiveGameScope
+            @Provides
+            @JvmStatic
+            internal fun viewModelProvider(game: Game,
+                                           userRepository: UserRepository,
+                                           stringRepository: StringRepository,
+                                           resourcesProvider: ResourcesProvider): ActiveGameViewModelProvider {
+                return ActiveGameViewModelProviderImpl(game, userRepository, stringRepository, resourcesProvider)
+            }
+
         }
 
     }

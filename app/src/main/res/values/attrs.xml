@@ -39,11 +39,11 @@
     <attr name="met_underlineColor" format="color" />
     <!-- Auto validate -->
     <attr name="met_autoValidate" format="boolean" />
-    <!-- Left icon -->
+    <!-- Left imageHolder -->
     <attr name="met_iconLeft" format="reference" />
-    <!-- Right icon -->
+    <!-- Right imageHolder -->
     <attr name="met_iconRight" format="reference" />
-    <!-- Padding between icon(s) and the main area. 8dp by default. -->
+    <!-- Padding between imageHolder(s) and the main area. 8dp by default. -->
     <attr name="met_iconPadding" format="dimension" />
     <!-- Clear button -->
     <attr name="met_clearButton" format="boolean" />

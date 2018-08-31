@@ -42,4 +42,8 @@
     <item name="tv_master_games_count" type="id" />
     <item name="main_container" type="id" />
     <item name="top_actions_container" type="id" />
+    <item name="bottom_menu_characters" type="id" />
+    <item name="bottom_menu_dices" type="id" />
+    <item name="bottom_menu_photos" type="id" />
+    <item name="bottom_menu_other" type="id" />
 </resources>
