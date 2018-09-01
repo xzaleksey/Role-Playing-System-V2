@@ -7,6 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
@@ -65,7 +66,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                     component: Component,
                     view: ActiveGameView,
                     interactor: ActiveGameInteractor): ActiveGameRouter {
-                return ActiveGameRouter(view, interactor, component)
+                return ActiveGameRouter(view, interactor, component, DiceBuilder(component))
             }
 
             @ActiveGameScope
@@ -84,7 +85,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
 
     @ActiveGameScope
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
-    interface Component : InteractorBaseComponent<ActiveGameInteractor>, BuilderComponent {
+    interface Component : InteractorBaseComponent<ActiveGameInteractor>, BuilderComponent, DiceBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {

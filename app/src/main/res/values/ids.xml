@@ -48,4 +48,14 @@
     <item name="bottom_menu_photos" type="id" />
     <item name="bottom_menu_other" type="id" />
     <item name="bottom_navigation_id" type="id" />
+    <item name="guideline_right_horizontal" type="id" />
+    <item name="guideline_right_vertical" type="id" />
+    <item name="guideline_left_vertical" type="id" />
+    <item name="guideline_left_horizontal" type="id" />
+    <item name="dices_actions_container" type="id" />
+    <item name="iv_dice_secondary" type="id" />
+    <item name="iv_plus" type="id" />
+    <item name="iv_minus" type="id" />
+    <item name="iv_main_dice" type="id" />
+    <item name="tv_dice_count" type="id" />
 </resources>

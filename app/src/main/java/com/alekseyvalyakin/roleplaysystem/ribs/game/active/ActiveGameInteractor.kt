@@ -29,7 +29,9 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                 .subscribeWithErrorLogging {
                     when (it) {
                         is ActiveGamePresenter.Event.Navigate -> {
-                            Timber.d("id %s", NavigationId.findById(it.id))
+                            val navigationId = NavigationId.findById(it.id)
+                            Timber.d("id %s", navigationId)
+                            router.attachView(navigationId)
                         }
                     }
                 }.addToDisposables()

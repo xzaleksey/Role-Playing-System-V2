@@ -9,6 +9,7 @@ import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import android.util.TypedValue
+import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import org.jetbrains.anko.dip
 
@@ -25,6 +26,10 @@ fun Context.getIntDimen(@DimenRes res: Int): Int {
 
 fun Context.getFloatDimen(@DimenRes res: Int): Float {
     return this.resources.getDimension(res)
+}
+
+fun Context.getCommonDimen(): Int {
+    return getIntDimen(R.dimen.dp_8)
 }
 
 fun Context.getCompatDrawable(@DrawableRes res: Int): Drawable {

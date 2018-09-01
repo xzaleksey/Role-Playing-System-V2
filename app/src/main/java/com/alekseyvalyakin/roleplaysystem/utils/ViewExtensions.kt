@@ -28,6 +28,10 @@ fun View.getIntDimen(@DimenRes res: Int): Int {
     return context.getIntDimen(res)
 }
 
+fun View.getCommonDimen():Int {
+    return context.getCommonDimen()
+}
+
 fun View.getString(@StringRes res: Int): String {
     return context.getString(res)
 }
