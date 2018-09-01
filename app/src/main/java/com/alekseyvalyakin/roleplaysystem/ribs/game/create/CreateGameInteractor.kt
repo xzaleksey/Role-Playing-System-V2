@@ -55,33 +55,52 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
                 model.accept(value.copy(inputText = event.text))
             }
             is CreateGameUiEvent.ClickNext -> {
-                val step = value.step
-                val nextStep = step.getNextStep()
-                if (nextStep == CreateGameStep.NONE) {
-                    return createGameProvider.onChangeInfo(step, event.text).toObservable<Any>()
-                            .doOnComplete {
-                                createGameListener.onCreateGameEvent(CreateGameListener.CreateGameEvent.CompleteCreate(createGameProvider.getGame()))
-                            }
-                } else {
-                    val newModel = viewModelProvider.getCreateGameViewModel(nextStep, createGameProvider.getGame())
-                    model.accept(newModel)
-                    presenter.updateView(newModel)
-                    return createGameProvider.onChangeInfo(step, event.text).toObservable<Any>()
-                }
+                return handleClickNext(value, event)
             }
             is CreateGameUiEvent.BackPress -> {
                 activityListener.backPress()
             }
+            is CreateGameUiEvent.DeleteGame -> {
+                presenter.showConfirmDeleteDialog()
+            }
+            is CreateGameUiEvent.ConfirmDeleteGame -> {
+                return createGameProvider.deleteGame().doOnComplete {
+                    model.accept(model.value.copy(isDeleted = true))
+                    activityListener.backPress()
+                }.toObservable<Any>()
+            }
+
         }
         return Observable.just(event)
     }
 
+    private fun handleClickNext(value: CreateGameViewModel, event: CreateGameUiEvent.ClickNext): Observable<*> {
+        val step = value.step
+        val nextStep = step.getNextStep()
+
+        return if (nextStep == CreateGameStep.NONE) {
+            createGameProvider.onChangeInfo(step, event.text).toObservable<Any>()
+                    .doOnComplete {
+                        createGameListener.onCreateGameEvent(CreateGameListener.CreateGameEvent.CompleteCreate(createGameProvider.getGame()))
+                    }
+        } else {
+            val newModel = viewModelProvider.getCreateGameViewModel(nextStep, createGameProvider.getGame())
+            model.accept(newModel)
+            presenter.updateView(newModel)
+            createGameProvider.onChangeInfo(step, event.text).toObservable<Any>()
+        }
+    }
+
     override fun handleBackPress(): Boolean {
-        val previousStep = model.value.step.getPreviousStep()
-        if (previousStep == CreateGameStep.NONE) {
+        val value = model.value
+        val previousStep = value.step.getPreviousStep()
+
+        if (value.isDeleted || previousStep == CreateGameStep.NONE) {
             return false
         }
+
         val newModel = viewModelProvider.getCreateGameViewModel(previousStep, createGameProvider.getGame())
+
         model.accept(newModel)
         presenter.updateView(newModel)
         return true
@@ -108,5 +127,6 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         fun updateView(createGameViewModel: CreateGameViewModel)
         fun updateFabShowDisposable(viewModelObservable: Observable<CreateGameViewModel>): Disposable
         fun observeUiEvents(): Observable<CreateGameUiEvent>
+        fun showConfirmDeleteDialog()
     }
 }

@@ -1,15 +1,18 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
+import android.app.Dialog
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -29,7 +32,10 @@ class CreateGameView constructor(
     private lateinit var exampleText: TextView
     private lateinit var backButton: ImageButton
     private lateinit var fab: FloatingActionButton
+    private lateinit var deleteButton: ImageButton
     private val textChangeObservable: Observable<String>
+    private val relay = PublishRelay.create<CreateGameUiEvent>()
+    private var currentDialog: Dialog? = null
 
     init {
 
@@ -43,6 +49,17 @@ class CreateGameView constructor(
                     tintImage(R.color.colorWhite)
                     imageResource = R.drawable.ic_arrow_back
                 }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                    topMargin = getStatusBarHeight()
+                    leftMargin = getIntDimen(R.dimen.dp_8)
+                }
+
+                deleteButton = imageButton {
+                    id = R.id.delete_btn
+                    backgroundResource = getSelectableItemBorderless()
+                    tintImage(R.color.colorWhite)
+                    imageResource = R.drawable.ic_delete_black_24dp
+                }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                    alignParentRight()
                     topMargin = getStatusBarHeight()
                     leftMargin = getIntDimen(R.dimen.dp_8)
                 }
@@ -137,8 +154,25 @@ class CreateGameView constructor(
     }
 
     override fun observeUiEvents(): Observable<CreateGameUiEvent> {
-        return Observable.merge(RxView.clicks(fab).map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) },
+        return Observable.merge(listOf(RxView.clicks(fab).map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) },
+                RxView.clicks(deleteButton).map { CreateGameUiEvent.DeleteGame },
                 textChangeObservable.map { CreateGameUiEvent.InputChange(inputEditText.text.toString()) },
-                RxView.clicks(backButton).map { CreateGameUiEvent.BackPress() })
+                RxView.clicks(backButton).map { CreateGameUiEvent.BackPress },
+                relay))
+    }
+
+    override fun showConfirmDeleteDialog() {
+        if (currentDialog != null) {
+            return
+        }
+        currentDialog = MaterialDialog(context)
+                .title(R.string.delete_game)
+                .message(R.string.delete)
+                .positiveButton(res = android.R.string.ok, click = {
+                    relay.accept(CreateGameUiEvent.ConfirmDeleteGame)
+                })
+                .negativeButton(res = android.R.string.cancel)
+        currentDialog?.setOnDismissListener { currentDialog = null }
+        currentDialog?.show()
     }
 }

@@ -70,6 +70,10 @@ class CreateGameProviderImpl(
         return Completable.complete()
     }
 
+    override fun deleteGame(): Completable {
+        return gameRepository.deleteDocumentOffline(getGame().id)
+    }
+
 }
 
 interface CreateGameProvider {
@@ -78,4 +82,6 @@ interface CreateGameProvider {
     fun getGame(): Game
 
     fun onChangeInfo(step: CreateGameStep, text: String): Completable
+
+    fun deleteGame(): Completable
 }

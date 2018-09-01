@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import io.reactivex.CompletableEmitter;
+import timber.log.Timber;
 
 /**
  * Created by Durdin on 13/11/2016.
@@ -28,7 +29,7 @@ public class RxCompletableHandler implements OnFailureListener, OnSuccessListene
         try {
             task.addOnCompleteListener(handler);
         } catch (Throwable t) {
-            // ignore
+            Timber.e(t);
         }
     }
 

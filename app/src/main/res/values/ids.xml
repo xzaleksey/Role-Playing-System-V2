@@ -31,6 +31,7 @@
     <item name="input_et" type="id"/>
     <item name="input_text_layout" type="id"/>
     <item name="back_btn" type="id"/>
+    <item name="delete_btn" type="id"/>
     <item name="iv_right" type="id"/>
     <item name="iv_edit" type="id" />
     <item name="display_name" type="id" />

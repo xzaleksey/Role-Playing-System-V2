@@ -14,4 +14,5 @@ interface FireStoreRepository<T : HasId> {
     fun observeQueryCollection(query: Query): Flowable<List<T>>
     fun createDocument(): Single<T>
     fun getCollection(): CollectionReference
+    fun deleteDocumentOffline(id: String): Completable
 }

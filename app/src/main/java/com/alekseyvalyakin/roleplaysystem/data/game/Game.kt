@@ -24,16 +24,19 @@ data class Game(
         override var id: String = StringUtils.EMPTY_STRING
 ) : HasId, Serializable {
 
+    @Exclude
     fun isFiltered(text: String): Boolean {
         return name.startsWith(text, true)
                 || description.startsWith(text, true)
                 || masterName.startsWith(text, true)
     }
 
+    @Exclude
     fun isDraft(): Boolean {
         return GameStatus.DRAFT.value == status
     }
 
+    @Exclude
     fun isActive(): Boolean {
         return GameStatus.ACTIVE.value == status
     }

@@ -11,7 +11,8 @@ data class CreateGameViewModel(
         val inputHint: String,
         val inputExample: String,
         val required: Boolean,
-        val inputType: Int
+        val inputType: Int,
+        val isDeleted: Boolean = false
 ) : Serializable {
 
     companion object {
