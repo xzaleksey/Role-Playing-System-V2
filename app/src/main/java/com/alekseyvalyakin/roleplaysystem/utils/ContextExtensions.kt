@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.ColorRes
@@ -28,6 +29,10 @@ fun Context.getFloatDimen(@DimenRes res: Int): Float {
 
 fun Context.getCompatDrawable(@DrawableRes res: Int): Drawable {
     return ContextCompat.getDrawable(this, res)!!
+}
+
+fun Context.getCompatColorState(@ColorRes res: Int): ColorStateList {
+    return ContextCompat.getColorStateList(this, res)!!
 }
 
 fun Context.getSelectableItemBackGround(): Int {

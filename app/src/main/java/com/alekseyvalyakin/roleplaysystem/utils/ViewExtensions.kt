@@ -41,11 +41,11 @@ fun View.getCompatDrawable(@DrawableRes res: Int): Drawable {
 }
 
 fun ImageView.tintImage(@ColorRes res: Int) {
-    ImageViewCompat.setImageTintList(this, getColorStateListFromColorRes(res))
+    ImageViewCompat.setImageTintList(this, getCompatColorStateList(res))
 }
 
-fun View.getColorStateListFromColorRes(@ColorRes res: Int): ColorStateList {
-    return ColorStateList.valueOf(getCompatColor(res))
+fun View.getCompatColorStateList(@ColorRes res: Int): ColorStateList {
+    return context.getCompatColorState(res)
 }
 
 fun View.getSelectableItemBackGround(): Int {

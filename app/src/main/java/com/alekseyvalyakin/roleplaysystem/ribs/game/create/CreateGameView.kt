@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 import android.app.Dialog
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
@@ -51,6 +52,7 @@ class CreateGameView constructor(
                 }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                     topMargin = getStatusBarHeight()
                     leftMargin = getIntDimen(R.dimen.dp_8)
+                    rightMargin = getIntDimen(R.dimen.dp_8)
                 }
 
                 deleteButton = imageButton {
@@ -60,6 +62,7 @@ class CreateGameView constructor(
                     imageResource = R.drawable.ic_delete_black_24dp
                 }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                     alignParentRight()
+                    rightMargin = getIntDimen(R.dimen.dp_8)
                     topMargin = getStatusBarHeight()
                     leftMargin = getIntDimen(R.dimen.dp_8)
                 }
@@ -67,13 +70,15 @@ class CreateGameView constructor(
                 fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
                     id = R.id.fab
                     imageResource = R.drawable.ic_arrow_right
+                    imageTintList = ContextCompat.getColorStateList(getContext(), R.color.fab_icon_color)
+                    backgroundTintList = getCompatColorStateList(R.color.fab_background_color)
                 }.lparams(width = wrapContent, height = wrapContent) {
-                    topMargin = getIntDimen(R.dimen.dp_16)
+                    margin = getIntDimen(R.dimen.dp_16)
                     alignParentBottom()
                     alignParentEnd()
                 }
-                relativeLayout {
 
+                relativeLayout {
                     stepTextView = textView {
                         id = R.id.step_text
                         textColorResource = R.color.colorWhite
@@ -108,11 +113,12 @@ class CreateGameView constructor(
                 }.lparams(width = matchParent, height = matchParent) {
                     above(fab)
                     below(backButton)
+
                     leftMargin = getIntDimen(R.dimen.dp_40)
+                    rightMargin = getIntDimen(R.dimen.dp_40)
                     topMargin = getIntDimen(R.dimen.dp_32)
                 }
             }.lparams(width = matchParent, height = matchParent) {
-                rightMargin = getIntDimen(R.dimen.dp_40)
                 bottomMargin = getIntDimen(R.dimen.dp_40)
             }
         }
@@ -144,11 +150,7 @@ class CreateGameView constructor(
     override fun updateFabShowDisposable(viewModelObservable: Observable<CreateGameViewModel>): Disposable {
         return Observable.combineLatest(textChangeObservable,
                 viewModelObservable, BiFunction { text: CharSequence, createGameViewModel: CreateGameViewModel ->
-            if (createGameViewModel.required && text.isBlank()) {
-                fab.hide()
-            } else {
-                fab.show()
-            }
+            fab.isEnabled = !(createGameViewModel.required && text.isBlank())
             return@BiFunction createGameViewModel
         }).subscribeWithErrorLogging()
     }
