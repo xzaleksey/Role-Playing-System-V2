@@ -10,22 +10,47 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColorStateList
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
+import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
+import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
+import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
+import com.alekseyvalyakin.roleplaysystem.utils.showSoftKeyboard
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.alekseyvalyakin.roleplaysystem.utils.tintImage
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import org.jetbrains.anko.*
+import org.jetbrains.anko._ScrollView
+import org.jetbrains.anko.alignParentEnd
+import org.jetbrains.anko.alignParentRight
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.below
 import org.jetbrains.anko.design.themedFloatingActionButton
+import org.jetbrains.anko.hintTextColor
+import org.jetbrains.anko.imageButton
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.relativeLayout
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.themedEditText
+import org.jetbrains.anko.themedTextView
+import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link CreateGameBuilder.CreateGameScope}.
  */
 class CreateGameView constructor(
         context: Context
-) : _FrameLayout(context), CreateGameInteractor.CreateGamePresenter {
+) : _ScrollView(context), CreateGameInteractor.CreateGamePresenter {
 
     private lateinit var stepTextView: TextView
     private lateinit var titleTextView: TextView
@@ -41,86 +66,85 @@ class CreateGameView constructor(
     init {
 
         backgroundColor = getCompatColor(R.color.colorPrimaryDark)
-        AnkoContext.createDelegate(this).apply {
+        relativeLayout {
+
+            backButton = imageButton {
+                id = R.id.back_btn
+                backgroundResource = getSelectableItemBorderless()
+                tintImage(R.color.colorWhite)
+                imageResource = R.drawable.ic_arrow_back
+            }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                topMargin = getStatusBarHeight()
+                leftMargin = getIntDimen(R.dimen.dp_8)
+                rightMargin = getIntDimen(R.dimen.dp_8)
+            }
+
+            deleteButton = imageButton {
+                id = R.id.delete_btn
+                backgroundResource = getSelectableItemBorderless()
+                tintImage(R.color.colorWhite)
+                imageResource = R.drawable.ic_delete_black_24dp
+            }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                alignParentRight()
+                rightMargin = getIntDimen(R.dimen.dp_8)
+                topMargin = getStatusBarHeight()
+                leftMargin = getIntDimen(R.dimen.dp_8)
+            }
+
             relativeLayout {
+                id = R.id.content_container
+                stepTextView = textView {
+                    id = R.id.step_text
+                    textColorResource = R.color.colorWhite
+                    setTextSizeFromRes(R.dimen.sp_16)
+                }.lparams(width = wrapContent, height = wrapContent)
 
-                backButton = imageButton {
-                    id = R.id.back_btn
-                    backgroundResource = getSelectableItemBorderless()
-                    tintImage(R.color.colorWhite)
-                    imageResource = R.drawable.ic_arrow_back
-                }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
-                    topMargin = getStatusBarHeight()
-                    leftMargin = getIntDimen(R.dimen.dp_8)
-                    rightMargin = getIntDimen(R.dimen.dp_8)
-                }
-
-                deleteButton = imageButton {
-                    id = R.id.delete_btn
-                    backgroundResource = getSelectableItemBorderless()
-                    tintImage(R.color.colorWhite)
-                    imageResource = R.drawable.ic_delete_black_24dp
-                }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
-                    alignParentRight()
-                    rightMargin = getIntDimen(R.dimen.dp_8)
-                    topMargin = getStatusBarHeight()
-                    leftMargin = getIntDimen(R.dimen.dp_8)
-                }
-
-                fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
-                    id = R.id.fab
-                    imageResource = R.drawable.ic_arrow_right
-                    imageTintList = ContextCompat.getColorStateList(getContext(), R.color.fab_icon_color)
-                    backgroundTintList = getCompatColorStateList(R.color.fab_background_color)
+                titleTextView = textView {
+                    id = R.id.title
+                    setSanserifMediumTypeface()
+                    textColorResource = R.color.colorWhite
+                    setTextSizeFromRes(R.dimen.sp_20)
                 }.lparams(width = wrapContent, height = wrapContent) {
-                    margin = getIntDimen(R.dimen.dp_16)
-                    alignParentBottom()
-                    alignParentEnd()
+                    topMargin = getIntDimen(R.dimen.dp_24)
+                    below(stepTextView)
                 }
 
-                relativeLayout {
-                    stepTextView = textView {
-                        id = R.id.step_text
-                        textColorResource = R.color.colorWhite
-                        setTextSizeFromRes(R.dimen.sp_16)
-                    }.lparams(width = wrapContent, height = wrapContent)
+                inputEditText = themedEditText(R.style.AppTheme_TextWhite) {
+                    id = R.id.input_et
+                    hintTextColor = getCompatColor(R.color.white54)
+                }.lparams(width = matchParent, height = wrapContent) {
+                    leftMargin = -getIntDimen(R.dimen.dp_4)
+                    topMargin = getIntDimen(R.dimen.dp_16)
+                    below(titleTextView)
+                }
 
-                    titleTextView = textView {
-                        id = R.id.title
-                        setSanserifMediumTypeface()
-                        textColorResource = R.color.colorWhite
-                        setTextSizeFromRes(R.dimen.sp_20)
-                    }.lparams(width = wrapContent, height = wrapContent) {
-                        topMargin = getIntDimen(R.dimen.dp_24)
-                        below(stepTextView)
-                    }
-
-                    inputEditText = themedEditText(R.style.AppTheme_TextWhite) {
-                        id = R.id.input_et
-                        hintTextColor = getCompatColor(R.color.white54)
-                    }.lparams(width = matchParent, height = wrapContent) {
-                        leftMargin = -getIntDimen(R.dimen.dp_4)
-                        topMargin = getIntDimen(R.dimen.dp_16)
-                        below(titleTextView)
-                    }
-
-                    exampleText = themedTextView(R.style.AppTheme_TextWhite) {
-                        id = R.id.text
-                        setTextSizeFromRes(R.dimen.sp_12)
-                    }.lparams(width = matchParent, height = wrapContent) {
-                        below(inputEditText)
-                    }
-                }.lparams(width = matchParent, height = matchParent) {
-                    above(fab)
-                    below(backButton)
-
-                    leftMargin = getIntDimen(R.dimen.dp_40)
-                    rightMargin = getIntDimen(R.dimen.dp_40)
-                    topMargin = getIntDimen(R.dimen.dp_32)
+                exampleText = themedTextView(R.style.AppTheme_TextWhite) {
+                    id = R.id.text
+                    setTextSizeFromRes(R.dimen.sp_12)
+                }.lparams(width = matchParent, height = wrapContent) {
+                    below(inputEditText)
                 }
             }.lparams(width = matchParent, height = matchParent) {
-                bottomMargin = getIntDimen(R.dimen.dp_40)
+                below(backButton)
+                leftMargin = getIntDimen(R.dimen.dp_40)
+                rightMargin = getIntDimen(R.dimen.dp_40)
+                topMargin = getIntDimen(R.dimen.dp_32)
             }
+
+
+            fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
+                id = R.id.fab
+                imageResource = R.drawable.ic_arrow_right
+                imageTintList = ContextCompat.getColorStateList(getContext(), R.color.fab_icon_color)
+                backgroundTintList = getCompatColorStateList(R.color.fab_background_color)
+            }.lparams(width = wrapContent, height = wrapContent) {
+                margin = getIntDimen(R.dimen.dp_16)
+                below(R.id.content_container)
+                alignParentEnd()
+            }
+
+        }.lparams(width = matchParent, height = wrapContent) {
+            bottomMargin = getIntDimen(R.dimen.dp_40)
         }
         textChangeObservable = RxTextView.textChanges(inputEditText).map { it.toString() }.share()
     }
@@ -136,15 +160,35 @@ class CreateGameView constructor(
         inputEditText.hint = createGameViewModel.inputHint
         inputEditText.setText(createGameViewModel.inputText)
         inputEditText.maxLines = createGameViewModel.inputMaxLines
-        inputEditText.setSelection(inputEditText.length())
-        if (inputEditText.maxLines == 1) {
-            inputEditText.imeOptions = EditorInfo.IME_ACTION_DONE
-        } else {
-            inputEditText.imeOptions = EditorInfo.IME_ACTION_UNSPECIFIED
-        }
         inputEditText.inputType = createGameViewModel.inputType
         exampleText.text = createGameViewModel.inputExample
         inputEditText.setSelection(inputEditText.length())
+        handleImeOptions(createGameViewModel)
+    }
+
+    private fun handleImeOptions(createGameViewModel: CreateGameViewModel) {
+        if (inputEditText.maxLines == 1) {
+            inputEditText.imeOptions = EditorInfo.IME_ACTION_DONE
+            inputEditText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    val text = inputEditText.text.toString()
+                    if (!createGameViewModel.required || !text.isBlank()) {
+                        relay.accept(CreateGameUiEvent.ClickNext(text))
+                    }
+                    return@setOnEditorActionListener true
+                }
+
+                return@setOnEditorActionListener false
+            }
+        } else {
+            inputEditText.setOnEditorActionListener(null)
+            inputEditText.imeOptions = EditorInfo.IME_ACTION_UNSPECIFIED
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        inputEditText.setOnEditorActionListener(null)
+        super.onDetachedFromWindow()
     }
 
     override fun updateFabShowDisposable(viewModelObservable: Observable<CreateGameViewModel>): Disposable {
