@@ -32,6 +32,10 @@ fun Context.getCommonDimen(): Int {
     return getIntDimen(R.dimen.dp_8)
 }
 
+fun Context.getDoubleCommonDimen(): Int {
+    return getIntDimen(R.dimen.dp_16)
+}
+
 fun Context.getCompatDrawable(@DrawableRes res: Int): Drawable {
     return ContextCompat.getDrawable(this, res)!!
 }

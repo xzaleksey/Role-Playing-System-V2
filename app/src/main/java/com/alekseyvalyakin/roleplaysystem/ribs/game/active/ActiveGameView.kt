@@ -9,16 +9,9 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import org.jetbrains.anko.above
-import org.jetbrains.anko.alignParentBottom
-import org.jetbrains.anko.backgroundColorResource
-import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.bottomNavigationView
-import org.jetbrains.anko.frameLayout
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.relativeLayout
-import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link ActiveGameBuilder.ActiveGameScope}.
@@ -45,8 +38,6 @@ class ActiveGameView constructor(
             container = frameLayout {
 
             }.lparams(width = matchParent, height = matchParent) {
-                //TODO remove bg
-                backgroundResource = R.color.blackColor54
                 above(bottomNavigationView)
             }
         }

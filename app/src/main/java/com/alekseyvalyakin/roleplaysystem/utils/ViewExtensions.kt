@@ -32,6 +32,10 @@ fun View.getCommonDimen():Int {
     return context.getCommonDimen()
 }
 
+fun View.getDoubleCommonDimen():Int {
+    return context.getDoubleCommonDimen()
+}
+
 fun View.getString(@StringRes res: Int): String {
     return context.getString(res)
 }
