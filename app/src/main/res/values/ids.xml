@@ -62,4 +62,6 @@
     <item name="top_container" type="id" />
     <item name="status_bar" type="id" />
     <item name="no_dices_container" type="id" />
+    <item name="btn_throw" type="id" />
+    <item name="btn_cancel" type="id" />
 </resources>

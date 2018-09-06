@@ -3,10 +3,19 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 import android.animation.LayoutTransition
 import android.content.Context
 import android.graphics.Color
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSmoothScroller
+import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
+import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.LinearOffsetItemDecortation
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -16,12 +25,27 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
  */
 class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInteractor.DicePresenter {
 
+    private lateinit var noDicesCollectionsContainer: ViewGroup
+    private lateinit var dicesCollectionsContainer: ViewGroup
+    private lateinit var tvSavedDiceCount: TextView
+    private lateinit var rvCollections: RecyclerView
+    private lateinit var rvDices: RecyclerView
+    private lateinit var btnCancel: Button
+    private lateinit var btnThrow: Button
+    private lateinit var btnSave: View
+    private val diceColumnCount = 3
+
+    private val smoothScroller = object : LinearSmoothScroller(getContext()) {
+        override fun getVerticalSnapPreference(): Int {
+            return LinearSmoothScroller.SNAP_TO_START
+        }
+    }
+
     init {
         id = R.id.main_container
         relativeLayout {
             id = R.id.top_container
             backgroundResource = R.drawable.top_background
-            //android:visibility = visible //not support attribute
             view {
                 id = R.id.status_bar
             }.lparams(width = matchParent, height = getIntDimen(R.dimen.status_bar_height))
@@ -30,7 +54,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
                 bottomPadding = getIntDimen(R.dimen.dp_8)
                 topPadding = getIntDimen(R.dimen.dp_16)
 
-                linearLayout {
+                noDicesCollectionsContainer = linearLayout {
                     id = R.id.no_dices_container
                     orientation = LinearLayout.VERTICAL
                     leftPadding = getIntDimen(R.dimen.dp_16)
@@ -52,19 +76,21 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
                         topMargin = getIntDimen(R.dimen.dp_4)
                     }
                 }.lparams(width = matchParent)
-                relativeLayout {
+                dicesCollectionsContainer = relativeLayout {
                     id = R.id.dices_collections_container
                     leftPadding = getDoubleCommonDimen()
-                    textView {
+                    tvSavedDiceCount = textView {
                         id = R.id.saved_dices_count
                         setSanserifMediumTypeface()
                         rightPadding = getDoubleCommonDimen()
                         textColor = getCompatColor(R.color.colorWhite)
                         setTextSizeFromRes(R.dimen.sp_15)
                     }.lparams(width = matchParent)
-                    recyclerView {
+                    rvCollections = recyclerView {
                         id = R.id.recycler_view_dices_collections
                         isVerticalScrollBarEnabled = true
+                        layoutManager = LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false)
+                        addItemDecoration(LinearOffsetItemDecortation(LinearOffsetItemDecortation.HORIZONTAL, getCommonDimen()))
                     }.lparams(width = matchParent, height = matchParent) {
                         below(R.id.saved_dices_count)
                         topMargin = getCommonDimen()
@@ -76,24 +102,43 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.game_characters_top_element_height)) {
             alignParentTop()
         }
-        button {
-            id = R.id.btn_throw
-            backgroundResource = R.drawable.accent_button
-            text = resources.getString(R.string.throw_dice)
-            textColor = getCompatColor(R.color.material_light_white)
+        linearLayout {
+            orientation = LinearLayout.HORIZONTAL
+            weightSum = 2f
+            btnCancel = button {
+                id = R.id.btn_cancel
+                isEnabled = false
+                background = getCompatDrawable(R.drawable.accent_button_borders)
+                text = resources.getString(android.R.string.cancel)
+                setTextColor(getCompatColorStateList(R.color.textview_enable_text_color))
+            }.lparams(width = 0, height = wrapContent) {
+                leftMargin = getDoubleCommonDimen()
+                rightMargin = getCommonDimen()
+                weight = 1f
+            }
+            btnThrow = button {
+                id = R.id.btn_throw
+                isEnabled = false
+                backgroundResource = R.drawable.accent_button
+                text = resources.getString(R.string.throw_dice)
+                textColor = getCompatColor(R.color.material_light_white)
+            }.lparams(width = 0, height = wrapContent) {
+                leftMargin = getCommonDimen()
+                rightMargin = getDoubleCommonDimen()
+                weight = 1f
+            }
         }.lparams(width = matchParent, height = wrapContent) {
             alignParentBottom()
-            leftMargin = getDoubleCommonDimen()
-            bottomMargin = getDoubleCommonDimen()
-            rightMargin = getDoubleCommonDimen()
+            bottomMargin = getCommonDimen()
         }
+
         relativeLayout {
             id = R.id.label_container
             textView {
                 id = R.id.new_throw
                 bottomPadding = getCommonDimen()
                 topPadding = getDoubleCommonDimen()
-                textColor= getCompatColor(R.color.colorPrimary)
+                textColor = getCompatColor(R.color.colorPrimary)
                 setSanserifMediumTypeface()
                 text = resources.getString(R.string.new_throw)
             }.lparams {
@@ -101,13 +146,13 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
                 leftMargin = getDoubleCommonDimen()
                 rightMargin = getDoubleCommonDimen()
             }
-            textView {
+            btnSave = textView {
                 id = R.id.save
                 backgroundColor = getSelectableItemBorderless()
                 padding = getCommonDimen()
                 setSanserifMediumTypeface()
                 text = resources.getString(R.string.save_set)
-                textColor = getCompatColor(R.drawable.textview_enable_text_color)
+                setTextColor(getCompatColorStateList(R.color.textview_enable_text_color))
             }.lparams {
                 alignParentRight()
                 rightMargin = getCommonDimen()
@@ -117,17 +162,27 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
             below(R.id.top_container)
         }
         cardView {
-            recyclerView {
+            rvDices = recyclerView {
                 id = R.id.recycler_view
                 backgroundColor = Color.WHITE
                 isVerticalScrollBarEnabled = true
                 padding = getCommonDimen()
-            }.lparams(width = matchParent, height = wrapContent) {
+                layoutManager = GridLayoutManager(getContext(), diceColumnCount)
+                addItemDecoration(ItemOffsetDecoration(getContext(), R.dimen.dp_8))
+            }.lparams(width = matchParent, height = wrapContent)
 
-            }
         }.lparams(width = matchParent, height = wrapContent) {
             below(R.id.label_container)
             margin = getCommonDimen()
         }
+    }
+
+    fun scrollDiceCollectionsToStart() {
+        rvCollections.post({
+            if (rvCollections.adapter!!.itemCount > 0) {
+                smoothScroller.targetPosition = 0
+                rvCollections.layoutManager!!.startSmoothScroll(smoothScroller)
+            }
+        })
     }
 }
