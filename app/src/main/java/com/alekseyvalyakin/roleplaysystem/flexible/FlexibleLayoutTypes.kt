@@ -7,4 +7,5 @@ object FlexibleLayoutTypes {
     const val SHADOW_DIVIDER: Int = 4
     const val USER_PROFILE = 5
     const val GAMES_IN_USER = 6
+    const val SINGLE_DICE_COLLECTION = 7
 }

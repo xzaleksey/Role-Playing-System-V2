@@ -1,10 +1,14 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
+import android.support.constraint.ConstraintLayout
 import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceSingleCollectionViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.constraint.layout.constraintLayout
@@ -13,12 +17,18 @@ import org.jetbrains.anko.constraint.layout.guideline
 class SingleDiceView(context: Context) : SquareFrameLayout(context) {
     private val ratio1 = 0.35f
     private val ratio2 = 0.65f
+    private lateinit var ivMainDice: ImageView
+    private lateinit var ivDiceSecondary: ImageView
+    private lateinit var ivMinus: ImageView
+    private lateinit var ivPlus: ImageView
+    private lateinit var tvDiceCount: TextView
+    private var dicesActionContainer: ConstraintLayout
 
     init {
         id = R.id.main_container
         backgroundResource = R.drawable.dice_selector_bg
 
-        constraintLayout {
+        dicesActionContainer = constraintLayout {
             id = R.id.dices_actions_container
             guideline {
                 id = R.id.guideline_left_vertical
@@ -44,7 +54,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
                 orientation = LinearLayout.HORIZONTAL
                 guidePercent = ratio2
             }
-            imageView {
+            ivMainDice = imageView {
                 id = R.id.iv_main_dice
                 tintImage(R.color.colorWhite)
                 imageResource = R.drawable.dice_d4
@@ -55,7 +65,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
                 startToEnd = R.id.guideline_left_vertical
                 topToBottom = R.id.guideline_left_horizontal
             }
-            textView {
+            tvDiceCount = textView {
                 id = R.id.tv_dice_count
                 setRufinaRegularTypeface()
                 gravity = Gravity.CENTER
@@ -73,7 +83,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
                 topToTop = R.id.dices_actions_container
                 rightToRight = R.id.dices_actions_container
             }
-            imageView {
+            ivMinus = imageView {
                 id = R.id.iv_minus
                 backgroundColor = getSelectableItemBorderless()
                 imageResource = R.drawable.dice_minus
@@ -83,7 +93,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
                 startToStart = R.id.dices_actions_container
                 topToTop = R.id.dices_actions_container
             }
-            imageView {
+            ivPlus = imageView {
                 id = R.id.iv_plus
                 backgroundColor = getSelectableItemBorderless()
                 imageResource = R.drawable.dice_plus
@@ -93,7 +103,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
                 startToStart = R.id.guideline_right_vertical
                 topToTop = R.id.guideline_right_horizontal
             }
-            imageView {
+            ivDiceSecondary = imageView {
                 id = R.id.iv_dice_secondary
                 tintImage(R.color.colorDiceSecondary)
                 visibility = View.GONE
@@ -108,5 +118,37 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
 
             }
         }.lparams(width = matchParent, height = matchParent)
+    }
+
+    fun updateView(diceSingleCollectionViewModel: DiceSingleCollectionViewModel,
+                   diceContainerClickListener: OnClickListener,
+                   ivPlusClickListener: OnClickListener,
+                   ivMinusClickListener: OnClickListener
+    ) {
+        val diceCollection = diceSingleCollectionViewModel.diceCollection
+        val mainDiceResId = diceSingleCollectionViewModel.mainDiceResId
+        ivPlus.setOnClickListener(ivPlusClickListener)
+        ivMinus.setOnClickListener(ivMinusClickListener)
+
+        if (diceCollection.getDiceCount() == 0) {
+            ivMainDice.setImageResource(mainDiceResId)
+            ivMainDice.visibility = View.VISIBLE
+            isSelected = false
+            ivMinus.visibility = View.GONE
+            ivPlus.visibility = View.GONE
+            tvDiceCount.visibility = View.GONE
+            ivDiceSecondary.visibility = View.GONE
+            dicesActionContainer.setOnClickListener(diceContainerClickListener)
+        } else {
+            ivDiceSecondary.setImageResource(mainDiceResId)
+            ivMainDice.visibility = View.GONE
+            isSelected = true
+            ivMinus.visibility = View.VISIBLE
+            ivPlus.visibility = View.VISIBLE
+            ivDiceSecondary.visibility = View.VISIBLE
+            tvDiceCount.text = diceCollection.getDiceCount().toString()
+            tvDiceCount.visibility = View.VISIBLE
+            dicesActionContainer.setOnClickListener(null)
+        }
     }
 }

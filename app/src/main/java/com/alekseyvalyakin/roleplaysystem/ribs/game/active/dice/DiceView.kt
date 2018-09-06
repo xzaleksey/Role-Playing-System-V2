@@ -13,9 +13,13 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.adapter.DiceAdapter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.LinearOffsetItemDecortation
+import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -23,7 +27,7 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 /**
  * Top level view for {@link DiceBuilder.DiceScope}.
  */
-class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInteractor.DicePresenter {
+class DiceView constructor(context: Context) : _RelativeLayout(context), DicePresenter {
 
     private lateinit var noDicesCollectionsContainer: ViewGroup
     private lateinit var dicesCollectionsContainer: ViewGroup
@@ -34,6 +38,8 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
     private lateinit var btnThrow: Button
     private lateinit var btnSave: View
     private val diceColumnCount = 3
+    private val relay = PublishRelay.create<DicePresenter.UiEvent>()
+    private val diceAdapter = DiceAdapter(emptyList(), relay)
 
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
@@ -168,6 +174,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
                 isVerticalScrollBarEnabled = true
                 padding = getCommonDimen()
                 layoutManager = GridLayoutManager(getContext(), diceColumnCount)
+                adapter = diceAdapter
                 addItemDecoration(ItemOffsetDecoration(getContext(), R.dimen.dp_8))
             }.lparams(width = matchParent, height = wrapContent)
 
@@ -175,6 +182,15 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DiceInt
             below(R.id.label_container)
             margin = getCommonDimen()
         }
+    }
+
+
+    override fun observeUiEvents(): Observable<DicePresenter.UiEvent> {
+        return relay
+    }
+
+    override fun update(diceViewModel: DiceViewModel) {
+        diceAdapter.updateDataSet(diceViewModel.diceItems, false)
     }
 
     fun scrollDiceCollectionsToStart() {

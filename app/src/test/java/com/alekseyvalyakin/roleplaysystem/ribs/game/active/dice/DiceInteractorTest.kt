@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations
 
 class DiceInteractorTest : RibTestBasePlaceholder() {
 
-  @Mock internal lateinit var presenter: DiceInteractor.DicePresenter
+  @Mock internal lateinit var presenter: DicePresenter
   @Mock internal lateinit var router: DiceRouter
 
   private var interactor: DiceInteractor? = null
@@ -28,7 +28,7 @@ class DiceInteractorTest : RibTestBasePlaceholder() {
   @Test
   fun anExampleTest_withSomeConditions_shouldPass() {
     // Use InteractorHelper to drive your interactor's lifecycle.
-    InteractorHelper.attach<DiceInteractor.DicePresenter, DiceRouter>(interactor!!, presenter, router, null)
+    InteractorHelper.attach<DicePresenter, DiceRouter>(interactor!!, presenter, router, null)
     InteractorHelper.detach(interactor!!)
 
     throw RuntimeException("Remove this test and add real tests.")

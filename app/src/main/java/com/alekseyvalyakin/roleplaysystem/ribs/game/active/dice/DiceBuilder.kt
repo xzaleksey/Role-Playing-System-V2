@@ -46,7 +46,7 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
 
         @DiceScope
         @Binds
-        internal abstract fun presenter(view: DiceView): DiceInteractor.DicePresenter
+        internal abstract fun presenter(view: DiceView): DicePresenter
 
         @dagger.Module
         companion object {
