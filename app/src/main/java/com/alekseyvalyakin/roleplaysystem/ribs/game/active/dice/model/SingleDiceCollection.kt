@@ -28,6 +28,19 @@ data class SingleDiceCollection(
         fun createEmptySingleDiceCollectionFromDice(dice: Dice): SingleDiceCollection {
             return SingleDiceCollection(dice, 0)
         }
+
+        @JvmStatic
+        fun createSingleDiceCollectionList(): List<SingleDiceCollection> {
+            return listOf(
+                    DiceType.D4.createSingleDiceCollection(),
+                    DiceType.D6.createSingleDiceCollection(),
+                    DiceType.D8.createSingleDiceCollection(),
+                    DiceType.D10.createSingleDiceCollection(),
+                    DiceType.D12.createSingleDiceCollection(),
+                    DiceType.D20.createSingleDiceCollection()
+            )
+        }
+
     }
 
 }

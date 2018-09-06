@@ -3,6 +3,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelMapper
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelMapperImpl
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
@@ -54,18 +56,25 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
             @DiceScope
             @Provides
             @JvmStatic
-            internal fun router(
+            fun router(
                     component: Component,
                     view: DiceView,
                     interactor: DiceInteractor): DiceRouter {
                 return DiceRouter(view, interactor, component)
+            }
+
+            @DiceScope
+            @Provides
+            @JvmStatic
+            fun diceViewModelMapper(): DiceViewModelMapper {
+                return DiceViewModelMapperImpl()
             }
         }
 
     }
 
     @DiceScope
-    @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
+    @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
     interface Component : InteractorBaseComponent<DiceInteractor>, BuilderComponent {
 
         @dagger.Component.Builder
