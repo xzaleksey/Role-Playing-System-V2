@@ -119,5 +119,6 @@
     <string name="last_games">Последние игры</string>
     <string name="no_name">Нет названия</string>
     <string name="no_description">Нет описания</string>
+    <string name="dice_collections_delete_message">Этот набор будет удален</string>
 
 </resources>

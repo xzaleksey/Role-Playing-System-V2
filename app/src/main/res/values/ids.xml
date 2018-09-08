@@ -64,4 +64,8 @@
     <item name="no_dices_container" type="id" />
     <item name="btn_throw" type="id" />
     <item name="btn_cancel" type="id" />
+    <item name="card_view" type="id" />
+    <item name="click_container" type="id" />
+    <item name="tv_main" type="id" />
+    <item name="dice_container" type="id" />
 </resources>

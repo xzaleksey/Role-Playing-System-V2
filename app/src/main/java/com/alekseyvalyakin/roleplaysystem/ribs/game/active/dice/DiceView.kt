@@ -20,6 +20,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceVi
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.LinearOffsetItemDecortation
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*
@@ -43,6 +44,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
     private val diceColumnCount = 3
     private val relay = PublishRelay.create<DicePresenter.UiEvent>()
     private val diceAdapter = DiceAdapter(emptyList(), relay)
+    private val diceCollectionsAdapter = DiceAdapter(emptyList(), relay)
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
             return LinearSmoothScroller.SNAP_TO_START
@@ -106,6 +108,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                         id = R.id.recycler_view_dices_collections
                         isVerticalScrollBarEnabled = true
                         layoutManager = LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false)
+                        adapter = diceCollectionsAdapter
                         addItemDecoration(LinearOffsetItemDecortation(LinearOffsetItemDecortation.HORIZONTAL, getCommonDimen()))
                     }.lparams(width = matchParent, height = matchParent) {
                         below(R.id.saved_dices_count)
@@ -194,9 +197,12 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
         }
     }
 
-
     override fun observeUiEvents(): Observable<DicePresenter.UiEvent> {
-        return relay
+        return Observable.merge(relay,
+                RxView.clicks(btnCancel).map { DicePresenter.UiEvent.Cancel },
+                RxView.clicks(btnSave).map { DicePresenter.UiEvent.Save },
+                RxView.clicks(btnThrow).map { DicePresenter.UiEvent.Throw }
+        )
     }
 
     override fun update(diceViewModel: DiceViewModel) {
@@ -204,6 +210,12 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
         if (diceViewModel.diceItemsCollectionsLoaded) {
             progressBar.visibility = View.GONE
             noDicesCollectionsContainer.visibility = if (diceViewModel.diceCollectionsItems.isEmpty()) View.VISIBLE else View.GONE
+            dicesCollectionsContainer.visibility = if (diceViewModel.diceCollectionsItems.isEmpty()) View.GONE else View.VISIBLE
+            val oldItemCount = diceCollectionsAdapter.itemCount
+            diceCollectionsAdapter.updateDataSet(diceViewModel.diceCollectionsItems, false)
+            if (oldItemCount < diceViewModel.diceCollectionsItems.size) {
+                scrollDiceCollectionsToStart()
+            }
         } else {
             progressBar.visibility = View.VISIBLE
         }
@@ -213,7 +225,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
         btnSave.isEnabled = diceViewModel.buttonSaveEnabled
     }
 
-    fun scrollDiceCollectionsToStart() {
+    private fun scrollDiceCollectionsToStart() {
         rvCollections.post({
             if (rvCollections.adapter!!.itemCount > 0) {
                 smoothScroller.targetPosition = 0

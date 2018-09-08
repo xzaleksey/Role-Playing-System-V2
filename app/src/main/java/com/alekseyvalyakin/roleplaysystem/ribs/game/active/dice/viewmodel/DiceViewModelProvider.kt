@@ -7,7 +7,6 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceInteractor
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceType
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
-import timber.log.Timber
 
 class DiceViewModelProviderImpl(
         private val dicesRepository: DicesRepository,
@@ -15,12 +14,25 @@ class DiceViewModelProviderImpl(
 ) : DiceViewModelProvider {
 
     override fun observeViewModel(flowable: Flowable<DiceInteractor.DicesInteractorModel>): Flowable<DiceViewModel> {
-        return Flowable.combineLatest(flowable, dicesRepository.observeCollection(gameId = game.id).startWith(EmptyCollection),
-                BiFunction { interactorModel, diceCollections ->
-                    Timber.d(diceCollections.toString())
+        return Flowable.combineLatest(flowable, dicesRepository.observeDiceCollectionsOrdered(gameId = game.id).startWith(EmptyCollection),
+                BiFunction { interactorModel, firebaseDiceCollections ->
                     val singleDiceCollections = interactorModel.dices
-                    val diceItemsCollectionsLoaded = diceCollections !== EmptyCollection
-                    val dicesChosen = singleDiceCollections.any { it.getDiceCount() > 0 }
+                    val diceItemsCollectionsLoaded = firebaseDiceCollections !== EmptyCollection
+                    val diceCountChosen = singleDiceCollections.sumBy { it.getDiceCount() }
+                    val dicesChosen = diceCountChosen > 0
+                    val diceCollections = firebaseDiceCollections.map { it.mapToDiceCollection() }
+                    var sameCollectionExists = false
+
+                    val diceCollectionsItems = diceCollections.map {
+                        val selected = it.isSame(singleDiceCollections)
+                        if (selected) {
+                            sameCollectionExists = true
+                        }
+                        DiceCollectionViewModel(
+                                it,
+                                selected
+                        )
+                    }
                     return@BiFunction DiceViewModel(
                             diceItems = singleDiceCollections.map { singleDiceCollection ->
                                 DiceSingleCollectionViewModel(
@@ -30,8 +42,11 @@ class DiceViewModelProviderImpl(
 
                             diceItemsCollectionsLoaded = diceItemsCollectionsLoaded,
                             buttonCancelEnabled = dicesChosen,
-                            buttonSaveEnabled = diceItemsCollectionsLoaded,
-                            buttonThrowEnabled = dicesChosen
+                            buttonSaveEnabled = diceItemsCollectionsLoaded
+                                    && diceCountChosen > 1
+                                    && !sameCollectionExists,
+                            buttonThrowEnabled = dicesChosen,
+                            diceCollectionsItems = diceCollectionsItems
                     )
                 })
     }

@@ -1,5 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 
+import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.dice.FirebaseDiceCollection
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.SingleDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -9,6 +14,7 @@ import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,10 +28,12 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
     lateinit var presenter: DicePresenter
     @Inject
     lateinit var diceViewModelProvider: DiceViewModelProvider
+    @Inject
+    lateinit var game: Game
+    @Inject
+    lateinit var diceRepository: DicesRepository
 
-    private val relay = BehaviorRelay.createDefault(DicesInteractorModel(
-            SingleDiceCollection.createSingleDiceCollectionList())
-    )
+    private val relay = BehaviorRelay.createDefault(getEmptyModel())
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
@@ -55,13 +63,50 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
                     relay.accept(relay.value)
                 }
             }
+            is DicePresenter.UiEvent.Cancel -> {
+                Observable.fromCallable {
+                    relay.accept(getEmptyModel())
+                }
+            }
+            is DicePresenter.UiEvent.Save -> {
+                return diceRepository.createDocument(
+                        gameId = game.id,
+                        data = FirebaseDiceCollection.newInstance(DiceCollection.createDiceCollectionFromSingleDiceCollections(
+                                relay.value.dices
+                        ))
+                ).toObservable()
+            }
+            is DicePresenter.UiEvent.SelectCollection -> {
+                Observable.fromCallable {
+                    relay.accept(DicesInteractorModel(uiEvent.diceCollection.toSingleDiceCollections()))
+                }
+            }
+
+            is DicePresenter.UiEvent.UnSelectCollection -> {
+                Observable.fromCallable {
+                    relay.accept(getEmptyModel())
+                }
+            }
+            is DicePresenter.UiEvent.DeleteCollection -> {
+                return diceRepository.deleteDocument(uiEvent.diceCollection.id, game.id).toObservable<Any>()
+            }
+
+            is DicePresenter.UiEvent.Throw -> {
+                Observable.fromCallable {
+                    router.attachDiceResult(DiceCollectionResult.createResult(relay.value.dices))
+                }
+            }
+
+        }.onErrorReturn {
+            Timber.e(it)
         }
     }
 
-    override fun willResignActive() {
-        super.willResignActive()
-
+    override fun handleBackPress(): Boolean {
+        return router.backPress()
     }
+
+    private fun getEmptyModel() = DicesInteractorModel(SingleDiceCollection.createSingleDiceCollectionList())
 
     class DicesInteractorModel(
             val dices: List<SingleDiceCollection>

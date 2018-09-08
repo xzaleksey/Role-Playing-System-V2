@@ -11,6 +11,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
@@ -65,8 +66,9 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
             internal fun router(
                     component: Component,
                     view: ActiveGameView,
-                    interactor: ActiveGameInteractor): ActiveGameRouter {
-                return ActiveGameRouter(view, interactor, component, DiceBuilder(component))
+                    interactor: ActiveGameInteractor,
+                    routerNavigatorFactory: RouterNavigatorFactory): ActiveGameRouter {
+                return ActiveGameRouter(view, interactor, component, DiceBuilder(component), routerNavigatorFactory)
             }
 
             @ActiveGameScope

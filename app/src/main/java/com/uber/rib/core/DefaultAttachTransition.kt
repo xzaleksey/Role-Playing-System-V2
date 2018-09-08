@@ -1,6 +1,7 @@
 package com.uber.rib.core
 
 import android.view.ViewGroup
+import org.jetbrains.anko.matchParent
 
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
 abstract class DefaultAttachTransition<R : ViewRouter<*, out Interactor<*, *>,
@@ -14,6 +15,6 @@ abstract class DefaultAttachTransition<R : ViewRouter<*, out Interactor<*, *>,
     }
 
     override fun willAttachToHost(router: R, previousState: S?, newState: S, isPush: Boolean) {
-        view.addView(router.view)
+        view.addView(router.view, matchParent, matchParent)
     }
 }

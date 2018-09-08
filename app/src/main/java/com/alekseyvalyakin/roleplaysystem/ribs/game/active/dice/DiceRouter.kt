@@ -1,15 +1,50 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 
-import android.view.View
-
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.transition.DiceResultAttachTranstion
+import com.uber.rib.core.DefaultDetachTransition
+import com.uber.rib.core.RouterNavigatorFactory
+import com.uber.rib.core.RouterNavigatorState
 import com.uber.rib.core.ViewRouter
 
 /**
  * Adds and removes children of {@link DiceBuilder.DiceScope}.
  *
- * TODO describe the possible child configurations of this scope.
  */
 class DiceRouter(
-    view: DiceView,
-    interactor: DiceInteractor,
-    component: DiceBuilder.Component) : ViewRouter<DiceView, DiceInteractor, DiceBuilder.Component>(view, interactor, component)
+        view: DiceView,
+        interactor: DiceInteractor,
+        component: DiceBuilder.Component,
+        diceResultBuilder: DiceResultBuilder,
+        routerNavigatorFactory: RouterNavigatorFactory) : ViewRouter<DiceView, DiceInteractor, DiceBuilder.Component>(view, interactor, component) {
+
+    private val router = routerNavigatorFactory.create<State>(this)!!
+    private val resultAttachTransition = DiceResultAttachTranstion(diceResultBuilder, view)
+    private val resultDetachTransition = object : DefaultDetachTransition<DiceResultRouter, State>(view) {}
+
+    fun attachDiceResult(createresult: DiceCollectionResult) {
+        router.pushTransientState(State.RESULT, resultAttachTransition, resultDetachTransition)
+    }
+
+    fun backPress(): Boolean {
+        if (router.peekState() == null) {
+            return false
+        }
+
+        router.popState()
+        return true
+    }
+
+    data class State(val name: String) : RouterNavigatorState {
+
+        override fun name(): String {
+            return name
+        }
+
+        companion object {
+            val RESULT = State("Result")
+        }
+    }
+}

@@ -37,4 +37,8 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                 }.addToDisposables()
     }
 
+    override fun handleBackPress(): Boolean {
+        return router.backPress()
+    }
+
 }

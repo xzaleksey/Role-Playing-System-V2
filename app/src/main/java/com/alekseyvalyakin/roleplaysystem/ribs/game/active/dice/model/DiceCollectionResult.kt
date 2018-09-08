@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 data class DiceCollectionResult(
-        val id: String=StringUtils.EMPTY_STRING,
+        val id: String = StringUtils.EMPTY_STRING,
         private val diceResults: TreeMap<Dice, MutableList<DiceResult>> = TreeMap(),
         private var diceResultMax: Int = 0
 ) : Serializable {
@@ -50,4 +50,18 @@ data class DiceCollectionResult(
     fun resetResult() {
         diceResults.clear()
     }
+
+    companion object {
+        fun createResult(singleDiceCollections: List<SingleDiceCollection>): DiceCollectionResult {
+            return DiceCollectionResult()
+                    .apply {
+                        singleDiceCollections.forEach { collection ->
+                            repeat(collection.getDiceCount(), {
+                                this.addDiceResult(DiceResult.throwDice(collection.dice))
+                            })
+                        }
+                    }
+        }
+    }
+
 }

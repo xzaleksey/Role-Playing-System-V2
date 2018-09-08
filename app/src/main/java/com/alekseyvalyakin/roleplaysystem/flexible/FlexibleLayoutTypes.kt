@@ -8,4 +8,5 @@ object FlexibleLayoutTypes {
     const val USER_PROFILE = 5
     const val GAMES_IN_USER = 6
     const val SINGLE_DICE_COLLECTION = 7
+    const val DICE_COLLECTION = 8
 }

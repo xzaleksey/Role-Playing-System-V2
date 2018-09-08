@@ -52,7 +52,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation "com.google.firebase:firebase-core:$firebase_core_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
     implementation "com.google.firebase:firebase-database:$firebase_database_version"
     implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
@@ -89,8 +89,8 @@ dependencies {
     implementation 'id.zelory:compressor:2.1.0'
 
     implementation 'com.kbeanie:multipicker:1.5@aar'
-    implementation 'com.afollestad.material-dialogs:core:2.0.0-alpha01'
-    implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha01'
+    implementation 'com.afollestad.material-dialogs:core:2.0.0-alpha07'
+    implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha07'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'

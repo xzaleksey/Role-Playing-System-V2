@@ -29,8 +29,12 @@ abstract class BaseGameUserFireStoreRepository<T : HasId>(
         return RxFirestore.updateDocumentOffline(getDocumentReference(id, gameId), mapOf(fieldName to value))
     }
 
-    override fun observeQueryCollection(query: Query, gameId: String): Flowable<List<T>> {
+    override fun observeQueryCollection(query: Query): Flowable<List<T>> {
         return RxFirestore.observeQueryRefHasId(query, clazz)
+    }
+
+    override fun deleteDocument(id: String, gameId: String): Completable {
+        return RxFirestore.deleteDocument(getDocumentReference(id, gameId))
     }
 
     protected fun getDocumentReference(id: String, gameId: String) = getCollection(gameId, getUserId())

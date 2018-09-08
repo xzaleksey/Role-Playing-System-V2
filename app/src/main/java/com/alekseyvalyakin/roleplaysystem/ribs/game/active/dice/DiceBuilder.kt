@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProviderImpl
+import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.ViewBuilder
+import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -20,7 +22,7 @@ import javax.inject.Scope
  *
  * TODO describe this scope's responsibility as a whole.
  */
-class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRouter, DiceBuilder.ParentComponent>(dependency) {
+class DiceBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceView, DiceRouter, DiceBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [DiceRouter].
@@ -28,7 +30,7 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [DiceRouter].
      */
-    fun build(parentViewGroup: ViewGroup): DiceRouter {
+    override fun build(parentViewGroup: ViewGroup): DiceRouter {
         val view = createView(parentViewGroup)
         val interactor = DiceInteractor()
         val component = DaggerDiceBuilder_Component.builder()
@@ -61,8 +63,11 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
             fun router(
                     component: Component,
                     view: DiceView,
-                    interactor: DiceInteractor): DiceRouter {
-                return DiceRouter(view, interactor, component)
+                    interactor: DiceInteractor,
+                    routerNavigatorFactory: RouterNavigatorFactory): DiceRouter {
+                return DiceRouter(view, interactor, component,
+                        DiceResultBuilder(component),
+                        routerNavigatorFactory)
             }
 
             @DiceScope
@@ -72,12 +77,13 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
                 return DiceViewModelProviderImpl(dicesRepository, game)
             }
         }
-
     }
 
     @DiceScope
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
-    interface Component : InteractorBaseComponent<DiceInteractor>, BuilderComponent {
+    interface Component : InteractorBaseComponent<DiceInteractor>,
+            BuilderComponent,
+            DiceResultBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {
