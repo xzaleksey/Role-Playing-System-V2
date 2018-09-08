@@ -27,7 +27,7 @@ class GamesInUserRepositoryImpl(
     private fun currentUser() = (userRepository.getCurrentUserInfo()
             ?: throw RuntimeException("No user"))
 
-    override fun gamesInUserCollection(id: String) = FirestoreCollection.GAMES_IN_USER(id).getDbCollection()
+    override fun gamesInUserCollection(id: String) = FirestoreCollection.GamesInUser(id).getDbCollection()
 
     override fun observeCurrentUserGames(): Flowable<List<GamesInUserInfo>> {
         val gamesInUserCollection = gamesInUserCollection(currentUser().uid)

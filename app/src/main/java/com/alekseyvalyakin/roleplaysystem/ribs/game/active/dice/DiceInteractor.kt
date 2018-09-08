@@ -1,20 +1,19 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.SingleDiceCollection
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelMapper
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import javax.inject.Inject
 
 /**
  * Coordinates Business Logic for [DiceScope].
  *
- * TODO describe the logic of this scope.
  */
 @RibInteractor
 class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
@@ -22,19 +21,19 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
     @Inject
     lateinit var presenter: DicePresenter
     @Inject
-    lateinit var diceViewModelMapper: DiceViewModelMapper
+    lateinit var diceViewModelProvider: DiceViewModelProvider
 
     private val relay = BehaviorRelay.createDefault(DicesInteractorModel(
-            SingleDiceCollection.createSingleDiceCollectionList(), emptyList())
+            SingleDiceCollection.createSingleDiceCollectionList())
     )
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        relay
-                .map { diceViewModelMapper.mapDiceViewModel(it) }
+
+        diceViewModelProvider.observeViewModel(relay.toFlowable(BackpressureStrategy.LATEST))
                 .subscribeWithErrorLogging {
                     presenter.update(it)
-                }.addToDisposables()
+                }
 
         presenter.observeUiEvents().flatMap {
             handleUiEvent(it)
@@ -65,8 +64,7 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
     }
 
     class DicesInteractorModel(
-            val dices: List<SingleDiceCollection>,
-            val diceCollections: List<DiceCollection>,
-            val diceCollectionsLoaded: Boolean = false)
+            val dices: List<SingleDiceCollection>
+    )
 
 }

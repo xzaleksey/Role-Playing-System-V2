@@ -31,7 +31,7 @@ class UserInGameRepositoryImpl(
     private fun getNewUserInGameInfo() = UserInGameInfo()
 
 
-    override fun userInGameCollection(gameId: String) = FirestoreCollection.USERS_IN_GAME(gameId).getDbCollection()
+    override fun userInGameCollection(gameId: String) = FirestoreCollection.UsersInGame(gameId).getDbCollection()
 }
 
 interface UserInGameRepository {

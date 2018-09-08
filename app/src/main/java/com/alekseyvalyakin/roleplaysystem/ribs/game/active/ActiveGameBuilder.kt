@@ -85,7 +85,10 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
 
     @ActiveGameScope
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
-    interface Component : InteractorBaseComponent<ActiveGameInteractor>, BuilderComponent, DiceBuilder.ParentComponent {
+    interface Component : InteractorBaseComponent<ActiveGameInteractor>,
+            BuilderComponent,
+            DiceBuilder.ParentComponent,
+            ActiveGameDependencyProvider {
 
         @dagger.Component.Builder
         interface Builder {

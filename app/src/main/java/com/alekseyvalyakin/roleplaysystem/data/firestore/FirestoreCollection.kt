@@ -11,8 +11,12 @@ sealed class FirestoreCollection(
     object USERS : FirestoreCollection(directory = "users")
     object GAMES : FirestoreCollection(directory = "games")
     object NONE : FirestoreCollection(directory = "none")
-    class USERS_IN_GAME(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/users")
-    class GAMES_IN_USER(userId: String) : FirestoreCollection(USERS, directory = "$userId/games")
+
+    class UsersInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/users")
+    class GamesInUser(userId: String) : FirestoreCollection(USERS, directory = "$userId/games")
+    class DICES(gameId: String, userId: String) :
+            FirestoreCollection(UsersInGame(gameId),
+                    directory = "$userId/dices/")
 
     private fun getFullPath(): String {
         return (root?.getFullPath()?.plus("/") ?: StringUtils.EMPTY_STRING) + directory

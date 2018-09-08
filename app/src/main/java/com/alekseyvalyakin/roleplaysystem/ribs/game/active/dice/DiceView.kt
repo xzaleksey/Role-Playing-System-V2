@@ -7,10 +7,12 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.adapter.DiceAdapter
@@ -37,10 +39,10 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
     private lateinit var btnCancel: Button
     private lateinit var btnThrow: Button
     private lateinit var btnSave: View
+    protected lateinit var progressBar: ProgressBar
     private val diceColumnCount = 3
     private val relay = PublishRelay.create<DicePresenter.UiEvent>()
     private val diceAdapter = DiceAdapter(emptyList(), relay)
-
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
             return LinearSmoothScroller.SNAP_TO_START
@@ -59,6 +61,14 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                 layoutTransition = LayoutTransition()
                 bottomPadding = getIntDimen(R.dimen.dp_8)
                 topPadding = getIntDimen(R.dimen.dp_16)
+
+                progressBar = progressBar {
+                    visibility = View.GONE
+                    indeterminateDrawable.setColorFilter(Color.WHITE, android.graphics.PorterDuff.Mode.MULTIPLY)
+                }.lparams {
+                    gravity = Gravity.CENTER
+                    margin = getIntDimen(R.dimen.dp_8)
+                }
 
                 noDicesCollectionsContainer = linearLayout {
                     id = R.id.no_dices_container
@@ -191,6 +201,13 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
 
     override fun update(diceViewModel: DiceViewModel) {
         diceAdapter.updateDataSet(diceViewModel.diceItems, false)
+        if (diceViewModel.diceItemsCollectionsLoaded) {
+            progressBar.visibility = View.GONE
+            noDicesCollectionsContainer.visibility = if (diceViewModel.diceCollectionsItems.isEmpty()) View.VISIBLE else View.GONE
+
+        } else {
+            progressBar.visibility = View.VISIBLE
+        }
     }
 
     fun scrollDiceCollectionsToStart() {

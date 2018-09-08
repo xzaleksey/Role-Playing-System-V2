@@ -2,9 +2,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelMapper
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelMapperImpl
+import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProviderImpl
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
@@ -41,7 +43,7 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
         return DiceView(parentViewGroup.context)
     }
 
-    interface ParentComponent : RibDependencyProvider
+    interface ParentComponent : ActiveGameDependencyProvider
 
     @dagger.Module
     abstract class Module {
@@ -66,8 +68,8 @@ class DiceBuilder(dependency: ParentComponent) : ViewBuilder<DiceView, DiceRoute
             @DiceScope
             @Provides
             @JvmStatic
-            fun diceViewModelMapper(): DiceViewModelMapper {
-                return DiceViewModelMapperImpl()
+            fun diceViewModelProvider(dicesRepository: DicesRepository, game: Game): DiceViewModelProvider {
+                return DiceViewModelProviderImpl(dicesRepository, game)
             }
         }
 

@@ -11,6 +11,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
@@ -126,6 +128,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun provideUserAvatarRepository(userAvatarRepositoryImpl: UserAvatarRepositoryImpl): UserAvatarRepository {
         return userAvatarRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideDiceRepository(userRepository: UserRepository): DicesRepository {
+        return DicesRepositoryImpl(userRepository)
     }
 
     @Provides

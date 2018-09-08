@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
@@ -48,4 +49,6 @@ interface SingletonDependencyProvider {
     fun fileInfoProvider(): FileInfoProvider
 
     fun userAvatarRepo(): UserAvatarRepository
+
+    fun diceRepo(): DicesRepository
 }

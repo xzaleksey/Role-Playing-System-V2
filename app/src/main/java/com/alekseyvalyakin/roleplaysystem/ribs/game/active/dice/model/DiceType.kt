@@ -13,16 +13,16 @@ enum class DiceType(val resId: Int, private val dice: Dice) {
     val maxValue: Int
         get() = dice.maxValue
 
-    fun createDice(): Dice {
+    fun getDice(): Dice {
         return dice
     }
 
     fun createSingleDiceCollection(): SingleDiceCollection {
-        return SingleDiceCollection.createEmptySingleDiceCollectionFromDice(createDice())
+        return SingleDiceCollection.createEmptySingleDiceCollectionFromDice(getDice())
     }
 
     fun createDiceCollection(): DiceCollection {
-        return DiceCollection.createDiceCollectionFromDice(createDice())
+        return DiceCollection.createDiceCollectionFromDice(getDice())
     }
 
     companion object {

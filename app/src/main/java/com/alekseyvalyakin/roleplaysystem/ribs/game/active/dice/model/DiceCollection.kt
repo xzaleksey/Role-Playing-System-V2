@@ -49,7 +49,7 @@ data class DiceCollection(
     fun toSingleDiceCollections(): List<SingleDiceCollection> {
         val result = mutableListOf<SingleDiceCollection>()
         for (value in DiceType.values()) {
-            val dice = value.createDice()
+            val dice = value.getDice()
             val diceCount = dices[dice]
             result.add(SingleDiceCollection(dice, diceCount ?: 0))
         }
