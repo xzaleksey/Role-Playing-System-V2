@@ -213,7 +213,10 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
             dicesCollectionsContainer.visibility = if (diceViewModel.diceCollectionsItems.isEmpty()) View.GONE else View.VISIBLE
             val oldItemCount = diceCollectionsAdapter.itemCount
             diceCollectionsAdapter.updateDataSet(diceViewModel.diceCollectionsItems, false)
-            if (oldItemCount < diceViewModel.diceCollectionsItems.size) {
+            val diceCollectionsSize = diceViewModel.diceCollectionsItems.size
+            val diceCountString = "${getString(R.string.saved_collections)} ($diceCollectionsSize)"
+            tvSavedDiceCount.text = diceCountString
+            if (oldItemCount < diceCollectionsSize) {
                 scrollDiceCollectionsToStart()
             }
         } else {
