@@ -58,8 +58,9 @@ class DiceResultBuilder(dependency: ParentComponent) : ViewBuilder<DiceResultVie
             internal fun router(
                     component: Component,
                     view: DiceResultView,
-                    interactor: DiceResultInteractor): DiceResultRouter {
-                return DiceResultRouter(view, interactor, component)
+                    interactor: DiceResultInteractor,
+                    diceCollectionResult: DiceCollectionResult): DiceResultRouter {
+                return DiceResultRouter(view, interactor, component, diceCollectionResult)
             }
         }
 

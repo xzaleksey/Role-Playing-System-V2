@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
@@ -91,6 +92,12 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
             Timber.d("Restored create game Router")
             router.attachMain()
             router.attachCreateGame(childInfo as Game)
+        }
+
+        if (clazz == ActiveGameRouter::class.java) {
+            Timber.d("Restored active game Router")
+            router.attachMain()
+            router.attachOpenActiveGame(childInfo as Game)
         }
     }
 

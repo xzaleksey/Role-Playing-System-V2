@@ -17,14 +17,18 @@ class ActiveGameViewModelProviderImpl(
         private val resourcesProvider: ResourcesProvider
 ) : ActiveGameViewModelProvider {
 
-    override fun getActiveGameViewModel(): ActiveGameViewModel {
-        return ActiveGameViewModel(
-                userRepository.isCurrentUser(game.masterId),
-                bottomPanelMenu())
+    override fun getCurrentGame(): Game {
+        return game
     }
 
-    private fun bottomPanelMenu(): BottomPanelMenu {
-        return BottomPanelMenu(listOf(
+    override fun getActiveGameViewModel(navigationId: NavigationId): ActiveGameViewModel {
+        return ActiveGameViewModel(
+                userRepository.isCurrentUser(game.masterId),
+                bottomPanelMenu(navigationId))
+    }
+
+    private fun bottomPanelMenu(navigationId: NavigationId): BottomPanelMenu {
+        val items = listOf(
                 BottomItem(NavigationId.CHARACTERS,
                         stringRepository.getCharacters(),
                         ResourceImageHolderImpl(R.drawable.bottom_bar_characters, resourcesProvider)
@@ -40,12 +44,18 @@ class ActiveGameViewModelProviderImpl(
                 BottomItem(NavigationId.MENU,
                         stringRepository.getMenu(),
                         ResourceImageHolderImpl(R.drawable.bottom_bar_menu, resourcesProvider)
-                )),
-                0)
+                ))
+        var selectedIndex = items.indexOfFirst { navigationId == it.id }
+        if (selectedIndex < 0) {
+            selectedIndex = 0
+        }
+        return BottomPanelMenu(items, selectedIndex)
     }
 
 }
 
 interface ActiveGameViewModelProvider {
-    fun getActiveGameViewModel(): ActiveGameViewModel
+    fun getActiveGameViewModel(navigationId: NavigationId): ActiveGameViewModel
+
+    fun getCurrentGame(): Game
 }

@@ -67,8 +67,9 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                     component: Component,
                     view: ActiveGameView,
                     interactor: ActiveGameInteractor,
-                    routerNavigatorFactory: RouterNavigatorFactory): ActiveGameRouter {
-                return ActiveGameRouter(view, interactor, component, DiceBuilder(component), routerNavigatorFactory)
+                    routerNavigatorFactory: RouterNavigatorFactory,
+                    activeGameViewModelProvider: ActiveGameViewModelProvider): ActiveGameRouter {
+                return ActiveGameRouter(view, interactor, component, DiceBuilder(component), routerNavigatorFactory, activeGameViewModelProvider)
             }
 
             @ActiveGameScope

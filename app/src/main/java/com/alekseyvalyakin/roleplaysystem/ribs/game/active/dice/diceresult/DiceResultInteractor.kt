@@ -27,6 +27,7 @@ class DiceResultInteractor : BaseInteractor<DiceResultPresenter, DiceResultRoute
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+
         presenter.observeUiEvents()
                 .subscribeWithErrorLogging {
                     when (it) {

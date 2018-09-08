@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.alekseyvalyakin.roleplaysystem">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,10 +12,11 @@
         android:name=".app.RpsApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <!-- [START fcm_default_icon] -->
         <!-- Set custom default imageHolder. This is used when no imageHolder is set for incoming notification messages.
              See README(https://goo.gl/l4GJaQ) for more. -->
@@ -30,11 +32,10 @@
         <!-- [START fcm_default_channel] -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
-        <service
-            android:name=".data.messaging.MyFirebaseMessagingService">
+            android:value="@string/default_notification_channel_id" />
+        <service android:name=".data.messaging.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 

@@ -3,18 +3,19 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.dice.FirebaseDiceCollection
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceInteractor.DicesInteractorModel.Companion.KEY
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.SingleDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.uber.rib.core.BaseInteractor
-import com.uber.rib.core.Bundle
-import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.*
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import timber.log.Timber
+import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -37,7 +38,9 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-
+        savedInstanceState?.run {
+            relay.accept(this.getSerializable(KEY))
+        }
         diceViewModelProvider.observeViewModel(relay.toFlowable(BackpressureStrategy.LATEST))
                 .subscribeWithErrorLogging {
                     presenter.update(it)
@@ -102,14 +105,30 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(KEY, relay.value)
+    }
+
     override fun handleBackPress(): Boolean {
         return router.backPress()
+    }
+
+    override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>, childInfo: Serializable?) {
+        if (clazz == DiceResultRouter::class.java) {
+            Timber.d("Restored dice result Router")
+            router.attachDiceResult(childInfo as DiceCollectionResult)
+        }
     }
 
     private fun getEmptyModel() = DicesInteractorModel(SingleDiceCollection.createSingleDiceCollectionList())
 
     class DicesInteractorModel(
             val dices: List<SingleDiceCollection>
-    )
+    ) : Serializable {
+        companion object {
+            const val KEY = "ModelKey"
+        }
+    }
 
 }

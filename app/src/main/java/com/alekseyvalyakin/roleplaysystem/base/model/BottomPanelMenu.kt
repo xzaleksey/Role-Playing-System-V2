@@ -2,17 +2,18 @@ package com.alekseyvalyakin.roleplaysystem.base.model
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageHolder
+import java.io.Serializable
 
 data class BottomPanelMenu(
         val items: List<BottomItem>,
         val selectedIndex: Int
-)
+) : Serializable
 
 data class BottomItem(
         val id: NavigationId,
         val text: String,
         val imageHolder: ImageHolder
-)
+) : Serializable
 
 enum class NavigationId(val id: Int) {
     CHARACTERS(R.id.bottom_menu_characters),
