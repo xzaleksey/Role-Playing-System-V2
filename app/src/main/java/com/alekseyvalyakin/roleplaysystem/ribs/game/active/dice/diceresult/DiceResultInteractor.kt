@@ -24,6 +24,8 @@ class DiceResultInteractor : BaseInteractor<DiceResultPresenter, DiceResultRoute
     lateinit var diceCollectionResult: DiceCollectionResult
     @Inject
     lateinit var stringRepository: StringRepository
+    @Inject
+    lateinit var diceResultViewModelProvider: DiceResultViewModelProvider
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
@@ -46,10 +48,7 @@ class DiceResultInteractor : BaseInteractor<DiceResultPresenter, DiceResultRoute
     }
 
     private fun updateView(diceCollectionResult: DiceCollectionResult) {
-        presenter.update(DiceResultViewModel(
-                diceCollectionResult.getCurrentResult().toString(),
-                "${diceCollectionResult.getMaxResult()} (${stringRepository.getMax()})"
-        ))
+        presenter.update(diceResultViewModelProvider.mapDiceResult(diceCollectionResult))
     }
 
 }

@@ -9,4 +9,5 @@ object FlexibleLayoutTypes {
     const val GAMES_IN_USER = 6
     const val SINGLE_DICE_COLLECTION = 7
     const val DICE_COLLECTION = 8
+    const val TOTAL_DICE_RESULT = 9
 }

@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.uber.rib.core.InteractorBaseComponent
@@ -61,6 +62,14 @@ class DiceResultBuilder(dependency: ParentComponent) : ViewBuilder<DiceResultVie
                     interactor: DiceResultInteractor,
                     diceCollectionResult: DiceCollectionResult): DiceResultRouter {
                 return DiceResultRouter(view, interactor, component, diceCollectionResult)
+            }
+
+            @DiceResultScope
+            @Provides
+            @JvmStatic
+            internal fun diceResultViewModelProvider(
+                    stringRepository: StringRepository): DiceResultViewModelProvider {
+                return DiceResultViewModelProviderImpl(stringRepository)
             }
         }
 
