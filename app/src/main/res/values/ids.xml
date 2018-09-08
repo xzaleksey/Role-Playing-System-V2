@@ -68,4 +68,7 @@
     <item name="click_container" type="id" />
     <item name="tv_main" type="id" />
     <item name="dice_container" type="id" />
+    <item name="tv_result" type="id" />
+    <item name="tv_result_value" type="id" />
+    <item name="tv_max_result_value" type="id" />
 </resources>

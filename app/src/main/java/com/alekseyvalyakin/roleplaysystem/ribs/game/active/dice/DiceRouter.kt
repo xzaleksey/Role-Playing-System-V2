@@ -3,7 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.transition.DiceResultAttachTranstion
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.transition.DiceResultAttachTransition
 import com.uber.rib.core.DefaultDetachTransition
 import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.RouterNavigatorState
@@ -17,15 +17,16 @@ class DiceRouter(
         view: DiceView,
         interactor: DiceInteractor,
         component: DiceBuilder.Component,
-        diceResultBuilder: DiceResultBuilder,
+        private val diceResultBuilder: DiceResultBuilder,
         routerNavigatorFactory: RouterNavigatorFactory) : ViewRouter<DiceView, DiceInteractor, DiceBuilder.Component>(view, interactor, component) {
 
     private val router = routerNavigatorFactory.create<State>(this)!!
-    private val resultAttachTransition = DiceResultAttachTranstion(diceResultBuilder, view)
     private val resultDetachTransition = object : DefaultDetachTransition<DiceResultRouter, State>(view) {}
 
-    fun attachDiceResult(createresult: DiceCollectionResult) {
-        router.pushTransientState(State.RESULT, resultAttachTransition, resultDetachTransition)
+    fun attachDiceResult(diceCollectionResult: DiceCollectionResult) {
+        router.pushTransientState(State.RESULT,
+                DiceResultAttachTransition(diceResultBuilder, view, diceCollectionResult),
+                resultDetachTransition)
     }
 
     fun backPress(): Boolean {

@@ -5,7 +5,6 @@ import com.uber.rib.core.ViewRouter
 /**
  * Adds and removes children of {@link DiceResultBuilder.DiceResultScope}.
  *
- * TODO describe the possible child configurations of this scope.
  */
 class DiceResultRouter(
     view: DiceResultView,

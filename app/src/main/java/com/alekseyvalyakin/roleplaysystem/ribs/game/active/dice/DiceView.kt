@@ -102,7 +102,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                         setSanserifMediumTypeface()
                         rightPadding = getDoubleCommonDimen()
                         textColor = getCompatColor(R.color.colorWhite)
-                        setTextSizeFromRes(R.dimen.sp_15)
+                        setTextSizeFromRes(R.dimen.dp_15)
                     }.lparams(width = matchParent)
                     rvCollections = recyclerView {
                         id = R.id.recycler_view_dices_collections
@@ -118,7 +118,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
             }.lparams(width = matchParent, height = matchParent) {
                 below(R.id.status_bar)
             }
-        }.lparams(width = matchParent, height = getIntDimen(R.dimen.game_characters_top_element_height)) {
+        }.lparams(width = matchParent, height = getIntDimen(R.dimen.bg_top_element_height_big)) {
             alignParentTop()
         }
         linearLayout {
@@ -159,6 +159,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                 topPadding = getDoubleCommonDimen()
                 textColor = getCompatColor(R.color.colorPrimary)
                 setSanserifMediumTypeface()
+                textSizeDimen = R.dimen.dp_14
                 text = resources.getString(R.string.new_throw)
             }.lparams {
                 alignParentLeft()

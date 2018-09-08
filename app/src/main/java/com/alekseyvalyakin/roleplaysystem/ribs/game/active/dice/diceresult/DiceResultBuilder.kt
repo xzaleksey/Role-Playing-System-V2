@@ -3,8 +3,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
-import com.uber.rib.core.BaseViewBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -15,7 +16,7 @@ import javax.inject.Scope
  * Builder for the {@link DiceResultScope}.
  *
  */
-class DiceResultBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceResultView, DiceResultRouter, DiceResultBuilder.ParentComponent>(dependency) {
+class DiceResultBuilder(dependency: ParentComponent) : ViewBuilder<DiceResultView, DiceResultRouter, DiceResultBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [DiceResultRouter].
@@ -23,12 +24,13 @@ class DiceResultBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceResul
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [DiceResultRouter].
      */
-    override fun build(parentViewGroup: ViewGroup): DiceResultRouter {
+    fun build(parentViewGroup: ViewGroup, diceCollectionResult: DiceCollectionResult): DiceResultRouter {
         val view = createView(parentViewGroup)
         val interactor = DiceResultInteractor()
         val component = DaggerDiceResultBuilder_Component.builder()
                 .parentComponent(dependency)
                 .view(view)
+                .diceCollectionResult(diceCollectionResult)
                 .interactor(interactor)
                 .build()
         return component.diceResultRouter()
@@ -45,7 +47,7 @@ class DiceResultBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceResul
 
         @DiceResultScope
         @Binds
-        internal abstract fun presenter(view: DiceResultView): DiceResultInteractor.DiceResultPresenter
+        internal abstract fun presenter(view: DiceResultView): DiceResultPresenter
 
         @dagger.Module
         companion object {
@@ -75,7 +77,11 @@ class DiceResultBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceResul
             @BindsInstance
             fun view(view: DiceResultView): Builder
 
+            @BindsInstance
+            fun diceCollectionResult(diceCollectionResult: DiceCollectionResult): Builder
+
             fun parentComponent(component: ParentComponent): Builder
+
             fun build(): Component
         }
     }

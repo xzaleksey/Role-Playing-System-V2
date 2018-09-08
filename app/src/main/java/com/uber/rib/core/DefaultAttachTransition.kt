@@ -10,6 +10,7 @@ abstract class DefaultAttachTransition<R : ViewRouter<*, out Interactor<*, *>,
         protected val builder: B,
         protected val view: ViewGroup
 ) : RouterNavigator.AttachTransition<R, S> {
+
     override fun buildRouter(): R {
         return builder.build(view)
     }

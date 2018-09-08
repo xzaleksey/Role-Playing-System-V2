@@ -8,7 +8,7 @@
     <RelativeLayout
             android:id="@+id/top_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/game_characters_top_element_height"
+            android:layout_height="@dimen/bg_top_element_height_big"
             android:layout_alignParentTop="true"
             android:background="@drawable/top_background"
             android:visibility="visible">

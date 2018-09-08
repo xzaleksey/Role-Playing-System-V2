@@ -51,6 +51,11 @@ data class DiceCollectionResult(
         diceResults.clear()
     }
 
+    @Synchronized
+    fun rethrow(){
+        diceResults.values.forEach { dices -> dices.forEach { it.rethrow() } }
+    }
+
     companion object {
         fun createResult(singleDiceCollections: List<SingleDiceCollection>): DiceCollectionResult {
             return DiceCollectionResult()
