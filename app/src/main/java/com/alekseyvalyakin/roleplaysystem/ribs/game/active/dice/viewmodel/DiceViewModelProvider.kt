@@ -11,21 +11,27 @@ import timber.log.Timber
 
 class DiceViewModelProviderImpl(
         private val dicesRepository: DicesRepository,
-        protected val game: Game
+        private val game: Game
 ) : DiceViewModelProvider {
 
     override fun observeViewModel(flowable: Flowable<DiceInteractor.DicesInteractorModel>): Flowable<DiceViewModel> {
         return Flowable.combineLatest(flowable, dicesRepository.observeCollection(gameId = game.id).startWith(EmptyCollection),
                 BiFunction { interactorModel, diceCollections ->
                     Timber.d(diceCollections.toString())
+                    val singleDiceCollections = interactorModel.dices
+                    val diceItemsCollectionsLoaded = diceCollections !== EmptyCollection
+                    val dicesChosen = singleDiceCollections.any { it.getDiceCount() > 0 }
                     return@BiFunction DiceViewModel(
-                            diceItems = interactorModel.dices.map { singleDiceCollection ->
+                            diceItems = singleDiceCollections.map { singleDiceCollection ->
                                 DiceSingleCollectionViewModel(
                                         DiceType.getDiceType(singleDiceCollection.dice).resId,
                                         singleDiceCollection)
                             },
 
-                            diceItemsCollectionsLoaded = diceCollections !== EmptyCollection
+                            diceItemsCollectionsLoaded = diceItemsCollectionsLoaded,
+                            buttonCancelEnabled = dicesChosen,
+                            buttonSaveEnabled = diceItemsCollectionsLoaded,
+                            buttonThrowEnabled = dicesChosen
                     )
                 })
     }

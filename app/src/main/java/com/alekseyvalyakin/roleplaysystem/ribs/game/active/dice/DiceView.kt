@@ -39,7 +39,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
     private lateinit var btnCancel: Button
     private lateinit var btnThrow: Button
     private lateinit var btnSave: View
-    protected lateinit var progressBar: ProgressBar
+    private lateinit var progressBar: ProgressBar
     private val diceColumnCount = 3
     private val relay = PublishRelay.create<DicePresenter.UiEvent>()
     private val diceAdapter = DiceAdapter(emptyList(), relay)
@@ -204,10 +204,13 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
         if (diceViewModel.diceItemsCollectionsLoaded) {
             progressBar.visibility = View.GONE
             noDicesCollectionsContainer.visibility = if (diceViewModel.diceCollectionsItems.isEmpty()) View.VISIBLE else View.GONE
-
         } else {
             progressBar.visibility = View.VISIBLE
         }
+
+        btnCancel.isEnabled = diceViewModel.buttonCancelEnabled
+        btnThrow.isEnabled = diceViewModel.buttonThrowEnabled
+        btnSave.isEnabled = diceViewModel.buttonSaveEnabled
     }
 
     fun scrollDiceCollectionsToStart() {
