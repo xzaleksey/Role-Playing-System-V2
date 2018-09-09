@@ -85,7 +85,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
             }
             ivMinus = imageView {
                 id = R.id.iv_minus
-                backgroundColor = getSelectableItemBorderless()
+                backgroundResource = getSelectableItemBorderless()
                 imageResource = R.drawable.dice_minus
             }.lparams(width = 0, height = 0) {
                 bottomToBottom = R.id.guideline_left_horizontal
@@ -95,7 +95,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
             }
             ivPlus = imageView {
                 id = R.id.iv_plus
-                backgroundColor = getSelectableItemBorderless()
+                backgroundResource = getSelectableItemBorderless()
                 imageResource = R.drawable.dice_plus
             }.lparams(width = 0, height = 0) {
                 bottomToBottom = R.id.dices_actions_container

@@ -22,11 +22,11 @@ class DiceResultDialogRethrowView(context: Context) : _LinearLayout(context) {
     init {
         rightPadding = getDoubleCommonDimen()
         leftPadding = getDoubleCommonDimen()
-        backgroundColor = getSelectableItemBorderless()
+        backgroundResource = getSelectableItemBorderless()
         orientation = LinearLayout.VERTICAL
         allContainer = relativeLayout {
             id = R.id.all_container
-            backgroundColor = getSelectableItemBorderless()
+            backgroundResource = getSelectableItemBorderless()
             bottomPadding = getIntDimen(R.dimen.dp_12)
             topPadding = getIntDimen(R.dimen.dp_12)
 

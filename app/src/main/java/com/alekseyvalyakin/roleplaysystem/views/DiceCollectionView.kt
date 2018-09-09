@@ -22,7 +22,7 @@ class DiceCollectionView(context: Context) : _CardView(context) {
         cardElevation = getFloatDimen(R.dimen.dp_8)
         relativeLayout {
             id = R.id.click_container
-            backgroundColor = getSelectableItemBorderless()
+            backgroundResource = getSelectableItemBorderless()
             tvMain = textView {
                 id = R.id.tv_main
                 bottomPadding = getIntDimen(R.dimen.dp_4)

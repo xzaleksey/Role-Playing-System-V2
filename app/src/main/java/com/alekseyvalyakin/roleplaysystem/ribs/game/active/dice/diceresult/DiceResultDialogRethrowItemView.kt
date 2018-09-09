@@ -24,7 +24,7 @@ class DiceResultDialogRethrowItemView(context: Context) : _RelativeLayout(contex
 
     init {
         relativeLayout {
-            backgroundColor = getSelectableItemBorderless()
+            backgroundResource = getSelectableItemBorderless()
             bottomPadding = getIntDimen(R.dimen.dp_12)
             topPadding = getIntDimen(R.dimen.dp_12)
             ivMainDice = imageView {

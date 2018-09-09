@@ -77,14 +77,14 @@ class SingleDiceTypeResultViewHolder(
                 diceView.tvDiceCount.text = singleDiceMaxResult
                 diceView.tvMainResult.text = diceResult.value.toString()
                 val checkBox = diceView.diceCheckBox
-                diceView.setOnClickListener({ v1 -> getOnClickListener(diceResults, allCheckbox, selectedDiceResults, diceResult, checkBox, actionButton) })
-                checkBox.setOnClickListener({ v1 -> getOnClickListener(diceResults, allCheckbox, selectedDiceResults, diceResult, checkBox, actionButton) })
+                diceView.setOnClickListener({ _ -> getOnClickListener(diceResults, allCheckbox, selectedDiceResults, diceResult, checkBox, actionButton) })
+                checkBox.setOnClickListener({ _ -> getOnClickListener(diceResults, allCheckbox, selectedDiceResults, diceResult, checkBox, actionButton) })
                 diceContainer.addView(diceView)
                 diceResultViewMap[diceView] = diceResult
             }
 
-            allContainer.setOnClickListener({ v12 -> getAllCLickListener(diceResults, diceResultViewMap, selectedDiceResults, actionButton, allCheckbox) })
-            allCheckbox.setOnClickListener({ v12 -> getAllCLickListener(diceResults, diceResultViewMap, selectedDiceResults, actionButton, allCheckbox) })
+            allContainer.setOnClickListener({ _ -> getAllCLickListener(diceResults, diceResultViewMap, selectedDiceResults, actionButton, allCheckbox) })
+            allCheckbox.setOnClickListener({ _ -> getAllCLickListener(diceResults, diceResultViewMap, selectedDiceResults, actionButton, allCheckbox) })
 
             materialDialog.show()
         }

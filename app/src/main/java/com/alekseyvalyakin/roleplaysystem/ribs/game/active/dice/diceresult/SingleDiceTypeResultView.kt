@@ -43,8 +43,8 @@ class SingleDiceTypeResultView(context: Context) : _CardView(context) {
                 }
                 reReThrowContainer = frameLayout {
                     id = R.id.rethrow_container
+                    setForegroundSelectableItemBackGround()
                     textView {
-                        backgroundColor = getSelectableItemBackGround()
                         padding = getDoubleCommonDimen()
                         textResource = R.string.rethrow
                         textColorResource = R.color.colorPrimary
