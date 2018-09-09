@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceType
 import eu.davidea.flexibleadapter.items.IFlexible
 
 class DiceResultViewModelProviderImpl(
@@ -19,12 +20,12 @@ class DiceResultViewModelProviderImpl(
 
         result.add(SubHeaderViewModel(stringRepository.getDetails()))
 
-//        for (diceResultEntry in diceCollectionResult.getDiceResults()) {
-//            val diceType = DiceType.getDiceType(diceResultEntry.key)
-//            val diceResults = diceResultEntry.value
-//            result.add(SingleDiceTypeResultViewModel(diceResults,
-//                    diceResults.sumBy { it.value }, diceType, false))
-//        }
+        for (diceResultEntry in diceCollectionResult.getDiceResults()) {
+            val diceType = DiceType.getDiceType(diceResultEntry.key)
+            val diceResults = diceResultEntry.value
+            result.add(SingleDiceTypeResultViewModel(diceResults,
+                    diceResults.sumBy { it.value }, diceType))
+        }
         return DiceResultViewModel(result)
     }
 

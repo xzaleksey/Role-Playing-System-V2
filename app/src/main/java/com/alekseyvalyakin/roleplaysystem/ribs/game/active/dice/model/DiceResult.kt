@@ -2,7 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model
 
 import java.io.Serializable
 
-data class DiceResult(val dice: Dice, var value: Int) : Serializable {
+class DiceResult(val dice: Dice, var value: Int) : Serializable {
 
     @Synchronized
     fun rethrow() {

@@ -10,4 +10,5 @@ object FlexibleLayoutTypes {
     const val SINGLE_DICE_COLLECTION = 7
     const val DICE_COLLECTION = 8
     const val TOTAL_DICE_RESULT = 9
+    const val SINGLE_DICE_RESULT = 10
 }

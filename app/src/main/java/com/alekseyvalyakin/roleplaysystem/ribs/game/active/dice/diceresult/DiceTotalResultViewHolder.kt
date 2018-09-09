@@ -11,7 +11,7 @@ class DiceTotalResultViewHolder(
 
     fun bind(diceSingleCollectionViewModel: DiceTotalResultViewModel, relay: Relay<DiceResultPresenter.UiEvent>) {
         view.update(diceSingleCollectionViewModel.currentResultValue, diceSingleCollectionViewModel.maxResultValue,
-                View.OnClickListener { relay.accept(DiceResultPresenter.UiEvent.Rethrow) })
+                View.OnClickListener { relay.accept(DiceResultPresenter.UiEvent.RethrowAllDices) })
 
     }
 

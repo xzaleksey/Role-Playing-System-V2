@@ -71,4 +71,8 @@
     <item name="tv_result" type="id" />
     <item name="tv_result_value" type="id" />
     <item name="tv_max_result_value" type="id" />
+    <item name="tv_main_result" type="id" />
+    <item name="rethrow_container" type="id" />
+    <item name="all_container" type="id" />
+
 </resources>

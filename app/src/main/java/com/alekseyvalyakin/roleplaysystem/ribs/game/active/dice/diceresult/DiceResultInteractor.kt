@@ -31,15 +31,21 @@ class DiceResultInteractor : BaseInteractor<DiceResultPresenter, DiceResultRoute
         super.didBecomeActive(savedInstanceState)
 
         presenter.observeUiEvents()
-                .subscribeWithErrorLogging {
-                    when (it) {
+                .subscribeWithErrorLogging { uiEvent ->
+                    when (uiEvent) {
                         is DiceResultPresenter.UiEvent.Back -> {
                             activityListener.backPress()
                         }
-                        is DiceResultPresenter.UiEvent.Rethrow -> {
+                        is DiceResultPresenter.UiEvent.RethrowAllDices -> {
                             diceCollectionResult.rethrow()
                             updateView(diceCollectionResult)
                         }
+
+                        is DiceResultPresenter.UiEvent.RethrowDices -> {
+                            uiEvent.diceResults.forEach { it.rethrow() }
+                            updateView(diceCollectionResult)
+                        }
+
                     }
                 }
                 .addToDisposables()

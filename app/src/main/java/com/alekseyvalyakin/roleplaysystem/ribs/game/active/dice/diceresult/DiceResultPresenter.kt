@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceResult
 import io.reactivex.Observable
 
 /**
@@ -9,7 +10,8 @@ interface DiceResultPresenter {
 
     sealed class UiEvent {
         object Back : UiEvent()
-        object Rethrow : UiEvent()
+        object RethrowAllDices : UiEvent()
+        class RethrowDices(val diceResults: Set<DiceResult>) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>
