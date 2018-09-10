@@ -7,6 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceInteractor
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceType
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
+import timber.log.Timber
 
 class DiceViewModelProviderImpl(
         private val dicesRepository: DicesRepository,
@@ -14,7 +15,12 @@ class DiceViewModelProviderImpl(
 ) : DiceViewModelProvider {
 
     override fun observeViewModel(flowable: Flowable<DiceInteractor.DicesInteractorModel>): Flowable<DiceViewModel> {
-        return Flowable.combineLatest(flowable, dicesRepository.observeDiceCollectionsOrdered(gameId = game.id).startWith(EmptyCollection),
+        return Flowable.combineLatest(flowable, dicesRepository.observeDiceCollectionsOrdered(gameId = game.id)
+                .onErrorReturn {
+                    Timber.e(it)
+                    EmptyCollection
+                }
+                .startWith(EmptyCollection),
                 BiFunction { interactorModel, firebaseDiceCollections ->
                     val singleDiceCollections = interactorModel.dices
                     val diceItemsCollectionsLoaded = firebaseDiceCollections !== EmptyCollection

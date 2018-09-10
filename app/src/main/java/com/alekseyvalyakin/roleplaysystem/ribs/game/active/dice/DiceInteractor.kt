@@ -72,12 +72,16 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
                 }
             }
             is DicePresenter.UiEvent.Save -> {
+                val diceCollection = DiceCollection.createDiceCollectionFromSingleDiceCollections(
+                        relay.value.dices
+                )
+                val firebaseDiceCollection = FirebaseDiceCollection.newInstance(diceCollection)
                 return diceRepository.createDocument(
                         gameId = game.id,
-                        data = FirebaseDiceCollection.newInstance(DiceCollection.createDiceCollectionFromSingleDiceCollections(
-                                relay.value.dices
-                        ))
-                ).toObservable()
+                        data = firebaseDiceCollection
+                ).onErrorReturn {
+                    firebaseDiceCollection
+                }.toObservable()
             }
             is DicePresenter.UiEvent.SelectCollection -> {
                 Observable.fromCallable {
