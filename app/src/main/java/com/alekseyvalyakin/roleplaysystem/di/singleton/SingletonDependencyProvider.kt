@@ -13,6 +13,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.uber.rib.core.RouterNavigatorFactory
 import io.reactivex.Scheduler
 
@@ -51,4 +52,6 @@ interface SingletonDependencyProvider {
     fun userAvatarRepo(): UserAvatarRepository
 
     fun diceRepo(): DicesRepository
+
+    fun analyticsReporter(): AnalyticsReporter
 }

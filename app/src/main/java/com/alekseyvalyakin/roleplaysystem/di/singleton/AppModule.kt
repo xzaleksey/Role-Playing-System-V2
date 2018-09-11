@@ -28,6 +28,8 @@ import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepositoryIm
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProviderImpl
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporterImpl
 import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Module
 import dagger.Provides
@@ -147,5 +149,12 @@ class AppModule(private val mApp: RpsApp) {
     fun provideFileProvider(context: Context): FileInfoProvider {
         return FileInfoProviderImpl(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsReporter(context: Context): AnalyticsReporter {
+        return AnalyticsReporterImpl(context)
+    }
+
 
 }

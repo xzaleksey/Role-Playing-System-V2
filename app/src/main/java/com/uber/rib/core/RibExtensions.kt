@@ -11,3 +11,7 @@ fun Bundle.putSerializable(key: String, serializable: Serializable) {
 fun <T> Bundle.getSerializable(key: String): T where T : Serializable {
     return this.wrappedBundle.getSerializable(key) as T
 }
+
+fun Bundle.toAndroidBundle(): android.os.Bundle {
+    return this.wrappedBundle
+}

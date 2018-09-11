@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User.Companion.EMP
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.CurrentUserInfo
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.usernameFromEmail
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.AuthResult
@@ -23,7 +24,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthProviderImpl @Inject constructor(
-        private val userRepository: UserRepository
+        private val userRepository: UserRepository,
+        private val analyticsReporter: AnalyticsReporter
 ) : AuthProvider {
 
     private val localUser = BehaviorSubject.create<User>()
@@ -64,7 +66,7 @@ class AuthProviderImpl @Inject constructor(
                                     if (userResult.photoUrl.isNullOrBlank() && !currentUserInfo.photoUrl.isNullOrBlank()) {
                                         userResult.photoUrl = currentUserInfo.photoUrl
                                     }
-
+                                    analyticsReporter.setCurrentUser(userResult.id)
                                     Timber.d("Update user $userResult")
 
                                     return@flatMap userRepository.createUser(userResult)
@@ -109,6 +111,7 @@ class AuthProviderImpl @Inject constructor(
                 .startWith(FirebaseAuth.getInstance())
                 .switchMap { firebaseAuth ->
                     if (firebaseAuth.currentUser == null) {
+                        analyticsReporter.setCurrentUser(null)
                         return@switchMap Observable.just(false)
                     }
 

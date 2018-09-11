@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.BuildConfig
 import com.alekseyvalyakin.roleplaysystem.di.singleton.AppComponent
 import com.alekseyvalyakin.roleplaysystem.di.singleton.AppModule
 import com.alekseyvalyakin.roleplaysystem.di.singleton.DaggerAppComponent
+import com.alekseyvalyakin.roleplaysystem.tree.MyTree
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -21,7 +22,7 @@ class RpsApp : Application() {
         Fabric.with(this, Crashlytics())
         JodaTimeAndroid.init(this)
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(MyTree())
         }
         FirebaseFirestore.getInstance().firestoreSettings = FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
