@@ -26,6 +26,8 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
@@ -156,5 +158,10 @@ class AppModule(private val mApp: RpsApp) {
         return AnalyticsReporterImpl(context)
     }
 
+    @Provides
+    @Singleton
+    fun createGameObservableProvider(gameRepository: GameRepository): CreateEmptyGameObservableProvider {
+        return CreateEmptyGameObservableProviderImpl(gameRepository)
+    }
 
 }

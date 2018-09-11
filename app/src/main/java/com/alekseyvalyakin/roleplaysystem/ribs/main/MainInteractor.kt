@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
@@ -43,6 +42,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var uiScheduler: Scheduler
     @Inject
     lateinit var mainRibListener: MainRibListener
+    @Inject
+    lateinit var createEmptyGameObservableProvider: CreateEmptyGameObservableProvider
 
     private val filterRelay = BehaviorRelay.createDefault<FilterModel>(FilterModel())
 
@@ -57,7 +58,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         mainViewModelProvider.observeViewModel(filterRelay.toFlowable(BackpressureStrategy.LATEST))
                 .doOnSubscribe {
                     if (presenter.isEmpty()) {
-                        presenter.showLoadingContent(true)
+                        presenter.showFabLoading(true)
                     }
                 }
                 .observeOn(uiScheduler)
@@ -65,10 +66,30 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                     presenter.showLoadingContent(false)
                     presenter.updateModel(it)
                 }.addToDisposables()
+
+        createEmptyGameObservableProvider.observeCreateGameModel()
+                .observeOn(uiScheduler)
+                .subscribeWithErrorLogging { createGameModel ->
+                    when (createGameModel) {
+                        is CreateEmptyGameObservableProvider.CreateGameModel.InProgress -> {
+                            presenter.showFabLoading(true)
+                        }
+                        is CreateEmptyGameObservableProvider.CreateGameModel.GameCreateSuccess -> {
+                            presenter.showFabLoading(false)
+                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(createGameModel.game))
+                        }
+
+                        is CreateEmptyGameObservableProvider.CreateGameModel.GameCreateFail -> {
+                            presenter.showFabLoading(false)
+                            presenter.showError(createGameModel.t.localizedMessage)
+                        }
+
+                    }
+                }.addToDisposables()
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
-        var observable: Observable<*> = Observable.empty<Any>()
+        val observable: Observable<*> = Observable.empty<Any>()
 
         when (uiEvents) {
             is UiEvents.SearchRightIconClick -> {
@@ -79,7 +100,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvents.text))
             }
             is UiEvents.FabClick -> {
-                observable = getCreateGameObservable()
+                return Observable.fromCallable {
+                    createEmptyGameObservableProvider.createEmptyGameModel()
+                }
             }
             is UiEvents.Logout -> {
                 return authProvider.signOut().toObservable<Any>()
@@ -110,24 +133,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         }
 
         return Observable.empty<Any>()
-    }
-
-    private fun getCreateGameObservable(): Observable<Game> {
-        return gameRepository.createDocument()
-                .onErrorReturn { t ->
-                    Timber.e(t)
-                    presenter.showError(t.localizedMessage)
-                    Game.EMPTY_GAME
-                }
-                .toObservable()
-                .doOnSubscribe { presenter.showFabLoading(true) }
-                .doOnNext { game ->
-                    presenter.showFabLoading(false)
-                    if (game != Game.EMPTY_GAME) {
-                        Timber.d("end chain")
-                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(game))
-                    }
-                }
     }
 
     /**

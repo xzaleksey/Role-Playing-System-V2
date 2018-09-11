@@ -3,7 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import io.reactivex.Flowable
 
-interface CreateGameObservableProvider {
+interface CreateEmptyGameObservableProvider {
 
     fun observeCreateGameModel(): Flowable<CreateGameModel>
 
@@ -11,7 +11,7 @@ interface CreateGameObservableProvider {
 
     sealed class CreateGameModel {
         object InProgress : CreateGameModel()
-        class GameCreateSuccess(game: Game) : CreateGameModel()
-        class GameCreateFail(t: Throwable) : CreateGameModel()
+        class GameCreateSuccess(val game: Game) : CreateGameModel()
+        class GameCreateFail(val t: Throwable) : CreateGameModel()
     }
 }

@@ -127,12 +127,14 @@ class MainView constructor(
     }
 
     override fun showFabLoading(loading: Boolean) {
-        if (loading) {
-            fab.hide()
-            progressBarBottom.visibility = View.VISIBLE
-        } else {
-            progressBarBottom.visibility = View.GONE
-            fab.show()
+        post {
+            if (loading) {
+                fab.hide()
+                progressBarBottom.visibility = View.VISIBLE
+            } else {
+                progressBarBottom.visibility = View.GONE
+                fab.show()
+            }
         }
     }
 

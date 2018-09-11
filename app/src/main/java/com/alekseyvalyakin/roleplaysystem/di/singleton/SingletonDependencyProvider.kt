@@ -12,6 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.uber.rib.core.RouterNavigatorFactory
@@ -54,4 +55,6 @@ interface SingletonDependencyProvider {
     fun diceRepo(): DicesRepository
 
     fun analyticsReporter(): AnalyticsReporter
+
+    fun createGameObservableProvider(): CreateEmptyGameObservableProvider
 }
