@@ -13,6 +13,7 @@ import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
+import timber.log.Timber
 
 class GameRepositoryImpl(
         private val userRepository: UserRepository,
@@ -61,6 +62,10 @@ class GameRepositoryImpl(
             gamesInUserRepository.addGameInUser(writeBatch, gameId)
 
             return@flatMap RxFirestore.atomicOperation(writeBatch)
+                    .onErrorComplete {
+                        Timber.e(it)
+                        true
+                    }
                     .andThen(getDocumentSingle(gameId))
         }
     }

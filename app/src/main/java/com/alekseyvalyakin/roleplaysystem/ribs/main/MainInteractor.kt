@@ -50,7 +50,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         super.didBecomeActive(savedInstanceState)
 
         presenter.observeUiEvents()
-                .concatMap(this::handleEvent)
+                .flatMap(this::handleEvent)
                 .subscribeWithErrorLogging { }
                 .addToDisposables()
 
@@ -113,13 +113,14 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     }
 
     private fun getCreateGameObservable(): Observable<Game> {
-        return gameRepository.createDocument().toObservable()
-                .doOnSubscribe { presenter.showFabLoading(true) }
+        return gameRepository.createDocument()
                 .onErrorReturn { t ->
                     Timber.e(t)
                     presenter.showError(t.localizedMessage)
                     Game.EMPTY_GAME
                 }
+                .toObservable()
+                .doOnSubscribe { presenter.showFabLoading(true) }
                 .doOnNext { game ->
                     presenter.showFabLoading(false)
                     if (game != Game.EMPTY_GAME) {
