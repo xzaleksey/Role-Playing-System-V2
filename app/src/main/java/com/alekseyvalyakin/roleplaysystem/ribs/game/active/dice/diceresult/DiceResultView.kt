@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.Button
 import android.widget.ImageView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -20,8 +19,6 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 class DiceResultView constructor(context: Context) : _LinearLayout(context), DiceResultPresenter {
 
     private lateinit var ivBack: ImageView
-
-    private lateinit var btnRethrow: Button
     private var recyclerView: RecyclerView
     private val relay = PublishRelay.create<DiceResultPresenter.UiEvent>()
     private val diceResultAdapter = DiceResultAdapter(emptyList(), relay)
