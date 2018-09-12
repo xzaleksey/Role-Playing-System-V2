@@ -21,7 +21,7 @@ class PhotoView constructor(
 
     init {
         view {
-            backgroundColorResource = R.color.colorPrimary
+            backgroundColorResource = R.color.colorPrimaryDark
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.status_bar_height))
         recyclerView {
             id = R.id.recycler_view
