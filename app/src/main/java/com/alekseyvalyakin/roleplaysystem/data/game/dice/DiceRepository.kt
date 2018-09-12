@@ -17,11 +17,7 @@ class DicesRepositoryImpl(
 ) : BaseGameUserFireStoreRepository<FirebaseDiceCollection>(FirebaseDiceCollection::class.java, userRepository), DicesRepository {
 
     override fun createDocument(gameId: String, data: FirebaseDiceCollection): Single<FirebaseDiceCollection> {
-        return RxFirestore.addDocument(getCollection(gameId, getUserId()), data)
-                .map {
-                    data.id = it.id
-                    data
-                }
+        return RxFirestore.addDocumentHasId(getCollection(gameId, getUserId()), data)
     }
 
     override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<FirebaseDiceCollection>> {

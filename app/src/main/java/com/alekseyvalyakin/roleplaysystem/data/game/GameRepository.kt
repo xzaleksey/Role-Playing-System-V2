@@ -9,11 +9,9 @@ import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameReposit
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import timber.log.Timber
 
 class GameRepositoryImpl(
         private val userRepository: UserRepository,
@@ -60,13 +58,8 @@ class GameRepositoryImpl(
             writeBatch.set(getDocumentReference(gameId), gameToCreate)
             userInGameRepository.addCurrentUserInGame(writeBatch, gameId)
             gamesInUserRepository.addGameInUser(writeBatch, gameId)
-
-            return@flatMap RxFirestore.atomicOperation(writeBatch)
-                    .onErrorComplete {
-                        Timber.e(it)
-                        true
-                    }
-                    .andThen(getDocumentSingle(gameId))
+            writeBatch.commit()
+            return@flatMap getDocumentSingle(gameId)
         }
     }
 

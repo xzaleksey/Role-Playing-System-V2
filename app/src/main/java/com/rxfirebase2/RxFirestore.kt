@@ -1,13 +1,28 @@
 package com.rxfirebase2
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.Transaction
+import com.google.firebase.firestore.WriteBatch
 import com.rxfirebase2.DocumentSnapshotMapper.DOCUMENT_EXISTENCE_PREDICATE
 import com.rxfirebase2.DocumentSnapshotMapper.QUERY_EXISTENCE_PREDICATE
-import io.reactivex.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -77,6 +92,7 @@ object RxFirestore {
         }
     }
 
+    @SuppressLint("RxLeakedSubscription")
     fun <T> addDocument(ref: CollectionReference,
                         pojo: T): Single<DocumentSnapshot> {
         return Single.create { emitter ->
@@ -92,6 +108,32 @@ object RxFirestore {
             }
         }
     }
+
+    fun <T : HasId> addDocumentHasId(ref: CollectionReference,
+                                     pojo: T): Single<T> {
+        return Single.create { emitter ->
+            ref.add(pojo as Any).addOnSuccessListener { reference ->
+                reference.get().addOnSuccessListener {
+                    try {
+                        emitter.onSuccess(DocumentSnapshotMapper.ofHasId(pojo.javaClass).apply(it))
+                    } catch (e: Exception) {
+                        if (!emitter.isDisposed) {
+                            emitter.onError(e)
+                        }
+                    }
+                }.addOnFailureListener {
+                    if (!emitter.isDisposed) {
+                        emitter.onError(it)
+                    }
+                }
+            }.addOnFailureListener { e ->
+                if (!emitter.isDisposed) {
+                    emitter.onError(e)
+                }
+            }
+        }
+    }
+
 
     /**
      * Adds a new document to this collection with the specified data, assigning it a document ID automatically.

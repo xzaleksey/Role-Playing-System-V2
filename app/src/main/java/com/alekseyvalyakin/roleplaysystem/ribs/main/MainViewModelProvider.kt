@@ -32,7 +32,7 @@ class MainViewModelProviderImpl(
         private val gameObservableProvider: CreateEmptyGameObservableProvider
 ) : MainViewModelProvider {
 
-    private val relay = BehaviorRelay.create<MainViewModel>()
+    private val relay = BehaviorRelay.createDefault(MainViewModel(emptyList(), true, true))
 
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
         val flowable = Flowable.combineLatest<List<IFlexible<*>>, List<IFlexible<*>>, CreateEmptyGameObservableProvider.CreateGameModel, MainViewModel>(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable),
@@ -44,7 +44,7 @@ class MainViewModelProviderImpl(
                     result.add(ShadowDividerViewModel(result.size))
                     val mainViewModel = MainViewModel(result,
                             createGameModel is CreateEmptyGameObservableProvider.CreateGameModel.InProgress,
-                            !relay.hasValue())
+                            false)
                     relay.accept(mainViewModel)
                     return@Function3 mainViewModel
                 })
