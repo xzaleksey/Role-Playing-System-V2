@@ -41,6 +41,11 @@ data class Game(
         return GameStatus.ACTIVE.value == status
     }
 
+    @Exclude
+    fun hasPassword(): Boolean {
+        return password.isBlank()
+    }
+
     companion object {
         const val serialVersionUID = 1L
 

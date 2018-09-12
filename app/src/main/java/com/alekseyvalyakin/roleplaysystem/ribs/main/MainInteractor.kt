@@ -112,10 +112,16 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
             FlexibleLayoutTypes.GAME -> {
                 (item as GameListViewModel).game.let {
                     Timber.d("Game clicked")
-                    if (it.isDraft() && userRepository.isCurrentUser(it.masterId)) {
-                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(it))
-                    } else if (it.isActive()) {
+                    if (userRepository.isCurrentUser(it.masterId)) {
+                        if (it.isDraft()) {
+                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(it))
+                        } else if (it.isActive()) {
+                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenActiveGame(it))
+                        }
+                    } else if (!it.hasPassword()) {
                         mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenActiveGame(it))
+                    } else {
+                        //TODO refactor
                     }
                 }
             }
