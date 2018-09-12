@@ -34,7 +34,7 @@ class DiceResultView constructor(context: Context) : _LinearLayout(context), Dic
 
             view {
                 id = R.id.status_bar
-            }.lparams(width = matchParent, height = getIntDimen(R.dimen.status_bar_height))
+            }.lparams(width = matchParent, height = getStatusBarHeight())
 
             ivBack = imageView {
                 id = R.id.iv_back

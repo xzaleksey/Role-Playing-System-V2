@@ -121,7 +121,7 @@ class ProfileView constructor(
                         centerHorizontally()
                     }
                 }.lparams(width = matchParent, height = matchParent) {
-                    topMargin = dimen(R.dimen.status_bar_height)
+                    topMargin = getStatusBarHeight()
                 }
                 view {
                     backgroundColor = Color.WHITE

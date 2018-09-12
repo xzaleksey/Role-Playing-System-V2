@@ -58,7 +58,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
             backgroundResource = R.drawable.top_background
             view {
                 id = R.id.status_bar
-            }.lparams(width = matchParent, height = getIntDimen(R.dimen.status_bar_height))
+            }.lparams(width = matchParent, height = getStatusBarHeight())
             frameLayout {
                 layoutTransition = LayoutTransition()
                 bottomPadding = getIntDimen(R.dimen.dp_8)
@@ -94,6 +94,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                         topMargin = getIntDimen(R.dimen.dp_4)
                     }
                 }.lparams(width = matchParent)
+
                 dicesCollectionsContainer = relativeLayout {
                     id = R.id.dices_collections_container
                     leftPadding = getDoubleCommonDimen()
@@ -104,6 +105,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                         textColor = getCompatColor(R.color.colorWhite)
                         setTextSizeFromRes(R.dimen.dp_15)
                     }.lparams(width = matchParent)
+
                     rvCollections = recyclerView {
                         id = R.id.recycler_view_dices_collections
                         isVerticalScrollBarEnabled = true
@@ -115,12 +117,15 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
                         topMargin = getCommonDimen()
                     }
                 }.lparams(width = matchParent, height = matchParent)
+
             }.lparams(width = matchParent, height = matchParent) {
                 below(R.id.status_bar)
             }
+
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.bg_top_element_height_big)) {
             alignParentTop()
         }
+
         linearLayout {
             orientation = LinearLayout.HORIZONTAL
             weightSum = 2f

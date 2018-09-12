@@ -74,5 +74,12 @@
     <item name="tv_main_result" type="id" />
     <item name="rethrow_container" type="id" />
     <item name="all_container" type="id" />
+    <item name="tv_sub_title" type="id" />
+    <item name="dices_collections_container" type="id" />
+    <item name="saved_dices_count" type="id" />
+    <item name="recycler_view_dices_collections" type="id" />
+    <item name="label_container" type="id" />
+    <item name="new_throw" type="id" />
+    <item name="save" type="id" />
 
 </resources>

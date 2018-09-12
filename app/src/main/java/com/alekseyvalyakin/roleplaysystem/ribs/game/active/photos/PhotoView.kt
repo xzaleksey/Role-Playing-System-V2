@@ -6,7 +6,7 @@ import android.view.Gravity
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.floatingActionButton
@@ -22,7 +22,7 @@ class PhotoView constructor(
     init {
         view {
             backgroundColorResource = R.color.colorPrimaryDark
-        }.lparams(width = matchParent, height = getIntDimen(R.dimen.status_bar_height))
+        }.lparams(width = matchParent, height = getStatusBarHeight())
         recyclerView {
             id = R.id.recycler_view
             clipToPadding = false
@@ -30,7 +30,7 @@ class PhotoView constructor(
             rightPadding = getCommonDimen()
             isVerticalScrollBarEnabled = true
         }.lparams(width = matchParent) {
-            topMargin = getIntDimen(R.dimen.status_bar_height)
+            topMargin = getStatusBarHeight()
         }
         floatingActionButton {
             id = R.id.fab
