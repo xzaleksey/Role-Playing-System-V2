@@ -56,14 +56,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 .addToDisposables()
 
         mainViewModelProvider.observeViewModel(filterRelay.toFlowable(BackpressureStrategy.LATEST))
-                .doOnSubscribe {
-                    if (presenter.isEmpty()) {
-                        presenter.showFabLoading(true)
-                    }
-                }
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
-                    presenter.showLoadingContent(false)
                     presenter.updateModel(it)
                 }.addToDisposables()
 
@@ -71,21 +65,16 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging { createGameModel ->
                     when (createGameModel) {
-                        is CreateEmptyGameObservableProvider.CreateGameModel.InProgress -> {
-                            presenter.showFabLoading(true)
-                        }
                         is CreateEmptyGameObservableProvider.CreateGameModel.GameCreateSuccess -> {
-                            presenter.showFabLoading(false)
                             mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(createGameModel.game))
                         }
 
                         is CreateEmptyGameObservableProvider.CreateGameModel.GameCreateFail -> {
-                            presenter.showFabLoading(false)
                             presenter.showError(createGameModel.t.localizedMessage)
                         }
-
                     }
                 }.addToDisposables()
+
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
@@ -145,13 +134,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
 
         fun updateModel(model: MainViewModel)
 
-        fun showFabLoading(loading: Boolean)
-
         fun showError(message: String)
 
-        fun showLoadingContent(loading: Boolean)
-
-        fun isEmpty(): Boolean
     }
 
     sealed class UiEvents {

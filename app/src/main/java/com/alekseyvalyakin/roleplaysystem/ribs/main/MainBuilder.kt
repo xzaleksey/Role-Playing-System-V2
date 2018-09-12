@@ -76,8 +76,10 @@ class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainR
                     resourceProvider: ResourcesProvider,
                     stringRepo: StringRepository,
                     gameRepository: GameRepository,
-                    gamesInUserRepository: GamesInUserRepository): MainViewModelProvider {
-                return MainViewModelProviderImpl(userRepository, resourceProvider, stringRepo, gameRepository, gamesInUserRepository)
+                    gamesInUserRepository: GamesInUserRepository,
+                    gameObservableProvider: CreateEmptyGameObservableProvider): MainViewModelProvider {
+                return MainViewModelProviderImpl(userRepository, resourceProvider, stringRepo,
+                        gameRepository, gamesInUserRepository, gameObservableProvider)
             }
         }
 

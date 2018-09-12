@@ -32,7 +32,7 @@ class CreateEmptyGameObservableProviderImpl(
         if (!disposable.isDisposed) {
             return flowable.startWith(CreateEmptyGameObservableProvider.CreateGameModel.InProgress)
         }
-        return flowable
+        return flowable.startWith(CreateEmptyGameObservableProvider.CreateGameModel.NONE)
     }
 
 

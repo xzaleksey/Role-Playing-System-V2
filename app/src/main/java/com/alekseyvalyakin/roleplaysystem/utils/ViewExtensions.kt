@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.alekseyvalyakin.roleplaysystem.ribs.main.FabEnabledProvider
 
 fun TextView.setTextSizeFromRes(@DimenRes res: Int) {
     setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getFloatDimen(res))
@@ -28,11 +29,11 @@ fun View.getIntDimen(@DimenRes res: Int): Int {
     return context.getIntDimen(res)
 }
 
-fun View.getCommonDimen():Int {
+fun View.getCommonDimen(): Int {
     return context.getCommonDimen()
 }
 
-fun View.getDoubleCommonDimen():Int {
+fun View.getDoubleCommonDimen(): Int {
     return context.getDoubleCommonDimen()
 }
 
@@ -80,12 +81,14 @@ fun View.getToolbarHeight(): Int {
     return context.getToolbarHeight()
 }
 
-fun RecyclerView.checkFabShow(fab: FloatingActionButton) {
-    val layoutManager = this.layoutManager
-    if (layoutManager is LinearLayoutManager) {
-        if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0
-                && layoutManager.findLastCompletelyVisibleItemPosition() == this.adapter!!.itemCount - 1) {
-            fab.show()
+fun RecyclerView.checkFabShow(fab: FloatingActionButton, fabEnabledProvider: FabEnabledProvider) {
+    if (fabEnabledProvider.isFabEnabled()) {
+        val layoutManager = this.layoutManager
+        if (layoutManager is LinearLayoutManager) {
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0
+                    && layoutManager.findLastCompletelyVisibleItemPosition() == this.adapter!!.itemCount - 1) {
+                fab.show()
+            }
         }
     }
 }

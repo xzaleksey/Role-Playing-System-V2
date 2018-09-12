@@ -10,6 +10,7 @@ interface CreateEmptyGameObservableProvider {
     fun createEmptyGameModel()
 
     sealed class CreateGameModel {
+        object NONE : CreateGameModel()
         object InProgress : CreateGameModel()
         class GameCreateSuccess(val game: Game) : CreateGameModel()
         class GameCreateFail(val t: Throwable) : CreateGameModel()

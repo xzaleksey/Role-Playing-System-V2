@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
  */
 class MainView constructor(
         context: Context
-) : _CoordinatorLayout(context), MainInteractor.MainPresenter {
+) : _CoordinatorLayout(context), MainInteractor.MainPresenter, FabEnabledProvider {
 
     private lateinit var searchToolbar: SearchToolbar
     private lateinit var fab: FloatingActionButton
@@ -39,6 +39,7 @@ class MainView constructor(
     private lateinit var progressBarCenter: ProgressBar
     private val relay = PublishRelay.create<MainInteractor.UiEvents>()
     private val flexibleAdapter: FlexibleAdapter<IFlexible<*>> = FlexibleAdapter(emptyList())
+    private lateinit var mainViewModel: MainViewModel
 
     init {
         AnkoContext.createDelegate(this).apply {
@@ -85,16 +86,19 @@ class MainView constructor(
             relay.accept(MainInteractor.UiEvents.RecyclerItemClick(item))
             true
         }
-        recyclerView.addOnScrollListener(HideFablListener(fab))
+        recyclerView.addOnScrollListener(HideFablListener(fab, this))
     }
 
     override fun updateModel(model: MainViewModel) {
+        this.mainViewModel = model
         flexibleAdapter.updateDataSet(model.flexibleItems, false)
         recyclerView.post {
             if (recyclerView.isAttachedToWindow) {
-                recyclerView.checkFabShow(fab)
+                recyclerView.checkFabShow(fab, this)
             }
         }
+        showFabLoading(model.showFabLoading)
+        showLoadingContent(model.showContentLoading)
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
@@ -118,7 +122,7 @@ class MainView constructor(
             .map { MainInteractor.UiEvents.SearchInput(it.toString()) }
             .distinctUntilChanged()
 
-    override fun showLoadingContent(loading: Boolean) {
+    private fun showLoadingContent(loading: Boolean) {
         if (loading) {
             progressBarCenter.visibility = View.VISIBLE
         } else {
@@ -126,20 +130,14 @@ class MainView constructor(
         }
     }
 
-    override fun showFabLoading(loading: Boolean) {
-        post {
-            if (loading) {
-                fab.hide()
-                progressBarBottom.visibility = View.VISIBLE
-            } else {
-                progressBarBottom.visibility = View.GONE
-                fab.show()
-            }
+    private fun showFabLoading(loading: Boolean) {
+        if (loading) {
+            fab.hide()
+            progressBarBottom.visibility = View.VISIBLE
+        } else {
+            progressBarBottom.visibility = View.GONE
+            fab.show()
         }
-    }
-
-    override fun isEmpty(): Boolean {
-        return flexibleAdapter.isEmpty
     }
 
     override fun showSearchContextMenu() {
@@ -153,6 +151,11 @@ class MainView constructor(
         }
         popupMenu.show()
     }
+
+    override fun isFabEnabled(): Boolean {
+        return !mainViewModel.showFabLoading
+    }
+
 
     private fun observeSearchRightIconClick(): Observable<MainInteractor.UiEvents.SearchRightIconClick> = searchToolbar.observeRightImageClick()
             .map { MainInteractor.UiEvents.SearchRightIconClick }

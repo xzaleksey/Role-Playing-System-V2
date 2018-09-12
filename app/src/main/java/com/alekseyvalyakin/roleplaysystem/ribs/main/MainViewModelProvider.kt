@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.base.image.CompositeImageProviderImpl
 import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.base.image.UrlRoundDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.game.GameStatus
 import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
@@ -15,32 +16,43 @@ import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewMode
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
+import com.jakewharton.rxrelay2.BehaviorRelay
 import eu.davidea.flexibleadapter.items.IFlexible
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
+import java.util.*
 
 class MainViewModelProviderImpl(
         private val userRepository: UserRepository,
         private val resourceProvider: ResourcesProvider,
         private val stringRepository: StringRepository,
         private val gameRepository: GameRepository,
-        private val gamesInUserRepository: GamesInUserRepository
+        private val gamesInUserRepository: GamesInUserRepository,
+        private val gameObservableProvider: CreateEmptyGameObservableProvider
 ) : MainViewModelProvider {
 
+    private val relay = BehaviorRelay.create<MainViewModel>()
+
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
-        return Flowable.combineLatest(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable),
-                BiFunction { userModels: List<IFlexible<*>>, allGames: List<IFlexible<*>> ->
+        val flowable = Flowable.combineLatest<List<IFlexible<*>>, List<IFlexible<*>>, CreateEmptyGameObservableProvider.CreateGameModel, MainViewModel>(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable),
+                gameObservableProvider.observeCreateGameModel(),
+                Function3 { userModels: List<IFlexible<*>>, allGames: List<IFlexible<*>>, createGameModel ->
                     val result = mutableListOf<IFlexible<*>>()
                     result.addAll(userModels)
                     result.addAll(allGames)
                     result.add(ShadowDividerViewModel(result.size))
-                    return@BiFunction MainViewModel(result)
+                    val mainViewModel = MainViewModel(result,
+                            createGameModel is CreateEmptyGameObservableProvider.CreateGameModel.InProgress,
+                            !relay.hasValue())
+                    relay.accept(mainViewModel)
+                    return@Function3 mainViewModel
                 })
+        return flowable.flatMap { relay.toFlowable(BackpressureStrategy.LATEST) }
     }
 
     private fun getAllGamesFlowable(filterFlowable: Flowable<FilterModel>): Flowable<List<IFlexible<*>>> {
-        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGamesDescending().onErrorReturn { emptyList() },
+        return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGamesDescending().onErrorReturn { FIRST_GAMES_OBJECT },
                 gamesInUserRepository.observeCurrentUserGames(),
                 Function3 { filterModel, games, gamesInUser ->
                     val ids = gamesInUser.map { it.id }.toSet()
@@ -119,6 +131,10 @@ class MainViewModelProviderImpl(
                             user
                     ))
         }
+    }
+
+    companion object {
+        val FIRST_GAMES_OBJECT = ArrayList<Game>()
     }
 }
 
