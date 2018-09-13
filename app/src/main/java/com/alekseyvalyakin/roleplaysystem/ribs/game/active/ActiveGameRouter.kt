@@ -34,6 +34,7 @@ class ActiveGameRouter(
 
     private val photoAttachTransition = ActiveGameInternalAttachTransition(photoBuilder, view)
     private val photoDetachTransition = object : DefaultActiveGameInternalDetachTransition<PhotoRouter, State>(view) {}
+    private var canBeClosed = false
 
     fun attachView(navigationId: NavigationId) {
         when (navigationId) {
@@ -48,6 +49,10 @@ class ActiveGameRouter(
     }
 
     fun backPress(): Boolean {
+        if (canBeClosed) {
+            return false
+        }
+
         if (modernRouter.peekState() == null) {
             return false
         }
@@ -57,6 +62,10 @@ class ActiveGameRouter(
         }
 
         return true
+    }
+
+    fun onDelete() {
+        canBeClosed = true
     }
 
     override fun getRestorableInfo(): Serializable? {

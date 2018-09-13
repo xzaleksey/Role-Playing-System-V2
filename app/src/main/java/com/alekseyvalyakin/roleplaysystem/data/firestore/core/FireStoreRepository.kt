@@ -9,6 +9,7 @@ import io.reactivex.Single
 interface FireStoreRepository<T : HasId> {
     fun getDocumentSingle(id: String): Single<T>
     fun observeDocument(id: String): Flowable<T>
+    fun observeDocumentDelete(id: String): Completable
     fun observeCollection(): Flowable<List<T>>
     fun updateFieldOffline(id: String, value: Any, fieldName: String): Completable
     fun observeQueryCollection(query: Query): Flowable<List<T>>

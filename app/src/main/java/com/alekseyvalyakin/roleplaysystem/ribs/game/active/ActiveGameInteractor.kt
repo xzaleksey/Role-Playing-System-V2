@@ -1,6 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
 import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameInteractor.Model.Companion.KEY
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
@@ -22,6 +24,12 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     lateinit var presenter: ActiveGamePresenter
     @Inject
     lateinit var viewModelProvider: ActiveGameViewModelProvider
+    @Inject
+    lateinit var activityListener: ActivityListener
+
+    @Inject
+    lateinit var gameRepository: GameRepository
+
     private var model: Model = Model(NavigationId.CHARACTERS)
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
@@ -30,6 +38,14 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
             model = this.getSerializable(KEY)
             handleNavigation(model.navigationId)
         }
+
+        gameRepository.observeDocumentDelete(viewModelProvider.getCurrentGame().id)
+                .subscribeWithErrorLogging {
+                    Timber.d("Game deleted")
+                    router.onDelete()
+                    activityListener.backPress()
+                }
+                .addToDisposables()
 
         presenter.showModel(viewModelProvider.getActiveGameViewModel(model.navigationId))
         presenter.observeUiEvents()

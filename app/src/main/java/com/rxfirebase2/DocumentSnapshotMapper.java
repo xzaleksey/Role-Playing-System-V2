@@ -2,15 +2,17 @@ package com.rxfirebase2;
 
 
 import android.support.annotation.NonNull;
+
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
 
@@ -26,6 +28,8 @@ public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
             return documentSnapshot.exists();
         }
     };
+
+    static final Predicate<DocumentSnapshot> DOCUMENT_NOT_EXISTENCE_PREDICATE = documentSnapshot -> !documentSnapshot.exists();
 
     private DocumentSnapshotMapper() {
     }

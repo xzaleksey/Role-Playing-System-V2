@@ -5,8 +5,8 @@ import com.alekseyvalyakin.roleplaysystem.base.image.ResourceImageHolderImpl
 import com.alekseyvalyakin.roleplaysystem.base.model.BottomItem
 import com.alekseyvalyakin.roleplaysystem.base.model.BottomPanelMenu
 import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 

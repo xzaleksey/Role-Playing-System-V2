@@ -4,25 +4,10 @@ package com.rxfirebase2
 import android.annotation.SuppressLint
 import android.app.Activity
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FieldPath
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.MetadataChanges
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.Transaction
-import com.google.firebase.firestore.WriteBatch
-import com.rxfirebase2.DocumentSnapshotMapper.DOCUMENT_EXISTENCE_PREDICATE
-import com.rxfirebase2.DocumentSnapshotMapper.QUERY_EXISTENCE_PREDICATE
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Single
+import com.rxfirebase2.DocumentSnapshotMapper.*
+import io.reactivex.*
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -657,6 +642,13 @@ object RxFirestore {
         return observeDocumentRef(ref)
                 .filter(DOCUMENT_EXISTENCE_PREDICATE)
                 .map(mapper)
+    }
+
+    fun observeDocumentDeleteRef(ref: DocumentReference): Completable {
+        return observeDocumentRef(ref)
+                .filter(DOCUMENT_NOT_EXISTENCE_PREDICATE)
+                .firstOrError()
+                .ignoreElement()
     }
 
     fun <T> observeDocumentRef(ref: DocumentReference,

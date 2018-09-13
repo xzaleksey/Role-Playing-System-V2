@@ -30,8 +30,12 @@ abstract class BaseFireStoreRepository<T : HasId>(
         return RxFirestore.observeQueryRefHasId(query, clazz)
     }
 
-    override fun deleteDocumentOffline(id:String): Completable {
+    override fun deleteDocumentOffline(id: String): Completable {
         return RxFirestore.deleteDocumentOffline(getDocumentReference(id))
+    }
+
+    override fun observeDocumentDelete(id: String): Completable {
+        return RxFirestore.observeDocumentDeleteRef(getDocumentReference(id))
     }
 
     protected fun getDocumentReference(id: String) = getCollection().document(id)
