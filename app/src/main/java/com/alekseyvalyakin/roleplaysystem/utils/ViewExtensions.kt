@@ -92,3 +92,7 @@ fun RecyclerView.checkFabShow(fab: FloatingActionButton, fabEnabledProvider: Fab
         }
     }
 }
+
+fun View.isOrientationLandscape(): Boolean {
+    return context.isOrientationLandscape()
+}

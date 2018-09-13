@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.ColorRes
@@ -77,4 +78,12 @@ fun Context.getToolbarHeight(): Int {
 
 fun Int.dip(): Int {
     return RpsApp.app.dip(this)
+}
+
+fun Context.getScreenOrientation(): Int {
+    return resources.configuration.orientation
+}
+
+fun Context.isOrientationLandscape(): Boolean {
+    return getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE
 }

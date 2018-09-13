@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations
 
 class PhotoInteractorTest : RibTestBasePlaceholder() {
 
-  @Mock internal lateinit var presenter: PhotoInteractor.PhotoPresenter
+  @Mock internal lateinit var presenter: PhotoPresenter
   @Mock internal lateinit var router: PhotoRouter
 
   private var interactor: PhotoInteractor? = null
@@ -28,7 +28,7 @@ class PhotoInteractorTest : RibTestBasePlaceholder() {
   @Test
   fun anExampleTest_withSomeConditions_shouldPass() {
     // Use InteractorHelper to drive your interactor's lifecycle.
-    InteractorHelper.attach<PhotoInteractor.PhotoPresenter, PhotoRouter>(interactor!!, presenter, router, null)
+    InteractorHelper.attach<PhotoPresenter, PhotoRouter>(interactor!!, presenter, router, null)
     InteractorHelper.detach(interactor!!)
 
     throw RuntimeException("Remove this test and add real tests.")

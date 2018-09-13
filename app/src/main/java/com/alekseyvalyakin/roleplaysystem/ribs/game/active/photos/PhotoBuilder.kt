@@ -43,7 +43,7 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
 
         @PhotoScope
         @Binds
-        internal abstract fun presenter(view: PhotoView): PhotoInteractor.PhotoPresenter
+        internal abstract fun presenter(view: PhotoView): PhotoPresenter
 
         @dagger.Module
         companion object {

@@ -10,7 +10,7 @@ import javax.inject.Inject
  *
  */
 @RibInteractor
-class PhotoInteractor : BaseInteractor<PhotoInteractor.PhotoPresenter, PhotoRouter>() {
+class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
 
     @Inject
     lateinit var presenter: PhotoPresenter
@@ -24,8 +24,4 @@ class PhotoInteractor : BaseInteractor<PhotoInteractor.PhotoPresenter, PhotoRout
         super.willResignActive()
     }
 
-    /**
-     * Presenter interface implemented by this RIB's view.
-     */
-    interface PhotoPresenter
 }
