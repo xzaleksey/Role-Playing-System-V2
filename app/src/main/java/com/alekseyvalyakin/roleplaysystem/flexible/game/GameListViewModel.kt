@@ -2,7 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.flexible.game
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.twolineimage.GameListView
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils

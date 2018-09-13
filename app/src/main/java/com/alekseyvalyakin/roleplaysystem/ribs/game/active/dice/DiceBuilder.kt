@@ -2,8 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider

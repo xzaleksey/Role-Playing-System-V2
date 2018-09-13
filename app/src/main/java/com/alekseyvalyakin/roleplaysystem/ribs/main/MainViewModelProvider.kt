@@ -5,10 +5,10 @@ import com.alekseyvalyakin.roleplaysystem.base.image.CompositeImageProviderImpl
 import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.base.image.UrlRoundDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.GameStatus
-import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameStatus
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes

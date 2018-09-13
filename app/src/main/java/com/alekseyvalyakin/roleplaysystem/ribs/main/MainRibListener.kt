@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 
 interface MainRibListener {
     fun onMainRibEvent(mainRibEvent: MainRibEvent)

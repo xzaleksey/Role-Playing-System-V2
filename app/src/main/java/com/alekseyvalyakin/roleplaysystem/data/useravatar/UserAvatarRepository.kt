@@ -54,7 +54,7 @@ class UserAvatarRepositoryImpl @Inject constructor(
                     BiFunction { id: String, file: File -> return@BiFunction id to file })
                     .flatMap { pair ->
                         val reference = FirebaseStorage.getInstance().reference.child(avatars).child(pair.first)
-                        Timber.d("After compress " + pair.second.length())
+                        Timber.d("After compress %s", pair.second.length())
 
                         return@flatMap RxFirebaseStorage
                                 .putFileAndObserveUri(reference, Uri.fromFile(pair.second))

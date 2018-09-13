@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.data.game.useringame
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository

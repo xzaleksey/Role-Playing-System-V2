@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder

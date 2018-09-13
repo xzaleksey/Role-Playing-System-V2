@@ -1,11 +1,11 @@
-package com.alekseyvalyakin.roleplaysystem.data.game
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.BaseFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query

@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.data.game
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils

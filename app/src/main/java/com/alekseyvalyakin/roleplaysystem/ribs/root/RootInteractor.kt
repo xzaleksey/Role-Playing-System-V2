@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener

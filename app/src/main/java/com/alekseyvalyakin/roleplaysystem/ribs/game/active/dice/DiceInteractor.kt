@@ -1,8 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice
 
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.dice.FirebaseDiceCollection
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.FirebaseDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceInteractor.DicesInteractorModel.Companion.KEY
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection

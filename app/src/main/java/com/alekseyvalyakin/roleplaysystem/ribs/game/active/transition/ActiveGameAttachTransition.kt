@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition
 
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
 import com.uber.rib.core.RouterNavigator

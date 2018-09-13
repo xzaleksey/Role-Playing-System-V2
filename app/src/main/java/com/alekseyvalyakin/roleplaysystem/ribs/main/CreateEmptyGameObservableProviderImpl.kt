@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.main
 
-import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable

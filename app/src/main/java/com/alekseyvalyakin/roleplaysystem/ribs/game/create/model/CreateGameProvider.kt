@@ -1,8 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create.model
 
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
-import com.alekseyvalyakin.roleplaysystem.data.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameStep
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils

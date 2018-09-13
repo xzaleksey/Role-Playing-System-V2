@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.google.firebase.firestore.Exclude

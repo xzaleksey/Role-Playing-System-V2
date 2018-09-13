@@ -2,14 +2,15 @@ package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.GameRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.dice.DicesRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.gamesinuser.GamesInUserRepository
-import com.alekseyvalyakin.roleplaysystem.data.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
@@ -57,4 +58,6 @@ interface SingletonDependencyProvider {
     fun analyticsReporter(): AnalyticsReporter
 
     fun createGameObservableProvider(): CreateEmptyGameObservableProvider
+
+    fun photoInGameDao(): PhotoInGameDao
 }

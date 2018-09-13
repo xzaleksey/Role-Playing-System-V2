@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.data.game.dice
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.Dice

@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.data.game
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game
 
 enum class GameStatus(val value: Int) {
     DRAFT(1),
