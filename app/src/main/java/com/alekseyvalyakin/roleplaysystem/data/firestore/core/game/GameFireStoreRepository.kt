@@ -13,6 +13,6 @@ interface GameFireStoreRepository<T : HasId> {
     fun observeCollection(gameId: String): Flowable<List<T>>
     fun updateFieldOffline(id: String, value: Any, fieldName: String, gameId: String): Completable
     fun observeQueryCollection(query: Query, gameId: String): Flowable<List<T>>
-    fun createDocument(gameId: String): Single<T>
+    fun createDocument(gameId: String, data: T): Single<T>
     fun getCollection(gameId: String): CollectionReference
 }

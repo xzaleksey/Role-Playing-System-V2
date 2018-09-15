@@ -1,10 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameUserFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameUserFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.rxfirebase2.RxFirestore
@@ -22,7 +22,7 @@ class DicesRepositoryImpl(
 
     override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<FirebaseDiceCollection>> {
         val query = getCollection(gameId, getUserId())
-                .orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
+                .orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
         return observeQueryCollection(query)
     }
 

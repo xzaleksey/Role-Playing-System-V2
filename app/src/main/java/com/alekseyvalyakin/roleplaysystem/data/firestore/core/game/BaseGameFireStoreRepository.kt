@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.core.game
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.google.firebase.firestore.Query
 import com.rxfirebase2.RxFirestore
@@ -32,4 +33,11 @@ abstract class BaseGameFireStoreRepository<T : HasId>(
     }
 
     protected fun getDocumentReference(id: String, gameId: String) = getCollection(gameId).document(id)
+}
+
+fun <T> BaseGameFireStoreRepository<T>.observeCollectionByDateCreate(gameId: String): Flowable<List<T>> where T : HasId,
+                                                                                                    T : HasDateCreate {
+    val query = getCollection(gameId)
+            .orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
+    return observeQueryCollection(query, gameId)
 }

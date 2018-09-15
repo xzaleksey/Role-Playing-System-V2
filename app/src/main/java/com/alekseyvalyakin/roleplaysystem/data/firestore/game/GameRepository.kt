@@ -3,9 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.BaseFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -24,12 +25,12 @@ class GameRepositoryImpl(
     override fun observeAllActiveGames(): Flowable<List<Game>> {
         val query = getCollection()
                 .whereEqualTo(Game.FIELD_STATUS, GameStatus.ACTIVE.value)
-                .orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
+                .orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
         return observeQueryCollection(query)
     }
 
     override fun observeAllGamesDescending(): Flowable<List<Game>> {
-        val query = getCollection().orderBy(Game.FIELD_DATE, Query.Direction.DESCENDING)
+        val query = getCollection().orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
         return observeQueryCollection(query)
     }
 

@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
@@ -14,7 +15,7 @@ data class Game(
         var name: String = EMPTY_STRING,
         var description: String = EMPTY_STRING,
         var password: String = EMPTY_STRING,
-        @ServerTimestamp var dateCreate: Date? = null,
+        @ServerTimestamp override var dateCreate: Date? = null,
         var status: Int = GameStatus.DRAFT.value,
 
         @Exclude
@@ -22,7 +23,7 @@ data class Game(
         @get:Exclude
         @Volatile
         override var id: String = StringUtils.EMPTY_STRING
-) : HasId, Serializable {
+) : HasId, Serializable, HasDateCreate {
 
     @Exclude
     fun isFiltered(text: String): Boolean {
@@ -51,7 +52,6 @@ data class Game(
 
         const val FIELD_NAME = "name"
         const val FIELD_STATUS = "status"
-        const val FIELD_DATE = "dateCreate"
         const val FIELD_DESCRIPTION = "description"
         const val FIELD_PASSWORD = "password"
 

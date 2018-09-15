@@ -13,7 +13,9 @@ sealed class FirestoreCollection(
     object NONE : FirestoreCollection(directory = "none")
 
     class UsersInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/users")
+    class PhotosInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/photos")
     class GamesInUser(userId: String) : FirestoreCollection(USERS, directory = "$userId/games")
+
     class DICES(gameId: String, userId: String) :
             FirestoreCollection(UsersInGame(gameId),
                     directory = "$userId/dices/")

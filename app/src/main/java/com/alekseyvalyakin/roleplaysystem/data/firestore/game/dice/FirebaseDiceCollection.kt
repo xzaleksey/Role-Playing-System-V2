@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.Dice
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
@@ -9,14 +10,14 @@ import java.util.*
 
 class FirebaseDiceCollection(
         var dices: HashMap<String, Int> = HashMap(),
-        @ServerTimestamp var dateCreate: Date? = null,
+        @ServerTimestamp override var dateCreate: Date? = null,
 
         @Exclude
         @set:Exclude
         @get:Exclude
         @Volatile
         override var id: String = ""
-) : HasId {
+) : HasId, HasDateCreate {
 
     @Exclude
     fun mapToDiceCollection(): DiceCollection {
@@ -30,8 +31,6 @@ class FirebaseDiceCollection(
     }
 
     companion object {
-        const val FIELD_DATE = "dateCreate"
-
         fun newInstance(diceCollection: DiceCollection): FirebaseDiceCollection {
             val firebaseDiceCollection = FirebaseDiceCollection()
             firebaseDiceCollection.id = diceCollection.id
