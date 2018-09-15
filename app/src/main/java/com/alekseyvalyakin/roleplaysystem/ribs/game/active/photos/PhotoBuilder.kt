@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -67,8 +68,9 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
             internal fun photoViewModelProvider(
                     photoInGameRepository: PhotoInGameRepository,
                     game: Game,
-                    userRepository: UserRepository): PhotoInGameViewModelProvider {
-                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game, userRepository)
+                    userRepository: UserRepository,
+                    photoInGameDao: PhotoInGameDao): PhotoInGameViewModelProvider {
+                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game, photoInGameDao, userRepository)
             }
 
         }

@@ -49,6 +49,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
         observeCreatePhotoUpload()
 
         photoInGameInGameViewModelProvider.observeViewModel()
+                .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
                     presenter.update(it)
                 }
@@ -62,7 +63,6 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                         }
                     }
                 }
-
         photoInGameDao.all().subscribeWithErrorLogging { photos ->
             photos.forEach {
                 Timber.d(it.toString())

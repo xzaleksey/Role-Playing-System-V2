@@ -125,4 +125,5 @@
     <string name="no_name">No name</string>
     <string name="no_description">No description</string>
     <string name="dice_collections_delete_message">This dice set will be deleted</string>
+    <string name="uploading_photo">Uploading photo…</string>
 </resources>

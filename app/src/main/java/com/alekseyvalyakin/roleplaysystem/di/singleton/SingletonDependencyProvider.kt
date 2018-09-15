@@ -16,6 +16,7 @@ import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
+import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.uber.rib.core.RouterNavigatorFactory
@@ -66,4 +67,6 @@ interface SingletonDependencyProvider {
     fun photoInGameRepository(): PhotoInGameRepository
 
     fun workManagerWrapper(): WorkManagerWrapper
+
+    fun notificationInteractor(): NotificationInteractor
 }

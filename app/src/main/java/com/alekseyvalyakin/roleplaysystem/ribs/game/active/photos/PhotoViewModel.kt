@@ -4,5 +4,11 @@ import eu.davidea.flexibleadapter.items.IFlexible
 
 data class PhotoViewModel(
         val items: List<IFlexible<*>>,
-        val fabVisible: Boolean
+        val fabState: FabState
 )
+
+enum class FabState {
+    VISIBLE,
+    HIDDEN,
+    LOADING
+}

@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.work.Worker
+import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnProgressListener
@@ -30,6 +32,8 @@ class PhotoInGameUpload : Worker() {
     lateinit var fileInfoProvider: FileInfoProvider
     @Inject
     lateinit var gameRepository: GameRepository
+    @Inject
+    lateinit var notificationInteractor: NotificationInteractor
 
     init {
         RpsApp.app.getAppComponent().inject(this)
@@ -64,6 +68,7 @@ class PhotoInGameUpload : Worker() {
             }
         }
         var result = Result.SUCCESS
+        val notifId = "$gameId/$photoId".hashCode()
 
         try {
             val file = createLocalFileCopy(localFile, gameId, photoId)
@@ -73,6 +78,10 @@ class PhotoInGameUpload : Worker() {
                         OnProgressListener { snapshot ->
                             Timber.d("Bytes transferred ${snapshot.bytesTransferred}" +
                                     "Total bytes ${snapshot.totalByteCount}")
+                            notificationInteractor.showProgressNotification(notifId,
+                                    RpsApp.app.getString(R.string.uploading_photo),
+                                    snapshot.bytesTransferred,
+                                    snapshot.totalByteCount)
                         })
                         .blockingGet()
                 documentReference.set(FireStorePhoto(
@@ -89,19 +98,20 @@ class PhotoInGameUpload : Worker() {
             result = Result.FAILURE
         }
 
+        notificationInteractor.dismissNotification(notifId)
         Timber.d("title $dbId + gameId $gameId pathToFile $pathToFile")
 
         return result
     }
 
     private fun createLocalFileCopy(file: File, gameId: String, photoId: String): File {
-        Timber.d("Before compress %s", file.length())
         val newDirectory = fileInfoProvider.getPhotoInGameDirectory(gameId).absolutePath
         var compressedFile = File(newDirectory, photoId)
         if (compressedFile.exists()) {
             return compressedFile
         }
 
+        Timber.d("Before compress %s", file.length())
         val compressor = Compressor(RpsApp.app)
                 .setDestinationDirectoryPath(newDirectory)
                 .setCompressFormat(Bitmap.CompressFormat.PNG)

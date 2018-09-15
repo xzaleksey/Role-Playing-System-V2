@@ -8,6 +8,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
+import android.view.View
+import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
@@ -34,6 +36,7 @@ class PhotoView constructor(
     private val recyclerView: RecyclerView
     private val flexibleAdapter = FlexibleAdapter<IFlexible<*>>(emptyList())
     private val rxPermissions = RxPermissions(context as FragmentActivity)
+    private var progressBarBottom: ProgressBar
 
     init {
         view {
@@ -60,14 +63,31 @@ class PhotoView constructor(
             gravity = Gravity.END or Gravity.BOTTOM
             margin = getDoubleCommonDimen()
         }
+
+        progressBarBottom = progressBar {
+            visibility = View.GONE
+        }.lparams {
+            gravity = Gravity.BOTTOM or Gravity.END
+            margin = getIntDimen(R.dimen.dp_8)
+        }
+
     }
 
     override fun update(photoViewModel: PhotoViewModel) {
         flexibleAdapter.updateDataSet(photoViewModel.items, false)
-        if (photoViewModel.fabVisible) {
-            fab.show()
-        } else {
-            fab.hide()
+        when {
+            photoViewModel.fabState == FabState.VISIBLE -> {
+                fab.show()
+                progressBarBottom.visibility = View.GONE
+            }
+            photoViewModel.fabState == FabState.HIDDEN -> {
+                fab.hide()
+                progressBarBottom.visibility = View.GONE
+            }
+            else -> {
+                fab.hide()
+                progressBarBottom.visibility = View.VISIBLE
+            }
         }
     }
 

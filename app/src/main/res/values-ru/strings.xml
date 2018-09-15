@@ -120,5 +120,6 @@
     <string name="no_name">Нет названия</string>
     <string name="no_description">Нет описания</string>
     <string name="dice_collections_delete_message">Этот набор будет удален</string>
+    <string name="uploading_photo">Загрука изображения…</string>
 
 </resources>

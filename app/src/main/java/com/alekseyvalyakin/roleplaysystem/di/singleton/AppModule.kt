@@ -35,6 +35,8 @@ import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapperImp
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProviderImpl
+import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
+import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractorImpl
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
@@ -198,5 +200,12 @@ class AppModule(private val mApp: RpsApp) {
     fun workManagerWrapper(photoInGameDao: PhotoInGameDao): WorkManagerWrapper {
         return WorkManagerWrapperImpl(photoInGameDao)
     }
+
+    @Provides
+    @Singleton
+    fun notificationInteractor(context: Context): NotificationInteractor {
+        return NotificationInteractorImpl(context)
+    }
+
 
 }
