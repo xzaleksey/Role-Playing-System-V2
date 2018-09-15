@@ -68,25 +68,27 @@ class PhotoInGameUpload : Worker() {
             }
         }
         var result = Result.SUCCESS
-        val notifId = "$gameId/$photoId".hashCode()
+        val notificationId = "$gameId/$photoId".hashCode()
 
         try {
-            val file = createLocalFileCopy(localFile, gameId, photoId)
+            val compressedFile = createLocalFileCopy(localFile, gameId, photoId)
 
             try {
-                val uri = RxFirebaseStorage.putFileAndObserveUri(reference, Uri.fromFile(file),
+                val uri = RxFirebaseStorage.putFileAndObserveUri(reference, Uri.fromFile(compressedFile),
                         OnProgressListener { snapshot ->
                             Timber.d("Bytes transferred ${snapshot.bytesTransferred}" +
                                     "Total bytes ${snapshot.totalByteCount}")
-                            notificationInteractor.showProgressNotification(notifId,
+                            notificationInteractor.showProgressNotification(notificationId,
                                     RpsApp.app.getString(R.string.uploading_photo),
                                     snapshot.bytesTransferred,
                                     snapshot.totalByteCount)
                         })
                         .blockingGet()
+
                 documentReference.set(FireStorePhoto(
                         fileName = pathToFile,
                         url = uri.toString()))
+
                 photoInGameDao.deleteById(dbId)
             } catch (t: Throwable) {
                 Timber.e(t)
@@ -98,7 +100,7 @@ class PhotoInGameUpload : Worker() {
             result = Result.FAILURE
         }
 
-        notificationInteractor.dismissNotification(notifId)
+        notificationInteractor.dismissNotification(notificationId)
         Timber.d("title $dbId + gameId $gameId pathToFile $pathToFile")
 
         return result
@@ -106,6 +108,7 @@ class PhotoInGameUpload : Worker() {
 
     private fun createLocalFileCopy(file: File, gameId: String, photoId: String): File {
         val newDirectory = fileInfoProvider.getPhotoInGameDirectory(gameId).absolutePath
+
         var compressedFile = File(newDirectory, photoId)
         if (compressedFile.exists()) {
             return compressedFile
@@ -121,7 +124,6 @@ class PhotoInGameUpload : Worker() {
 
         return compressedFile
     }
-
 
     companion object {
         const val KEY_ID = "id"
