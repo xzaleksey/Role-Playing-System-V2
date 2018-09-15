@@ -12,5 +12,8 @@ interface PhotoPresenter {
     }
 
     fun observeUiEvents(): Observable<UiEvent>
+
     fun update(photoViewModel: PhotoViewModel)
+
+    fun showError(localizedMessage: String)
 }

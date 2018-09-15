@@ -67,8 +67,8 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
             internal fun photoViewModelProvider(
                     photoInGameRepository: PhotoInGameRepository,
                     game: Game,
-                    userRepository: UserRepository): PhotoViewModelProvider {
-                return PhotoViewModelProviderImpl(photoInGameRepository, game, userRepository)
+                    userRepository: UserRepository): PhotoInGameViewModelProvider {
+                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game, userRepository)
             }
 
         }

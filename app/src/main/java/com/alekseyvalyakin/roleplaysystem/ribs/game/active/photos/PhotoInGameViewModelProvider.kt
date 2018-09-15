@@ -6,11 +6,11 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameR
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import io.reactivex.Flowable
 
-class PhotoViewModelProviderImpl(
+class PhotoInGameViewModelProviderImpl(
         private val photoInGameRepository: PhotoInGameRepository,
         private val game: Game,
         userRepository: UserRepository
-) : PhotoViewModelProvider {
+) : PhotoInGameViewModelProvider {
 
     private val isMaster = userRepository.isCurrentUser(game.masterId)
 
@@ -23,11 +23,11 @@ class PhotoViewModelProviderImpl(
         }
     }
 
-    fun getFlowable(): Flowable<List<FireStorePhoto>> {
+    private fun getFlowable(): Flowable<List<FireStorePhoto>> {
         return photoInGameRepository.observeByDateCreate(game.id).startWith(emptyList<FireStorePhoto>())
     }
 }
 
-interface PhotoViewModelProvider {
+interface PhotoInGameViewModelProvider {
     fun observeViewModel(): Flowable<PhotoViewModel>
 }
