@@ -72,7 +72,9 @@ dependencies {
     implementation 'net.danlew:android.joda:2.9.9'
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
-
+    implementation "android.arch.work:work-runtime:1.0.0-alpha08"
+// if you want some benefits from Kotlin then try this
+    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha08"
     //Room
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"

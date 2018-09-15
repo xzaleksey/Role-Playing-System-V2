@@ -12,6 +12,9 @@ data class PhotoInGame @Ignore constructor(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 
+        @ColumnInfo(name = "work_id")
+        var workId: String = "",
+
         @ColumnInfo(name = "game_id")
         var gameId: String = "",
 
@@ -22,5 +25,6 @@ data class PhotoInGame @Ignore constructor(
 
     companion object {
         const val TABLE_NAME = "photo_in_game"
+        const val STORAGE_KEY = "photos"
     }
 }

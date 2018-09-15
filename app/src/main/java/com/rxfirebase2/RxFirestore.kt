@@ -388,7 +388,7 @@ object RxFirestore {
                 if (documentSnapshot.exists()) {
                     emitter.onSuccess(documentSnapshot)
                 } else {
-                    emitter.onError(RuntimeException("Snapshot does not exist"))
+                    emitter.onError(DocumentNotExistsException())
                 }
             }.addOnFailureListener { e ->
                 if (!emitter.isDisposed)

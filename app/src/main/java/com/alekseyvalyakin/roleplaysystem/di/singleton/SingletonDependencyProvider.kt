@@ -13,6 +13,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
@@ -63,4 +64,6 @@ interface SingletonDependencyProvider {
     fun photoInGameDao(): PhotoInGameDao
 
     fun photoInGameRepository(): PhotoInGameRepository
+
+    fun workManagerWrapper(): WorkManagerWrapper
 }

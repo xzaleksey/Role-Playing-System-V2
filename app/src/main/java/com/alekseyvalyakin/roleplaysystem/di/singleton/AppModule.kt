@@ -30,6 +30,8 @@ import com.alekseyvalyakin.roleplaysystem.data.room.AppDatabase
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapperImpl
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.main.CreateEmptyGameObservableProviderImpl
@@ -189,6 +191,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun photoInGameRepostitory(): PhotoInGameRepository {
         return PhotoIngameRepositoryIml()
+    }
+
+    @Provides
+    @Singleton
+    fun workManagerWrapper(photoInGameDao: PhotoInGameDao): WorkManagerWrapper {
+        return WorkManagerWrapperImpl(photoInGameDao)
     }
 
 }

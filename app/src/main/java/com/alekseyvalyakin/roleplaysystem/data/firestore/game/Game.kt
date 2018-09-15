@@ -55,6 +55,7 @@ data class Game(
         const val FIELD_DESCRIPTION = "description"
         const val FIELD_PASSWORD = "password"
 
+        const val STORAGE_KEY = "games"
         val EMPTY_GAME = Game()
     }
 

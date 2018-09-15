@@ -1,9 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.room.game.photo
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGame.Companion.TABLE_NAME
 import io.reactivex.Flowable
 
@@ -14,10 +11,16 @@ interface PhotoInGameDao {
     fun all(): Flowable<List<PhotoInGame>>
 
     @Insert
-    fun insert(photoInGame: PhotoInGame)
+    fun insert(photoInGame: PhotoInGame): Long
+
+    @Update
+    fun update(photoInGame: PhotoInGame)
 
     @Delete
     fun delete(photoInGame: PhotoInGame)
+
+    @Query("DELETE FROM $TABLE_NAME WHERE id = :id")
+    fun deleteById(id: Long)
 
     @Query("DELETE FROM $TABLE_NAME")
     fun deleteAll()

@@ -10,13 +10,19 @@ import java.util.*
 data class FireStorePhoto(
         @ServerTimestamp
         override var dateCreate: Date? = null,
+
         var state: FirestorePhotoState = FirestorePhotoState(FireStoreVisibility.HIDDEN.value),
-        var fileName: String,
-        var url: String,
+        var fileName: String = StringUtils.EMPTY_STRING,
+        var url: String = StringUtils.EMPTY_STRING,
 
         @Exclude
         @set:Exclude
         @get:Exclude
         @Volatile
         override var id: String = StringUtils.EMPTY_STRING
-) : HasId, HasDateCreate
+) : HasId, HasDateCreate {
+
+    companion object {
+        const val STORAGE_KEY = "photos"
+    }
+}

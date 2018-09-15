@@ -178,9 +178,13 @@ object RxFirebaseStorage {
         }
     }
 
-    fun putFileAndObserveUri(storageRef: StorageReference, uri: Uri): Single<Uri> {
+    fun putFileAndObserveUri(storageRef: StorageReference, uri: Uri, listener: OnProgressListener<in UploadTask.TaskSnapshot>? = null): Single<Uri> {
         return Single.create { emitter ->
-            val taskSnapshotStorageTask = storageRef.putFile(uri).addOnFailureListener { e ->
+            val taskSnapshotStorageTask = storageRef.putFile(uri)
+            if (listener != null) {
+                taskSnapshotStorageTask.addOnProgressListener(listener)
+            }
+            taskSnapshotStorageTask.addOnFailureListener { e ->
                 if (!emitter.isDisposed)
                     emitter.onError(e)
             }

@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGame
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.utils.createCompletable
 import com.alekseyvalyakin.roleplaysystem.utils.image.ImagesResult
@@ -36,6 +37,8 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
     lateinit var ioScheduler: Scheduler
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
+    @Inject
+    lateinit var workManagerWrapper: WorkManagerWrapper
 
     @Inject
     lateinit var game: Game
@@ -71,10 +74,12 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
         localImageProvider.observeImage().flatMapCompletable {
             val completable = if (it is ImagesResult.Success) {
                 createCompletable({
-                    photoInGameDao.insert(PhotoInGame(
+                    val photoInGame = PhotoInGame(
                             gameId = game.id,
                             filePath = it.images.first().originalPath
-                    ))
+                    )
+                    photoInGame.id = photoInGameDao.insert(photoInGame)
+                    workManagerWrapper.startUploadPhotoInGameWork(photoInGame)
                 }, ioScheduler)
             } else {
                 Completable.error(RuntimeException((it as ImagesResult.Error).error))
@@ -93,12 +98,6 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
     override fun willResignActive() {
         super.willResignActive()
     }
-
-    private fun createPhotoInGame(photoInGame: PhotoInGame) {
-        createCompletable({ photoInGameDao.insert(photoInGame) }, ioScheduler)
-                .subscribeWithErrorLogging()
-    }
-
 }
 
 
