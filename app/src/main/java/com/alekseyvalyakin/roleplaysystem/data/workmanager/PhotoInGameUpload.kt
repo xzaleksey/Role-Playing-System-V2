@@ -86,7 +86,7 @@ class PhotoInGameUpload : Worker() {
                         .blockingGet()
 
                 documentReference.set(FireStorePhoto(
-                        fileName = pathToFile,
+                        fileName = compressedFile.name,
                         url = uri.toString()))
 
                 photoInGameDao.deleteById(dbId)
