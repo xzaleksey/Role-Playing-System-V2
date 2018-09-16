@@ -19,17 +19,7 @@ open class UrlDrawableProviderImpl(
         try {
             val path: String = url
             val bitmap: Bitmap
-            if (urlCacheProvider != null) {
-                if (urlCacheProvider.existsInCache()) {
-                    bitmap = getBitmapFromUrl(urlCacheProvider.getFilePath())
-                } else {
-                    bitmap = getBitmapFromUrl(path)
-                    urlCacheProvider.saveToCache(bitmap)
-                }
-            } else {
-                bitmap = getBitmapFromUrl(path)
-            }
-
+            bitmap = getBitmap(urlCacheProvider, path)
             val bitmapImageHolderImpl: ImageHolder = BitmapImageHolderImpl(bitmap, resourcesProvider)
 
             if (!emitter.isDisposed) {
@@ -46,14 +36,27 @@ open class UrlDrawableProviderImpl(
             .observeOn(AndroidSchedulers.mainThread())
             .share()
 
+    fun getBitmap(urlCacheProvider: UrlCacheProvider?, path: String): Bitmap {
+        return if (urlCacheProvider != null) {
+            if (urlCacheProvider.existsInCache()) {
+                getBitmapFromUrl(urlCacheProvider.getFilePath())
+            } else {
+                getBitmapFromUrl(path).apply {
+                    urlCacheProvider.saveToCache(this)
+                }
+            }
+        } else {
+            getBitmapFromUrl(path)
+        }
+    }
+
     private fun getBitmapFromUrl(path: String): Bitmap {
-        val bitmap = Glide.with(resourcesProvider.getContext())
+        return Glide.with(resourcesProvider.getContext())
                 .asBitmap()
                 .apply(requestOptions)
                 .load(path)
                 .submit()
                 .get()
-        return bitmap
     }
 
     override fun observeImage(): Observable<ImageHolder> {
