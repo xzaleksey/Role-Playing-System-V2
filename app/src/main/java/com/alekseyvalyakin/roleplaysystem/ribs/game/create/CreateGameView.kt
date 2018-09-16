@@ -1,8 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -10,40 +12,16 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColorStateList
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
-import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
-import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
-import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
-import com.alekseyvalyakin.roleplaysystem.utils.showSoftKeyboard
-import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.alekseyvalyakin.roleplaysystem.utils.tintImage
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
+import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import org.jetbrains.anko._ScrollView
-import org.jetbrains.anko.alignParentEnd
-import org.jetbrains.anko.alignParentRight
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.below
+import org.jetbrains.anko.*
 import org.jetbrains.anko.design.themedFloatingActionButton
-import org.jetbrains.anko.hintTextColor
-import org.jetbrains.anko.imageButton
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.margin
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.relativeLayout
-import org.jetbrains.anko.textColorResource
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.themedEditText
-import org.jetbrains.anko.themedTextView
-import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link CreateGameBuilder.CreateGameScope}.
@@ -62,6 +40,7 @@ class CreateGameView constructor(
     private val textChangeObservable: Observable<String>
     private val relay = PublishRelay.create<CreateGameUiEvent>()
     private var currentDialog: Dialog? = null
+    private val rxPermissions = RxPermissions(context as FragmentActivity)
 
     init {
 
@@ -200,7 +179,10 @@ class CreateGameView constructor(
     }
 
     override fun observeUiEvents(): Observable<CreateGameUiEvent> {
-        return Observable.merge(listOf(RxView.clicks(fab).map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) },
+        return Observable.merge(listOf(RxView.clicks(fab)
+                .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) },
                 RxView.clicks(deleteButton).map { CreateGameUiEvent.DeleteGame },
                 textChangeObservable.map { CreateGameUiEvent.InputChange(inputEditText.text.toString()) },
                 RxView.clicks(backButton).map { CreateGameUiEvent.BackPress },

@@ -56,6 +56,9 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                             model = Model(navigationId)
                             Timber.d("id %s", navigationId)
                             handleNavigation(navigationId)
+                            if (navigationId == NavigationId.MENU) {
+                                gameRepository.deleteDocumentOffline(viewModelProvider.getCurrentGame().id)
+                            }
                         }
                     }
                 }.addToDisposables()

@@ -7,4 +7,15 @@ interface ImageHolder {
     fun getDrawable(): Drawable?
 
     fun getBitmap(): Bitmap?
+
+    object EMPTY : ImageHolder {
+        override fun getDrawable(): Drawable? {
+            return null
+        }
+
+        override fun getBitmap(): Bitmap? {
+            return null
+        }
+
+    }
 }

@@ -1,7 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
 import android.content.res.Configuration
-import com.alekseyvalyakin.roleplaysystem.base.image.UrlDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreVisibility
@@ -13,6 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUpload
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.FabState
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoFlexibleViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoViewModel
+import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getDisplayWidth
 import com.alekseyvalyakin.roleplaysystem.utils.getScreenOrientation
@@ -24,6 +24,7 @@ class PhotoInGameViewModelProviderImpl(
         private val game: Game,
         private val photoInGameDao: PhotoInGameDao,
         private val resourcesProvider: ResourcesProvider,
+        private val fileInfoProvider: FileInfoProvider,
         userRepository: UserRepository
 ) : PhotoInGameViewModelProvider {
 
@@ -38,7 +39,10 @@ class PhotoInGameViewModelProviderImpl(
                                     .filter { isMaster || it.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value }
                                     .map {
                                         PhotoFlexibleViewModel(it.id,
-                                                UrlDrawableProviderImpl(it.url, resourcesProvider),
+                                                PhotoInGameUrlProvider(it.url, resourcesProvider,
+                                                        fileInfoProvider,
+                                                        game.id,
+                                                        it.id),
                                                 it.fileName,
                                                 isMaster,
                                                 it.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value,

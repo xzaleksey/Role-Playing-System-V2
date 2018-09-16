@@ -1,7 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.main
 
+import android.Manifest
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
@@ -15,6 +17,7 @@ import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.HideFablListener
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
+import com.tbruyelle.rxpermissions2.RxPermissions
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
@@ -40,6 +43,7 @@ class MainView constructor(
     private val relay = PublishRelay.create<MainInteractor.UiEvents>()
     private val flexibleAdapter: FlexibleAdapter<IFlexible<*>> = FlexibleAdapter(emptyList())
     private lateinit var mainViewModel: MainViewModel
+    private val rxPermissions = RxPermissions(context as FragmentActivity)
 
     init {
         AnkoContext.createDelegate(this).apply {
@@ -113,7 +117,10 @@ class MainView constructor(
     }
 
     private fun observeFabClick(): Observable<MainInteractor.UiEvents> {
-        return RxView.clicks(fab).map { MainInteractor.UiEvents.FabClick }
+        return RxView.clicks(fab)
+                .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .map { MainInteractor.UiEvents.FabClick }
     }
 
     private fun observeSearchInput(): Observable<MainInteractor.UiEvents.SearchInput> = searchToolbar.observeSearchInput()

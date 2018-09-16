@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
@@ -72,8 +73,10 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
                     game: Game,
                     userRepository: UserRepository,
                     photoInGameDao: PhotoInGameDao,
-                    resourcesProvider: ResourcesProvider): PhotoInGameViewModelProvider {
-                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game, photoInGameDao, resourcesProvider, userRepository)
+                    resourcesProvider: ResourcesProvider,
+                    fileInfoProvider: FileInfoProvider): PhotoInGameViewModelProvider {
+                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game,
+                        photoInGameDao, resourcesProvider, fileInfoProvider, userRepository)
             }
 
         }
