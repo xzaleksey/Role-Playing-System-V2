@@ -24,7 +24,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class PhotoInGameUpload : Worker() {
+class PhotoInGameUploadWorker : Worker() {
 
     @Inject
     lateinit var photoInGameDao: PhotoInGameDao
@@ -97,6 +97,7 @@ class PhotoInGameUpload : Worker() {
 
         } catch (t: Throwable) {
             Timber.e(t)
+            photoInGameDao.deleteById(dbId)
             result = Result.FAILURE
         }
 

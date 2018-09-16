@@ -23,6 +23,7 @@
     <dimen name="dp_72">72dp</dimen>
     <dimen name="dp_74">74dp</dimen>
     <dimen name="dp_100">100dp</dimen>
+    <dimen name="dp_132">132dp</dimen>
 
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_14">14sp</dimen>

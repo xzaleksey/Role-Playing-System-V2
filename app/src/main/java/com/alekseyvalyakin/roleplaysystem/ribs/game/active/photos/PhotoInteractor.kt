@@ -1,8 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGame
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreVisibility
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.utils.createCompletable
@@ -13,6 +15,7 @@ import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -39,6 +42,8 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
     lateinit var uiScheduler: Scheduler
     @Inject
     lateinit var workManagerWrapper: WorkManagerWrapper
+    @Inject
+    lateinit var photoInGameRepository: PhotoInGameRepository
 
     @Inject
     lateinit var game: Game
@@ -56,12 +61,9 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                 .addToDisposables()
 
         presenter.observeUiEvents()
-                .subscribeWithErrorLogging { event ->
-                    when (event) {
-                        is PhotoPresenter.UiEvent.FabClicked -> {
-                            localImageProvider.pickImage()
-                        }
-                    }
+                .flatMap(this::handleUiEvent)
+                .subscribeWithErrorLogging {
+
                 }
         photoInGameDao.all().subscribeWithErrorLogging { photos ->
             photos.forEach {
@@ -70,11 +72,29 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
         }
     }
 
+    private fun handleUiEvent(uiEvent: PhotoPresenter.UiEvent): Observable<*> {
+        when (uiEvent) {
+            is PhotoPresenter.UiEvent.FabClicked -> {
+                localImageProvider.pickImage()
+            }
+            is PhotoPresenter.UiEvent.SwitchVisibility -> {
+                val model = uiEvent.photoFlexibleViewModel
+                return photoInGameRepository.switchVisibility(
+                        game.id,
+                        model.id,
+                        if (!model.visible) FireStoreVisibility.VISIBLE_TO_ALL else FireStoreVisibility.HIDDEN
+                ).onErrorComplete().toObservable<Any>()
+            }
+
+        }
+        return Observable.empty<Any>()
+    }
+
     private fun observeCreatePhotoUpload() {
         localImageProvider.observeImage().flatMapCompletable {
             val completable = if (it is ImagesResult.Success) {
                 createCompletable({
-                    val photoInGame = PhotoInGame(
+                    val photoInGame = PhotoInGameUploadModel(
                             gameId = game.id,
                             filePath = it.images.first().originalPath
                     )

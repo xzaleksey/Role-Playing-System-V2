@@ -6,11 +6,12 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStore
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.observeCollectionByDateCreate
 import com.google.firebase.firestore.CollectionReference
 import com.rxfirebase2.RxFirestore
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 
-class PhotoIngameRepositoryIml : BaseGameFireStoreRepository<FireStorePhoto>(FireStorePhoto::class.java), PhotoInGameRepository {
+class PhotoInGameRepositoryIml : BaseGameFireStoreRepository<FireStorePhoto>(FireStorePhoto::class.java), PhotoInGameRepository {
 
     override fun createDocument(gameId: String, data: FireStorePhoto): Single<FireStorePhoto> {
         return RxFirestore.addDocumentHasId(getCollection(gameId), data)
@@ -23,8 +24,17 @@ class PhotoIngameRepositoryIml : BaseGameFireStoreRepository<FireStorePhoto>(Fir
     override fun getCollection(gameId: String): CollectionReference {
         return FirestoreCollection.PhotosInGame(gameId).getDbCollection()
     }
+
+    override fun switchVisibility(gameId: String, id: String, fireStoreVisibility: FireStoreVisibility): Completable {
+        val updateMap = HashMap<Any, Any>()
+        updateMap[FirestorePhotoState.VISIBILITY_STATE] = fireStoreVisibility.value
+        return updateFieldOffline(id, updateMap, FireStorePhoto.STATE_FIELD, gameId)
+    }
+
 }
 
 interface PhotoInGameRepository : GameFireStoreRepository<FireStorePhoto> {
     fun observeByDateCreate(gameId: String): Flowable<List<FireStorePhoto>>
+
+    fun switchVisibility(gameId: String, id: String, fireStoreVisibility: FireStoreVisibility): Completable
 }

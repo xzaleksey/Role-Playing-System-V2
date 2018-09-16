@@ -11,12 +11,15 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.FabState
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoInGameAdapter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions
-import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.davidea.flexibleadapter.items.IFlexible
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
@@ -34,9 +37,10 @@ class PhotoView constructor(
 
     private val fab: FloatingActionButton
     private val recyclerView: RecyclerView
-    private val flexibleAdapter = FlexibleAdapter<IFlexible<*>>(emptyList())
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private var progressBarBottom: ProgressBar
+    private val relay = PublishRelay.create<PhotoPresenter.UiEvent>()
+    private val flexibleAdapter = PhotoInGameAdapter(emptyList(), relay)
 
     init {
         view {
@@ -48,7 +52,7 @@ class PhotoView constructor(
             leftPadding = getCommonDimen()
             rightPadding = getCommonDimen()
             isVerticalScrollBarEnabled = true
-            layoutManager = GridLayoutManager(context, if (isOrientationLandscape()) COLUMNS_COUNT else COLUMSN_COUNT_LANDSCAPE)
+            layoutManager = GridLayoutManager(context, if (isOrientationLandscape()) COLUMSN_COUNT_LANDSCAPE else COLUMNS_COUNT)
             adapter = flexibleAdapter
             addItemDecoration(ItemOffsetDecoration(getContext(), R.dimen.dp_8))
         }.lparams(width = matchParent) {
@@ -96,6 +100,10 @@ class PhotoView constructor(
     }
 
     override fun observeUiEvents(): Observable<PhotoPresenter.UiEvent> {
+        return Observable.merge(getFabClickedObservable(), relay.toFlowable(BackpressureStrategy.LATEST).toObservable())
+    }
+
+    private fun getFabClickedObservable(): Observable<PhotoPresenter.UiEvent> {
         return RxView.clicks(fab)
                 .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE))

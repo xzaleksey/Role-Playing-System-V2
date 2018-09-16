@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton;
 
-import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUpload;
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker;
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent;
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityModule;
 
@@ -16,5 +16,5 @@ import dagger.Component;
 public interface AppComponent extends SingletonDependencyProvider {
     ActivityComponent activityComponent(ActivityModule activityModule);
 
-    void inject(PhotoInGameUpload photoInGameUpload);
+    void inject(PhotoInGameUploadWorker photoInGameUploadWorker);
 }

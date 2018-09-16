@@ -9,6 +9,7 @@ import android.support.annotation.ColorRes
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
@@ -86,4 +87,12 @@ fun Context.getScreenOrientation(): Int {
 
 fun Context.isOrientationLandscape(): Boolean {
     return getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE
+}
+
+fun Context.getDisplayMetrics(): DisplayMetrics {
+    return resources.displayMetrics
+}
+
+fun Context.getDisplayWidth(): Int {
+    return getDisplayMetrics().widthPixels
 }

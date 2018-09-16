@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter
 
 import eu.davidea.flexibleadapter.items.IFlexible
 

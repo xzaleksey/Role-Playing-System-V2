@@ -23,6 +23,7 @@ data class FireStorePhoto(
 ) : HasId, HasDateCreate {
 
     companion object {
+        const val STATE_FIELD = "state"
         const val STORAGE_KEY = "photos"
     }
 }

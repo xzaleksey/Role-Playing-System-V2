@@ -1,11 +1,11 @@
 package com.alekseyvalyakin.roleplaysystem.data.workmanager
 
 import androidx.work.*
-import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGame
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
-import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUpload.Companion.KEY_GAME_ID
-import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUpload.Companion.KEY_ID
-import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUpload.Companion.KEY_PATH_TO_FILE
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker.Companion.KEY_GAME_ID
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker.Companion.KEY_ID
+import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker.Companion.KEY_PATH_TO_FILE
 import com.alekseyvalyakin.roleplaysystem.utils.createCompletable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -15,17 +15,17 @@ class WorkManagerWrapperImpl(
 ) : WorkManagerWrapper {
     private val workManager: WorkManager = WorkManager.getInstance()
 
-    override fun startUploadPhotoInGameWork(photoInGame: PhotoInGame) {
-        Timber.d("id" + photoInGame.id)
+    override fun startUploadPhotoInGameWork(photoInGameUploadModel: PhotoInGameUploadModel) {
+        Timber.d("id" + photoInGameUploadModel.id)
         val data = Data.Builder()
                 .putAll(mapOf(
-                        KEY_ID to photoInGame.id,
-                        KEY_GAME_ID to photoInGame.gameId,
-                        KEY_PATH_TO_FILE to photoInGame.filePath
+                        KEY_ID to photoInGameUploadModel.id,
+                        KEY_GAME_ID to photoInGameUploadModel.gameId,
+                        KEY_PATH_TO_FILE to photoInGameUploadModel.filePath
                 ))
                 .build()
 
-        val uploadPhoto = OneTimeWorkRequest.Builder(PhotoInGameUpload::class.java)
+        val uploadPhoto = OneTimeWorkRequest.Builder(PhotoInGameUploadWorker::class.java)
                 .setInputData(data)
                 .setConstraints(Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -33,8 +33,8 @@ class WorkManagerWrapperImpl(
                 .build()
 
         createCompletable({
-            photoInGame.workId = uploadPhoto.id.toString()
-            photoInGameDao.update(photoInGame)
+            photoInGameUploadModel.workId = uploadPhoto.id.toString()
+            photoInGameDao.update(photoInGameUploadModel)
         }, Schedulers.io())
 
         workManager.enqueue(uploadPhoto)
@@ -42,6 +42,6 @@ class WorkManagerWrapperImpl(
 }
 
 interface WorkManagerWrapper {
-    fun startUploadPhotoInGameWork(photoInGame: PhotoInGame)
+    fun startUploadPhotoInGameWork(photoInGameUploadModel: PhotoInGameUploadModel)
 }
 

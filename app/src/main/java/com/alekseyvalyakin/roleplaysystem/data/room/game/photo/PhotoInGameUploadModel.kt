@@ -4,11 +4,11 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGame.Companion.TABLE_NAME
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel.Companion.TABLE_NAME
 
 
 @Entity(tableName = TABLE_NAME)
-data class PhotoInGame @Ignore constructor(
+data class PhotoInGameUploadModel @Ignore constructor(
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0,
 

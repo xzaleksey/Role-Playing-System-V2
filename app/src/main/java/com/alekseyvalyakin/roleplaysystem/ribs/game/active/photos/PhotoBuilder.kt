@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -69,8 +71,9 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
                     photoInGameRepository: PhotoInGameRepository,
                     game: Game,
                     userRepository: UserRepository,
-                    photoInGameDao: PhotoInGameDao): PhotoInGameViewModelProvider {
-                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game, photoInGameDao, userRepository)
+                    photoInGameDao: PhotoInGameDao,
+                    resourcesProvider: ResourcesProvider): PhotoInGameViewModelProvider {
+                return PhotoInGameViewModelProviderImpl(photoInGameRepository, game, photoInGameDao, resourcesProvider, userRepository)
             }
 
         }
@@ -79,7 +82,8 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
 
     @PhotoScope
     @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
-    interface Component : InteractorBaseComponent<PhotoInteractor>, BuilderComponent {
+    interface Component : InteractorBaseComponent<PhotoInteractor>, BuilderComponent,
+            RibDependencyProvider {
 
         @dagger.Component.Builder
         interface Builder {

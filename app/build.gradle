@@ -29,6 +29,12 @@ android {
         versionName "1.0"
         buildConfigField("String", "MASTER_PASSWORD", "\"$project.password\"")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {

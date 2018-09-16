@@ -15,7 +15,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesReposito
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoIngameRepositoryIml
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepositoryIml
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
@@ -191,8 +191,8 @@ class AppModule(private val mApp: RpsApp) {
 
     @Provides
     @Singleton
-    fun photoInGameRepostitory(): PhotoInGameRepository {
-        return PhotoIngameRepositoryIml()
+    fun photoInGameRepository(): PhotoInGameRepository {
+        return PhotoInGameRepositoryIml()
     }
 
     @Provides

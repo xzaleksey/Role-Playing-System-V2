@@ -3,7 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.utils.file
 import android.content.Context
 import android.os.Environment
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGame
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.kbeanie.multipicker.utils.FileUtils
 import java.io.File
 
@@ -12,7 +12,7 @@ class FileInfoProviderImpl(
 ) : FileInfoProvider {
 
     override fun getPhotoInGameDirectory(gameId: String): File {
-        return File(getImagesFilePath(), "${Game.STORAGE_KEY}/${PhotoInGame.STORAGE_KEY}/$gameId")
+        return File(getImagesFilePath(), "${Game.STORAGE_KEY}/${PhotoInGameUploadModel.STORAGE_KEY}/$gameId")
     }
 
     override fun getFilesPath(): File {
