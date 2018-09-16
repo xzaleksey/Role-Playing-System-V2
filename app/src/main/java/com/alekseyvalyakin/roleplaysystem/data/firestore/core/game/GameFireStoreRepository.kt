@@ -15,4 +15,5 @@ interface GameFireStoreRepository<T : HasId> {
     fun observeQueryCollection(query: Query, gameId: String): Flowable<List<T>>
     fun createDocument(gameId: String, data: T): Single<T>
     fun getCollection(gameId: String): CollectionReference
+    fun deleteDocumentOffline(gameId: String, id: String): Completable
 }

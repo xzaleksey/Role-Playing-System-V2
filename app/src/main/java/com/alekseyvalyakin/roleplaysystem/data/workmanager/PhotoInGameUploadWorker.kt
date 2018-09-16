@@ -6,17 +6,15 @@ import android.net.Uri
 import androidx.work.Worker
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
+import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnProgressListener
 import com.rxfirebase2.DocumentNotExistsException
-import com.rxfirebase2.RxFirebaseStorage
 import com.rxfirebase2.RxFirestore
 import id.zelory.compressor.Compressor
 import timber.log.Timber
@@ -34,6 +32,8 @@ class PhotoInGameUploadWorker : Worker() {
     lateinit var gameRepository: GameRepository
     @Inject
     lateinit var notificationInteractor: NotificationInteractor
+    @Inject
+    lateinit var firebaseStorageRepository: FirebaseStorageRepository
 
     init {
         RpsApp.app.getAppComponent().inject(this)
@@ -47,13 +47,6 @@ class PhotoInGameUploadWorker : Worker() {
         val photosInGame = FirestoreCollection.PhotosInGame(gameId)
         val documentReference = photosInGame.getDbCollection().document()
         val photoId = documentReference.id
-
-        val reference = FirebaseStorage.getInstance()
-                .reference
-                .child(Game.STORAGE_KEY)
-                .child(gameId)
-                .child(FireStorePhoto.STORAGE_KEY)
-                .child(photoId)
 
         val gameDocument = FirestoreCollection.GAMES.getDbCollection().document(gameId)
         val localFile = File(pathToFile)
@@ -74,7 +67,8 @@ class PhotoInGameUploadWorker : Worker() {
             val compressedFile = createLocalFileCopy(localFile, gameId, photoId)
 
             try {
-                val uri = RxFirebaseStorage.putFileAndObserveUri(reference, Uri.fromFile(compressedFile),
+                val uri = firebaseStorageRepository.uploadPhotoInGameAndGetUri(
+                        gameId, photoId, Uri.fromFile(compressedFile),
                         OnProgressListener { snapshot ->
                             Timber.d("Bytes transferred ${snapshot.bytesTransferred}" +
                                     "Total bytes ${snapshot.totalByteCount}")
@@ -82,8 +76,8 @@ class PhotoInGameUploadWorker : Worker() {
                                     RpsApp.app.getString(R.string.uploading_photo),
                                     snapshot.bytesTransferred,
                                     snapshot.totalByteCount)
-                        })
-                        .blockingGet()
+                        }
+                ).blockingGet()
 
                 documentReference.set(FireStorePhoto(
                         fileName = compressedFile.name,
@@ -115,12 +109,12 @@ class PhotoInGameUploadWorker : Worker() {
             return compressedFile
         }
 
-        Timber.d("Before compress %s", file.length())
         val compressor = Compressor(RpsApp.app)
                 .setDestinationDirectoryPath(newDirectory)
-                .setCompressFormat(Bitmap.CompressFormat.PNG)
-                .setQuality(90)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                .setQuality(80)
         compressedFile = compressor.compressToFile(file, photoId)
+        Timber.d("Before compress %s after compress %s", file.length(), compressedFile.length())
         file.delete()
 
         return compressedFile

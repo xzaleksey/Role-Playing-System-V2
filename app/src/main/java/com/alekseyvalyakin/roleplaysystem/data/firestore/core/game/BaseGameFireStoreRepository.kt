@@ -32,11 +32,15 @@ abstract class BaseGameFireStoreRepository<T : HasId>(
         return RxFirestore.observeQueryRefHasId(query, clazz)
     }
 
+    override fun deleteDocumentOffline(gameId: String, id: String): Completable {
+        return RxFirestore.deleteDocumentOffline(getDocumentReference(id, gameId))
+    }
+
     protected fun getDocumentReference(id: String, gameId: String) = getCollection(gameId).document(id)
 }
 
 fun <T> BaseGameFireStoreRepository<T>.observeCollectionByDateCreate(gameId: String): Flowable<List<T>> where T : HasId,
-                                                                                                    T : HasDateCreate {
+                                                                                                              T : HasDateCreate {
     val query = getCollection(gameId)
             .orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
     return observeQueryCollection(query, gameId)

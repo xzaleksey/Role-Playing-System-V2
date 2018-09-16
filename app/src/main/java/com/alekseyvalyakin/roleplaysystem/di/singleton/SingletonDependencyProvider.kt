@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
@@ -69,4 +70,6 @@ interface SingletonDependencyProvider {
     fun workManagerWrapper(): WorkManagerWrapper
 
     fun notificationInteractor(): NotificationInteractor
+
+    fun firebaseStorageRepo(): FirebaseStorageRepository
 }

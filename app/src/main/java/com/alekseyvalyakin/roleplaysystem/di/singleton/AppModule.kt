@@ -8,6 +8,8 @@ import com.alekseyvalyakin.roleplaysystem.BuildConfig
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProviderImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
@@ -205,6 +207,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun notificationInteractor(context: Context): NotificationInteractor {
         return NotificationInteractorImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun firebaseStorageRepo(): FirebaseStorageRepository {
+        return FirebaseStorageRepositoryImpl()
     }
 
 

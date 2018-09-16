@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
+import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreVisibility
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
@@ -44,6 +45,8 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
     lateinit var workManagerWrapper: WorkManagerWrapper
     @Inject
     lateinit var photoInGameRepository: PhotoInGameRepository
+    @Inject
+    lateinit var firebaseStorageRepository: FirebaseStorageRepository
 
     @Inject
     lateinit var game: Game
@@ -85,6 +88,21 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                         if (!model.visible) FireStoreVisibility.VISIBLE_TO_ALL else FireStoreVisibility.HIDDEN
                 ).onErrorComplete().toObservable<Any>()
             }
+
+            is PhotoPresenter.UiEvent.DeletePhoto -> {
+                val model = uiEvent.photoFlexibleViewModel
+                return photoInGameRepository.deleteDocumentOffline(
+                        game.id,
+                        model.id
+                ).andThen(firebaseStorageRepository.deletePhotoInGame(game.id, model.id))
+                        .onErrorComplete {
+                            Timber.e(it)
+                            presenter.showError(it.localizedMessage)
+                            true
+                        }
+                        .toObservable<Any>()
+            }
+
 
         }
         return Observable.empty<Any>()
