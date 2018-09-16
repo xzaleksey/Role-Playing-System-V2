@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameInteractor.Model.Companion.KEY
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.*
 import timber.log.Timber
@@ -79,10 +80,12 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
 
     override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>, childInfo: Serializable?) {
         if (clazz == DiceRouter::class.java) {
-            Timber.d("Restored create game Router")
+            Timber.d("Restored dice Router")
             router.attachView(NavigationId.DICES)
+        } else if (clazz == PhotoRouter::class.java) {
+            Timber.d("Restored photos Router")
+            router.attachView(NavigationId.PICTURES)
         }
-
     }
 
     data class Model(
