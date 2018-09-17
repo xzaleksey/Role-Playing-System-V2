@@ -8,12 +8,13 @@ import android.support.design.widget.CoordinatorLayout
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Toast
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.alekseyvalyakin.roleplaysystem.views.bottomsheet.UserLockBottomSheetBehavior
 import org.jetbrains.anko._LinearLayout
 import org.jetbrains.anko.design.coordinatorLayout
-import org.jetbrains.anko.frameLayout
+import org.jetbrains.anko.wrapContent
 
 @SuppressLint("ViewConstructor")
 open class BackDropView constructor(
@@ -25,22 +26,29 @@ open class BackDropView constructor(
 
     private val userLockBottomSheetBehavior = UserLockBottomSheetBehavior<View>()
     private lateinit var frontViewWrapper: FrameLayout
+    protected var coordinatorLayout: CoordinatorLayout
 
     init {
         orientation = VERTICAL
-        addView(topViewContainer.view, LinearLayout.LayoutParams(topViewContainer.width, topViewContainer.height))
+        this.addView(topViewContainer.view, LinearLayout.LayoutParams(topViewContainer.width, topViewContainer.height))
 
-        coordinatorLayout {
+        coordinatorLayout = coordinatorLayout {
             addView(backViewContainer.view, LinearLayout.LayoutParams(backViewContainer.width, backViewContainer.height))
 
-            frontViewWrapper = frameLayout {
-                this.addView(frontViewContainer.view, LinearLayout.LayoutParams(frontViewContainer.width, frontViewContainer.height))
-            }.lparams()
+
+            frontViewWrapper = FrontViewWrapper(
+                    context,
+                    frontViewContainer, object : FrontViewWrapper.BackDropDelegate {
+                override fun shouldInterceptTouchEvents(): Boolean {
+                    return userLockBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+            )
+            this.addView(frontViewWrapper, LayoutParams(wrapContent, wrapContent))
 
             (frontViewWrapper.layoutParams as CoordinatorLayout.LayoutParams).behavior = userLockBottomSheetBehavior
             expandFront()
             frontViewWrapper.setOnClickListener {
-                elevation = 2f
                 when {
                     userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
                         collapseFront()
@@ -51,6 +59,8 @@ open class BackDropView constructor(
             }
         }
 
+        frontViewContainer.view.setOnClickListener { Toast.makeText(context, "view clicked", Toast.LENGTH_SHORT).show() }
+        topViewContainer.view.setOnClickListener { collapseFront() }
     }
 
     fun expandFront() {

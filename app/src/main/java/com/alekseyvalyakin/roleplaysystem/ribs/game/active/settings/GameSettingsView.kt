@@ -40,5 +40,7 @@ class GameSettingsView constructor(context: Context) : BackDropView(context,
                 }
         )
 ), GameSettingsInteractor.GameSettingsPresenter {
-
+    init {
+        backgroundColorResource = R.color.colorAccent
+    }
 }
