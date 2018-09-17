@@ -85,5 +85,7 @@
     <item name="tv_name" type="id" />
     <item name="bottom_container" type="id" />
     <item name="switcher" type="id" />
+    <item name="btn_retry" type="id" />
+    <item name="photo_container" type="id" />
 
 </resources>

@@ -4,6 +4,7 @@ import android.view.ViewManager
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.google.android.gms.common.SignInButton
 import org.jetbrains.anko.custom.ankoView
+import uk.co.senab.photoview.PhotoView
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun ViewManager.googleSignInButton(theme: Int = 0) = googleSignInButton({}, theme)
@@ -20,3 +21,9 @@ inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit) = searchToo
 inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit, theme: Int = 0) = ankoView(::SearchToolbar, theme, init)
 
 
+@Suppress("NOTHING_TO_INLINE")
+inline fun ViewManager.photoView(theme: Int = 0) = photoView({}, theme)
+
+inline fun ViewManager.photoView(init: PhotoView.() -> Unit) = photoView(init, 0)
+
+inline fun ViewManager.photoView(init: PhotoView.() -> Unit, theme: Int = 0) = ankoView(::PhotoView, theme, init)
