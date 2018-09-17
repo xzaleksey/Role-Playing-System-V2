@@ -7,10 +7,10 @@ import android.widget.Button
 import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.photoView
+import com.github.chrisbanes.photoview.PhotoView
+import com.github.chrisbanes.photoview.PhotoViewAttacher
 import io.reactivex.disposables.Disposables
 import org.jetbrains.anko.*
-import uk.co.senab.photoview.PhotoView
-import uk.co.senab.photoview.PhotoViewAttacher
 
 /**
  * Top level view for {@link FullSizePhotoBuilder.FullSizePhotoScope}.

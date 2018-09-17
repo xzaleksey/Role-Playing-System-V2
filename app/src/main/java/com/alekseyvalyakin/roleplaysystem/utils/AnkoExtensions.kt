@@ -2,9 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.view.ViewManager
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.gms.common.SignInButton
 import org.jetbrains.anko.custom.ankoView
-import uk.co.senab.photoview.PhotoView
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun ViewManager.googleSignInButton(theme: Int = 0) = googleSignInButton({}, theme)
