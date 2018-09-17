@@ -96,3 +96,7 @@ fun Context.getDisplayMetrics(): DisplayMetrics {
 fun Context.getDisplayWidth(): Int {
     return getDisplayMetrics().widthPixels
 }
+
+fun Context.getDisplayHeight(): Int {
+    return getDisplayMetrics().heightPixels
+}
