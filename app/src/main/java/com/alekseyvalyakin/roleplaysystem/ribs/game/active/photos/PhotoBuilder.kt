@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -84,9 +85,9 @@ class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, Pho
     }
 
     @PhotoScope
-    @dagger.Component(modules = arrayOf(Module::class), dependencies = arrayOf(ParentComponent::class))
+    @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
     interface Component : InteractorBaseComponent<PhotoInteractor>, BuilderComponent,
-            RibDependencyProvider {
+            RibDependencyProvider, FullSizePhotoBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {

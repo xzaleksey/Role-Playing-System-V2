@@ -2,8 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
@@ -11,12 +11,16 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.InteractorBaseComponent
 import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Observable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -76,7 +80,8 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                         DiceBuilder(component),
                         routerNavigatorFactory,
                         activeGameViewModelProvider,
-                        PhotoBuilder(component))
+                        PhotoBuilder(component),
+                        FullSizePhotoBuilder(component))
             }
 
             @ActiveGameScope
@@ -89,6 +94,19 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                 return ActiveGameViewModelProviderImpl(game, userRepository, stringRepository, resourcesProvider)
             }
 
+            @ActiveGameScope
+            @Provides
+            @JvmStatic
+            internal fun activeGameRelay(): Relay<ActiveGameEvent> {
+                return PublishRelay.create()
+            }
+
+            @ActiveGameScope
+            @Provides
+            @JvmStatic
+            internal fun activeGameEventObservable(relay: Relay<ActiveGameEvent>): Observable<ActiveGameEvent> {
+                return relay
+            }
         }
 
     }
@@ -98,7 +116,8 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
     interface Component : InteractorBaseComponent<ActiveGameInteractor>,
             BuilderComponent,
             DiceBuilder.ParentComponent,
-            ActiveGameDependencyProvider, PhotoBuilder.ParentComponent {
+            ActiveGameDependencyProvider,
+            PhotoBuilder.ParentComponent, FullSizePhotoBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {

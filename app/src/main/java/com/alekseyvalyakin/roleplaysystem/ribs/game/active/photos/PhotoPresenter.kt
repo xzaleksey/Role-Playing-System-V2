@@ -14,6 +14,7 @@ interface PhotoPresenter {
 
         class DeletePhoto(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class SwitchVisibility(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
+        class OpenFullSize(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>

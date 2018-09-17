@@ -29,7 +29,8 @@ class PhotoInGameItemViewHolder(
                             .negativeButton(res = android.R.string.cancel)
                             .show()
                 },
-                View.OnClickListener { relay.accept(PhotoPresenter.UiEvent.SwitchVisibility(photoFlexibleViewModel)) }
+                View.OnClickListener { relay.accept(PhotoPresenter.UiEvent.SwitchVisibility(photoFlexibleViewModel)) },
+                View.OnClickListener { relay.accept(PhotoPresenter.UiEvent.OpenFullSize(photoFlexibleViewModel)) }
         )
     }
 }

@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewM
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.*
+import io.reactivex.Observable
 import timber.log.Timber
 import java.io.Serializable
 import javax.inject.Inject
@@ -16,7 +17,6 @@ import javax.inject.Inject
 /**
  * Coordinates Business Logic for [ActiveGameScope].
  *
- * TODO describe the logic of this scope.
  */
 @RibInteractor
 class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRouter>() {
@@ -30,6 +30,8 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
 
     @Inject
     lateinit var gameRepository: GameRepository
+    @Inject
+    lateinit var activeGameEventObservable: Observable<ActiveGameEvent>
 
     private var model: Model = Model(NavigationId.CHARACTERS)
 
@@ -63,6 +65,14 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                         }
                     }
                 }.addToDisposables()
+        activeGameEventObservable.subscribeWithErrorLogging {
+            when (it) {
+                is ActiveGameEvent.OpenFullSizePhoto -> {
+                        router.attachFullSizePhoto(it.fullSizePhotoModel)
+                }
+            }
+        }.addToDisposables()
+
     }
 
     private fun handleNavigation(navigationId: NavigationId) {

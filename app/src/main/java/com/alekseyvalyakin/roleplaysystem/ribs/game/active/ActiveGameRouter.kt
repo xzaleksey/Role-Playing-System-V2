@@ -6,6 +6,9 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGameInternalAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.DefaultActiveGameInternalDetachTransition
 import com.uber.rib.core.RestorableRouter
@@ -25,7 +28,8 @@ class ActiveGameRouter(
         private val diceBuilder: DiceBuilder,
         private val routerNavigatorFactory: RouterNavigatorFactory,
         private val activeGameViewModelProvider: ActiveGameViewModelProvider,
-        private val photoBuilder: PhotoBuilder
+        private val photoBuilder: PhotoBuilder,
+        private val fullSizePhotoBuilder: FullSizePhotoBuilder
 ) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component), RestorableRouter {
 
     private val modernRouter = routerNavigatorFactory.create<State>(this)
@@ -35,7 +39,7 @@ class ActiveGameRouter(
     private val photoAttachTransition = ActiveGameInternalAttachTransition(photoBuilder, view)
     private val photoDetachTransition = object : DefaultActiveGameInternalDetachTransition<PhotoRouter, State>(view) {}
     private var canBeClosed = false
-
+    private var fullSizePhotoRouter: FullSizePhotoRouter? = null
     fun attachView(navigationId: NavigationId) {
         when (navigationId) {
             NavigationId.DICES -> {
@@ -48,6 +52,27 @@ class ActiveGameRouter(
         }
     }
 
+    fun attachFullSizePhoto(fullSizePhotoModel: FullSizePhotoModel) {
+        if (fullSizePhotoRouter == null) {
+            val fullScreenContainer = view.getFullScreenContainer()
+            fullSizePhotoRouter = fullSizePhotoBuilder.build(fullScreenContainer, fullSizePhotoModel)
+            attachChild(fullSizePhotoRouter)
+            fullScreenContainer.addView(fullSizePhotoRouter!!.view)
+        }
+    }
+
+    private fun detachFullSizePhoto(): Boolean {
+        if (fullSizePhotoRouter != null) {
+            val fullScreenContainer = view.getFullScreenContainer()
+            detachChild(fullSizePhotoRouter)
+            fullScreenContainer.removeView(fullSizePhotoRouter!!.view)
+            fullSizePhotoRouter = null
+            return true
+        }
+
+        return false
+    }
+
     fun backPress(): Boolean {
         if (canBeClosed) {
             return false
@@ -55,6 +80,10 @@ class ActiveGameRouter(
 
         if (modernRouter.peekState() == null) {
             return false
+        }
+
+        if (detachFullSizePhoto()) {
+            return true
         }
 
         if (modernRouter.peekRouter()?.handleBackPress() == false) {

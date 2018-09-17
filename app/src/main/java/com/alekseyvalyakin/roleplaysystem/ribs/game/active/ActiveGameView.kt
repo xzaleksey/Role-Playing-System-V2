@@ -22,6 +22,7 @@ class ActiveGameView constructor(
 
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var container: FrameLayout
+    private var fullScreenContainer: FrameLayout
 
     private val relay = PublishRelay.create<ActiveGamePresenter.Event>()
 
@@ -45,6 +46,11 @@ class ActiveGameView constructor(
             relay.accept(ActiveGamePresenter.Event.Navigate(it.itemId))
             true
         }
+
+        fullScreenContainer = frameLayout {
+
+        }.lparams(width = matchParent, height = matchParent) {
+        }
     }
 
     override fun showModel(viewModel: ActiveGameViewModel) {
@@ -65,4 +71,9 @@ class ActiveGameView constructor(
     fun getContentContainer(): FrameLayout {
         return container
     }
+
+    fun getFullScreenContainer(): FrameLayout {
+        return fullScreenContainer
+    }
+
 }

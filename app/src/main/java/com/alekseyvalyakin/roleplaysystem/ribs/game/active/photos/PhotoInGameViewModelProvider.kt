@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
 import android.content.res.Configuration
+import com.alekseyvalyakin.roleplaysystem.base.image.ImageData
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreVisibility
@@ -18,6 +19,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.getDisplayWidth
 import com.alekseyvalyakin.roleplaysystem.utils.getScreenOrientation
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
+import java.io.File
 
 class PhotoInGameViewModelProviderImpl(
         private val photoInGameRepository: PhotoInGameRepository,
@@ -37,16 +39,25 @@ class PhotoInGameViewModelProviderImpl(
                     return@BiFunction PhotoViewModel(
                             fireStorePhotos.asSequence()
                                     .filter { isMaster || it.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value }
-                                    .map {
-                                        PhotoFlexibleViewModel(it.id,
-                                                PhotoInGameUrlProvider(it.url, resourcesProvider,
-                                                        fileInfoProvider,
-                                                        game.id,
-                                                        it.id),
-                                                it.fileName,
+                                    .map { photo ->
+                                        val gameId = game.id
+                                        val photoId = photo.id
+
+                                        val imageProvider = PhotoInGameUrlProvider(photo.url,
+                                                resourcesProvider,
+                                                fileInfoProvider,
+                                                gameId,
+                                                photoId)
+
+                                        PhotoFlexibleViewModel(photoId,
+                                                imageProvider,
+                                                photo.fileName,
                                                 isMaster,
-                                                it.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value,
-                                                size
+                                                photo.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value,
+                                                size,
+                                                ImageData(photo.url,
+                                                        File(fileInfoProvider.getPhotoInGameDirectory(gameId), photoId)
+                                                )
                                         )
                                     }.toList(),
                             when {
@@ -68,16 +79,16 @@ class PhotoInGameViewModelProviderImpl(
         val context = resourcesProvider.getContext()
 
         if (context.getScreenOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
-            countOfPaddings = 2 + 2 * COLUMSN_COUNT_LANDSCAPE
-            countOfColumns = COLUMSN_COUNT_LANDSCAPE
+            countOfPaddings = 2 + 2 * COLUMNS_COUNT_LANDSCAPE
+            countOfColumns = COLUMNS_COUNT_LANDSCAPE
         }
 
         return (context.getDisplayWidth() - context.getCommonDimen() * countOfPaddings) / countOfColumns
     }
 
     companion object {
-        val COLUMNS_COUNT = 2
-        val COLUMSN_COUNT_LANDSCAPE = 3
+        private const val COLUMNS_COUNT = 2
+        private const val COLUMNS_COUNT_LANDSCAPE = 3
     }
 }
 

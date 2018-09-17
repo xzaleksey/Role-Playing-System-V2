@@ -112,7 +112,8 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                    isChecked: Boolean,
                    imageProvider: ImageProvider,
                    deleteClickListener: OnClickListener,
-                   switcherOnClickListener: OnClickListener) {
+                   switcherOnClickListener: OnClickListener,
+                   photoClickListener: OnClickListener) {
         layoutParams.width = size
         photoImageView.layoutParams.height = size
         tvName.text = name
@@ -122,6 +123,7 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
         deleteImageView.setOnClickListener(deleteClickListener)
         switcherVisibility.isChecked = isChecked
         switcherVisibility.setOnClickListener(switcherOnClickListener)
+        photoImageView.setOnClickListener(photoClickListener)
 
         if (this.imageProvider == null || this.imageProvider!!.getId() != imageProvider.getId()) {
             this.imageProvider = imageProvider

@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.base.image.ImageData
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageProvider
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -16,7 +17,8 @@ data class PhotoFlexibleViewModel(
         val name: String,
         val canChange: Boolean,
         val visible: Boolean,
-        val size: Int
+        val size: Int,
+        val imageData: ImageData
 ) : AbstractFlexibleItem<PhotoInGameItemViewHolder>() {
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, inflater: LayoutInflater, parent: ViewGroup): PhotoInGameItemViewHolder {

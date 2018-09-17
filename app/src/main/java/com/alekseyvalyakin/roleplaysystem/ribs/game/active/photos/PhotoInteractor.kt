@@ -8,10 +8,13 @@ import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoModel
 import com.alekseyvalyakin.roleplaysystem.utils.createCompletable
 import com.alekseyvalyakin.roleplaysystem.utils.image.ImagesResult
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
@@ -47,6 +50,8 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
     lateinit var photoInGameRepository: PhotoInGameRepository
     @Inject
     lateinit var firebaseStorageRepository: FirebaseStorageRepository
+    @Inject
+    lateinit var activeGameEventRelay: Relay<ActiveGameEvent>
 
     @Inject
     lateinit var game: Game
@@ -103,7 +108,13 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                         .toObservable<Any>()
             }
 
-
+            is PhotoPresenter.UiEvent.OpenFullSize -> {
+                val photoFlexibleViewModel = uiEvent.photoFlexibleViewModel
+                activeGameEventRelay.accept(ActiveGameEvent.OpenFullSizePhoto(
+                        FullSizePhotoModel(photoFlexibleViewModel.imageData,
+                                photoFlexibleViewModel.name)
+                ))
+            }
         }
         return Observable.empty<Any>()
     }
