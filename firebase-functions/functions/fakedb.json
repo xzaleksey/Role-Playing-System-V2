@@ -1,0 +1,29 @@
+{
+  "settings": {
+    "default": {
+      "name": "Default",
+      "classes": {
+        "warrior": {
+          "name": {
+            "default": "Warrior",
+            "ru": "Воин"
+          },
+          "description": {
+            "default": "Powerful man",
+            "ru": "Могучий хрен"
+          }
+        },
+        "ranger": {
+          "name": {
+            "default": "Ranger",
+            "ru": "Рэнджер"
+          },
+          "description": {
+            "default": "Good fighter",
+            "ru": "Хороший стрелок"
+          }
+        }
+      }
+    }
+  }
+}

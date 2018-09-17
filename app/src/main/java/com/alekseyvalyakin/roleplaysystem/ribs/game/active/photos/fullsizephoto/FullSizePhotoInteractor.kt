@@ -41,11 +41,6 @@ class FullSizePhotoInteractor : BaseInteractor<FullSizePhotoInteractor.FullSizeP
         )
     }
 
-    override fun willResignActive() {
-        super.willResignActive()
-
-    }
-
     /**
      * Presenter interface implemented by this RIB's view.
      */
