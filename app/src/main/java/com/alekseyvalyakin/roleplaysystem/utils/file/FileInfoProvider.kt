@@ -10,6 +10,9 @@ import java.io.File
 class FileInfoProviderImpl(
         val context: Context
 ) : FileInfoProvider {
+    override fun getAvatarsPath(): File {
+        return File(getImagesFilePath(), "avatars")
+    }
 
     override fun getPhotoInGameDirectory(gameId: String): File {
         return File(getImagesFilePath(), "${Game.STORAGE_KEY}/${PhotoInGameUploadModel.STORAGE_KEY}/$gameId")
@@ -29,6 +32,8 @@ interface FileInfoProvider {
     fun getFilesPath(): File
 
     fun getImagesFilePath(): File
+
+    fun getAvatarsPath(): File
 
     fun getPhotoInGameDirectory(gameId: String): File
 }

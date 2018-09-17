@@ -93,7 +93,7 @@ class UserAvatarRepositoryImpl @Inject constructor(
     private fun createLocalFileCopy(file: File): Single<File> {
         return Single.fromCallable {
             Timber.d("Before compress %s", file.length())
-            val newDirectory = fileInfoProvider.getImagesFilePath().absolutePath
+            val newDirectory = fileInfoProvider.getAvatarsPath().absolutePath
             val compressor = Compressor(context)
                     .setDestinationDirectoryPath(newDirectory)
                     .setCompressFormat(Bitmap.CompressFormat.PNG)
