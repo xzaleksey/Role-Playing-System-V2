@@ -14,6 +14,7 @@ import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.google.firebase.storage.OnProgressListener
+import com.google.firebase.storage.StorageException
 import com.rxfirebase2.DocumentNotExistsException
 import com.rxfirebase2.RxFirestore
 import id.zelory.compressor.Compressor
@@ -60,6 +61,7 @@ class PhotoInGameUploadWorker : Worker() {
                 return Result.SUCCESS
             }
         }
+
         var result = Result.SUCCESS
         val notificationId = "$gameId/$photoId".hashCode()
 
@@ -85,8 +87,14 @@ class PhotoInGameUploadWorker : Worker() {
 
                 photoInGameDao.deleteById(dbId)
             } catch (t: Throwable) {
+                result = if (t.cause is StorageException){
+                    photoInGameDao.deleteById(dbId)
+                    localFile.delete()
+                    Result.FAILURE
+                } else{
+                    Result.RETRY
+                }
                 Timber.e(t)
-                result = Result.RETRY
             }
 
         } catch (t: Throwable) {
