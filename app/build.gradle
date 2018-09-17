@@ -46,6 +46,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        pickFirst  '**'
+    }
+    configurations.all {
+        resolutionStrategy.force "com.android.support:appcompat-v7:$support_version"
+    }
 }
 
 dependencies {
@@ -99,7 +105,7 @@ dependencies {
 
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
     implementation 'com.github.chrisbanes:PhotoView:2.1.4'
     implementation 'id.zelory:compressor:2.1.0'
 
@@ -110,11 +116,15 @@ dependencies {
 
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'
 
-    annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
+    kapt 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'
     implementation 'com.uber.rib:rib-workflow:0.9.1'
     implementation 'com.uber.rib:rib-router-navigator:0.9.1'
     implementation 'com.uber.rib:rib-screen-stack-base:0.9.1'
+    implementation('com.github.pedromassango:IBackdrop:2.1.0') {
+        exclude group: 'androidx.core'
+        exclude group: 'com.android.support'
+    }
 
     testImplementation 'com.uber.rib:rib-test-utils:0.9.1'
 
@@ -123,10 +133,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
+
+
 configurations {
     all*.exclude group: 'io.reactivex:rxjava', module: 'rxjava'
 }
-
 
 repositories {
     mavenCentral()
