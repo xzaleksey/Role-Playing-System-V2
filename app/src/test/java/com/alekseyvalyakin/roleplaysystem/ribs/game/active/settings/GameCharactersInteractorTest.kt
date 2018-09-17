@@ -8,7 +8,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class GameSettingsInteractorTest : RibTestBasePlaceholder() {
+class GameCharactersInteractorTest : RibTestBasePlaceholder() {
 
   @Mock internal lateinit var presenter: GameSettingsInteractor.GameSettingsPresenter
   @Mock internal lateinit var router: GameSettingsRouter

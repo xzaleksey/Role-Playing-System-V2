@@ -39,9 +39,9 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
         super.didBecomeActive(savedInstanceState)
         savedInstanceState?.run {
             model = this.getSerializable(KEY)
-            handleNavigation(model.navigationId)
         }
 
+        handleNavigation(model.navigationId)
         gameRepository.observeDocumentDelete(viewModelProvider.getCurrentGame().id)
                 .subscribeWithErrorLogging {
                     Timber.d("Game deleted")
@@ -68,7 +68,7 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
         activeGameEventObservable.subscribeWithErrorLogging {
             when (it) {
                 is ActiveGameEvent.OpenFullSizePhoto -> {
-                        router.attachFullSizePhoto(it.fullSizePhotoModel)
+                    router.attachFullSizePhoto(it.fullSizePhotoModel)
                 }
             }
         }.addToDisposables()

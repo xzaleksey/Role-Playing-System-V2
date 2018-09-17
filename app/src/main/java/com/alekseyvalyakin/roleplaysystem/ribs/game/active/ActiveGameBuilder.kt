@@ -7,6 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharactersBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
@@ -84,7 +85,8 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                         activeGameViewModelProvider,
                         PhotoBuilder(component),
                         GameSettingsBuilder(component),
-                        FullSizePhotoBuilder(component))
+                        FullSizePhotoBuilder(component),
+                        GameCharactersBuilder(component))
             }
 
             @ActiveGameScope
@@ -120,7 +122,10 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
             BuilderComponent,
             DiceBuilder.ParentComponent,
             ActiveGameDependencyProvider,
-            PhotoBuilder.ParentComponent, FullSizePhotoBuilder.ParentComponent, GameSettingsBuilder.ParentComponent {
+            PhotoBuilder.ParentComponent,
+            FullSizePhotoBuilder.ParentComponent,
+            GameSettingsBuilder.ParentComponent,
+            GameCharactersBuilder.ParentComponent {
         @dagger.Component.Builder
         interface Builder {
             @BindsInstance
