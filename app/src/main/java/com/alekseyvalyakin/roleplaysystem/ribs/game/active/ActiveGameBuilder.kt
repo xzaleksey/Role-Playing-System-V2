@@ -12,6 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewM
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsBuilder
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.InteractorBaseComponent
@@ -74,6 +75,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                     interactor: ActiveGameInteractor,
                     routerNavigatorFactory: RouterNavigatorFactory,
                     activeGameViewModelProvider: ActiveGameViewModelProvider): ActiveGameRouter {
+
                 return ActiveGameRouter(view,
                         interactor,
                         component,
@@ -81,6 +83,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                         routerNavigatorFactory,
                         activeGameViewModelProvider,
                         PhotoBuilder(component),
+                        GameSettingsBuilder(component),
                         FullSizePhotoBuilder(component))
             }
 
@@ -117,8 +120,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
             BuilderComponent,
             DiceBuilder.ParentComponent,
             ActiveGameDependencyProvider,
-            PhotoBuilder.ParentComponent, FullSizePhotoBuilder.ParentComponent {
-
+            PhotoBuilder.ParentComponent, FullSizePhotoBuilder.ParentComponent, GameSettingsBuilder.ParentComponent {
         @dagger.Component.Builder
         interface Builder {
             @BindsInstance

@@ -18,6 +18,10 @@ ext {
     room_version = '1.1.1'
 }
 
+kapt {
+    generateStubs = true
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.2"
@@ -36,6 +40,7 @@ android {
             }
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -45,12 +50,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-    packagingOptions {
-        pickFirst  '**'
-    }
-    configurations.all {
-        resolutionStrategy.force "com.android.support:appcompat-v7:$support_version"
     }
 }
 
@@ -75,8 +74,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.google.dagger:dagger:2.15'
+
     kapt 'com.google.dagger:dagger-android-processor:2.15'
     kapt 'com.google.dagger:dagger-compiler:2.15'
+
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     implementation 'com.jakewharton.rxbinding2:rxbinding-design:2.1.1'
     implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.1.1'
@@ -105,27 +106,24 @@ dependencies {
 
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-    kapt 'com.github.bumptech.glide:compiler:4.7.1'
-    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     implementation 'id.zelory:compressor:2.1.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
+
 
     implementation 'com.kbeanie:multipicker:1.5@aar'
     implementation 'com.afollestad.material-dialogs:core:2.0.0-alpha07'
     implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha07'
+
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'
 
-    kapt 'com.uber.rib:rib-compiler-test:0.9.1'
+    annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'
     implementation 'com.uber.rib:rib-workflow:0.9.1'
     implementation 'com.uber.rib:rib-router-navigator:0.9.1'
     implementation 'com.uber.rib:rib-screen-stack-base:0.9.1'
-    implementation('com.github.pedromassango:IBackdrop:2.1.0') {
-        exclude group: 'androidx.core'
-        exclude group: 'com.android.support'
-    }
-
     testImplementation 'com.uber.rib:rib-test-utils:0.9.1'
 
     testImplementation 'junit:junit:4.12'
@@ -133,11 +131,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-
-
 configurations {
     all*.exclude group: 'io.reactivex:rxjava', module: 'rxjava'
 }
+
 
 repositories {
     mavenCentral()

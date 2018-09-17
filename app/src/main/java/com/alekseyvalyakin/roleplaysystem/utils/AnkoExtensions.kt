@@ -20,7 +20,6 @@ inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit) = searchToo
 
 inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit, theme: Int = 0) = ankoView(::SearchToolbar, theme, init)
 
-
 @Suppress("NOTHING_TO_INLINE")
 inline fun ViewManager.photoView(theme: Int = 0) = photoView({}, theme)
 

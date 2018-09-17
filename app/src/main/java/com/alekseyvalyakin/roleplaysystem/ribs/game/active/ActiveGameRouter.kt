@@ -9,6 +9,8 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGameInternalAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.DefaultActiveGameInternalDetachTransition
 import com.uber.rib.core.RestorableRouter
@@ -29,6 +31,7 @@ class ActiveGameRouter(
         private val routerNavigatorFactory: RouterNavigatorFactory,
         private val activeGameViewModelProvider: ActiveGameViewModelProvider,
         private val photoBuilder: PhotoBuilder,
+        private val gameSettingsBuilder: GameSettingsBuilder,
         private val fullSizePhotoBuilder: FullSizePhotoBuilder
 ) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component), RestorableRouter {
 
@@ -38,6 +41,10 @@ class ActiveGameRouter(
 
     private val photoAttachTransition = ActiveGameInternalAttachTransition(photoBuilder, view)
     private val photoDetachTransition = object : DefaultActiveGameInternalDetachTransition<PhotoRouter, State>(view) {}
+
+    private val gameSettingsAttachTransition = ActiveGameInternalAttachTransition(gameSettingsBuilder, view)
+    private val gameSettingsDetachTransition = object : DefaultActiveGameInternalDetachTransition<GameSettingsRouter, State>(view) {}
+
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
     fun attachView(navigationId: NavigationId) {
@@ -48,6 +55,10 @@ class ActiveGameRouter(
 
             NavigationId.PICTURES -> {
                 modernRouter.pushTransientState(State.PHOTOS, photoAttachTransition, photoDetachTransition)
+            }
+
+            NavigationId.MENU -> {
+                modernRouter.pushTransientState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
             }
         }
     }
@@ -110,6 +121,7 @@ class ActiveGameRouter(
         companion object {
             val DICES = State("DICES")
             val PHOTOS = State("PHOTOS")
+            val SETTINGS = State("SETTINGS")
         }
     }
 }
