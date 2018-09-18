@@ -36,6 +36,7 @@ class GameSettingsView(context: Context) : _RelativeLayout(context) {
 
         tvText = textView {
             textSizeDimen = R.dimen.dp_16
+            textColorResource= R.color.colorTextPrimary
         }.lparams(width = matchParent, height = wrapContent) {
             endOf(R.id.left_icon)
             startOf(R.id.arrow_right)

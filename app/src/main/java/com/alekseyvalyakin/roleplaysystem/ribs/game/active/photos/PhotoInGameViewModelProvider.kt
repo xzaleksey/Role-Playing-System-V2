@@ -3,7 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 import android.content.res.Configuration
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageData
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreIdPhoto
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreVisibility
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
@@ -35,7 +35,7 @@ class PhotoInGameViewModelProviderImpl(
     override fun observeViewModel(): Flowable<PhotoViewModel> {
         val size = calculateItemSize()
         return Flowable.combineLatest(getFirebasePhotosFlowable(), photoInGameDao.all(),
-                BiFunction { fireStorePhotos: List<FireStorePhoto>, photoUploadUploadModels: List<PhotoInGameUploadModel> ->
+                BiFunction { fireStorePhotos: List<FireStoreIdPhoto>, photoUploadUploadModels: List<PhotoInGameUploadModel> ->
                     return@BiFunction PhotoViewModel(
                             fireStorePhotos.asSequence()
                                     .filter { isMaster || it.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value }
@@ -69,8 +69,8 @@ class PhotoInGameViewModelProviderImpl(
                 })
     }
 
-    private fun getFirebasePhotosFlowable(): Flowable<List<FireStorePhoto>> {
-        return photoInGameRepository.observeByDateCreate(game.id).startWith(emptyList<FireStorePhoto>())
+    private fun getFirebasePhotosFlowable(): Flowable<List<FireStoreIdPhoto>> {
+        return photoInGameRepository.observeByDateCreate(game.id).startWith(emptyList<FireStoreIdPhoto>())
     }
 
     private fun calculateItemSize(): Int {

@@ -2,7 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.data.firestorage
 
 import android.net.Uri
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreIdPhoto
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
@@ -28,7 +28,7 @@ class FirebaseStorageRepositoryImpl() : FirebaseStorageRepository {
                 .reference
                 .child(Game.STORAGE_KEY)
                 .child(gameId)
-                .child(FireStorePhoto.STORAGE_KEY)
+                .child(FireStoreIdPhoto.STORAGE_KEY)
                 .child(photoId)
     }
 }

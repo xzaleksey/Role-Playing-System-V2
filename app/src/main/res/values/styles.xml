@@ -27,24 +27,19 @@
 
     <style name="AppTheme.Widget.TextView" parent="android:Widget.TextView">
         <item name="android:ellipsize">end</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
     <style name="AppThemeBase.Widget.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
     <style name="AppThemeBase.Widget.AutoCompleteTextView" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
     <style name="AppThemeBase.Widget.Button" parent="Widget.AppCompat.Button">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
-
 
     <style name="AppTheme.TextWhite">
         <item name="colorAccent">@color/colorWhite</item>

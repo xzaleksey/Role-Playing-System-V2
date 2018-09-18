@@ -29,7 +29,12 @@ public abstract class DocumentSnapshotMapper<T, U> implements Function<T, U> {
         }
     };
 
-    static final Predicate<DocumentSnapshot> DOCUMENT_NOT_EXISTENCE_PREDICATE = documentSnapshot -> !documentSnapshot.exists();
+    static final Predicate<DocumentSnapshot> DOCUMENT_NOT_EXISTENCE_PREDICATE = new Predicate<DocumentSnapshot>() {
+        @Override
+        public boolean test(@NonNull DocumentSnapshot documentSnapshot) throws Exception {
+            return !documentSnapshot.exists();
+        }
+    };
 
     private DocumentSnapshotMapper() {
     }

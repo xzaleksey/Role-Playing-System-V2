@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
 import com.google.firebase.firestore.Exclude
@@ -23,7 +23,7 @@ data class Game(
         @get:Exclude
         @Volatile
         override var id: String = StringUtils.EMPTY_STRING
-) : HasId, Serializable, HasDateCreate {
+) : FireStoreIdModel, Serializable, HasDateCreate {
 
     @Exclude
     fun isFiltered(text: String): Boolean {

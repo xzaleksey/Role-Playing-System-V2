@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser
 
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
 import java.io.Serializable
@@ -14,7 +14,7 @@ data class GamesInUserInfo(
         @get:Exclude
         @Volatile
         override var id: String = ""
-) : HasId, Serializable {
+) : FireStoreIdModel, Serializable {
 
 
     companion object {

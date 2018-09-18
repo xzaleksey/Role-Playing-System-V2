@@ -19,3 +19,5 @@ libs/
 .idea/vcs.xml
 src/main/java/anko/
 src/main/res/layout/
+keystore.properties
+keystore

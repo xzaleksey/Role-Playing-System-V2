@@ -1,3 +1,5 @@
 /build
 google-services.json
 master_password.gradle
+keystore.properties
+keystore

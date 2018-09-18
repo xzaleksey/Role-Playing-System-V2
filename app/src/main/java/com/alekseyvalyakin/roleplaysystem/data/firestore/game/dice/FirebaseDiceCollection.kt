@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.Dice
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
 import com.google.firebase.firestore.Exclude
@@ -17,7 +17,7 @@ class FirebaseDiceCollection(
         @get:Exclude
         @Volatile
         override var id: String = ""
-) : HasId, HasDateCreate {
+) : FireStoreIdModel, HasDateCreate {
 
     @Exclude
     fun mapToDiceCollection(): DiceCollection {

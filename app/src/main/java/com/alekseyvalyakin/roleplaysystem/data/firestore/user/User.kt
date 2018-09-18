@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.user
 
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
 
@@ -18,7 +18,7 @@ data class User(
         @set:Exclude
         @get:Exclude
         override var id: String = StringUtils.EMPTY_STRING
-) : HasId {
+) : FireStoreIdModel {
 
     companion object {
         const val FIELD_DISPLAY_NAME = "displayName"

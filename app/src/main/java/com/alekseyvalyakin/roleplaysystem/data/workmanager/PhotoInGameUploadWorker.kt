@@ -9,7 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStorePhoto
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreIdPhoto
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
 import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
@@ -81,7 +81,7 @@ class PhotoInGameUploadWorker : Worker() {
                         }
                 ).blockingGet()
 
-                documentReference.set(FireStorePhoto(
+                documentReference.set(FireStoreIdPhoto(
                         fileName = compressedFile.name,
                         url = uri.toString()))
 
