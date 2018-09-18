@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatBuilder
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -57,8 +59,9 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
             internal fun router(
                     component: Component,
                     view: GameSettingsView,
-                    interactor: GameSettingsInteractor): GameSettingsRouter {
-                return GameSettingsRouter(view, interactor, component)
+                    interactor: GameSettingsInteractor,
+                    routerNavigatorFactory: RouterNavigatorFactory): GameSettingsRouter {
+                return GameSettingsRouter(view, interactor, component, GameSettingsStatBuilder(component), routerNavigatorFactory)
             }
 
             @GameSettingsScope
@@ -73,7 +76,7 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
 
     @GameSettingsScope
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
-    interface Component : InteractorBaseComponent<GameSettingsInteractor>, BuilderComponent {
+    interface Component : InteractorBaseComponent<GameSettingsInteractor>, BuilderComponent, ActiveGameDependencyProvider, GameSettingsStatBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {
@@ -84,6 +87,7 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
             fun view(view: GameSettingsView): Builder
 
             fun parentComponent(component: ParentComponent): Builder
+
             fun build(): Component
         }
     }

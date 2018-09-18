@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.root
 
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
@@ -39,14 +39,14 @@ class RootRouter(
 
     private val router = routerNavigatorFactory.create<RootState>(this)!!
     private val authAttachTransition = object : DefaultAttachTransition<AuthRouter, RootState, AuthBuilder>(authBuilder, view) {}
-    private val authDetachTransition = object : DefaultDetachTransition<AuthRouter, RootState>(view) {}
+    private val authDetachTransition = DefaultDetachTransition<AuthRouter, RootState>(view)
 
     private val mainAttachTransition = object : DefaultAttachTransition<MainRouter, RootState, MainBuilder>(mainBuilder, view) {}
-    private val mainDetachTransition = object : DefaultDetachTransition<MainRouter, RootState>(view) {}
+    private val mainDetachTransition = DefaultDetachTransition<MainRouter, RootState>(view)
 
-    private val createGameDetachTransition = object : DefaultDetachTransition<CreateGameRouter, RootState>(view) {}
-    private val profileDetachTransition = object : DefaultDetachTransition<ProfileRouter, RootState>(view) {}
-    private val activeGameDetachTransition = object : DefaultDetachTransition<ActiveGameRouter, RootState>(view) {}
+    private val createGameDetachTransition = DefaultDetachTransition<CreateGameRouter, RootState>(view)
+    private val profileDetachTransition = DefaultDetachTransition<ProfileRouter, RootState>(view)
+    private val activeGameDetachTransition = DefaultDetachTransition<ActiveGameRouter, RootState>(view)
 
     fun attachAuth() {
         router.pushTransientState(RootState.AUTH, authAttachTransition, authDetachTransition)

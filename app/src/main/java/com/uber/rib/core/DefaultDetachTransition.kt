@@ -3,7 +3,7 @@ package com.uber.rib.core
 import android.view.ViewGroup
 
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
-abstract class DefaultDetachTransition<R : ViewRouter<*, out Interactor<*, *>, out InteractorBaseComponent<*>>, S : RouterNavigatorState>(
+open class DefaultDetachTransition<R : ViewRouter<*, out Interactor<*, *>, out InteractorBaseComponent<*>>, S : RouterNavigatorState>(
         private val view: ViewGroup
 ) : RouterNavigator.DetachTransition<R, S> {
 

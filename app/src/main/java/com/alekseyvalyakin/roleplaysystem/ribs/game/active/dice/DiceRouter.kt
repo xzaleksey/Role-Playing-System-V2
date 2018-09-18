@@ -21,7 +21,7 @@ class DiceRouter(
         routerNavigatorFactory: RouterNavigatorFactory) : ViewRouter<DiceView, DiceInteractor, DiceBuilder.Component>(view, interactor, component) {
 
     private val router = routerNavigatorFactory.create<State>(this)!!
-    private val resultDetachTransition = object : DefaultDetachTransition<DiceResultRouter, State>(view) {}
+    private val resultDetachTransition = DefaultDetachTransition<DiceResultRouter, State>(view)
 
     fun attachDiceResult(diceCollectionResult: DiceCollectionResult) {
         router.pushTransientState(State.RESULT,

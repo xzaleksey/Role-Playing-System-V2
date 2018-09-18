@@ -89,5 +89,6 @@
     <item name="photo_container" type="id" />
     <item name="skip_game_setting" type="id" />
     <item name="left_icon" type="id" />
+    <item name="right_icon" type="id" />
 
 </resources>

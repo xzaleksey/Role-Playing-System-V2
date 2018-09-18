@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.uber.rib.core.RibTestBasePlaceholder
 import com.uber.rib.core.RouterHelper
@@ -8,19 +8,19 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class GameCharactersRouterTest : RibTestBasePlaceholder() {
+class GameSettingsStatRouterTest : RibTestBasePlaceholder() {
 
-  @Mock internal lateinit var component: GameSettingsBuilder.Component
-  @Mock internal lateinit var interactor: GameSettingsInteractor
-  @Mock internal lateinit var view: GameSettingsView
+  @Mock internal lateinit var component: GameSettingsStatBuilder.Component
+  @Mock internal lateinit var interactor: GameSettingsStatInteractor
+  @Mock internal lateinit var view: GameSettingsStatView
 
-  private var router: GameSettingsRouter? = null
+  private var router: GameSettingsStatRouter? = null
 
   @Before
   fun setup() {
     MockitoAnnotations.initMocks(this)
 
-    router = GameSettingsRouter(view, interactor, component, GameSettingsStatBuilder(component))
+    router = GameSettingsStatRouter(view, interactor, component)
   }
 
   /**

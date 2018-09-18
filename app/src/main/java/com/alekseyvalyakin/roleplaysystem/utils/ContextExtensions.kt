@@ -100,3 +100,12 @@ fun Context.getDisplayWidth(): Int {
 fun Context.getDisplayHeight(): Int {
     return getDisplayMetrics().heightPixels
 }
+
+fun Context.getDividerDrawable(): Drawable {
+    val attrs = intArrayOf(android.R.attr.listDivider)
+
+    val styledAttributes = obtainStyledAttributes(attrs)
+    val drawable: Drawable = styledAttributes.getDrawable(0)!!
+    styledAttributes.recycle()
+    return drawable
+}

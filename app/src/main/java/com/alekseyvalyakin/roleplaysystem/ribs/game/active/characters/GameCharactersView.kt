@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters
 
 import android.content.Context
 import android.view.View
+import android.widget.RelativeLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackViewContainer
@@ -12,7 +13,7 @@ import org.jetbrains.anko.*
 /**
  * Top level view for {@link GameSettingsBuilder.GameSettingsScope}.
  */
-class GameCharactersView constructor(context: Context) : BackDropView(context,
+class GameCharactersView constructor(context: Context) : BackDropView<View, View, RelativeLayout>(context,
         BaseViewContainer(
                 View(context).apply { backgroundColorResource = R.color.colorPrimary },
                 matchParent,

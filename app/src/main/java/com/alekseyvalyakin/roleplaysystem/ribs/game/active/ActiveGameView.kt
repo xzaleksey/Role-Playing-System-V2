@@ -1,12 +1,14 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*
@@ -30,6 +32,7 @@ class ActiveGameView constructor(
         relativeLayout {
             bottomNavigationView = bottomNavigationView {
                 backgroundColorResource = R.color.colorPrimary
+                itemTextColor = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
                 itemIconTintList = ContextCompat.getColorStateList(context, R.color.bottom_menu_icon_color)
                 id = R.id.bottom_navigation_id
             }.lparams(width = matchParent, height = wrapContent) {

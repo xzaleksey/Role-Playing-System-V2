@@ -3,10 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.views.backdrop
 import android.view.View
 import org.jetbrains.anko.matchParent
 
-class FrontViewContainer(
-        view: View,
+class FrontViewContainer<T : View>(
+        view: T,
         width: Int = matchParent,
         height: Int = matchParent
-) : BaseViewContainer(view, width, height) {
+) : BaseViewContainer<T>(view, width, height) {
 
 }

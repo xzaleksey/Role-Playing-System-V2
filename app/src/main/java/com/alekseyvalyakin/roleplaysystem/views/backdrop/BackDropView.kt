@@ -17,11 +17,11 @@ import org.jetbrains.anko.design.coordinatorLayout
 import org.jetbrains.anko.wrapContent
 
 @SuppressLint("ViewConstructor")
-open class BackDropView constructor(
+open class BackDropView<T : View, B : View, F : View> constructor(
         context: Context,
-        protected val topViewContainer: BaseViewContainer,
-        protected val backViewContainer: BackViewContainer,
-        protected val frontViewContainer: FrontViewContainer
+        protected val topViewContainer: BaseViewContainer<T>,
+        protected val backViewContainer: BackViewContainer<B>,
+        protected val frontViewContainer: FrontViewContainer<F>
 ) : _LinearLayout(context) {
 
     private val userLockBottomSheetBehavior = UserLockBottomSheetBehavior<View>()
@@ -72,6 +72,7 @@ open class BackDropView constructor(
         frontViewWrapper.foreground = ColorDrawable(getCompatColor(R.color.white10))
         userLockBottomSheetBehavior.peekHeight = frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        backViewContainer.view.requestFocus()
     }
 
 
