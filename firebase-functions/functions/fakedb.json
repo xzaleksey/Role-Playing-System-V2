@@ -23,7 +23,30 @@
             "ru": "Хороший стрелок"
           }
         }
+      },
+      "stats": {
+        "strength": {
+          "name": {
+            "default": "Strength",
+            "ru": "Сила"
+          },
+          "description": {
+            "default": "Measures the character's physical strength and stamina",
+            "ru": "Измеряет физическую мощь персонажа и выносливость"
+          }
+        },
+        "constitution": {
+          "name": {
+            "default": "Constitution",
+            "ru": "Телосложение"
+          },
+          "description": {
+            "default": "Includes his endurance, fitness, health and physical resistance to adversities, injuries, and illnesses",
+            "ru": "Включает в себя его выносливость, натренированность, здоровье и физическую сопротивляемость невзгодам, ранениям, и болезням"
+          }
+        }
       }
+
     }
   }
 }

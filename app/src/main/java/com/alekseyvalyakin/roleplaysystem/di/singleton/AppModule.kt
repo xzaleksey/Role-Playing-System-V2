@@ -18,6 +18,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesI
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepositoryIml
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
@@ -215,5 +217,10 @@ class AppModule(private val mApp: RpsApp) {
         return FirebaseStorageRepositoryImpl()
     }
 
+    @Provides
+    @Singleton
+    fun statRepository(): DefaultSettingStatsRepository {
+        return DefaultSettingStatsRepositoryImpl()
+    }
 
 }

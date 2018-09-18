@@ -125,7 +125,7 @@
     <string name="tune_your_game">Настройте свою игру</string>
     <string name="tune_your_game_subtitle">Вы можете настроить все компоненты игры сейчас или чуть позже.</string>
     <string name="skip_game_setting">Пропустить и перейти к игре</string>
-    <string name="main_characteristics">Основные характеристики</string>
+    <string name="main_stats">Основные характеристики</string>
     <string name="character_classes">Классы персонажей</string>
 
 </resources>

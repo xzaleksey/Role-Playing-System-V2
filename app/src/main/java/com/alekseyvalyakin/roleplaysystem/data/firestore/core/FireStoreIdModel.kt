@@ -1,4 +1,3 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.core
 
-interface FireStoreIdModel : HasId, FireStoreModel {
-}
+interface FireStoreIdModel : HasId, FireStoreModel

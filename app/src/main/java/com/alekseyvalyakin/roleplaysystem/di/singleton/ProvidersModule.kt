@@ -10,7 +10,7 @@ import javax.inject.Singleton
  * Base app module
  */
 @Module
-class ProvidersModule() {
+class ProvidersModule {
 
     @Provides
     @Singleton

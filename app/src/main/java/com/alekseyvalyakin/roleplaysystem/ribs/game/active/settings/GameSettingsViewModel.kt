@@ -7,7 +7,7 @@ data class GameSettingsViewModel(
 ) {
 
     enum class GameSettingsItemType {
-        CHARACTERISTICS,
+        STATS,
         CLASSES
     }
 }

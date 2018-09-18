@@ -130,6 +130,6 @@
     <string name="tune_your_game">Tune your game</string>
     <string name="tune_your_game_subtitle">You can tune all game components now or later</string>
     <string name="skip_game_setting">Skip and go navigate to game</string>
-    <string name="main_characteristics">Main characteristics</string>
+    <string name="main_stats">Main stats</string>
     <string name="character_classes">Character classes</string>
 </resources>

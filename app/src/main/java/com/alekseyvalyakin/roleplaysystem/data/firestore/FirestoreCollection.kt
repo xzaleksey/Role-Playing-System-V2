@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.GameSetting
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,6 +11,7 @@ sealed class FirestoreCollection(
 ) {
     object USERS : FirestoreCollection(directory = "users")
     object GAMES : FirestoreCollection(directory = "games")
+    object SETTINGS : FirestoreCollection(directory = "settings")
     object NONE : FirestoreCollection(directory = "none")
 
     class UsersInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/users")
@@ -19,6 +21,9 @@ sealed class FirestoreCollection(
     class DICES(gameId: String, userId: String) :
             FirestoreCollection(UsersInGame(gameId),
                     directory = "$userId/dices/")
+
+
+    object DEFAULT_STATS : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/stats")
 
     private fun getFullPath(): String {
         return (root?.getFullPath()?.plus("/") ?: StringUtils.EMPTY_STRING) + directory

@@ -11,8 +11,8 @@ class GameSettingsViewModelProviderImpl(
         return GameSettingsViewModel(
                 listOf(
                         GameSettingsListViewModel(
-                                stringRepository.mainCharacteristics(),
-                                GameSettingsViewModel.GameSettingsItemType.CHARACTERISTICS
+                                stringRepository.mainStats(),
+                                GameSettingsViewModel.GameSettingsItemType.STATS
                         ),
                         GameSettingsListViewModel(
                                 stringRepository.characterClasses(),
