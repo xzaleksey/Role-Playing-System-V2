@@ -39,7 +39,7 @@ class TwoLineImageView(context: Context) : _FrameLayout(context) {
                     id = R.id.primary_line
                     maxLines = 1
                     textColor = getCompatColor(R.color.colorTextPrimary)
-                    setTextSizeFromRes(R.dimen.sp_16)
+                    setTextSizeFromRes(R.dimen.dp_16)
                 }.lparams(width = matchParent) {
                     leftOf(R.id.arrow_right)
                 }
@@ -47,7 +47,7 @@ class TwoLineImageView(context: Context) : _FrameLayout(context) {
                     id = R.id.secondary_line
                     maxLines = 1
                     textColor = getCompatColor(R.color.colorTextSecondary)
-                    setTextSizeFromRes(R.dimen.sp_14)
+                    setTextSizeFromRes(R.dimen.dp_14)
                 }.lparams(width = matchParent) {
                     below(R.id.primary_line)
                     leftOf(R.id.arrow_right)

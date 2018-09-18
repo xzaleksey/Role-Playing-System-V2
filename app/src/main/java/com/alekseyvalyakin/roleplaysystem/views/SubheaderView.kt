@@ -25,7 +25,7 @@ class SubheaderView(context: Context) : _FrameLayout(context) {
                 id = R.id.text
                 maxLines = 1
                 gravity = Gravity.START
-                setTextSizeFromRes(R.dimen.sp_14)
+                setTextSizeFromRes(R.dimen.dp_14)
                 setSanserifMediumTypeface()
                 singleLine = true
             }.lparams {

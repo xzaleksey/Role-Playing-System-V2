@@ -67,7 +67,7 @@ class AuthView @JvmOverloads constructor(
 
                     textView(R.string.app_name) {
                         gravity = Gravity.CENTER_HORIZONTAL
-                        setTextSizeFromRes(R.dimen.sp_18)
+                        setTextSizeFromRes(R.dimen.dp_18)
                         textColorResource = R.color.colorWhite
                     }.lparams(width = wrapContent, height = wrapContent) {
                         bottomMargin = getIntDimen(R.dimen.dp_40)

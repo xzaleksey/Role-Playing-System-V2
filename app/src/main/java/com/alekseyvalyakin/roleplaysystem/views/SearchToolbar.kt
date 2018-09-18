@@ -89,7 +89,7 @@ class SearchToolbar constructor(
                         id = R.id.tv_title
                         text = resources.getString(R.string.app_name)
                         textColor = getCompatColor(R.color.colorTextSecondary)
-                        setTextSizeFromRes(R.dimen.sp_16)
+                        setTextSizeFromRes(R.dimen.dp_16)
                     }.lparams {
                         centerVertically()
                         leftMargin = getIntDimen(R.dimen.dp_16)
@@ -103,7 +103,7 @@ class SearchToolbar constructor(
                         backgroundColor = Color.TRANSPARENT
                         hint = resources.getString(R.string.search)
                         textColor = getCompatColor(R.color.colorTextPrimary)
-                        setTextSizeFromRes(R.dimen.sp_16)
+                        setTextSizeFromRes(R.dimen.dp_16)
                         visibility = View.INVISIBLE
                     }.lparams {
                         centerVertically()

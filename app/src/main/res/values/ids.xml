@@ -87,5 +87,7 @@
     <item name="switcher" type="id" />
     <item name="btn_retry" type="id" />
     <item name="photo_container" type="id" />
+    <item name="skip_game_setting" type="id" />
+    <item name="left_icon" type="id" />
 
 </resources>

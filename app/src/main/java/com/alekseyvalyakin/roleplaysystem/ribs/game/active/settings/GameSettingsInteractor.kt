@@ -10,23 +10,23 @@ import javax.inject.Inject
  *
  */
 @RibInteractor
-class GameSettingsInteractor : BaseInteractor<GameSettingsInteractor.GameSettingsPresenter, GameSettingsRouter>() {
+class GameSettingsInteractor : BaseInteractor<GameSettingsPresenter, GameSettingsRouter>() {
 
-  @Inject
-  lateinit var presenter: GameSettingsPresenter
+    @Inject
+    lateinit var presenter: GameSettingsPresenter
+    @Inject
+    lateinit var gameSettingsViewModelProvider: GameSettingsViewModelProvider
 
-  override fun didBecomeActive(savedInstanceState: Bundle?) {
-    super.didBecomeActive(savedInstanceState)
+    override fun didBecomeActive(savedInstanceState: Bundle?) {
+        super.didBecomeActive(savedInstanceState)
+        presenter.update(gameSettingsViewModelProvider.getSettingsViewModel())
 
-  }
+    }
 
-  override fun willResignActive() {
-    super.willResignActive()
+    override fun willResignActive() {
+        super.willResignActive()
 
-  }
+    }
 
-  /**
-   * Presenter interface implemented by this RIB's view.
-   */
-  interface GameSettingsPresenter
+
 }

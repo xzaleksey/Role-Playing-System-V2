@@ -75,14 +75,14 @@ class CreateGameView constructor(
                 stepTextView = textView {
                     id = R.id.step_text
                     textColorResource = R.color.colorWhite
-                    setTextSizeFromRes(R.dimen.sp_16)
+                    setTextSizeFromRes(R.dimen.dp_16)
                 }.lparams(width = wrapContent, height = wrapContent)
 
                 titleTextView = textView {
                     id = R.id.title
                     setSanserifMediumTypeface()
                     textColorResource = R.color.colorWhite
-                    setTextSizeFromRes(R.dimen.sp_20)
+                    setTextSizeFromRes(R.dimen.dp_20)
                 }.lparams(width = wrapContent, height = wrapContent) {
                     topMargin = getIntDimen(R.dimen.dp_24)
                     below(stepTextView)
@@ -99,7 +99,7 @@ class CreateGameView constructor(
 
                 exampleText = themedTextView(R.style.AppTheme_TextWhite) {
                     id = R.id.text
-                    setTextSizeFromRes(R.dimen.sp_12)
+                    setTextSizeFromRes(R.dimen.dp_12)
                 }.lparams(width = matchParent, height = wrapContent) {
                     below(inputEditText)
                 }

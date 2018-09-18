@@ -1,5 +1,4 @@
 <resources>
-    <dimen name="avatar_small_size">32dp</dimen>
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_3">3dp</dimen>
     <dimen name="dp_4">4dp</dimen>
@@ -23,23 +22,17 @@
     <dimen name="dp_72">72dp</dimen>
     <dimen name="dp_74">74dp</dimen>
     <dimen name="dp_100">100dp</dimen>
+    <dimen name="dp_128">128dp</dimen>
     <dimen name="dp_132">132dp</dimen>
 
-    <dimen name="sp_12">12sp</dimen>
-    <dimen name="sp_14">14sp</dimen>
-    <dimen name="sp_15">15sp</dimen>
-    <dimen name="sp_16">16sp</dimen>
-    <dimen name="sp_18">18sp</dimen>
-    <dimen name="sp_20">20sp</dimen>
-    <dimen name="sp_24">24sp</dimen>
+    <dimen name="avatar_small_size">32dp</dimen>
+
 
     <dimen name="dp_3_inverse">-3dp</dimen>
     <dimen name="dp_30_inverse">-30dp</dimen>
     <dimen name="dp_40_inverse">-40dp</dimen>
 
-    <dimen name="status_bar_height">25dp</dimen>
     <dimen name="auth_top_padding">100dp</dimen>
-
     <dimen name="default_padding_top">8dp</dimen>
     <dimen name="default_padding_bottom">8dp</dimen>
     <dimen name="inner_padding_left">0dp</dimen>

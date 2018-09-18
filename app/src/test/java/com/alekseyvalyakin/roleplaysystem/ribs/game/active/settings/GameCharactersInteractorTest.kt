@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations
 
 class GameCharactersInteractorTest : RibTestBasePlaceholder() {
 
-  @Mock internal lateinit var presenter: GameSettingsInteractor.GameSettingsPresenter
+  @Mock internal lateinit var presenter: GameSettingsPresenter
   @Mock internal lateinit var router: GameSettingsRouter
 
   private var interactor: GameSettingsInteractor? = null
@@ -28,7 +28,7 @@ class GameCharactersInteractorTest : RibTestBasePlaceholder() {
   @Test
   fun anExampleTest_withSomeConditions_shouldPass() {
     // Use InteractorHelper to drive your interactor's lifecycle.
-    InteractorHelper.attach<GameSettingsInteractor.GameSettingsPresenter, GameSettingsRouter>(interactor!!, presenter, router, null)
+    InteractorHelper.attach<GameSettingsPresenter, GameSettingsRouter>(interactor!!, presenter, router, null)
     InteractorHelper.detach(interactor!!)
 
     throw RuntimeException("Remove this test and add real tests.")

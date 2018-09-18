@@ -111,6 +111,14 @@ class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : S
         return resourcesProvider.getString(R.string.no_description)
     }
 
+    override fun mainCharacteristics(): String {
+        return resourcesProvider.getString(R.string.main_characteristics)
+    }
+
+    override fun characterClasses(): String {
+        return resourcesProvider.getString(R.string.character_classes)
+    }
+
 }
 
 interface StringRepository {
@@ -142,4 +150,6 @@ interface StringRepository {
     fun getDices(): String
     fun getPictures(): String
     fun getMenu(): String
+    fun mainCharacteristics(): String
+    fun characterClasses(): String
 }

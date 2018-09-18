@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -45,7 +46,7 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
 
         @GameSettingsScope
         @Binds
-        internal abstract fun presenter(view: GameSettingsView): GameSettingsInteractor.GameSettingsPresenter
+        internal abstract fun presenter(view: GameSettingsView): GameSettingsPresenter
 
         @dagger.Module
         companion object {
@@ -58,6 +59,13 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
                     view: GameSettingsView,
                     interactor: GameSettingsInteractor): GameSettingsRouter {
                 return GameSettingsRouter(view, interactor, component)
+            }
+
+            @GameSettingsScope
+            @Provides
+            @JvmStatic
+            internal fun viewModelProvider(stringRepository: StringRepository): GameSettingsViewModelProvider {
+                return GameSettingsViewModelProviderImpl(stringRepository)
             }
         }
 

@@ -16,7 +16,7 @@ class GameCharactersView constructor(context: Context) : BackDropView(context,
         BaseViewContainer(
                 View(context).apply { backgroundColorResource = R.color.colorPrimary },
                 matchParent,
-                100
+                200
         ),
         BackViewContainer(
                 View(context).apply { backgroundColorResource = R.color.colorAccent },
