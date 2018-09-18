@@ -269,6 +269,7 @@ class ProfileView constructor(
         return RxView.clicks(btnChooseImage)
                 .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .filter { it }
                 .map { ProfilePresenter.Event.ChooseAvatar }
     }
 

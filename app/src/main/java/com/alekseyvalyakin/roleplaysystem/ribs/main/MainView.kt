@@ -120,6 +120,7 @@ class MainView constructor(
         return RxView.clicks(fab)
                 .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .filter { it }
                 .map { MainInteractor.UiEvents.FabClick }
     }
 
