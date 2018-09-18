@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Role Playing System</string>
+    <string name="app_name">RPG Assistant</string>
     <string name="error_title_no_loaded">troubles while loading</string>
     <string name="error_subtitle_no_loaded">Try again if you wish</string>
     <string name="retry_error_button">try again</string>

@@ -86,10 +86,10 @@ class GameSettingsView constructor(
             centerHorizontally()
         }
         recyclerView {
+            topPadding = getCommonDimen()
             layoutManager = LinearLayoutManager(context)
             adapter = flexibleAdapter
         }.lparams(width = matchParent, height = matchParent) {
-            topMargin = getCommonDimen()
             below(R.id.top_container)
             above(R.id.skip_game_setting)
         }
