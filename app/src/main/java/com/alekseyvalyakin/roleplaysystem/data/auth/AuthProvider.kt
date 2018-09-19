@@ -61,6 +61,10 @@ class AuthProviderImpl @Inject constructor(
                                         userResult.displayName = usernameFromEmail(currentUserInfo.email)
                                     }
 
+                                    if (userResult.id.isEmpty()) {
+                                        userResult.id = userRepository.getCurrentUserInfo()!!.uid
+                                    }
+
                                     userResult.token = userWithToken.second.token
 
                                     if (userResult.photoUrl.isNullOrBlank() && !currentUserInfo.photoUrl.isNullOrBlank()) {
