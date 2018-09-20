@@ -36,6 +36,7 @@ open class CustomToolbarView(context: Context) : _RelativeLayout(context) {
             backgroundResource = getSelectableItemBorderless()
             padding = getCommonDimen()
         }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+            alignParentRight()
             centerVertically()
         }
 

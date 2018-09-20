@@ -132,4 +132,7 @@
     <string name="skip_game_setting">Skip and go navigate to game</string>
     <string name="main_stats">Main stats</string>
     <string name="character_classes">Character classes</string>
+    <string name="stats">Stats</string>
+    <string name="new_stat">New stat</string>
+    <string name="my_stat">My stat</string>
 </resources>

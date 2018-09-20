@@ -127,5 +127,8 @@
     <string name="skip_game_setting">Пропустить и перейти к игре</string>
     <string name="main_stats">Основные характеристики</string>
     <string name="character_classes">Классы персонажей</string>
+    <string name="stats">Характеристики</string>
+    <string name="new_stat">Новая характеристика</string>
+    <string name="my_stat">Моя характеристика</string>
 
 </resources>

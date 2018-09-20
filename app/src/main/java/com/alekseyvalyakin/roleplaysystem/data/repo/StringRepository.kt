@@ -3,6 +3,18 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun getMyStat(): String {
+        return resourcesProvider.getString(R.string.my_stat)
+    }
+
+    override fun getNewStat(): String {
+        return resourcesProvider.getString(R.string.new_stat)
+    }
+
+    override fun getStats(): String {
+        return resourcesProvider.getString(R.string.stats)
+    }
+
     override fun getMenu(): String {
         return resourcesProvider.getString(R.string.menu)
     }
@@ -152,4 +164,7 @@ interface StringRepository {
     fun getMenu(): String
     fun mainStats(): String
     fun characterClasses(): String
+    fun getStats(): String
+    fun getNewStat(): String
+    fun getMyStat(): String
 }

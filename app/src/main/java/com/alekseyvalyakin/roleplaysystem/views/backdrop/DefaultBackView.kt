@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.views.backdrop
 
 import android.content.Context
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -19,7 +20,8 @@ class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
         rightPadding = getDoubleCommonDimen()
 
         etTitle = themedEditText(R.style.AppTheme_TextWhite) {
-
+            maxLines = 1
+            imeOptions = EditorInfo.IME_ACTION_NEXT
         }.lparams(matchParent) {
             bottomMargin = getCommonDimen()
         }

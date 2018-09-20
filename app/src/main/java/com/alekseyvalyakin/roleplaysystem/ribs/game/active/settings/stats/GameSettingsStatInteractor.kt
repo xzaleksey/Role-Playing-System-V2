@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
-import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
@@ -17,22 +16,15 @@ class GameSettingsStatInteractor : BaseInteractor<GameSettingsStatPresenter, Gam
     @Inject
     lateinit var presenter: GameSettingsStatPresenter
     @Inject
-    lateinit var activityListener: ActivityListener
+    lateinit var gameSettingsStatsViewModelProvider: GameSettingsStatsViewModelProvider
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        presenter.observeUiEvents()
-                .subscribeWithErrorLogging { uiEvent ->
-                    when (uiEvent) {
-                        is GameSettingsStatPresenter.UiEvent.ToolbarLeftClick -> {
-                            activityListener.backPress()
-                        }
-                    }
-                }.addToDisposables()
-    }
-
-    override fun willResignActive() {
-        super.willResignActive()
+        gameSettingsStatsViewModelProvider.observeViewModel()
+                .subscribeWithErrorLogging {
+                    presenter.update(it)
+                }
+                .addToDisposables()
     }
 
 }

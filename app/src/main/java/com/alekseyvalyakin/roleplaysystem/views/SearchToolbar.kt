@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -104,7 +105,16 @@ class SearchToolbar constructor(
                         hint = resources.getString(R.string.search)
                         textColor = getCompatColor(R.color.colorTextPrimary)
                         setTextSizeFromRes(R.dimen.dp_16)
+                        singleLine = true
+                        imeOptions = EditorInfo.IME_ACTION_SEARCH
                         visibility = View.INVISIBLE
+                        setOnEditorActionListener { v, actionId, event ->
+                            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                                hideKeyboard()
+                                return@setOnEditorActionListener true
+                            }
+                            false
+                        }
                     }.lparams {
                         centerVertically()
                         leftMargin = getIntDimen(R.dimen.dp_16)

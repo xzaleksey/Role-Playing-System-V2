@@ -7,5 +7,12 @@ import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 data class GameSettingsStatViewModel(
         val toolBarModel: CustomToolbarView.Model,
         val frontModel: DefaultFrontView.Model,
-        val backModel: DefaultBackView.Model
-)
+        val backModel: DefaultBackView.Model,
+        val step: Step
+) {
+
+    enum class Step {
+        NEW_STAT,
+        SHOW_ALL
+    }
+}

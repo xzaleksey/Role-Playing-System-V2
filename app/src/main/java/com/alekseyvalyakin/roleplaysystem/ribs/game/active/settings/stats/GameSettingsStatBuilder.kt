@@ -2,6 +2,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -60,6 +65,26 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
                     view: GameSettingsStatView,
                     interactor: GameSettingsStatInteractor): GameSettingsStatRouter {
                 return GameSettingsStatRouter(view, interactor, component)
+            }
+
+            @GameSettingsStatScope
+            @Provides
+            @JvmStatic
+            internal fun viewModelProvider(
+                    view: GameSettingsStatView,
+                    defaultSettingsStatsRepository: DefaultSettingStatsRepository,
+                    game: Game,
+                    stringRepository: StringRepository,
+                    resourcesProvider: ResourcesProvider,
+                    activityListener: ActivityListener
+            ): GameSettingsStatsViewModelProvider {
+                return GameSettingsStatsViewModelProviderImpl(
+                        defaultSettingsStatsRepository,
+                        game,
+                        stringRepository,
+                        resourcesProvider,
+                        view,
+                        activityListener)
             }
         }
 

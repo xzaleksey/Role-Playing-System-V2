@@ -7,7 +7,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.alekseyvalyakin.roleplaysystem.views.bottomsheet.BottomSheetBehavior
@@ -23,7 +22,7 @@ open class BackDropView<T : View, B, F : View> constructor(
         protected val frontViewContainer: FrontViewContainer<F>
 ) : _LinearLayout(context) where B : View, B : BackView {
 
-    private val userLockBottomSheetBehavior = BottomSheetBehavior<View>()
+    protected val userLockBottomSheetBehavior = BottomSheetBehavior<View>()
     private lateinit var frontViewWrapper: FrameLayout
     protected var coordinatorLayout: CoordinatorLayout
 
@@ -45,20 +44,27 @@ open class BackDropView<T : View, B, F : View> constructor(
             )
             this.addView(frontViewWrapper, LayoutParams(wrapContent, wrapContent))
             (frontViewWrapper.layoutParams as CoordinatorLayout.LayoutParams).behavior = userLockBottomSheetBehavior
-            expandFront()
-            frontViewWrapper.setOnClickListener {
-                when {
-                    userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
-                        collapseFront()
-                    }
-                    userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED -> expandFront()
-                    else -> expandFront()
-                }
-            }
+            expandFrontInternal()
+            frontViewWrapper.setOnClickListener(getDefaultFrontViewWrapperClickListener())
         }
 
-        frontViewContainer.view.setOnClickListener { Toast.makeText(context, "view clicked", Toast.LENGTH_SHORT).show() }
-        topViewContainer.view.setOnClickListener { collapseFront() }
+        topViewContainer.view.setOnClickListener(getDefaultTopViewClickListener())
+    }
+
+    open fun getDefaultFrontViewWrapperClickListener(): (View) -> Unit {
+        return {
+            when {
+                userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
+                    collapseFront()
+                }
+                userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED -> expandFront()
+                else -> expandFront()
+            }
+        }
+    }
+
+    open fun getDefaultTopViewClickListener(): (View) -> Unit {
+        return { collapseFront() }
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -66,19 +72,32 @@ open class BackDropView<T : View, B, F : View> constructor(
         userLockBottomSheetBehavior.peekHeight = frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
     }
 
-    fun expandFront() {
+    open fun expandFront() {
+        expandFrontInternal()
+        onExpanded()
+    }
+
+    private fun expandFrontInternal() {
         frontViewWrapper.foreground = null
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         backViewContainer.onHidden()
     }
 
-    fun collapseFront() {
+    open fun collapseFront() {
         frontViewWrapper.foreground = ColorDrawable(getCompatColor(R.color.white20))
         userLockBottomSheetBehavior.peekHeight = frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         backViewContainer.view.requestFocus()
         backViewContainer.onShown()
+        onCollapsed()
     }
 
+    protected open fun onCollapsed() {
+
+    }
+
+    protected open fun onExpanded() {
+
+    }
 
 }
