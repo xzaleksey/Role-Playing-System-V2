@@ -1,13 +1,11 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import android.content.Context
-import android.view.View
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
 import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.*
-import com.alekseyvalyakin.roleplaysystem.views.bottomsheet.BottomSheetBehavior
 import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
@@ -45,22 +43,6 @@ class GameSettingsStatView constructor(
 
     override fun observeUiEvents(): Observable<GameSettingsStatPresenter.UiEvent> {
         return relay
-    }
-
-    override fun getDefaultFrontViewWrapperClickListener(): (View) -> Unit {
-        return {
-            when {
-                userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
-                    collapseFront()
-                    relay.accept(GameSettingsStatPresenter.UiEvent.CollapseFront)
-                }
-
-                else -> {
-                    expandFront()
-                    relay.accept(GameSettingsStatPresenter.UiEvent.ExpandFront)
-                }
-            }
-        }
     }
 
     override fun onExpanded() {
