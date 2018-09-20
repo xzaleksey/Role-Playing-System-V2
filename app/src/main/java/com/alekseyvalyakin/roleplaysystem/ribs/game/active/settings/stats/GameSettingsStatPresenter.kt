@@ -8,8 +8,13 @@ import io.reactivex.Observable
 interface GameSettingsStatPresenter {
 
     sealed class UiEvent {
-        object BackNavigate : UiEvent()
+        object ToolbarLeftClick : UiEvent()
+        object ToolbarRightClick : UiEvent()
+
+        class TitleInput(val text: String) : UiEvent()
+        class SubtitleInput(val text: String) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>
+    fun update(viewModel: GameSettingsStatViewModel)
 }

@@ -24,7 +24,7 @@ class GameSettingsStatInteractor : BaseInteractor<GameSettingsStatPresenter, Gam
         presenter.observeUiEvents()
                 .subscribeWithErrorLogging { uiEvent ->
                     when (uiEvent) {
-                        is GameSettingsStatPresenter.UiEvent.BackNavigate -> {
+                        is GameSettingsStatPresenter.UiEvent.ToolbarLeftClick -> {
                             activityListener.backPress()
                         }
                     }

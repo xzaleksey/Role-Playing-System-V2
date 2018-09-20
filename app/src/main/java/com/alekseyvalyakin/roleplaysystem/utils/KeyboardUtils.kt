@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.app.Activity
 import android.content.Context
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 
@@ -19,12 +20,15 @@ fun Activity.hideKeyboard(delay: Long = 10L) {
 
 @JvmOverloads
 fun View.hideKeyboard(delay: Long = 10L) {
-    (context as? Activity)?.hideKeyboard(delay)
+    context.hideKeyboard(delay)
 }
 
 @JvmOverloads
 fun Context.hideKeyboard(delay: Long = 10L) {
-    (this as? Activity)?.hideKeyboard(delay)
+    when {
+        this is Activity -> this.hideKeyboard(delay)
+        this is ContextThemeWrapper -> baseContext?.hideKeyboard(delay)
+    }
 }
 
 fun Activity.forceHideKeyboard() {

@@ -9,7 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
 
-class CustomToolbarView(context: Context) : _RelativeLayout(context) {
+open class CustomToolbarView(context: Context) : _RelativeLayout(context) {
 
     private var leftIcon: ImageView
     private var rightIcon: ImageView
@@ -51,19 +51,25 @@ class CustomToolbarView(context: Context) : _RelativeLayout(context) {
         backgroundColorResource = R.color.colorPrimary
     }
 
-    fun setLeftIcon(drawable: Drawable?, onClickListener: OnClickListener? = null) {
+    fun update(model: Model) {
+        setLeftIcon(model.leftIcon, model.leftIconClickListener)
+        setRightIcon(model.rightIcon, model.rightIconClickListener)
+        setTitle(model.title)
+    }
+
+    protected fun setLeftIcon(drawable: Drawable?, onClickListener: () -> Unit) {
         setIcon(drawable, leftIcon, onClickListener)
     }
 
-    fun setRighIcon(drawable: Drawable?, onClickListener: OnClickListener? = null) {
+    protected fun setRightIcon(drawable: Drawable?, onClickListener: () -> Unit) {
         setIcon(drawable, rightIcon, onClickListener)
     }
 
-    fun setTitle(text: String) {
+    protected fun setTitle(text: String) {
         tvTitle.text = text
     }
 
-    private fun setIcon(drawable: Drawable?, imageView: ImageView, onClickListener: OnClickListener?) {
+    private fun setIcon(drawable: Drawable?, imageView: ImageView, onClickListener: () -> Unit) {
         if (drawable == null) {
             imageView.visibility = View.GONE
         } else {
@@ -71,7 +77,15 @@ class CustomToolbarView(context: Context) : _RelativeLayout(context) {
             imageView.visibility = View.VISIBLE
         }
 
-        imageView.setOnClickListener(onClickListener)
+        imageView.setOnClickListener { onClickListener() }
     }
+
+    data class Model(
+            val leftIcon: Drawable?,
+            val leftIconClickListener: () -> Unit,
+            val rightIcon: Drawable?,
+            val rightIconClickListener: () -> Unit,
+            val title: String
+    )
 
 }

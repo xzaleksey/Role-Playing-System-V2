@@ -1,9 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import android.content.Context
-import android.view.View
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
 import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.*
@@ -17,27 +16,29 @@ import org.jetbrains.anko.backgroundColorResource
  */
 class GameSettingsStatView constructor(
         context: Context
-) : BackDropView<CustomToolbarView, View, DefaultFrontView>(context,
+) : BackDropView<CustomToolbarView, DefaultBackView, DefaultFrontView>(context,
         BaseViewContainer(
                 CustomToolbarView(context),
                 height = context.getToolbarHeight() + context.getStatusBarHeight()
         )
-        , BackViewContainer(View(context), height = context.getToolbarHeight())
+        , BackViewContainer(DefaultBackView(context))
         , FrontViewContainer(DefaultFrontView(context))
 ), GameSettingsStatPresenter {
 
     private val relay = PublishRelay.create<GameSettingsStatPresenter.UiEvent>()
+    private val adapter = GameSettingsStatAdapter(relay)
 
     init {
         isClickable = true
-        setOnClickListener { }
-        val toolbarView = topViewContainer.view
-        toolbarView.setLeftIcon(
-                getCompatDrawable(R.drawable.ic_arrow_back),
-                View.OnClickListener { relay.accept(GameSettingsStatPresenter.UiEvent.BackNavigate) }
-        )
         backgroundColorResource = R.color.colorPrimary
-        toolbarView.setTitle("Test")
+        setOnClickListener { }
+        frontViewContainer.view.setAdapter(adapter)
+    }
+
+    override fun update(viewModel: GameSettingsStatViewModel) {
+        topViewContainer.view.update(viewModel.toolBarModel)
+        frontViewContainer.view.update(viewModel.frontModel)
+        backViewContainer.view.update(viewModel.backModel)
     }
 
     override fun observeUiEvents(): Observable<GameSettingsStatPresenter.UiEvent> {

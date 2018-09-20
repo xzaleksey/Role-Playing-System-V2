@@ -4,23 +4,20 @@ import android.content.Context
 import android.view.View
 import android.widget.RelativeLayout
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackViewContainer
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.BaseViewContainer
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.FrontViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.*
 import org.jetbrains.anko.*
 
 /**
  * Top level view for {@link GameSettingsBuilder.GameSettingsScope}.
  */
-class GameCharactersView constructor(context: Context) : BackDropView<View, View, RelativeLayout>(context,
+class GameCharactersView constructor(context: Context) : BackDropView<View, DefaultBackView, RelativeLayout>(context,
         BaseViewContainer(
                 View(context).apply { backgroundColorResource = R.color.colorPrimary },
                 matchParent,
                 200
         ),
         BackViewContainer(
-                View(context).apply { backgroundColorResource = R.color.colorAccent },
+                DefaultBackView(context).apply { backgroundColorResource = R.color.colorAccent },
                 matchParent,
                 200
         ),

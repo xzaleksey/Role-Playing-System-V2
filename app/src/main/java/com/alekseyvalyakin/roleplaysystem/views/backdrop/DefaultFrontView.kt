@@ -1,22 +1,33 @@
 package com.alekseyvalyakin.roleplaysystem.views.backdrop
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
-class DefaultFrontView(context: Context) : _RelativeLayout(context) {
+open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
 
-    private lateinit var rightIcon: ImageView
+    protected lateinit var rightIcon: ImageView
+    protected var recyclerView: RecyclerView
+    protected lateinit var tvTitle: TextView
+    protected var topContainer: ViewGroup
+    protected lateinit var flexibleAdapter: FlexibleAdapter<IFlexible<*>>
 
     init {
         backgroundColorResource = R.color.colorWhite
         topPadding = getIntDimen(R.dimen.dp_12)
 
-        relativeLayout {
+        topContainer = relativeLayout {
             id = R.id.top_container
 
             rightIcon = imageView {
@@ -30,10 +41,9 @@ class DefaultFrontView(context: Context) : _RelativeLayout(context) {
                 alignParentEnd()
             }
 
-            textView {
+            tvTitle = textView {
                 id = R.id.tv_title
                 textSizeDimen = R.dimen.dp_16
-                text = "Title"
             }.lparams(width = matchParent) {
                 leftMargin = getDoubleCommonDimen()
                 startOf(rightIcon)
@@ -49,11 +59,39 @@ class DefaultFrontView(context: Context) : _RelativeLayout(context) {
 
         }.lparams(matchParent, wrapContent)
 
-        recyclerView {
+        recyclerView = recyclerView {
             layoutManager = LinearLayoutManager(context)
-            backgroundColorResource = R.color.blackColor54
         }.lparams(width = matchParent, height = matchParent) {
             below(R.id.top_container)
         }
     }
+
+    fun update(model: Model) {
+        val headerModel = model.headerModel
+        flexibleAdapter.updateDataSet(model.items, true)
+        if (headerModel != null) {
+            topContainer.visibility = View.VISIBLE
+            tvTitle.text = headerModel.title
+            rightIcon.setOnClickListener { headerModel.clickListener() }
+            rightIcon.setImageDrawable(headerModel.icon)
+        } else {
+            topContainer.visibility = View.GONE
+        }
+    }
+
+    fun setAdapter(adapter: FlexibleAdapter<IFlexible<*>>) {
+        flexibleAdapter = adapter
+        recyclerView.adapter = adapter
+    }
+
+    data class Model(
+            val headerModel: HeaderModel?,
+            val items: List<IFlexible<*>>
+    )
+
+    data class HeaderModel(
+            val title: String,
+            val icon: Drawable?,
+            val clickListener: () -> Unit
+    )
 }

@@ -1,9 +1,11 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
-import android.graphics.drawable.Drawable
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultBackView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultFrontView
+import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 
 data class GameSettingsStatViewModel(
-        val toolbarTitle: String,
-        val leftToolbarIcon: Drawable?,
-        val rightToolbarIcon: Drawable?
+        val toolBarModel: CustomToolbarView.Model,
+        val frontModel: DefaultFrontView.Model,
+        val backModel: DefaultBackView.Model
 )
