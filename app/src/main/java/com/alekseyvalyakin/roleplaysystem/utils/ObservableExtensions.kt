@@ -4,6 +4,7 @@ import android.Manifest
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
@@ -80,11 +81,12 @@ fun <T> Observable<T>.requestPermissions(rxPermissions: RxPermissions, vararg pe
 }
 
 fun <T> Observable<T>.requestPermissionsExternalReadWrite(rxPermissions: RxPermissions): Observable<T> {
-    return this.concatMap { any ->
-        rxPermissions.request(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .filter { it }
-                .map { any }
-    }
+    return this.observeOn(AndroidSchedulers.mainThread())
+            .concatMap { any ->
+                rxPermissions.request(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .filter { it }
+                        .map { any }
+            }
 }
