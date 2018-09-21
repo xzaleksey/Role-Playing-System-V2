@@ -73,20 +73,16 @@ fun <T> createCompletable(body: () -> T, scheduler: Scheduler): Completable {
 }
 
 fun <T> Observable<T>.requestPermissions(rxPermissions: RxPermissions, vararg permissions: String): Observable<T> {
-    return this.concatMap { any ->
-        rxPermissions.request(*permissions)
-                .filter { it }
-                .map { any }
-    }
-}
-
-fun <T> Observable<T>.requestPermissionsExternalReadWrite(rxPermissions: RxPermissions): Observable<T> {
     return this.observeOn(AndroidSchedulers.mainThread())
             .concatMap { any ->
-                rxPermissions.request(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                rxPermissions.request(*permissions)
                         .filter { it }
                         .map { any }
             }
+}
+
+fun <T> Observable<T>.requestPermissionsExternalReadWrite(rxPermissions: RxPermissions): Observable<T> {
+    return requestPermissions(rxPermissions,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
 }
