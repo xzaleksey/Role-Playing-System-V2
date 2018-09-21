@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import io.reactivex.Observable
 
 /**
@@ -15,6 +16,7 @@ interface GameSettingsStatPresenter {
         object ExpandFront : UiEvent()
 
         class TitleInput(val text: String) : UiEvent()
+        class SelectStat(val gameSettingsStatListViewModel: GameSettingsStatListViewModel) : UiEvent()
 
         class SubtitleInput(val text: String) : UiEvent()
     }

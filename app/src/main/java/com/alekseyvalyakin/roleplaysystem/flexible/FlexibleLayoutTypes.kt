@@ -13,4 +13,5 @@ object FlexibleLayoutTypes {
     const val SINGLE_DICE_RESULT = 10
     const val PHOTO_IN_GAME = 11
     const val GAME_SETTINGS_ITEM = 12
+    const val GAME_SETTINGS_STAT_ITEM = 13
 }

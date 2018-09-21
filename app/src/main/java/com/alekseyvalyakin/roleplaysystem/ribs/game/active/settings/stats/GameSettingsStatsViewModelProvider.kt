@@ -2,16 +2,17 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultGameStat
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultFrontView
 import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 import com.jakewharton.rxrelay2.BehaviorRelay
+import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
@@ -27,7 +28,7 @@ class GameSettingsStatsViewModelProviderImpl(
         private val activityListener: ActivityListener
 ) : GameSettingsStatsViewModelProvider {
 
-    private val defaultGameStats = BehaviorRelay.createDefault(emptyList<DefaultGameStat>())
+    private val defaultGameStats = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
     private val statViewModel = BehaviorRelay.createDefault<GameSettingsStatViewModel>(getDefaultModel())
     private val disposable = CompositeDisposable()
 
@@ -53,7 +54,12 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun getDefaultGamesDisposable(): Disposable {
         return defaultSettingsStatsRepository.observeCollection(game.id)
-                .subscribeWithErrorLogging { defaultGameStats.accept(it) }
+                .subscribeWithErrorLogging { list ->
+                    defaultGameStats.accept(list.map {
+                        GameSettingsStatListViewModel(it.getDisplayedName(), it.getDisplayedDescription())
+                    })
+                    updateItemsInList()
+                }
     }
 
     private fun getDefaultModel(): GameSettingsStatViewModel {
@@ -92,7 +98,6 @@ class GameSettingsStatsViewModelProviderImpl(
 
     }
 
-
     private fun updateShowStatsModel() {
         statViewModel.accept(statViewModel.value.copy(toolBarModel = getShowStatToolbarModel(),
                 step = GameSettingsStatViewModel.Step.SHOW_ALL))
@@ -114,6 +119,9 @@ class GameSettingsStatsViewModelProviderImpl(
 
 
     private fun updateItemsInList() {
+        statViewModel.accept(statViewModel.value.let {
+            it.copy(frontModel = it.frontModel.copy(items = defaultGameStats.value))
+        })
     }
 }
 
