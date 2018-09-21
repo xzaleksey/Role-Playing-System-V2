@@ -12,7 +12,13 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.checkFabShow
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getString
+import com.alekseyvalyakin.roleplaysystem.utils.searchToolbar
+import com.alekseyvalyakin.roleplaysystem.utils.showSnack
+import com.alekseyvalyakin.roleplaysystem.utils.tintImage
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.HideFablListener
 import com.jakewharton.rxbinding2.view.RxView
@@ -22,10 +28,15 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.floatingActionButton
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.progressBar
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.wrapContent
 import java.util.concurrent.TimeUnit
 
 /**
@@ -118,8 +129,10 @@ class MainView constructor(
 
     private fun observeFabClick(): Observable<MainInteractor.UiEvents> {
         return RxView.clicks(fab)
-                .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .concatMap {
+                    rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
                 .filter { it }
                 .map { MainInteractor.UiEvents.FabClick }
     }
