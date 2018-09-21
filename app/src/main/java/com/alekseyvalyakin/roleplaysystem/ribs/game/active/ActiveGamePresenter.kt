@@ -14,4 +14,6 @@ interface ActiveGamePresenter {
     }
 
     fun observeUiEvents(): Observable<Event>
+    fun hideBottomBar()
+    fun showBottomBar()
 }

@@ -126,8 +126,9 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha07'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
-
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
 
     annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'

@@ -19,7 +19,7 @@ class PhotoInGameItemViewHolder(
                 photoFlexibleViewModel.canChange,
                 photoFlexibleViewModel.visible,
                 photoFlexibleViewModel.imageProvider,
-                View.OnClickListener { view ->
+                View.OnClickListener { _ ->
                     MaterialDialog(itemView.context)
                             .title(R.string.delete_photo)
                             .message(R.string.delete)

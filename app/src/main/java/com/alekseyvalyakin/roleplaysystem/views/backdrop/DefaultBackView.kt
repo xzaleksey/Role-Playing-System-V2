@@ -57,6 +57,8 @@ class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
 
     data class Model(
             val titleHint: String,
-            val subtitleHint: String
+            val subtitleHint: String,
+            val titleText: String = "",
+            val subtitleText: String = ""
     )
 }

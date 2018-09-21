@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter
 
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import org.jetbrains.anko.wrapContent
 data class GameSettingsStatListViewModel(
         val title: String,
         val description: String,
+        val leftIcon: Drawable,
         val selected: Boolean = false
 ) : AbstractFlexibleItem<GameSettingsStatsViewHolder>() {
 

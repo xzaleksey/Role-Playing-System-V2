@@ -4,4 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.
 
 sealed class ActiveGameEvent {
     class OpenFullSizePhoto(val fullSizePhotoModel: FullSizePhotoModel) : ActiveGameEvent()
+
+     object HideBottomBar : ActiveGameEvent()
+     object ShowBottomBar : ActiveGameEvent()
 }

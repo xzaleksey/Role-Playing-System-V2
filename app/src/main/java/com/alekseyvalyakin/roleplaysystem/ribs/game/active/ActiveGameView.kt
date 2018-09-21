@@ -1,10 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.content.res.ColorStateList
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
 import android.view.Menu
+import android.view.View
 import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
@@ -38,6 +40,7 @@ class ActiveGameView constructor(
             }.lparams(width = matchParent, height = wrapContent) {
                 alignParentBottom()
             }
+            layoutTransition = LayoutTransition()
 
             container = frameLayout {
 
@@ -77,6 +80,14 @@ class ActiveGameView constructor(
 
     fun getFullScreenContainer(): FrameLayout {
         return fullScreenContainer
+    }
+
+    override fun hideBottomBar() {
+        bottomNavigationView.visibility = View.GONE
+    }
+
+    override fun showBottomBar() {
+        bottomNavigationView.visibility = View.VISIBLE
     }
 
 }

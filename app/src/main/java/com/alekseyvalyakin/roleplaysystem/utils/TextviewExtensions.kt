@@ -15,7 +15,7 @@ fun TextView.setRufinaRegularTypeface() {
     typeface = ResourcesCompat.getFont(context, R.font.rufina_regular)
 }
 
-fun TextView.setAutoSizeTypeUniform(){
+fun TextView.setAutoSizeTypeUniform() {
     TextViewCompat.setAutoSizeTextTypeWithDefaults(this, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
 }
 
@@ -38,4 +38,8 @@ fun TextView.getVisibleText(): String {
 
     val end = this.layout.getLineEnd(lastLine - 1)
     return this.text.toString().substring(0, end)
+}
+
+fun TextView.isAllTextVisible(): Boolean {
+    return text == getVisibleText()
 }

@@ -6,18 +6,21 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultFrontView
 import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.Relay
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
+import timber.log.Timber
 
 class GameSettingsStatsViewModelProviderImpl(
         private val defaultSettingsStatsRepository: DefaultSettingStatsRepository,
@@ -25,7 +28,8 @@ class GameSettingsStatsViewModelProviderImpl(
         private val stringRepository: StringRepository,
         private val resourcesProvider: ResourcesProvider,
         private val presenter: GameSettingsStatPresenter,
-        private val activityListener: ActivityListener
+        private val activityListener: ActivityListener,
+        private val activeGameEventRelay: Relay<ActiveGameEvent>
 ) : GameSettingsStatsViewModelProvider {
 
     private val defaultGameStats = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
@@ -45,9 +49,32 @@ class GameSettingsStatsViewModelProviderImpl(
         return presenter.observeUiEvents().subscribeWithErrorLogging {
             when (it) {
                 is GameSettingsStatPresenter.UiEvent.CollapseFront -> {
+                    activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
                     updateNewStatModel()
                 }
-                is GameSettingsStatPresenter.UiEvent.ExpandFront -> updateShowStatsModel()
+
+                is GameSettingsStatPresenter.UiEvent.ExpandFront -> {
+                    updateShowStatsModel()
+                    activeGameEventRelay.accept(ActiveGameEvent.ShowBottomBar)
+                }
+
+                is GameSettingsStatPresenter.UiEvent.TitleInput -> {
+                    val value = statViewModel.value
+                    statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                            titleText = it.text
+                    )))
+                }
+
+                is GameSettingsStatPresenter.UiEvent.SubtitleInput -> {
+                    val value = statViewModel.value
+                    statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                            subtitleText = it.text
+                    )))
+                }
+
+                is GameSettingsStatPresenter.UiEvent.SelectStat -> {
+                    Timber.d("Selected")
+                }
             }
         }
     }
@@ -56,7 +83,8 @@ class GameSettingsStatsViewModelProviderImpl(
         return defaultSettingsStatsRepository.observeCollection(game.id)
                 .subscribeWithErrorLogging { list ->
                     defaultGameStats.accept(list.map {
-                        GameSettingsStatListViewModel(it.getDisplayedName(), it.getDisplayedDescription())
+                        GameSettingsStatListViewModel(it.getDisplayedName(), it.getDisplayedDescription(),
+                                resourcesProvider.getDrawable(R.drawable.ic_dexterity)!!)
                     })
                     updateItemsInList()
                 }
@@ -111,7 +139,12 @@ class GameSettingsStatsViewModelProviderImpl(
                     updateShowStatsModel()
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done_black_24dp),
-                rightIconClickListener = {},
+                rightIconClickListener = {
+                    val value = statViewModel.value
+                    if (value.backModel.titleText.isNotBlank() && value.backModel.subtitleText.isNotBlank()) {
+                        Timber.d("Save clicked")
+                    }
+                },
                 title = stringRepository.getMyStat()
         ),
                 step = GameSettingsStatViewModel.Step.NEW_STAT))

@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
-import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -267,9 +266,7 @@ class ProfileView constructor(
 
     private fun observeChooseAvatarPress(): Observable<ProfilePresenter.Event> {
         return RxView.clicks(btnChooseImage)
-                .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .filter { it }
+                .requestPermissionsExternalReadWrite(rxPermissions)
                 .map { ProfilePresenter.Event.ChooseAvatar }
     }
 

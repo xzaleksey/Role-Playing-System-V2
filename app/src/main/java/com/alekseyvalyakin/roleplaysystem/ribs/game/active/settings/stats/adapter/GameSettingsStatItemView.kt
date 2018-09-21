@@ -1,30 +1,13 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter
 
+import android.animation.LayoutTransition
 import android.content.Context
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
-import org.jetbrains.anko._RelativeLayout
-import org.jetbrains.anko.alignParentEnd
-import org.jetbrains.anko.allCaps
-import org.jetbrains.anko.below
-import org.jetbrains.anko.bottomPadding
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.imageView
-import org.jetbrains.anko.leftOf
-import org.jetbrains.anko.leftPadding
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.rightOf
-import org.jetbrains.anko.rightPadding
-import org.jetbrains.anko.textColorResource
-import org.jetbrains.anko.textResource
-import org.jetbrains.anko.textSizeDimen
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.topPadding
+import com.alekseyvalyakin.roleplaysystem.utils.*
+import org.jetbrains.anko.*
 
 class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
@@ -39,11 +22,12 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         leftPadding = getDoubleCommonDimen()
         rightPadding = getDoubleCommonDimen()
         topPadding = getIntDimen(R.dimen.dp_10)
-
+        bottomPadding = getIntDimen(R.dimen.dp_10)
+        backgroundResource = getSelectableItemBackGround()
+        layoutTransition = LayoutTransition().apply { enableTransitionType(LayoutTransition.CHANGING) }
         ivIconLeft = imageView {
             id = R.id.left_icon
             scaleType = ImageView.ScaleType.CENTER_INSIDE
-            imageResource = R.drawable.ic_dexterity
         }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
             marginEnd = getDoubleCommonDimen()
         }
@@ -79,11 +63,23 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         btnMore = textView {
             textSizeDimen = R.dimen.dp_10
             setSanserifMediumTypeface()
+            backgroundResource = getSelectableItemBackGround()
             maxLines = 1
             allCaps = true
             topPadding = getIntDimen(R.dimen.dp_10)
             bottomPadding = getIntDimen(R.dimen.dp_10)
+            visibility = View.GONE
             textResource = R.string.more_details
+            setOnClickListener {
+                if (!tvDescription.isAllTextVisible()) {
+                    tvDescription.maxLines = Int.MAX_VALUE
+                    tvDescription.requestLayout()
+                    textResource = R.string.hide
+                } else {
+                    textResource = R.string.more_details
+                    tvDescription.maxLines = 2
+                }
+            }
         }.lparams(matchParent) {
             rightOf(ivIconLeft)
             leftOf(ivIconRight)
@@ -94,7 +90,17 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
     fun update(gameSettingsStatListViewModel: GameSettingsStatListViewModel, onClickListener: OnClickListener) {
         tvTitle.text = gameSettingsStatListViewModel.title
         tvDescription.text = gameSettingsStatListViewModel.description
-        ivIconRight.setOnClickListener(onClickListener)
+        tvDescription.post {
+            if (tvDescription.isAllTextVisible()) {
+                btnMore.visibility = View.GONE
+                bottomPadding = getIntDimen(R.dimen.dp_10)
+            } else {
+                btnMore.visibility = View.VISIBLE
+                bottomPadding = 0
+            }
+        }
+        setOnClickListener(onClickListener)
+        ivIconLeft.setImageDrawable(gameSettingsStatListViewModel.leftIcon)
         if (gameSettingsStatListViewModel.selected) {
             ivIconRight.imageResource = R.drawable.ic_confirm_selected
         } else {

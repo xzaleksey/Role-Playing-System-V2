@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.views.backdrop
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -60,6 +61,7 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
         }.lparams(matchParent, wrapContent)
 
         recyclerView = recyclerView {
+            addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             layoutManager = LinearLayoutManager(context)
         }.lparams(width = matchParent, height = matchParent) {
             below(R.id.top_container)

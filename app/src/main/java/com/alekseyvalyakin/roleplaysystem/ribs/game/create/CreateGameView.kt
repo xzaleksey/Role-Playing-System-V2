@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
-import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
@@ -180,10 +179,8 @@ class CreateGameView constructor(
 
     override fun observeUiEvents(): Observable<CreateGameUiEvent> {
         return Observable.merge(listOf(RxView.clicks(fab)
-                .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .filter { it }
-                .map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) },
+                .map { CreateGameUiEvent.ClickNext(inputEditText.text.toString()) }
+                .requestPermissionsExternalReadWrite(rxPermissions),
                 RxView.clicks(deleteButton).map { CreateGameUiEvent.DeleteGame },
                 textChangeObservable.map { CreateGameUiEvent.InputChange(inputEditText.text.toString()) },
                 RxView.clicks(backButton).map { CreateGameUiEvent.BackPress },

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatPresenter
 import com.jakewharton.rxrelay2.Relay
+import timber.log.Timber
 
 class GameSettingsStatsViewHolder(
         private val gsView: GameSettingsStatItemView
@@ -11,6 +12,7 @@ class GameSettingsStatsViewHolder(
 
     fun update(gameSettingsViewModel: GameSettingsStatListViewModel, relay: Relay<GameSettingsStatPresenter.UiEvent>) {
         gsView.update(gameSettingsViewModel, View.OnClickListener {
+            Timber.d("OnCkick")
             relay.accept(
                     GameSettingsStatPresenter.UiEvent.SelectStat(gameSettingsViewModel))
         })

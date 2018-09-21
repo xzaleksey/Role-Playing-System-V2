@@ -1,6 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
+import android.Manifest
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
+import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.*
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -67,4 +69,22 @@ fun <T> createCompletable(body: () -> T, scheduler: Scheduler): Completable {
     return Completable.fromCallable {
         body()
     }.subscribeOn(scheduler)
+}
+
+fun <T> Observable<T>.requestPermissions(rxPermissions: RxPermissions, vararg permissions: String): Observable<T> {
+    return this.concatMap { any ->
+        rxPermissions.request(*permissions)
+                .filter { it }
+                .map { any }
+    }
+}
+
+fun <T> Observable<T>.requestPermissionsExternalReadWrite(rxPermissions: RxPermissions): Observable<T> {
+    return this.concatMap { any ->
+        rxPermissions.request(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .filter { it }
+                .map { any }
+    }
 }

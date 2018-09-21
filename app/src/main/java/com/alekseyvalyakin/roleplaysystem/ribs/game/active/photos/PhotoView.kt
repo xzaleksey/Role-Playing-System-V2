@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
-import android.Manifest
 import android.content.Context
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.FragmentActivity
@@ -105,9 +104,7 @@ class PhotoView constructor(
 
     private fun getFabClickedObservable(): Observable<PhotoPresenter.UiEvent> {
         return RxView.clicks(fab)
-                .compose(rxPermissions.ensure(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .filter { it }
+                .requestPermissionsExternalReadWrite(rxPermissions)
                 .map { PhotoPresenter.UiEvent.FabClicked }
     }
 }

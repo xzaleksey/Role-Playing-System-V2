@@ -42,7 +42,10 @@ class GameSettingsStatView constructor(
     }
 
     override fun observeUiEvents(): Observable<GameSettingsStatPresenter.UiEvent> {
-        return relay
+        return Observable.merge(relay,
+                backViewContainer.view.getEtTitleObservable().map { GameSettingsStatPresenter.UiEvent.TitleInput(it) },
+                backViewContainer.view.getEtSubtitleObservable().map { GameSettingsStatPresenter.UiEvent.SubtitleInput(it) }
+        )
     }
 
     override fun onExpanded() {

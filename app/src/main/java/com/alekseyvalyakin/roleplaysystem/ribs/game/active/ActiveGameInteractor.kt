@@ -70,6 +70,12 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                 is ActiveGameEvent.OpenFullSizePhoto -> {
                     router.attachFullSizePhoto(it.fullSizePhotoModel)
                 }
+                is ActiveGameEvent.HideBottomBar -> {
+                    presenter.hideBottomBar()
+                }
+                is ActiveGameEvent.ShowBottomBar ->{
+                    presenter.showBottomBar()
+                }
             }
         }.addToDisposables()
 
