@@ -312,7 +312,7 @@ public class RxFirebaseAuth {
     }
 
     /**
-     * Registers a listener to changes in the ID token state.
+     * Registers a listener to changes in the INFO token state.
      * There can be more than one listener registered at the same time. The listeners are called asynchronously, possibly on a different thread.
      * <p>
      * Authentication state changes are:
@@ -341,7 +341,7 @@ public class RxFirebaseAuth {
     }
 
     /**
-     * Unregisters a listener of ID token changes.
+     * Unregisters a listener of INFO token changes.
      * Listener must previously been added with AddIdTokenListener.
      *
      * @param firebaseAuth    firebaseAuth instance.

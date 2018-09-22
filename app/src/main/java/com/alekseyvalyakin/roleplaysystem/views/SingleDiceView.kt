@@ -56,7 +56,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
             }
             ivMainDice = imageView {
                 id = R.id.iv_main_dice
-                tintImage(R.color.colorWhite)
+                tintImageRes(R.color.colorWhite)
                 imageResource = R.drawable.dice_d4
                 visibility = View.GONE
             }.lparams(width = 0, height = 0) {
@@ -105,7 +105,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
             }
             ivDiceSecondary = imageView {
                 id = R.id.iv_dice_secondary
-                tintImage(R.color.colorDiceSecondary)
+                tintImageRes(R.color.colorDiceSecondary)
                 visibility = View.GONE
                 imageResource = R.drawable.dice_d4
             }.lparams(width = 0, height = 0) {

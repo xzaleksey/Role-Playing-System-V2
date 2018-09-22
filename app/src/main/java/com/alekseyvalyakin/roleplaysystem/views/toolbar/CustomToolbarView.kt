@@ -24,7 +24,7 @@ open class CustomToolbarView(context: Context) : _RelativeLayout(context) {
         leftIcon = imageView {
             id = R.id.left_icon
             padding = getCommonDimen()
-            tintImage(R.color.colorWhite)
+            tintImageRes(R.color.colorWhite)
             backgroundResource = getSelectableItemBorderless()
         }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
             centerVertically()
@@ -32,7 +32,7 @@ open class CustomToolbarView(context: Context) : _RelativeLayout(context) {
 
         rightIcon = imageView {
             id = R.id.right_icon
-            tintImage(R.color.colorWhite)
+            tintImageRes(R.color.colorWhite)
             backgroundResource = getSelectableItemBorderless()
             padding = getCommonDimen()
         }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {

@@ -31,5 +31,8 @@ data class DefaultGameStat(
         return icon
     }
 
-
+    @Exclude
+    fun toUserGameStat(): UserGameStat {
+        return UserGameStat(getDisplayedName(), getDisplayedDescription(), getDisplayedIcon(), id)
+    }
 }

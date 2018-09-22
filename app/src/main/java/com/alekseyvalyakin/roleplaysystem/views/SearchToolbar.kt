@@ -54,7 +54,7 @@ class SearchToolbar constructor(
                         id = R.id.more
                         padding = getIntDimen(R.dimen.dp_8)
                         setBackgroundResource(getSelectableItemBorderless())
-                        tintImage(R.color.blackColor54)
+                        tintImageRes(R.color.blackColor54)
                         setImageDrawable(getCompatDrawable(R.drawable.ic_more_vert_black_24dp))
                     }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                         alignParentRight()
@@ -76,7 +76,7 @@ class SearchToolbar constructor(
                         id = R.id.clear_icon
                         padding = getIntDimen(R.dimen.dp_8)
                         setBackgroundResource(getSelectableItemBorderless())
-                        tintImage(R.color.grey24Color)
+                        tintImageRes(R.color.grey24Color)
                         visibility = View.GONE
                         setImageDrawable(getCompatDrawable(R.drawable.ic_close_black_24dp))
                     }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {

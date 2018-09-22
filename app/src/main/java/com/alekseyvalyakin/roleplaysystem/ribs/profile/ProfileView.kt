@@ -76,7 +76,7 @@ class ProfileView constructor(
                         id = R.id.iv_back
                         padding = getIntDimen(R.dimen.dp_8)
                         backgroundResource = getSelectableItemBorderless()
-                        tintImage(R.color.colorWhite)
+                        tintImageRes(R.color.colorWhite)
                         imageResource = R.drawable.ic_arrow_back
                     }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                         marginStart = getIntDimen(R.dimen.dp_8)
@@ -87,7 +87,7 @@ class ProfileView constructor(
                         id = R.id.iv_edit
                         padding = getIntDimen(R.dimen.dp_8)
                         backgroundResource = getSelectableItemBorderless()
-                        tintImage(R.color.colorWhite)
+                        tintImageRes(R.color.colorWhite)
                         visibility = View.INVISIBLE
                         imageResource = R.drawable.ic_mode_edit_black_24dp
                     }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {

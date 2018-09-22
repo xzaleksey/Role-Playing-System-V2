@@ -49,7 +49,7 @@ class CreateGameView constructor(
             backButton = imageButton {
                 id = R.id.back_btn
                 backgroundResource = getSelectableItemBorderless()
-                tintImage(R.color.colorWhite)
+                tintImageRes(R.color.colorWhite)
                 imageResource = R.drawable.ic_arrow_back
             }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                 topMargin = getStatusBarHeight()
@@ -60,7 +60,7 @@ class CreateGameView constructor(
             deleteButton = imageButton {
                 id = R.id.delete_btn
                 backgroundResource = getSelectableItemBorderless()
-                tintImage(R.color.colorWhite)
+                tintImageRes(R.color.colorWhite)
                 imageResource = R.drawable.ic_delete_black_24dp
             }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                 alignParentRight()

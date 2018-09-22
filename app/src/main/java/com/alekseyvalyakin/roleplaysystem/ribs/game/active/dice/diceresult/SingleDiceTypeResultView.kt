@@ -27,7 +27,7 @@ class SingleDiceTypeResultView(context: Context) : _CardView(context) {
                 leftPadding = getDoubleCommonDimen()
                 ivMainDice = imageView {
                     id = R.id.iv_main_dice
-                    tintImage(R.color.colorDiceResult)
+                    tintImageRes(R.color.colorDiceResult)
                 }.lparams(width = getIntDimen(R.dimen.dp_24), height = getIntDimen(R.dimen.dp_24)) {
                     centerVertically()
                 }

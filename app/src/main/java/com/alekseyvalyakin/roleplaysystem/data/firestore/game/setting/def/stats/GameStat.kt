@@ -16,7 +16,7 @@ interface GameStat : FireStoreIdModel {
     fun getDisplayedIcon(): String
 
 
-    enum class ID(val id: String) {
+    enum class INFO(val id: String) {
         STRENGTH("strength") {
             override fun getIconRes(): Int {
                 return R.drawable.ic_dexterity
@@ -48,10 +48,21 @@ interface GameStat : FireStoreIdModel {
             }
         };
 
-        fun isSupported(gameStat: GameStat): Boolean {
-            return values().any { it.id == gameStat.id }
-        }
-
         abstract fun getIconRes(): Int
+
+        companion object {
+            fun isSupported(gameStat: GameStat): Boolean {
+                return values().any { it.id == gameStat.id }
+            }
+
+            fun getIconId(id: String): Int {
+                val iconRes = values().firstOrNull { it.id == id }?.getIconRes()
+                if (iconRes != null) {
+                    return iconRes
+                }
+
+                return R.drawable.ic_dexterity
+            }
+        }
     }
 }

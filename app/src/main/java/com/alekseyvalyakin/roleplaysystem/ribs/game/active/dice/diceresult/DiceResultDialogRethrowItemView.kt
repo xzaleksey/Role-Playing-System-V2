@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
-import com.alekseyvalyakin.roleplaysystem.utils.tintImage
+import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
 import org.jetbrains.anko.*
 
 class DiceResultDialogRethrowItemView(context: Context) : _RelativeLayout(context) {
@@ -29,7 +29,7 @@ class DiceResultDialogRethrowItemView(context: Context) : _RelativeLayout(contex
             topPadding = getIntDimen(R.dimen.dp_12)
             ivMainDice = imageView {
                 id = R.id.iv_main_dice
-                tintImage(R.color.colorDiceResult)
+                tintImageRes(R.color.colorDiceResult)
             }.lparams(width = getIntDimen(R.dimen.dp_20), height = getIntDimen(R.dimen.dp_20)) {
                 centerVertically()
                 leftMargin = getIntDimen(R.dimen.dp_2)

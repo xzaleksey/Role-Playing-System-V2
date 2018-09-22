@@ -24,10 +24,10 @@ import io.reactivex.SingleOnSubscribe;
 public class RxFirebaseUser {
 
     /**
-     * Fetches a Firebase Auth ID Token for the user; useful when authenticating against your own backend.
+     * Fetches a Firebase Auth INFO Token for the user; useful when authenticating against your own backend.
      *
      * @param firebaseUser current firebaseUser instance.
-     * @param forceRefresh force to refresh the token ID.
+     * @param forceRefresh force to refresh the token INFO.
      * @return a {@link Maybe} which emits an {@link GetTokenResult} if success.
      */
     @NonNull

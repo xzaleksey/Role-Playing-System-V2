@@ -43,7 +43,7 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                     backgroundResource = getSelectableItemBorderless()
                     scaleType = ImageView.ScaleType.CENTER_CROP
                     padding = getIntDimen(R.dimen.dp_2)
-                    tintImage(R.color.colorTextSecondary)
+                    tintImageRes(R.color.colorTextSecondary)
                     visibility = View.GONE
                     imageResource = R.drawable.ic_delete_black_24dp
                 }.lparams(width = getIntDimen(R.dimen.dp_24), height = getIntDimen(R.dimen.dp_24)) {

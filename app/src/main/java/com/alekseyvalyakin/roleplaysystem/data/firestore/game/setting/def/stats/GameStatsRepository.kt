@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasName
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
 import com.google.firebase.firestore.CollectionReference
@@ -13,7 +13,7 @@ class GameStatsRepositoryImpl : BaseGameFireStoreRepository<UserGameStat>(UserGa
 
     override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameStat>> {
         val query = getCollection(gameId)
-                .orderBy(HasId.ID_FIELD, Query.Direction.ASCENDING)
+                .orderBy(HasName.NAME_FIELD, Query.Direction.ASCENDING)
         return observeQueryCollection(query, gameId)
     }
 

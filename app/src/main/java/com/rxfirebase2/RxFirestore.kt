@@ -61,7 +61,7 @@ object RxFirestore {
     }
 
     /**
-     * Adds a new document to this collection with the specified data, assigning it a document ID automatically.
+     * Adds a new document to this collection with the specified data, assigning it a document INFO automatically.
      *
      * @param ref  The given Collection reference.
      * @param data A Map containing the data for the new document..
@@ -121,7 +121,7 @@ object RxFirestore {
 
 
     /**
-     * Adds a new document to this collection with the specified data, assigning it a document ID automatically.
+     * Adds a new document to this collection with the specified data, assigning it a document INFO automatically.
      *
      *
      * This method will just call the API `add` method without wait for any complete listener. This is made in this way because the
@@ -144,7 +144,7 @@ object RxFirestore {
     }
 
     /**
-     * Adds a new document to this collection with the specified POJO as contents, assigning it a document ID automatically.
+     * Adds a new document to this collection with the specified POJO as contents, assigning it a document INFO automatically.
      *
      *
      * This method will just call the API `add` method without wait for any complete listener. This is made in this way because the

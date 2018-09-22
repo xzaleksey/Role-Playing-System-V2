@@ -2,10 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorRes
-import android.support.annotation.DimenRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import android.support.annotation.*
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -49,8 +46,12 @@ fun View.getCompatDrawable(@DrawableRes res: Int): Drawable {
     return context.getCompatDrawable(res)
 }
 
-fun ImageView.tintImage(@ColorRes res: Int) {
+fun ImageView.tintImageRes(@ColorRes res: Int) {
     ImageViewCompat.setImageTintList(this, getCompatColorStateList(res))
+}
+
+fun ImageView.tintImage(@ColorInt color: Int) {
+    ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(color))
 }
 
 fun View.getCompatColorStateList(@ColorRes res: Int): ColorStateList {

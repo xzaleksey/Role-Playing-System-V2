@@ -2,9 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.*
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -19,6 +17,7 @@ import com.jakewharton.rxrelay2.Relay
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -50,48 +49,82 @@ class GameSettingsStatsViewModelProviderImpl(
     }
 
     private fun getPresenterEvents(): Disposable {
-        return presenter.observeUiEvents().subscribeWithErrorLogging {
-            when (it) {
-                is GameSettingsStatPresenter.UiEvent.CollapseFront -> {
-                    activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
-                    updateNewStatModel()
-                }
+        return presenter.observeUiEvents()
+                .flatMap { event ->
+                    when (event) {
+                        is GameSettingsStatPresenter.UiEvent.CollapseFront -> {
+                            activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
+                            updateNewStatModel()
+                        }
 
-                is GameSettingsStatPresenter.UiEvent.ExpandFront -> {
-                    updateShowStatsModel()
-                    activeGameEventRelay.accept(ActiveGameEvent.ShowBottomBar)
-                }
+                        is GameSettingsStatPresenter.UiEvent.ExpandFront -> {
+                            updateShowStatsModel()
+                            activeGameEventRelay.accept(ActiveGameEvent.ShowBottomBar)
+                        }
 
-                is GameSettingsStatPresenter.UiEvent.TitleInput -> {
-                    val value = statViewModel.value
-                    statViewModel.accept(value.copy(backModel = value.backModel.copy(
-                            titleText = it.text
-                    )))
-                }
+                        is GameSettingsStatPresenter.UiEvent.TitleInput -> {
+                            val value = statViewModel.value
+                            statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                                    titleText = event.text
+                            )))
+                        }
 
-                is GameSettingsStatPresenter.UiEvent.SubtitleInput -> {
-                    val value = statViewModel.value
-                    statViewModel.accept(value.copy(backModel = value.backModel.copy(
-                            subtitleText = it.text
-                    )))
-                }
+                        is GameSettingsStatPresenter.UiEvent.SubtitleInput -> {
+                            val value = statViewModel.value
+                            statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                                    subtitleText = event.text
+                            )))
+                        }
 
-                is GameSettingsStatPresenter.UiEvent.SelectStat -> {
-                    Timber.d("Selected")
+                        is GameSettingsStatPresenter.UiEvent.SelectStat -> {
+                            val gameStat = event.gameSettingsStatListViewModel.gameStat
+
+                            if (!event.gameSettingsStatListViewModel.selected) {
+
+                                if (gameStat is DefaultGameStat) {
+                                    return@flatMap gameGameStatsRepository.createDocumentWithId(game.id, gameStat.toUserGameStat())
+                                            .toObservable()
+                                }
+                            } else {
+                                if (gameStat is UserGameStat) {
+                                    return@flatMap gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
+                                            .toObservable<Any>()
+                                }
+                            }
+                        }
+                    }
+                    return@flatMap Observable.empty<Any>()
                 }
-            }
-        }
+                .subscribeWithErrorLogging()
     }
 
     private fun getDefaultGamesDisposable(): Disposable {
         return Flowable.combineLatest(
                 gameGameStatsRepository.observeDiceCollectionsOrdered(game.id),
-                defaultSettingsStatsRepository.observeCollection(),
+                defaultSettingsStatsRepository.observeCollection()
+                        .map { list -> list.filter { GameStat.INFO.isSupported(it) } },
                 BiFunction { gameStats: List<GameStat>, defaultStats: List<GameStat> ->
-                    defaultGameStats.accept(defaultStats.map {
-                        GameSettingsStatListViewModel(it.getDisplayedName(), it.getDisplayedDescription(),
-                                resourcesProvider.getDrawable(R.drawable.ic_dexterity)!!)
-                    })
+                    val result = mutableListOf<IFlexible<*>>()
+                    val keySelector: (GameStat) -> String = { it.id }
+                    val gameStatsMap = gameStats.associateBy(keySelector)
+                    val defaultStatsMap = defaultStats.associateBy { it.id }
+                    gameStats.forEach {
+                        result.add(
+                                GameSettingsStatListViewModel(it,
+                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id))!!,
+                                        selected = true)
+                        )
+                    }
+
+                    defaultStatsMap.minus(gameStatsMap.keys).values.forEach {
+                        result.add(
+                                GameSettingsStatListViewModel(it,
+                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id))!!,
+                                        selected = false)
+                        )
+                    }
+
+                    defaultGameStats.accept(result)
                 }).subscribeWithErrorLogging { _ -> updateItemsInList() }
 
     }

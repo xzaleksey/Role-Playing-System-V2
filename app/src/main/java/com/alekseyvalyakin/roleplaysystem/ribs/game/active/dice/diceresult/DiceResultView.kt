@@ -42,7 +42,7 @@ class DiceResultView constructor(context: Context) : _LinearLayout(context), Dic
                 imageResource = R.drawable.ic_arrow_back
                 padding = getCommonDimen()
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
-                tintImage(R.color.colorWhite)
+                tintImageRes(R.color.colorWhite)
 
             }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                 alignParentBottom()

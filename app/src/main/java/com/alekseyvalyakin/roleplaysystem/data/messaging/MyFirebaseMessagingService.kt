@@ -23,7 +23,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
+        // Instance INFO token to your app server.
         sendRegistrationToServer(token)
     }
 
@@ -72,7 +72,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(0 /* INFO of notification */, notificationBuilder.build())
     }
 
 }
