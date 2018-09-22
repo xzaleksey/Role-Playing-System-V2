@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -119,6 +120,10 @@ fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToStartOnNewItem(
             }
         })
     }
+}
+
+fun View.marginLayoutParams(): ViewGroup.MarginLayoutParams {
+    return layoutParams as ViewGroup.MarginLayoutParams
 }
 
 fun View.isOrientationLandscape(): Boolean {

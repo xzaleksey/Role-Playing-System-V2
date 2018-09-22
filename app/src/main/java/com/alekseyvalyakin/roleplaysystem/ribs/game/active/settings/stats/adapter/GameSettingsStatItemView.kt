@@ -19,18 +19,20 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
     private val disabledColor = getCompatColor(R.color.colorDisabled)
     private val textColorPrimary = getCompatColor(R.color.colorTextPrimary)
     private val commonIconColor = getCompatColor(R.color.commonIconColor)
+    private var divider: View
 
     init {
         topPadding = getIntDimen(R.dimen.dp_10)
         backgroundResource = getSelectableItemBackGround()
         relativeLayout {
             id = R.id.container
+            leftPadding = getDoubleCommonDimen()
+            rightPadding = getDoubleCommonDimen()
             ivIconLeft = imageView {
                 id = R.id.left_icon
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
             }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
                 marginEnd = getDoubleCommonDimen()
-                leftMargin = getDoubleCommonDimen()
                 centerVertically()
             }
 
@@ -41,7 +43,6 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                 alignParentEnd()
                 centerVertically()
                 leftMargin = getCommonDimen()
-                rightMargin = getDoubleCommonDimen()
             }
 
             verticalLayout {
@@ -94,7 +95,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
         }
 
-        view {
+        divider = view {
             backgroundDrawable = dividerDrawable()
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_1)) {
             below(R.id.container)
@@ -113,7 +114,9 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         tvDescription.post {
             if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
                 btnMore.visibility = View.GONE
+                divider.marginLayoutParams().topMargin = getIntDimen(R.dimen.dp_10)
             } else {
+                divider.marginLayoutParams().topMargin = 0
                 btnMore.visibility = View.VISIBLE
             }
         }

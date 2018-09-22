@@ -33,5 +33,7 @@ interface GameSettingsStatPresenter {
 
     fun clearBackView()
 
-    fun scrollToPosition(adapterPosition: Int)
+    fun updateStartEndScrollPositions(adapterPosition: Int)
+
+    fun scrollToPosition(position: Int)
 }

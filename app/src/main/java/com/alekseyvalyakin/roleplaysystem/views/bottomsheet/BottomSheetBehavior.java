@@ -26,6 +26,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import timber.log.Timber;
+
 public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
     public static final int STATE_DRAGGING = 1;
     public static final int STATE_SETTLING = 2;
@@ -254,18 +256,18 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
     private void stopNestedScrollIfNeeded(int dy, V child, View target, int type) {
         ScrollingView scrollingView = (ScrollingView) target;
 
-//        Timber.d("height " + child.getHeight()
-//                + " diff " + (child.getBottom() - child.getHeight() + target.getScrollY())
-//                + " Scroll offset " + ((ScrollingView) target).computeVerticalScrollOffset()
-//                + " Scroll extent " + ((ScrollingView) target).computeVerticalScrollExtent()
-//                + " Scroll range " + ((ScrollingView) target).computeVerticalScrollRange()
-//                + " dy " + dy
-//        );
+        Timber.d("height " + child.getHeight()
+                + " diff " + (child.getBottom() - child.getHeight() + target.getScrollY())
+                + " Scroll offset " + ((ScrollingView) target).computeVerticalScrollOffset()
+                + " Scroll extent " + ((ScrollingView) target).computeVerticalScrollExtent()
+                + " Scroll range " + ((ScrollingView) target).computeVerticalScrollRange()
+                + " dy " + dy
+        );
 
         if (type == ViewCompat.TYPE_NON_TOUCH) {
             if (((dy <= 0 && scrollingView.computeVerticalScrollOffset() == 0) ||
-                    (dy >= 0 && (scrollingView.computeVerticalScrollRange() - scrollingView.computeVerticalScrollOffset() ==
-                            scrollingView.computeVerticalScrollExtent())))) {
+                    (dy >= 0 && (scrollingView.computeVerticalScrollRange() - scrollingView.computeVerticalScrollOffset() -
+                            scrollingView.computeVerticalScrollExtent()) <= 10))) {
                 ViewCompat.stopNestedScroll(target, ViewCompat.TYPE_NON_TOUCH);
             }
         }

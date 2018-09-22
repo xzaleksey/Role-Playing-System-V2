@@ -106,9 +106,9 @@ class MainView constructor(
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
         return Observable.merge(observeSearchInput(),
-                observeSearchRightIconClick(),
-                relay,
-                observeFabClick()).requestPermissionsExternalReadWrite(rxPermissions)
+                observeSearchRightIconClick().requestPermissionsExternalReadWrite(rxPermissions),
+                relay.requestPermissionsExternalReadWrite(rxPermissions),
+                observeFabClick().requestPermissionsExternalReadWrite(rxPermissions))
     }
 
     override fun showError(message: String) {

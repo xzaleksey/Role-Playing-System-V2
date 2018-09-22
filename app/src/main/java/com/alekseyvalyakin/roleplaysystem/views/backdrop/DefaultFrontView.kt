@@ -68,14 +68,8 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
 
     fun update(model: Model) {
         val headerModel = model.headerModel
-
-//        flexibleAdapter.updateWithAnimateToStartOnNewItem(
-//                recyclerView,
-//                smoothScroller,
-//                model.items,
-//                true
-//        )
         flexibleAdapter.updateDataSet(model.items, true)
+
         if (headerModel != null) {
             topContainer.visibility = View.VISIBLE
             tvTitle.text = headerModel.title
@@ -91,12 +85,18 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
         recyclerView.adapter = adapter
     }
 
-    fun scrollRecyclerToPosition(adapterPosition: Int) {
+    fun updateStartEndPositions(adapterPosition: Int) {
         recyclerView.postDelayed({
             if (adapterPosition == 0 || adapterPosition == flexibleAdapter.itemCount - 1) {
                 recyclerView.smoothScrollToPosition(adapterPosition)
             }
         }, 200L)
+    }
+
+    fun scrollToAdapterPosition(adapterPosition: Int) {
+        recyclerView.postDelayed({
+            recyclerView.smoothScrollToPosition(adapterPosition)
+        }, 10L)
     }
 
     data class Model(

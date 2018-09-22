@@ -60,9 +60,11 @@ class GameSettingsStatView constructor(
         backViewContainer.view.clear()
     }
 
-    override fun scrollToPosition(adapterPosition: Int) {
-        frontViewContainer.view.scrollRecyclerToPosition(adapterPosition)
+    override fun updateStartEndScrollPositions(adapterPosition: Int) {
+        frontViewContainer.view.updateStartEndPositions(adapterPosition)
     }
 
-
+    override fun scrollToPosition(position: Int) {
+        frontViewContainer.view.scrollToAdapterPosition(position)
+    }
 }
