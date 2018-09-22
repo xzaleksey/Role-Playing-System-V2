@@ -8,9 +8,10 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultBackView
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.DefaultFrontView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
 import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
@@ -132,11 +133,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     val keySelector: (GameStat) -> String = { it.id }
                     val gameStatsMap = gameStats.associateBy(keySelector)
                     val defaultStatsMap = defaultStats.associateBy { it.id }
-                    gameStats.forEach {
-                        result.add(
-                                gameSettingsStatListViewModel(it)
-                        )
-                    }
+                    gameStats.forEach { stat -> result.add(gameSettingsStatListViewModel(stat)) }
 
                     defaultStatsMap.minus(gameStatsMap.keys).values.forEach {
                         result.add(
@@ -153,7 +150,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun gameSettingsStatListViewModel(gameStat: GameStat): GameSettingsStatListViewModel {
         return GameSettingsStatListViewModel(gameStat,
-                leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(gameStat.id))!!)
+                leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(gameStat.getIconId()))!!)
     }
 
     private fun getDefaultModel(): GameSettingsStatViewModel {
@@ -172,7 +169,22 @@ class GameSettingsStatsViewModelProviderImpl(
                 ),
                 DefaultBackView.Model(
                         stringRepository.name(),
-                        stringRepository.description()
+                        stringRepository.description(),
+                        iconModel = IconViewModel(resourcesProvider.getDrawable(R.drawable.ic_photo)!!),
+                        chooseIconListener = {
+                            presenter.chooseIcon(
+                                    { iconViewModel ->
+                                        statViewModel.value.let {
+                                            statViewModel.accept(it.copy(
+                                                    backModel = it.backModel.copy(iconModel = iconViewModel)
+                                            ))
+                                        }
+                                    },
+                                    GameStat.INFO.values().map {
+                                        IconViewModel(resourcesProvider.getDrawable(it.getIconRes())!!, it.id)
+                                    }
+                            )
+                        }
                 ),
                 GameSettingsStatViewModel.Step.SHOW_ALL
         )
@@ -210,15 +222,18 @@ class GameSettingsStatsViewModelProviderImpl(
                         disposable.add(gameGameStatsRepository.createDocument(
                                 game.id,
                                 UserGameStat(backModel.titleText,
-                                        backModel.subtitleText)
+                                        backModel.subtitleText,
+                                        icon = backModel.iconModel.id)
                         ).subscribeWithErrorLogging { gameStat ->
-                            val result = value.frontModel.items.asSequence().map {
+                            value.frontModel.items.asSequence().map {
                                 it as GameSettingsStatListViewModel
-                            }.toMutableList()
-                            val element = gameSettingsStatListViewModel(gameStat)
-                            result.add(element)
-                            result.sortDescending()
-                            presenter.scrollToPosition(result.indexOf(element))
+                            }.toMutableList().apply {
+                                val element = gameSettingsStatListViewModel(gameStat)
+                                add(element)
+                                sortDescending()
+                                presenter.scrollToPosition(indexOf(element))
+                            }
+
                         })
                     }
                 },

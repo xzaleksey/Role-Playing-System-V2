@@ -1,6 +1,7 @@
-package com.alekseyvalyakin.roleplaysystem.views.backdrop
+package com.alekseyvalyakin.roleplaysystem.views.backdrop.back
 
 import android.view.View
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.BaseViewContainer
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.wrapContent
 

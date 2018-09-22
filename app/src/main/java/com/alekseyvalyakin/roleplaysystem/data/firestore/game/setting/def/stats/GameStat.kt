@@ -26,33 +26,35 @@ interface GameStat : FireStoreIdModel {
         },
         CONSTITUTION("constitution") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.dice_d4
             }
         },
         DEXTERITY("dexterity") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.dice_d6
             }
         },
         INTELLIGENCE("intelligence") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.dice_d8
             }
         },
         WISDOM("wisdom") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.dice_d10
             }
         },
         CHARISMA("charisma") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.dice_d12
             }
         };
 
         abstract fun getIconRes(): Int
 
         companion object {
+            const val DEFAULT = "default"
+
             fun isSupported(gameStat: GameStat): Boolean {
                 return values().any { it.id == gameStat.id }
             }
@@ -63,7 +65,7 @@ interface GameStat : FireStoreIdModel {
                     return iconRes
                 }
 
-                return R.drawable.ic_dexterity
+                return R.drawable.ic_photo
             }
         }
     }

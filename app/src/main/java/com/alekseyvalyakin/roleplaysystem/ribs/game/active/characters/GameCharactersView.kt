@@ -5,6 +5,9 @@ import android.view.View
 import android.widget.RelativeLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.*
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewContainer
 import org.jetbrains.anko.*
 
 /**

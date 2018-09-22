@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.views.backdrop
+package com.alekseyvalyakin.roleplaysystem.views.backdrop.front
 
 import android.annotation.SuppressLint
 import android.content.Context

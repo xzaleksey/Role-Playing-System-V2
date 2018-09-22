@@ -133,5 +133,7 @@
     <string name="more_details">Подробнее</string>
     <string name="hide">Свернуть</string>
     <string name="delete_stat">Удалить характеристику</string>
+    <string name="icon">Картинка</string>
+    <string name="choose_icon">Выберите иконку</string>
 
 </resources>

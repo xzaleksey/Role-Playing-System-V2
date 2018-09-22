@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.IconViewModel
 import io.reactivex.Observable
 
 /**
@@ -36,4 +37,6 @@ interface GameSettingsStatPresenter {
     fun updateStartEndScrollPositions(adapterPosition: Int)
 
     fun scrollToPosition(position: Int)
+
+    fun chooseIcon(callback: (IconViewModel) -> Unit, items: List<IconViewModel>)
 }

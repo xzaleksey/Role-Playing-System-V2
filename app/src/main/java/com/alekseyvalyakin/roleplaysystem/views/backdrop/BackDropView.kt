@@ -9,6 +9,10 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewWrapper
 import com.alekseyvalyakin.roleplaysystem.views.bottomsheet.BottomSheetBehavior
 import org.jetbrains.anko._LinearLayout
 import org.jetbrains.anko.design.coordinatorLayout

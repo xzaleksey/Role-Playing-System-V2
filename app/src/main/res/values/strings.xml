@@ -138,4 +138,6 @@
     <string name="more_details">More</string>
     <string name="hide">Hide</string>
     <string name="delete_stat">Delete stat</string>
+    <string name="icon">Icon</string>
+    <string name="choose_icon">Choose icon</string>
 </resources>
