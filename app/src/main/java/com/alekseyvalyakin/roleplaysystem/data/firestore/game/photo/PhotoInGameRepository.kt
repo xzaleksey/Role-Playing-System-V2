@@ -5,17 +5,11 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireS
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.observeCollectionByDateCreate
 import com.google.firebase.firestore.CollectionReference
-import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 
 class PhotoInGameRepositoryIml : BaseGameFireStoreRepository<FireStoreIdPhoto>(FireStoreIdPhoto::class.java), PhotoInGameRepository {
-
-    override fun createDocument(gameId: String, data: FireStoreIdPhoto): Single<FireStoreIdPhoto> {
-        return RxFirestore.addDocumentHasId(getCollection(gameId), data)
-    }
 
     override fun observeByDateCreate(gameId: String): Flowable<List<FireStoreIdPhoto>> {
         return observeCollectionByDateCreate(gameId)

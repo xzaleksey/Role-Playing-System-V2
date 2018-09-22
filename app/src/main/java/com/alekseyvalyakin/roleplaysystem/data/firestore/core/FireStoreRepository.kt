@@ -13,7 +13,9 @@ interface FireStoreRepository<T : HasId> {
     fun observeCollection(): Flowable<List<T>>
     fun updateFieldOffline(id: String, value: Any, fieldName: String): Completable
     fun observeQueryCollection(query: Query): Flowable<List<T>>
-    fun createDocument(): Single<T>
+    fun createEmptyDocument(): Single<T>
     fun getCollection(): CollectionReference
     fun deleteDocumentOffline(id: String): Completable
+    fun createDocumentWithId(gameId: String, data: T): Single<T>
+    fun createDocument(gameId: String, data: T): Single<T>
 }

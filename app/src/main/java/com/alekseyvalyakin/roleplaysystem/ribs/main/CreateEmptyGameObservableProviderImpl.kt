@@ -15,7 +15,7 @@ class CreateEmptyGameObservableProviderImpl(
 
     override fun createEmptyGameModel() {
         if (disposable.isDisposed) {
-            disposable = gameRepository.createDocument()
+            disposable = gameRepository.createEmptyDocument()
                     .doOnSubscribe {
                         relay.accept(CreateEmptyGameObservableProvider.CreateGameModel.InProgress)
                     }

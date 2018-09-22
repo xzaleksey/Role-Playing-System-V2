@@ -16,4 +16,5 @@ interface GameFireStoreRepository<T : HasId> {
     fun createDocument(gameId: String, data: T): Single<T>
     fun getCollection(gameId: String): CollectionReference
     fun deleteDocumentOffline(gameId: String, id: String): Completable
+    fun createDocumentWithId(gameId: String, data: T): Single<T>
 }

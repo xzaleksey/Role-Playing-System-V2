@@ -50,7 +50,7 @@ class GameRepositoryImpl(
         return updateFieldOffline(id, GameStatus.ACTIVE.value, Game.FIELD_STATUS)
     }
 
-    override fun createDocument(): Single<Game> {
+    override fun createEmptyDocument(): Single<Game> {
         return userRepository.getCurrentUserSingle().flatMap { user ->
             val gameToCreate = Game(masterId = user.id, status = GameStatus.DRAFT.value, masterName = user.displayName)
             val writeBatch = instance.batch()

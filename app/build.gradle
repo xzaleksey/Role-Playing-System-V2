@@ -12,7 +12,7 @@ ext {
     firebase_database_version = '16.0.1'
     firebase_storage_version = '16.0.2'
     firebase_firestore_version = '17.1.0'
-    firebase_messaging_version = '17.3.1'
+    firebase_messaging_version = '17.3.2'
     anko_version = '0.10.5'
     support_version = '28.0.0-rc02'
     room_version = '1.1.1'

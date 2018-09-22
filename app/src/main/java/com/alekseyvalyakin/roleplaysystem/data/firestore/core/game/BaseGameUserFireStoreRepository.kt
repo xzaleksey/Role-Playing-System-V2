@@ -37,6 +37,15 @@ abstract class BaseGameUserFireStoreRepository<T : HasId>(
         return RxFirestore.deleteDocument(getDocumentReference(id, gameId))
     }
 
+    override fun createDocument(gameId: String, data: T): Single<T> {
+        return RxFirestore.addDocumentHasId(getCollection(gameId, getUserId()), data)
+    }
+
+    override fun createDocumentWithId(gameId: String, data: T): Single<T> {
+        return RxFirestore.setDocumentOffline(getCollection(gameId, getUserId()).document(data.id), data)
+                .toSingleDefault(data)
+    }
+
     protected fun getDocumentReference(id: String, gameId: String) = getCollection(gameId, getUserId())
             .document(id)
 

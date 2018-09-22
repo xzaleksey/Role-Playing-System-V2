@@ -14,6 +14,7 @@ interface GameUserFireStoreRepository<T : HasId> {
     fun updateFieldOffline(id: String, value: Any, fieldName: String, gameId: String): Completable
     fun observeQueryCollection(query: Query): Flowable<List<T>>
     fun createDocument(gameId: String, data: T): Single<T>
+    fun createDocumentWithId(gameId: String, data: T): Single<T>
     fun deleteDocument(id: String, gameId: String): Completable
     fun getCollection(gameId: String, userId: String): CollectionReference
 }

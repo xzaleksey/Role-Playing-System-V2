@@ -3,6 +3,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -19,6 +21,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
 
@@ -29,7 +32,8 @@ class GameSettingsStatsViewModelProviderImpl(
         private val resourcesProvider: ResourcesProvider,
         private val presenter: GameSettingsStatPresenter,
         private val activityListener: ActivityListener,
-        private val activeGameEventRelay: Relay<ActiveGameEvent>
+        private val activeGameEventRelay: Relay<ActiveGameEvent>,
+        private val gameGameStatsRepository: GameStatsRepository
 ) : GameSettingsStatsViewModelProvider {
 
     private val defaultGameStats = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
@@ -80,14 +84,16 @@ class GameSettingsStatsViewModelProviderImpl(
     }
 
     private fun getDefaultGamesDisposable(): Disposable {
-        return defaultSettingsStatsRepository.observeCollection(game.id)
-                .subscribeWithErrorLogging { list ->
-                    defaultGameStats.accept(list.map {
+        return Flowable.combineLatest(
+                gameGameStatsRepository.observeDiceCollectionsOrdered(game.id),
+                defaultSettingsStatsRepository.observeCollection(),
+                BiFunction { gameStats: List<GameStat>, defaultStats: List<GameStat> ->
+                    defaultGameStats.accept(defaultStats.map {
                         GameSettingsStatListViewModel(it.getDisplayedName(), it.getDisplayedDescription(),
                                 resourcesProvider.getDrawable(R.drawable.ic_dexterity)!!)
                     })
-                    updateItemsInList()
-                }
+                }).subscribeWithErrorLogging { _ -> updateItemsInList() }
+
     }
 
     private fun getDefaultModel(): GameSettingsStatViewModel {

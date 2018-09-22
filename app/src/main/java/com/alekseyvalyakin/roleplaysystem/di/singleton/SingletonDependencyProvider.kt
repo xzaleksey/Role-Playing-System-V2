@@ -8,6 +8,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesReposito
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
@@ -74,6 +75,8 @@ interface SingletonDependencyProvider {
 
     fun firebaseStorageRepo(): FirebaseStorageRepository
 
-    fun gameSetting(): DefaultSettingStatsRepository
+    fun gameStatsRepository(): DefaultSettingStatsRepository
+
+    fun statsRepo(): GameStatsRepository
 
 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -40,7 +41,7 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
                 .view(view)
                 .interactor(interactor)
                 .build()
-        return component.gamesettingsstatRouter()
+        return component.gameSettingsStatRouter()
     }
 
     override fun inflateView(inflater: LayoutInflater, parentViewGroup: ViewGroup): GameSettingsStatView? {
@@ -79,7 +80,8 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
                     stringRepository: StringRepository,
                     resourcesProvider: ResourcesProvider,
                     activityListener: ActivityListener,
-                    activeGameEventRelay: Relay<ActiveGameEvent>
+                    activeGameEventRelay: Relay<ActiveGameEvent>,
+                    gameGameStatsRepository: GameStatsRepository
             ): GameSettingsStatsViewModelProvider {
                 return GameSettingsStatsViewModelProviderImpl(
                         defaultSettingsStatsRepository,
@@ -88,7 +90,8 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
                         resourcesProvider,
                         view,
                         activityListener,
-                        activeGameEventRelay)
+                        activeGameEventRelay,
+                        gameGameStatsRepository)
             }
         }
 
@@ -112,7 +115,7 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
     }
 
     interface BuilderComponent {
-        fun gamesettingsstatRouter(): GameSettingsStatRouter
+        fun gameSettingsStatRouter(): GameSettingsStatRouter
     }
 
     @Scope
