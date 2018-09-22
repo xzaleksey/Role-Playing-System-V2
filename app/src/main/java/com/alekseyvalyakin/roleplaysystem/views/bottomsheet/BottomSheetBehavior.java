@@ -9,6 +9,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.AbsSavedState;
+import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.view.MotionEvent;
@@ -16,6 +17,8 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import com.alekseyvalyakin.roleplaysystem.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -190,7 +193,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
         this.parentHeight = parent.getHeight();
         if (this.peekHeightAuto) {
             if (this.peekHeightMin == 0) {
-                this.peekHeightMin = parent.getResources().getDimensionPixelSize(android.support.design.R.dimen.design_bottom_sheet_peek_height_min);
+                this.peekHeightMin = parent.getContext().getResources().getDimensionPixelSize(R.dimen.dp_56);
             }
 
             this.lastPeekHeight = Math.max(this.peekHeightMin, this.parentHeight - parent.getWidth() * 9 / 16);
@@ -236,8 +239,36 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
         return (axes & 2) != 0;
     }
 
+    @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
+        stopNestedScrollIfNeeded(dy, child, target, type);
+    }
 
+    @Override
+    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
+        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
+        stopNestedScrollIfNeeded(dyUnconsumed, child, target, type);
+    }
+
+    private void stopNestedScrollIfNeeded(int dy, V child, View target, int type) {
+        ScrollingView scrollingView = (ScrollingView) target;
+
+//        Timber.d("height " + child.getHeight()
+//                + " diff " + (child.getBottom() - child.getHeight() + target.getScrollY())
+//                + " Scroll offset " + ((ScrollingView) target).computeVerticalScrollOffset()
+//                + " Scroll extent " + ((ScrollingView) target).computeVerticalScrollExtent()
+//                + " Scroll range " + ((ScrollingView) target).computeVerticalScrollRange()
+//                + " dy " + dy
+//        );
+
+        if (type == ViewCompat.TYPE_NON_TOUCH) {
+            if (((dy <= 0 && scrollingView.computeVerticalScrollOffset() == 0) ||
+                    (dy >= 0 && (scrollingView.computeVerticalScrollRange() - scrollingView.computeVerticalScrollOffset() ==
+                            scrollingView.computeVerticalScrollExtent())))) {
+                ViewCompat.stopNestedScroll(target, ViewCompat.TYPE_NON_TOUCH);
+            }
+        }
     }
 
     public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, int type) {
@@ -247,6 +278,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View target, float velocityX, float velocityY) {
         return target == this.nestedScrollingChildRef.get() && (this.state != 3 || super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY));
     }
+
 
     public boolean isFitToContents() {
         return this.fitToContents;

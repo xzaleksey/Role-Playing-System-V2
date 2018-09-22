@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter
 
-import android.animation.LayoutTransition
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
@@ -45,7 +44,6 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         }
 
         verticalLayout {
-            layoutTransition = LayoutTransition().apply { enableTransitionType(LayoutTransition.CHANGING) }
             tvTitle = textView {
                 id = R.id.tv_title
                 textSizeDimen = R.dimen.dp_16

@@ -41,12 +41,51 @@
             "ru": "Телосложение"
           },
           "description": {
-            "default": "Includes his endurance, fitness, health and physical resistance to adversities, injuries, and illnesses",
+            "default": "Includes endurance, fitness, health and physical resistance to adversities, injuries, and illnesses",
             "ru": "Включает в себя его выносливость, натренированность, здоровье и физическую сопротивляемость невзгодам, ранениям, и болезням"
+          }
+        },
+        "dexterity": {
+          "name": {
+            "default": "Dexterity",
+            "ru": "Ловкость"
+          },
+          "description": {
+            "default": "Includes endurance, fitness, health and physical resistance to adversities, injuries, and illnesses",
+            "ru": "Contains several physical attributes, including coordination, agility, reaction speed, reflexes and sense of balance."
+          }
+        },
+        "intelligence": {
+          "name": {
+            "default": "Intelligence",
+            "ru": "Интеллект"
+          },
+          "description": {
+            "default": "Represents the character's memory, discretion, and learning ability. Intellect determines the number of languages that a character can learn",
+            "ru": "Представляет память персонажа, рассудительность, и способность к обучению. Интеллект определяет число языков, которые может выучить персонаж"
+          }
+        },
+        "wisdom": {
+          "name": {
+            "default": "Wisdom",
+            "ru": "Мудрость"
+          },
+          "description": {
+            "default": "Describes a combination of character enlightenment, discretion, cunning, willpower, common sense, and intuition",
+            "ru": "Описывает соединение просвещенности персонажа, рассудительности, хитрости, силы воли, здравого смысла, и интуиции"
+          }
+        },
+        "charisma": {
+          "name": {
+            "default": "Charisma",
+            "ru": "Обаяние"
+          },
+          "description": {
+            "default": "Measures the character's credibility, personal attractiveness, and the ability to be a leader",
+            "ru": "Измеряет убедительность персонажа, личностную притягательность, и способность быть лидером"
           }
         }
       }
-
     }
   }
 }
