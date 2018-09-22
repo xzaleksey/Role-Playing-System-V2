@@ -7,7 +7,6 @@ import com.google.firebase.firestore.Exclude
 data class DefaultGameStat(
         var name: TrasnlatableField = TrasnlatableField(),
         var description: TrasnlatableField = TrasnlatableField(),
-        var icon: String = StringUtils.EMPTY_STRING,
 
         @Exclude
         @set:Exclude
@@ -27,12 +26,12 @@ data class DefaultGameStat(
     }
 
     @Exclude
-    override fun getDisplayedIcon(): String {
-        return icon
+    override fun getIconId(): String {
+        return id
     }
 
     @Exclude
     fun toUserGameStat(): UserGameStat {
-        return UserGameStat(getDisplayedName(), getDisplayedDescription(), getDisplayedIcon(), id)
+        return UserGameStat(getDisplayedName(), getDisplayedDescription(), getIconId(), id)
     }
 }

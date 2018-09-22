@@ -13,7 +13,7 @@ interface GameStat : FireStoreIdModel {
     fun getDisplayedDescription(): String
 
     @Exclude
-    fun getDisplayedIcon(): String
+    fun getIconId(): String
 
 
     enum class INFO(val id: String) {

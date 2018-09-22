@@ -56,5 +56,9 @@ class GameSettingsStatView constructor(
         relay.accept(GameSettingsStatPresenter.UiEvent.CollapseFront)
     }
 
+    override fun clearBackView() {
+        backViewContainer.view.clear()
+    }
+
 
 }

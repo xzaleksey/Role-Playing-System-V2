@@ -22,7 +22,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
-import timber.log.Timber
 
 class GameSettingsStatsViewModelProviderImpl(
         private val defaultSettingsStatsRepository: DefaultSettingStatsRepository,
@@ -161,10 +160,6 @@ class GameSettingsStatsViewModelProviderImpl(
         )
     }
 
-    fun updateModel() {
-
-    }
-
     private fun updateShowStatsModel() {
         statViewModel.accept(statViewModel.value.copy(toolBarModel = getShowStatToolbarModel(),
                 step = GameSettingsStatViewModel.Step.SHOW_ALL))
@@ -180,15 +175,21 @@ class GameSettingsStatsViewModelProviderImpl(
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done_black_24dp),
                 rightIconClickListener = {
                     val value = statViewModel.value
-                    if (value.backModel.titleText.isNotBlank() && value.backModel.subtitleText.isNotBlank()) {
-                        Timber.d("Save clicked")
+                    val backModel = value.backModel
+                    if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
+                        presenter.clearBackView()
+                        presenter.expandFront()
+                        disposable.add(gameGameStatsRepository.createDocument(
+                                game.id,
+                                UserGameStat(backModel.titleText,
+                                        backModel.subtitleText)
+                        ).subscribeWithErrorLogging { })
                     }
                 },
                 title = stringRepository.getMyStat()
         ),
                 step = GameSettingsStatViewModel.Step.NEW_STAT))
     }
-
 
     private fun updateItemsInList() {
         statViewModel.accept(statViewModel.value.let {

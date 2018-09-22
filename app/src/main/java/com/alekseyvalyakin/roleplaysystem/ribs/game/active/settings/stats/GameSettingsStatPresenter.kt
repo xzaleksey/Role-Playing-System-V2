@@ -28,4 +28,6 @@ interface GameSettingsStatPresenter {
     fun expandFront()
 
     fun collapseFront()
+
+    fun clearBackView()
 }

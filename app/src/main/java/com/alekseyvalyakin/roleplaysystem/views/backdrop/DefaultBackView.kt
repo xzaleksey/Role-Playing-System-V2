@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.views.backdrop
 
 import android.content.Context
+import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.alekseyvalyakin.roleplaysystem.R
@@ -20,14 +21,15 @@ class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
         rightPadding = getDoubleCommonDimen()
 
         etTitle = themedEditText(R.style.AppTheme_TextWhite) {
-            maxLines = 1
+            singleLine = true
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             imeOptions = EditorInfo.IME_ACTION_NEXT
         }.lparams(matchParent) {
             bottomMargin = getCommonDimen()
         }
 
         etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
-
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }.lparams(matchParent) {
             bottomMargin = getIntDimen(R.dimen.dp_40)
         }
@@ -53,6 +55,11 @@ class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
 
     override fun onHidden() {
         etTitle.hideKeyboard(100L)
+    }
+
+    fun clear() {
+        etTitle.setText(StringUtils.EMPTY_STRING)
+        etSubtitle.setText(StringUtils.EMPTY_STRING)
     }
 
     data class Model(

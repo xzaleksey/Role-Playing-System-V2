@@ -28,7 +28,7 @@ data class UserGameStat(
 
 
     @Exclude
-    override fun getDisplayedIcon(): String {
+    override fun getIconId(): String {
         return icon
     }
 
