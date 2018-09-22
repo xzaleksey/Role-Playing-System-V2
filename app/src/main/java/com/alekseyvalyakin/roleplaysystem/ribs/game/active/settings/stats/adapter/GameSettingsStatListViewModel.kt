@@ -18,7 +18,7 @@ class GameSettingsStatListViewModel(
         val title: String = gameStat.getDisplayedName(),
         val description: String = gameStat.getDisplayedDescription(),
         val leftIcon: Drawable
-) : AbstractFlexibleItem<GameSettingsStatsViewHolder>() {
+) : AbstractFlexibleItem<GameSettingsStatsViewHolder>(), Comparable<GameSettingsStatListViewModel> {
 
     override fun getLayoutRes(): Int {
         return FlexibleLayoutTypes.GAME_SETTINGS_ITEM
@@ -44,4 +44,23 @@ class GameSettingsStatListViewModel(
     override fun hashCode(): Int {
         return gameStat.id.hashCode()
     }
+
+    override fun compareTo(other: GameSettingsStatListViewModel): Int {
+        if (selected && other.selected) {
+            return compareTitles(other)
+        }
+
+        if (selected && !other.selected) {
+            return 1
+        }
+
+        if (!selected && other.selected) {
+            return -1
+        }
+
+        return compareTitles(other)
+    }
+
+    private fun compareTitles(other: GameSettingsStatListViewModel) = -title.compareTo(other.title)
+
 }

@@ -132,5 +132,6 @@
     <string name="my_stat">Моя характеристика</string>
     <string name="more_details">Подробнее</string>
     <string name="hide">Свернуть</string>
+    <string name="delete_stat">Удалить характеристику</string>
 
 </resources>

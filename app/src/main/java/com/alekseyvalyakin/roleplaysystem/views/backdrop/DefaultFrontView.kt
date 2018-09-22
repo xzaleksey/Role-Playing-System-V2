@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,11 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
     protected lateinit var tvTitle: TextView
     protected var topContainer: ViewGroup
     protected lateinit var flexibleAdapter: FlexibleAdapter<IFlexible<*>>
+    private val smoothScroller = object : LinearSmoothScroller(getContext()) {
+        override fun getVerticalSnapPreference(): Int {
+            return LinearSmoothScroller.SNAP_TO_START
+        }
+    }
 
     init {
         backgroundColorResource = R.color.colorWhite
@@ -70,7 +76,13 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
 
     fun update(model: Model) {
         val headerModel = model.headerModel
-        flexibleAdapter.updateDataSet(model.items, true)
+
+        flexibleAdapter.updateWithAnimateToStartOnNewItem(
+                recyclerView,
+                smoothScroller,
+                model.items,
+                true
+        )
         if (headerModel != null) {
             topContainer.visibility = View.VISIBLE
             tvTitle.text = headerModel.title

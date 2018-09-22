@@ -2,6 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapt
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
+import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.UserGameStat
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatPresenter
 import com.jakewharton.rxrelay2.Relay
 import timber.log.Timber
@@ -15,6 +18,19 @@ class GameSettingsStatsViewHolder(
             Timber.d("OnCkick")
             relay.accept(
                     GameSettingsStatPresenter.UiEvent.SelectStat(gameSettingsViewModel))
+        }, View.OnLongClickListener { _ ->
+            if (gameSettingsViewModel.gameStat is UserGameStat) {
+                MaterialDialog(gsView.context)
+                        .title(R.string.delete)
+                        .message(R.string.delete_stat)
+                        .positiveButton(android.R.string.ok, click = {
+                            relay.accept(GameSettingsStatPresenter.UiEvent.DeleteStat(gameSettingsViewModel))
+                        })
+                        .negativeButton(android.R.string.cancel)
+                        .show()
+                return@OnLongClickListener true
+            }
+            return@OnLongClickListener false
         })
     }
 }

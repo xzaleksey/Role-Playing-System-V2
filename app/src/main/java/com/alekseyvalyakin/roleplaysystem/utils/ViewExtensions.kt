@@ -13,6 +13,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.ribs.main.FabEnabledProvider
+import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 
 fun TextView.setTextSizeFromRes(@DimenRes res: Int) {
     setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getFloatDimen(res))
@@ -94,6 +96,25 @@ fun RecyclerView.checkFabShow(fab: FloatingActionButton, fabEnabledProvider: Fab
     }
 }
 
+fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToStartOnNewItem(
+        recyclerView: RecyclerView,
+        smoothScroller: RecyclerView.SmoothScroller,
+        items: List<IFlexible<*>>,
+        animated: Boolean = false) {
+
+    val oldItemCount = itemCount
+    updateDataSet(items, animated)
+    if (oldItemCount < items.size) {
+        recyclerView.post({
+            if (itemCount > 0) {
+                smoothScroller.targetPosition = 0
+                recyclerView.layoutManager!!.startSmoothScroll(smoothScroller)
+            }
+        })
+    }
+}
+
 fun View.isOrientationLandscape(): Boolean {
     return context.isOrientationLandscape()
 }
+

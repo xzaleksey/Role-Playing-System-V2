@@ -78,6 +78,10 @@ class GameSettingsStatsViewModelProviderImpl(
                         is GameSettingsStatPresenter.UiEvent.SelectStat -> {
                             return@flatMap handleSelectStat(event)
                         }
+
+                        is GameSettingsStatPresenter.UiEvent.DeleteStat -> {
+                            return@flatMap deleteObservable(event.gameSettingsViewModel.gameStat)
+                        }
                     }
                     return@flatMap Observable.empty<Any>()
                 }
@@ -98,8 +102,7 @@ class GameSettingsStatsViewModelProviderImpl(
         } else {
             if (gameStat is UserGameStat) {
                 return if (GameStat.INFO.isSupported(gameStat)) {
-                    gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
-                            .toObservable<Any>()
+                    deleteObservable(gameStat)
                 } else {
                     gameGameStatsRepository.setSelected(game.id, gameStat.id, false)
                             .toObservable<Any>()
@@ -109,13 +112,18 @@ class GameSettingsStatsViewModelProviderImpl(
         return Observable.empty<Any>()
     }
 
+    private fun deleteObservable(gameStat: GameStat): Observable<Any> {
+        return gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
+                .toObservable<Any>()!!
+    }
+
     private fun getDefaultGamesDisposable(): Disposable {
         return Flowable.combineLatest(
                 gameGameStatsRepository.observeDiceCollectionsOrdered(game.id),
                 defaultSettingsStatsRepository.observeCollection()
                         .map { list -> list.filter { GameStat.INFO.isSupported(it) } },
                 BiFunction { gameStats: List<GameStat>, defaultStats: List<GameStat> ->
-                    val result = mutableListOf<IFlexible<*>>()
+                    val result = mutableListOf<GameSettingsStatListViewModel>()
                     val keySelector: (GameStat) -> String = { it.id }
                     val gameStatsMap = gameStats.associateBy(keySelector)
                     val defaultStatsMap = defaultStats.associateBy { it.id }
@@ -133,7 +141,7 @@ class GameSettingsStatsViewModelProviderImpl(
                                         selected = false)
                         )
                     }
-
+                    result.sortDescending()
                     defaultGameStats.accept(result)
                 }).subscribeWithErrorLogging { _ -> updateItemsInList() }
 

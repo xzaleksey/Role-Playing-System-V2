@@ -9,8 +9,6 @@ import io.reactivex.Observable
 interface GameSettingsStatPresenter {
 
     sealed class UiEvent {
-        object ToolbarLeftClick : UiEvent()
-        object ToolbarRightClick : UiEvent()
 
         object CollapseFront : UiEvent()
         object ExpandFront : UiEvent()
@@ -19,6 +17,7 @@ interface GameSettingsStatPresenter {
         class SelectStat(val gameSettingsStatListViewModel: GameSettingsStatListViewModel) : UiEvent()
 
         class SubtitleInput(val text: String) : UiEvent()
+        class DeleteStat(val gameSettingsViewModel: GameSettingsStatListViewModel) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>

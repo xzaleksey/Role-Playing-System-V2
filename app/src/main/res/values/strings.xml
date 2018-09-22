@@ -137,4 +137,5 @@
     <string name="my_stat">My stat</string>
     <string name="more_details">More</string>
     <string name="hide">Hide</string>
+    <string name="delete_stat">Delete stat</string>
 </resources>

@@ -89,10 +89,13 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
     }
 
-    fun update(gameSettingsStatListViewModel: GameSettingsStatListViewModel, onClickListener: OnClickListener) {
+    fun update(gameSettingsStatListViewModel: GameSettingsStatListViewModel, onClickListener: OnClickListener,
+               longClickListener: OnLongClickListener) {
         tvTitle.text = gameSettingsStatListViewModel.title
+        tvDescription.maxLines = 2
         tvDescription.visibility = if (gameSettingsStatListViewModel.selected) View.GONE else View.VISIBLE
         tvDescription.text = gameSettingsStatListViewModel.description
+        setOnLongClickListener(longClickListener)
         tvDescription.post {
             if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
                 btnMore.visibility = View.GONE
