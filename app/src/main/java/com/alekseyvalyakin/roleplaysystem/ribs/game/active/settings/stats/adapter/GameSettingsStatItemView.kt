@@ -16,14 +16,17 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
     private lateinit var tvDescription: TextView
     private lateinit var tvTitle: TextView
     private lateinit var btnMore: TextView
+    private var divider: View
+
     private val disabledColor = getCompatColor(R.color.colorDisabled)
     private val textColorPrimary = getCompatColor(R.color.colorTextPrimary)
     private val commonIconColor = getCompatColor(R.color.commonIconColor)
-    private var divider: View
+    private val maxLinesDefault = 2
 
     init {
         topPadding = getIntDimen(R.dimen.dp_10)
         backgroundResource = getSelectableItemBackGround()
+
         relativeLayout {
             id = R.id.container
             leftPadding = getDoubleCommonDimen()
@@ -56,7 +59,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                 tvDescription = textView {
                     id = R.id.tv_sub_title
                     textSizeDimen = R.dimen.dp_12
-                    maxLines = 2
+                    maxLines = maxLinesDefault
                     textColorResource = R.color.colorTextSecondary
                 }.lparams(matchParent) {
                     topMargin = getIntDimen(R.dimen.dp_2)
@@ -79,7 +82,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                             textResource = R.string.hide
                         } else {
                             textResource = R.string.more_details
-                            tvDescription.maxLines = 2
+                            tvDescription.maxLines = maxLinesDefault
                         }
                     }
 
@@ -91,9 +94,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                 centerVertically()
             }
 
-        }.lparams(matchParent, wrapContent) {
-
-        }
+        }.lparams(matchParent, wrapContent)
 
         divider = view {
             backgroundDrawable = dividerDrawable()
@@ -104,13 +105,15 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
     }
 
-    fun update(gameSettingsStatListViewModel: GameSettingsStatListViewModel, onClickListener: OnClickListener,
+    fun update(gameSettingsStatListViewModel: GameSettingsStatListViewModel,
+               onClickListener: OnClickListener,
                longClickListener: OnLongClickListener) {
         tvTitle.text = gameSettingsStatListViewModel.title
-        tvDescription.maxLines = 2
+        tvDescription.maxLines = maxLinesDefault
         tvDescription.visibility = if (gameSettingsStatListViewModel.selected) View.GONE else View.VISIBLE
         tvDescription.text = gameSettingsStatListViewModel.description
-        setOnLongClickListener(longClickListener)
+        ivIconLeft.setImageDrawable(gameSettingsStatListViewModel.leftIcon)
+
         tvDescription.post {
             if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
                 btnMore.visibility = View.GONE
@@ -120,8 +123,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                 btnMore.visibility = View.VISIBLE
             }
         }
-        setOnClickListener(onClickListener)
-        ivIconLeft.setImageDrawable(gameSettingsStatListViewModel.leftIcon)
+
         if (gameSettingsStatListViewModel.selected) {
             ivIconRight.imageResource = R.drawable.ic_confirm_selected
             ivIconLeft.tintImage(disabledColor)
@@ -131,5 +133,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
             ivIconLeft.tintImage(commonIconColor)
             tvTitle.setTextColor(textColorPrimary)
         }
+        setOnClickListener(onClickListener)
+        setOnLongClickListener(longClickListener)
     }
 }

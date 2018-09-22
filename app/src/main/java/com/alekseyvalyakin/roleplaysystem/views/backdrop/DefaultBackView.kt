@@ -29,7 +29,7 @@ class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
         }
 
         etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         }.lparams(matchParent) {
             bottomMargin = getIntDimen(R.dimen.dp_40)
         }

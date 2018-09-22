@@ -7,7 +7,7 @@ import java.io.FileOutputStream
 
 
 fun saveImage(fileName: String, bitmap: Bitmap) {
-    File(fileName).mkdirs()
+    File(File(fileName).parent).mkdirs()
     try {
         FileOutputStream(fileName).use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
