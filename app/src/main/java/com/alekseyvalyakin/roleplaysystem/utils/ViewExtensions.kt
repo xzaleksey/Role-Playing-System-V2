@@ -96,6 +96,13 @@ fun RecyclerView.checkFabShow(fab: FloatingActionButton, fabEnabledProvider: Fab
     }
 }
 
+fun View.dividerDrawable(): Drawable {
+    val styledAttributes = context.obtainStyledAttributes(intArrayOf(android.R.attr.listDivider))
+    val drawable = styledAttributes.getDrawable(0)
+    styledAttributes.recycle()
+    return drawable!!
+}
+
 fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToStartOnNewItem(
         recyclerView: RecyclerView,
         smoothScroller: RecyclerView.SmoothScroller,

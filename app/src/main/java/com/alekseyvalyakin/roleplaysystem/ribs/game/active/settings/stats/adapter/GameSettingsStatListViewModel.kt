@@ -46,18 +46,6 @@ class GameSettingsStatListViewModel(
     }
 
     override fun compareTo(other: GameSettingsStatListViewModel): Int {
-        if (selected && other.selected) {
-            return compareTitles(other)
-        }
-
-        if (selected && !other.selected) {
-            return 1
-        }
-
-        if (!selected && other.selected) {
-            return -1
-        }
-
         return compareTitles(other)
     }
 

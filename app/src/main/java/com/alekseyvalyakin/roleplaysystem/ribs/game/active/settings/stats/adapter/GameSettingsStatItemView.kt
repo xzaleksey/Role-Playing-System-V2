@@ -10,8 +10,8 @@ import org.jetbrains.anko.*
 
 class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
-    private var ivIconLeft: ImageView
-    private var ivIconRight: ImageView
+    private lateinit var ivIconLeft: ImageView
+    private lateinit var ivIconRight: ImageView
 
     private lateinit var tvDescription: TextView
     private lateinit var tvTitle: TextView
@@ -21,70 +21,84 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
     private val commonIconColor = getCompatColor(R.color.commonIconColor)
 
     init {
-        leftPadding = getDoubleCommonDimen()
-        rightPadding = getDoubleCommonDimen()
         topPadding = getIntDimen(R.dimen.dp_10)
-        bottomPadding = getIntDimen(R.dimen.dp_10)
         backgroundResource = getSelectableItemBackGround()
-        ivIconLeft = imageView {
-            id = R.id.left_icon
-            scaleType = ImageView.ScaleType.CENTER_INSIDE
-        }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
-            marginEnd = getDoubleCommonDimen()
-            centerVertically()
-        }
-
-        ivIconRight = imageView {
-            id = R.id.right_icon
-            scaleType = ImageView.ScaleType.CENTER_INSIDE
-        }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
-            alignParentEnd()
-            centerVertically()
-            leftMargin = getCommonDimen()
-        }
-
-        verticalLayout {
-            tvTitle = textView {
-                id = R.id.tv_title
-                textSizeDimen = R.dimen.dp_16
-                maxLines = 1
-            }.lparams(matchParent) {
+        relativeLayout {
+            id = R.id.container
+            ivIconLeft = imageView {
+                id = R.id.left_icon
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+            }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
+                marginEnd = getDoubleCommonDimen()
+                leftMargin = getDoubleCommonDimen()
+                centerVertically()
             }
 
-            tvDescription = textView {
-                id = R.id.tv_sub_title
-                textSizeDimen = R.dimen.dp_12
-                maxLines = 2
-                textColorResource = R.color.colorTextSecondary
-            }.lparams(matchParent) {
+            ivIconRight = imageView {
+                id = R.id.right_icon
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+            }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
+                alignParentEnd()
+                centerVertically()
+                leftMargin = getCommonDimen()
+                rightMargin = getDoubleCommonDimen()
             }
 
-            btnMore = textView {
-                textSizeDimen = R.dimen.dp_10
-                setSanserifMediumTypeface()
-                backgroundResource = getSelectableItemBackGround()
-                maxLines = 1
-                allCaps = true
-                topPadding = getIntDimen(R.dimen.dp_10)
-                bottomPadding = getIntDimen(R.dimen.dp_10)
-                visibility = View.GONE
-                textResource = R.string.more_details
-                setOnClickListener {
-                    if (!tvDescription.isAllTextVisible()) {
-                        tvDescription.maxLines = Int.MAX_VALUE
-                        tvDescription.requestLayout()
-                        textResource = R.string.hide
-                    } else {
-                        textResource = R.string.more_details
-                        tvDescription.maxLines = 2
-                    }
+            verticalLayout {
+                tvTitle = textView {
+                    id = R.id.tv_title
+                    textSizeDimen = R.dimen.dp_16
+                    maxLines = 1
+                }.lparams(matchParent) {
                 }
-            }.lparams(matchParent) {
+
+                tvDescription = textView {
+                    id = R.id.tv_sub_title
+                    textSizeDimen = R.dimen.dp_12
+                    maxLines = 2
+                    textColorResource = R.color.colorTextSecondary
+                }.lparams(matchParent) {
+                    topMargin = getIntDimen(R.dimen.dp_2)
+                }
+
+                btnMore = textView {
+                    textSizeDimen = R.dimen.dp_10
+                    setSanserifMediumTypeface()
+                    backgroundResource = getSelectableItemBackGround()
+                    maxLines = 1
+                    allCaps = true
+                    topPadding = getIntDimen(R.dimen.dp_10)
+                    bottomPadding = getIntDimen(R.dimen.dp_10)
+                    visibility = View.GONE
+                    textResource = R.string.more_details
+                    setOnClickListener {
+                        if (!tvDescription.isAllTextVisible()) {
+                            tvDescription.maxLines = Int.MAX_VALUE
+                            tvDescription.requestLayout()
+                            textResource = R.string.hide
+                        } else {
+                            textResource = R.string.more_details
+                            tvDescription.maxLines = 2
+                        }
+                    }
+
+                }.lparams(matchParent) {
+                }
+            }.lparams(matchParent, wrapContent) {
+                rightOf(ivIconLeft)
+                leftOf(ivIconRight)
+                centerVertically()
             }
+
         }.lparams(matchParent, wrapContent) {
-            rightOf(ivIconLeft)
-            leftOf(ivIconRight)
-            centerVertically()
+
+        }
+
+        view {
+            backgroundDrawable = dividerDrawable()
+        }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_1)) {
+            below(R.id.container)
+            topMargin = getIntDimen(R.dimen.dp_10)
         }
 
     }
@@ -99,10 +113,8 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         tvDescription.post {
             if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
                 btnMore.visibility = View.GONE
-                bottomPadding = getIntDimen(R.dimen.dp_10)
             } else {
                 btnMore.visibility = View.VISIBLE
-                bottomPadding = 0
             }
         }
         setOnClickListener(onClickListener)

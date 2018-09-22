@@ -17,7 +17,7 @@ class GameSettingsStatsViewHolder(
         gsView.update(gameSettingsViewModel, View.OnClickListener {
             Timber.d("OnCkick")
             relay.accept(
-                    GameSettingsStatPresenter.UiEvent.SelectStat(gameSettingsViewModel))
+                    GameSettingsStatPresenter.UiEvent.SelectStat(gameSettingsViewModel, adapterPosition))
         }, View.OnLongClickListener { _ ->
             if (gameSettingsViewModel.gameStat is UserGameStat) {
                 MaterialDialog(gsView.context)

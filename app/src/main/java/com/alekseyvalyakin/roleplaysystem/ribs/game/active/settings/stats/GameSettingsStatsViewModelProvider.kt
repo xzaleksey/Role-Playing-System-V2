@@ -90,7 +90,6 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun handleSelectStat(event: GameSettingsStatPresenter.UiEvent.SelectStat): Observable<out Any> {
         val gameStat = event.gameSettingsStatListViewModel.gameStat
-
         if (!event.gameSettingsStatListViewModel.selected) {
             return if (gameStat is DefaultGameStat) {
                 gameGameStatsRepository.createDocumentWithId(game.id, gameStat.toUserGameStat())
@@ -102,10 +101,15 @@ class GameSettingsStatsViewModelProviderImpl(
         } else {
             if (gameStat is UserGameStat) {
                 return if (GameStat.INFO.isSupported(gameStat)) {
-                    deleteObservable(gameStat)
+                    deleteObservable(gameStat).doOnNext {
+                        presenter.scrollToPosition(event.adapterPosition)
+                    }
                 } else {
                     gameGameStatsRepository.setSelected(game.id, gameStat.id, false)
                             .toObservable<Any>()
+                            .doOnNext {
+                                presenter.scrollToPosition(event.adapterPosition)
+                            }
                 }
             }
         }
@@ -115,6 +119,7 @@ class GameSettingsStatsViewModelProviderImpl(
     private fun deleteObservable(gameStat: GameStat): Observable<Any> {
         return gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
                 .toObservable<Any>()!!
+                .startWith(Unit)
     }
 
     private fun getDefaultGamesDisposable(): Disposable {

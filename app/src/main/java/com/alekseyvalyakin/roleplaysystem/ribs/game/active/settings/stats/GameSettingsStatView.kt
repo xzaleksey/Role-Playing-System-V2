@@ -20,9 +20,9 @@ class GameSettingsStatView constructor(
         BaseViewContainer(
                 CustomToolbarView(context),
                 height = context.getToolbarHeight() + context.getStatusBarHeight()
-        )
-        , BackViewContainer(DefaultBackView(context))
-        , FrontViewContainer(DefaultFrontView(context))
+        ),
+        BackViewContainer(DefaultBackView(context)),
+        FrontViewContainer(DefaultFrontView(context))
 ), GameSettingsStatPresenter {
 
     private val relay = PublishRelay.create<GameSettingsStatPresenter.UiEvent>()
@@ -58,6 +58,10 @@ class GameSettingsStatView constructor(
 
     override fun clearBackView() {
         backViewContainer.view.clear()
+    }
+
+    override fun scrollToPosition(adapterPosition: Int) {
+        frontViewContainer.view.scrollRecyclerToPosition(adapterPosition)
     }
 
 

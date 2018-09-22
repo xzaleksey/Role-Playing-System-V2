@@ -14,7 +14,10 @@ interface GameSettingsStatPresenter {
         object ExpandFront : UiEvent()
 
         class TitleInput(val text: String) : UiEvent()
-        class SelectStat(val gameSettingsStatListViewModel: GameSettingsStatListViewModel) : UiEvent()
+        class SelectStat(
+                val gameSettingsStatListViewModel: GameSettingsStatListViewModel,
+                val adapterPosition: Int
+        ) : UiEvent()
 
         class SubtitleInput(val text: String) : UiEvent()
         class DeleteStat(val gameSettingsViewModel: GameSettingsStatListViewModel) : UiEvent()
@@ -29,4 +32,6 @@ interface GameSettingsStatPresenter {
     fun collapseFront()
 
     fun clearBackView()
+
+    fun scrollToPosition(adapterPosition: Int)
 }

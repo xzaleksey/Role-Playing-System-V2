@@ -2,9 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.views.backdrop
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -24,11 +22,6 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
     protected lateinit var tvTitle: TextView
     protected var topContainer: ViewGroup
     protected lateinit var flexibleAdapter: FlexibleAdapter<IFlexible<*>>
-    private val smoothScroller = object : LinearSmoothScroller(getContext()) {
-        override fun getVerticalSnapPreference(): Int {
-            return LinearSmoothScroller.SNAP_TO_START
-        }
-    }
 
     init {
         backgroundColorResource = R.color.colorWhite
@@ -67,7 +60,6 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
         }.lparams(matchParent, wrapContent)
 
         recyclerView = recyclerView {
-            addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             layoutManager = LinearLayoutManager(context)
         }.lparams(width = matchParent, height = matchParent) {
             below(R.id.top_container)
@@ -77,12 +69,13 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
     fun update(model: Model) {
         val headerModel = model.headerModel
 
-        flexibleAdapter.updateWithAnimateToStartOnNewItem(
-                recyclerView,
-                smoothScroller,
-                model.items,
-                true
-        )
+//        flexibleAdapter.updateWithAnimateToStartOnNewItem(
+//                recyclerView,
+//                smoothScroller,
+//                model.items,
+//                true
+//        )
+        flexibleAdapter.updateDataSet(model.items, true)
         if (headerModel != null) {
             topContainer.visibility = View.VISIBLE
             tvTitle.text = headerModel.title
@@ -96,6 +89,14 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
     fun setAdapter(adapter: FlexibleAdapter<IFlexible<*>>) {
         flexibleAdapter = adapter
         recyclerView.adapter = adapter
+    }
+
+    fun scrollRecyclerToPosition(adapterPosition: Int) {
+        recyclerView.postDelayed({
+            if (adapterPosition == 0 || adapterPosition == flexibleAdapter.itemCount - 1) {
+                recyclerView.smoothScrollToPosition(adapterPosition)
+            }
+        }, 200L)
     }
 
     data class Model(
