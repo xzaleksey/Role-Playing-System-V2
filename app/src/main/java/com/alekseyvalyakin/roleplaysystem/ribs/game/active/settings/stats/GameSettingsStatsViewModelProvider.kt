@@ -76,25 +76,37 @@ class GameSettingsStatsViewModelProviderImpl(
                         }
 
                         is GameSettingsStatPresenter.UiEvent.SelectStat -> {
-                            val gameStat = event.gameSettingsStatListViewModel.gameStat
-
-                            if (!event.gameSettingsStatListViewModel.selected) {
-
-                                if (gameStat is DefaultGameStat) {
-                                    return@flatMap gameGameStatsRepository.createDocumentWithId(game.id, gameStat.toUserGameStat())
-                                            .toObservable()
-                                }
-                            } else {
-                                if (gameStat is UserGameStat) {
-                                    return@flatMap gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
-                                            .toObservable<Any>()
-                                }
-                            }
+                            return@flatMap handleSelectStat(event)
                         }
                     }
                     return@flatMap Observable.empty<Any>()
                 }
                 .subscribeWithErrorLogging()
+    }
+
+    private fun handleSelectStat(event: GameSettingsStatPresenter.UiEvent.SelectStat): Observable<out Any> {
+        val gameStat = event.gameSettingsStatListViewModel.gameStat
+
+        if (!event.gameSettingsStatListViewModel.selected) {
+            return if (gameStat is DefaultGameStat) {
+                gameGameStatsRepository.createDocumentWithId(game.id, gameStat.toUserGameStat())
+                        .toObservable()
+            } else {
+                gameGameStatsRepository.setSelected(game.id, gameStat.id, true)
+                        .toObservable<Any>()
+            }
+        } else {
+            if (gameStat is UserGameStat) {
+                return if (GameStat.INFO.isSupported(gameStat)) {
+                    gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
+                            .toObservable<Any>()
+                } else {
+                    gameGameStatsRepository.setSelected(game.id, gameStat.id, false)
+                            .toObservable<Any>()
+                }
+            }
+        }
+        return Observable.empty<Any>()
     }
 
     private fun getDefaultGamesDisposable(): Disposable {
@@ -110,8 +122,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     gameStats.forEach {
                         result.add(
                                 GameSettingsStatListViewModel(it,
-                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id))!!,
-                                        selected = true)
+                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id))!!)
                         )
                     }
 

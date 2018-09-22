@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireS
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
+import io.reactivex.Completable
 import io.reactivex.Flowable
 
 
@@ -21,8 +22,14 @@ class GameStatsRepositoryImpl : BaseGameFireStoreRepository<UserGameStat>(UserGa
         return FirestoreCollection.StatsInGame(gameId).getDbCollection()
     }
 
+    override fun setSelected(gameId: String, id: String, selected: Boolean): Completable {
+        return updateFieldOffline(id, selected, UserGameStat.SELECTED_FIELD, gameId)
+    }
+
 }
 
 interface GameStatsRepository : GameFireStoreRepository<UserGameStat> {
     fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameStat>>
+
+    fun setSelected(gameId: String, id: String, selected: Boolean): Completable
 }

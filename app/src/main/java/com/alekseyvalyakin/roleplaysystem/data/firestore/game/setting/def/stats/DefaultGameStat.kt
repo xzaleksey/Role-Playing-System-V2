@@ -31,7 +31,12 @@ data class DefaultGameStat(
     }
 
     @Exclude
+    override fun selected(): Boolean {
+        return false
+    }
+
+    @Exclude
     fun toUserGameStat(): UserGameStat {
-        return UserGameStat(getDisplayedName(), getDisplayedDescription(), getIconId(), id)
+        return UserGameStat(getDisplayedName(), getDisplayedDescription(), getIconId(), true, id)
     }
 }

@@ -14,7 +14,7 @@ import org.jetbrains.anko.wrapContent
 
 class GameSettingsStatListViewModel(
         val gameStat: GameStat,
-        val selected: Boolean = false,
+        val selected: Boolean = gameStat.selected(),
         val title: String = gameStat.getDisplayedName(),
         val description: String = gameStat.getDisplayedDescription(),
         val leftIcon: Drawable

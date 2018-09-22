@@ -8,6 +8,7 @@ data class UserGameStat(
         override var name: String = StringUtils.EMPTY_STRING,
         var description: String = StringUtils.EMPTY_STRING,
         var icon: String = StringUtils.EMPTY_STRING,
+        var selected: Boolean = true,
 
         @Exclude
         @set:Exclude
@@ -26,10 +27,18 @@ data class UserGameStat(
         return description
     }
 
+    @Exclude
+    override fun selected(): Boolean {
+        return selected
+    }
 
     @Exclude
     override fun getIconId(): String {
         return icon
+    }
+
+    companion object {
+        const val SELECTED_FIELD = "selected"
     }
 
 }

@@ -12,6 +12,8 @@ interface GameStat : FireStoreIdModel {
     @Exclude
     fun getDisplayedDescription(): String
 
+    fun selected(): Boolean
+
     @Exclude
     fun getIconId(): String
 
