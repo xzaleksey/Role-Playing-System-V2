@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
 import com.alekseyvalyakin.roleplaysystem.utils.NumberUtils.ZERO
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.UNDEFINED
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import timber.log.Timber
 
 interface ResourcesProvider {
@@ -23,7 +25,7 @@ interface ResourcesProvider {
 
     fun getString(@StringRes stringRes: Int, vararg args: Any): String
 
-    fun getDrawable(@DrawableRes drawableRes: Int): Drawable?
+    fun getDrawable(@DrawableRes drawableRes: Int): Drawable
 
     fun getBitmap(drawableRes: Int): Bitmap?
 
@@ -65,13 +67,13 @@ class ResourcesProviderImpl(private val c: Context) : ResourcesProvider {
         return ZERO
     }
 
-    override fun getDrawable(drawableRes: Int): Drawable? {
+    override fun getDrawable(drawableRes: Int): Drawable {
         try {
-            return AppCompatResources.getDrawable(c, drawableRes)
+            return AppCompatResources.getDrawable(c, drawableRes)!!
         } catch (ignored: Exception) {
             Timber.e(ignored)
         }
-        return null
+        return ColorDrawable(c.getCompatColor(android.R.color.transparent))
     }
 
     override fun getBitmap(drawableRes: Int): Bitmap? {

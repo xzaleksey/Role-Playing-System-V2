@@ -138,7 +138,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     defaultStatsMap.minus(gameStatsMap.keys).values.forEach {
                         result.add(
                                 GameSettingsStatListViewModel(it,
-                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id))!!,
+                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id)),
                                         selected = false)
                         )
                     }
@@ -150,7 +150,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun gameSettingsStatListViewModel(gameStat: GameStat): GameSettingsStatListViewModel {
         return GameSettingsStatListViewModel(gameStat,
-                leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(gameStat.getIconId()))!!)
+                leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(gameStat.getIconId())))
     }
 
     private fun getDefaultModel(): GameSettingsStatViewModel {
@@ -169,8 +169,8 @@ class GameSettingsStatsViewModelProviderImpl(
                 ),
                 DefaultBackView.Model(
                         stringRepository.name(),
-                        stringRepository.description(),
-                        iconModel = IconViewModel(resourcesProvider.getDrawable(R.drawable.ic_photo)!!),
+                        stringRepository.getDescription(),
+                        iconModel = IconViewModel(resourcesProvider.getDrawable(R.drawable.ic_photo)),
                         chooseIconListener = {
                             presenter.chooseIcon(
                                     { iconViewModel ->
@@ -181,7 +181,7 @@ class GameSettingsStatsViewModelProviderImpl(
                                         }
                                     },
                                     GameStat.INFO.values().map {
-                                        IconViewModel(resourcesProvider.getDrawable(it.getIconRes())!!, it.id)
+                                        IconViewModel(resourcesProvider.getDrawable(it.getIconRes()), it.id)
                                     }
                             )
                         }

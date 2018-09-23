@@ -34,7 +34,7 @@ class CreateGameViewModelProvider constructor(
                         CreateGameStep.DESCRIPTION,
                         game.description,
                         Int.MAX_VALUE,
-                        stringRepository.description(),
+                        stringRepository.getDescription(),
                         stringRepository.createGameDescriptionExample(),
                         true,
                         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE

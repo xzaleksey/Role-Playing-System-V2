@@ -8,6 +8,11 @@ data class GameSettingsViewModel(
 
     enum class GameSettingsItemType {
         STATS,
-        CLASSES
+        CLASSES,
+        RACES,
+        SKILLS,
+        SPELLS,
+        EQUIPMENT,
+        DICES,
     }
 }

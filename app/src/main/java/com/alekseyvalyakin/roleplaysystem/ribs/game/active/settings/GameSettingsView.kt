@@ -78,6 +78,7 @@ class GameSettingsView constructor(
         buttonSkip = button {
             id = R.id.skip_game_setting
             backgroundResource = getSelectableItemBackGround()
+            textColorResource = R.color.colorAccent
             textResource = R.string.skip_game_setting
             leftPadding = getCommonDimen()
             rightPadding = getCommonDimen()

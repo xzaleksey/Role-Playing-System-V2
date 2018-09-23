@@ -140,4 +140,9 @@
     <string name="delete_stat">Delete stat</string>
     <string name="icon">Icon</string>
     <string name="choose_icon">Choose icon</string>
+    <string name="character_races">Character races</string>
+    <string name="skills">Skills</string>
+    <string name="spells">Spells</string>
+    <string name="equipment">Equipment</string>
+    <string name="dices_checks">Dice checks</string>
 </resources>

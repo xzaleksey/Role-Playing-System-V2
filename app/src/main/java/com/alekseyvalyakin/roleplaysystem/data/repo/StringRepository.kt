@@ -3,6 +3,26 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun getDicesChecks(): String {
+        return resourcesProvider.getString(R.string.dices_checks)
+    }
+
+    override fun getEquipment(): String {
+        return resourcesProvider.getString(R.string.equipment)
+    }
+
+    override fun getSpells(): String {
+        return resourcesProvider.getString(R.string.spells)
+    }
+
+    override fun getSkills(): String {
+        return resourcesProvider.getString(R.string.skills)
+    }
+
+    override fun getCharacterRaces(): String {
+        return resourcesProvider.getString(R.string.character_races)
+    }
+
     override fun getMyStat(): String {
         return resourcesProvider.getString(R.string.my_stat)
     }
@@ -39,7 +59,7 @@ class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : S
         return resourcesProvider.getString(R.string.create_game_description_title)
     }
 
-    override fun description(): String {
+    override fun getDescription(): String {
         return resourcesProvider.getString(R.string.description)
     }
 
@@ -152,7 +172,7 @@ interface StringRepository {
     fun createGameStepText(currentStep: Int, maxSteps: Int): String
     fun name(): String
     fun createGameNameExample(): String
-    fun description(): String
+    fun getDescription(): String
     fun createGameDescriptionTitle(): String
     fun createGameDescriptionExample(): String
     fun createGamePasswordTitle(): String
@@ -167,4 +187,9 @@ interface StringRepository {
     fun getStats(): String
     fun getNewStat(): String
     fun getMyStat(): String
+    fun getCharacterRaces(): String
+    fun getSkills(): String
+    fun getSpells(): String
+    fun getEquipment(): String
+    fun getDicesChecks(): String
 }

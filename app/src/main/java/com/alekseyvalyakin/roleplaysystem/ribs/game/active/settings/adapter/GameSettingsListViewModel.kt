@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.adapter
 
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +14,8 @@ import org.jetbrains.anko.wrapContent
 
 data class GameSettingsListViewModel(
         val title: String,
-        val type: GameSettingsViewModel.GameSettingsItemType
+        val type: GameSettingsViewModel.GameSettingsItemType,
+        val icon: Drawable
 ) : AbstractFlexibleItem<GameSettingsViewHolder>() {
 
     override fun getLayoutRes(): Int {

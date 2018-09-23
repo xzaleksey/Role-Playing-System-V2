@@ -12,6 +12,7 @@ class GameSettingsViewHolder(
     fun update(gameSettingsViewModel: GameSettingsListViewModel, relay: Relay<GameSettingsPresenter.UiEvent>) {
         gameSettingsView.update(
                 gameSettingsViewModel.title,
+                gameSettingsViewModel.icon,
                 View.OnClickListener { relay.accept(GameSettingsPresenter.UiEvent.GameSettingsClick(gameSettingsViewModel)) }
         )
     }

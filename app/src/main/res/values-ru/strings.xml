@@ -135,5 +135,10 @@
     <string name="delete_stat">Удалить характеристику</string>
     <string name="icon">Картинка</string>
     <string name="choose_icon">Выберите иконку</string>
+    <string name="character_races">Расы персонажей</string>
+    <string name="skills">Навыки</string>
+    <string name="spells">Заклинания</string>
+    <string name="equipment">Экипировка</string>
+    <string name="dices_checks">Кубы при проверках</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatBuilder
@@ -67,8 +68,8 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
             @GameSettingsScope
             @Provides
             @JvmStatic
-            internal fun viewModelProvider(stringRepository: StringRepository): GameSettingsViewModelProvider {
-                return GameSettingsViewModelProviderImpl(stringRepository)
+            internal fun viewModelProvider(stringRepository: StringRepository, resourcesProvider: ResourcesProvider): GameSettingsViewModelProvider {
+                return GameSettingsViewModelProviderImpl(stringRepository, resourcesProvider)
             }
         }
 
