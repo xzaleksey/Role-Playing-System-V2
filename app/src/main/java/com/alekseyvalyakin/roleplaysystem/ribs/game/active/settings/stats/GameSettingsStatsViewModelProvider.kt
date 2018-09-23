@@ -102,15 +102,12 @@ class GameSettingsStatsViewModelProviderImpl(
         } else {
             if (gameStat is UserGameStat) {
                 return if (GameStat.INFO.isSupported(gameStat)) {
-                    deleteObservable(gameStat).doOnNext {
-                        presenter.updateStartEndScrollPositions(event.adapterPosition)
-                    }
+                    deleteObservable(gameStat)
                 } else {
                     gameGameStatsRepository.setSelected(game.id, gameStat.id, false)
                             .toObservable<Any>()
-                            .doOnNext {
-                                presenter.updateStartEndScrollPositions(event.adapterPosition)
-                            }
+                }.doOnNext {
+                    presenter.updateStartEndScrollPositions(event.adapterPosition)
                 }
             }
         }
@@ -142,7 +139,7 @@ class GameSettingsStatsViewModelProviderImpl(
                                         selected = false)
                         )
                     }
-                    result.sortDescending()
+                    result.sort()
                     defaultGameStats.accept(result)
                 }).subscribeWithErrorLogging { _ -> updateItemsInList() }
 
@@ -230,7 +227,7 @@ class GameSettingsStatsViewModelProviderImpl(
                             }.toMutableList().apply {
                                 val element = gameSettingsStatListViewModel(gameStat)
                                 add(element)
-                                sortDescending()
+                                sort()
                                 presenter.scrollToPosition(indexOf(element))
                             }
 

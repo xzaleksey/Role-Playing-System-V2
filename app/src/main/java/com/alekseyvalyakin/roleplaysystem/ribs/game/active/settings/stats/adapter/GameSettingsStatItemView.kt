@@ -2,13 +2,14 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapt
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
 
-class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
+class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
 
     private lateinit var ivIconLeft: ImageView
     private lateinit var ivIconRight: ImageView
@@ -16,6 +17,8 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
     private lateinit var tvDescription: TextView
     private lateinit var tvTitle: TextView
     private lateinit var btnMore: TextView
+    private lateinit var space: View
+    private var container: ViewGroup
     private var divider: View
 
     private val disabledColor = getCompatColor(R.color.colorDisabled)
@@ -24,13 +27,15 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
     private val maxLinesDefault = 2
 
     init {
-        topPadding = getIntDimen(R.dimen.dp_10)
         backgroundResource = getSelectableItemBackGround()
+        orientation = VERTICAL
 
-        relativeLayout {
+        container = relativeLayout {
             id = R.id.container
+            topPadding = getIntDimen(R.dimen.dp_10)
             leftPadding = getDoubleCommonDimen()
             rightPadding = getDoubleCommonDimen()
+
             ivIconLeft = imageView {
                 id = R.id.left_icon
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -75,7 +80,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                     bottomPadding = getIntDimen(R.dimen.dp_10)
                     visibility = View.GONE
                     textResource = R.string.more_details
-                    textColorResource= R.color.colorAccent
+                    textColorResource = R.color.colorAccent
                     setOnClickListener {
                         if (!tvDescription.isAllTextVisible()) {
                             tvDescription.maxLines = Int.MAX_VALUE
@@ -89,6 +94,12 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
                 }.lparams(matchParent) {
                 }
+
+                space = view {
+                    visibility = View.VISIBLE
+                }.lparams(matchParent) {
+                    topMargin = getIntDimen(R.dimen.dp_10)
+                }
             }.lparams(matchParent, wrapContent) {
                 rightOf(ivIconLeft)
                 leftOf(ivIconRight)
@@ -100,8 +111,6 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         divider = view {
             backgroundDrawable = dividerDrawable()
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_1)) {
-            below(R.id.container)
-            topMargin = getIntDimen(R.dimen.dp_10)
         }
 
     }
@@ -115,14 +124,12 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
         tvDescription.text = gameSettingsStatListViewModel.description
         ivIconLeft.setImageDrawable(gameSettingsStatListViewModel.leftIcon)
 
-        tvDescription.post {
-            if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
-                btnMore.visibility = View.GONE
-                divider.marginLayoutParams().topMargin = getIntDimen(R.dimen.dp_10)
-            } else {
-                divider.marginLayoutParams().topMargin = 0
-                btnMore.visibility = View.VISIBLE
-            }
+        if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
+            btnMore.visibility = View.GONE
+            space.visibility=View.VISIBLE
+        } else {
+            btnMore.visibility = View.VISIBLE
+            space.visibility=View.GONE
         }
 
         if (gameSettingsStatListViewModel.selected) {

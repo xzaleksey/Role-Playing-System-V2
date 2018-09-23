@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -22,6 +23,7 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
     protected lateinit var tvTitle: TextView
     protected var topContainer: ViewGroup
     protected lateinit var flexibleAdapter: FlexibleAdapter<IFlexible<*>>
+    protected var progressBar: ProgressBar
 
     init {
         backgroundColorResource = R.color.colorWhite
@@ -64,6 +66,11 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
         }.lparams(width = matchParent, height = matchParent) {
             below(R.id.top_container)
         }
+        progressBar = progressBar {
+            visibility = View.GONE
+        }.lparams {
+            centerInParent()
+        }
     }
 
     fun update(model: Model) {
@@ -77,6 +84,12 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
             rightIcon.setImageDrawable(headerModel.icon)
         } else {
             topContainer.visibility = View.GONE
+        }
+
+        if (model.items.isEmpty()) {
+            progressBar.visibility = View.VISIBLE
+        } else {
+            progressBar.visibility = View.GONE
         }
     }
 

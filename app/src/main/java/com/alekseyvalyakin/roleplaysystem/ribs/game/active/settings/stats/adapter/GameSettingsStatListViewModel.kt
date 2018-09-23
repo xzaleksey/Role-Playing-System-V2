@@ -49,6 +49,6 @@ class GameSettingsStatListViewModel(
         return compareTitles(other)
     }
 
-    private fun compareTitles(other: GameSettingsStatListViewModel) = -title.compareTo(other.title)
+    private fun compareTitles(other: GameSettingsStatListViewModel) = title.compareTo(other.title)
 
 }
