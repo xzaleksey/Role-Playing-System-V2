@@ -21,32 +21,32 @@ interface GameStat : FireStoreIdModel {
     enum class INFO(val id: String) {
         STRENGTH("strength") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.ic_strength
             }
         },
         CONSTITUTION("constitution") {
             override fun getIconRes(): Int {
-                return R.drawable.dice_d4
+                return R.drawable.ic_constitution
             }
         },
         DEXTERITY("dexterity") {
             override fun getIconRes(): Int {
-                return R.drawable.dice_d6
+                return R.drawable.ic_dexterity
             }
         },
         INTELLIGENCE("intelligence") {
             override fun getIconRes(): Int {
-                return R.drawable.dice_d8
+                return R.drawable.ic_intelligence
             }
         },
         WISDOM("wisdom") {
             override fun getIconRes(): Int {
-                return R.drawable.dice_d10
+                return R.drawable.ic_wisdom
             }
         },
         CHARISMA("charisma") {
             override fun getIconRes(): Int {
-                return R.drawable.dice_d12
+                return R.drawable.ic_charisma
             }
         };
 

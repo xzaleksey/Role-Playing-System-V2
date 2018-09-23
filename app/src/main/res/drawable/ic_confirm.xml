@@ -7,8 +7,8 @@
     <path
             android:pathData="M21.5 12A9.5 9.5 0 0 1 12 21.5 9.5 9.5 0 0 1 2.5 12 9.5 9.5 0 0 1 12 2.5 9.5 9.5 0 0 1 21.5 12Z"
             android:strokeWidth="1"
-            android:strokeColor="#53585d" />
+            android:strokeColor="@color/colorAccent" />
     <path
             android:pathData="M10.1109 14.4843L7.88423 12.2577c-0.24811 -0.2482 -0.64254 -0.2482 -0.89065 0 -0.24811 0.2481 -0.24811 0.6425 0 0.8906l2.6656 2.6656c0.24812 0.2481 0.64892 0.2481 0.89702 0l6.7435 -6.73716c0.2482 -0.24811 0.2482 -0.64255 0 -0.89066 -0.2481 -0.24811 -0.6425 -0.24811 -0.8906 0l-6.2982 6.29822z"
-            android:fillColor="#53585d" />
+            android:fillColor="@color/colorAccent" />
 </vector>

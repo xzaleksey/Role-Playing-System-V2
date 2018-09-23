@@ -20,7 +20,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
 
     private val disabledColor = getCompatColor(R.color.colorDisabled)
     private val textColorPrimary = getCompatColor(R.color.colorTextPrimary)
-    private val commonIconColor = getCompatColor(R.color.commonIconColor)
+    private val commonIconColor = getCompatColor(R.color.colorPrimary)
     private val maxLinesDefault = 2
 
     init {
@@ -75,6 +75,7 @@ class GameSettingsStatItemView(context: Context) : _RelativeLayout(context) {
                     bottomPadding = getIntDimen(R.dimen.dp_10)
                     visibility = View.GONE
                     textResource = R.string.more_details
+                    textColorResource= R.color.colorAccent
                     setOnClickListener {
                         if (!tvDescription.isAllTextVisible()) {
                             tvDescription.maxLines = Int.MAX_VALUE
