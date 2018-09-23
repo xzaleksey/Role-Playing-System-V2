@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -17,7 +18,7 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
     private lateinit var tvDescription: TextView
     private lateinit var tvTitle: TextView
     private lateinit var btnMore: TextView
-    private lateinit var space: View
+    private lateinit var textContainer: ViewGroup
     private var container: ViewGroup
     private var divider: View
 
@@ -32,9 +33,9 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
 
         container = relativeLayout {
             id = R.id.container
-            topPadding = getIntDimen(R.dimen.dp_10)
             leftPadding = getDoubleCommonDimen()
             rightPadding = getDoubleCommonDimen()
+            topPadding = getIntDimen(R.dimen.dp_10)
 
             ivIconLeft = imageView {
                 id = R.id.left_icon
@@ -53,7 +54,8 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
                 leftMargin = getCommonDimen()
             }
 
-            verticalLayout {
+            textContainer = verticalLayout {
+                id = R.id.content
                 tvTitle = textView {
                     id = R.id.tv_title
                     textSizeDimen = R.dimen.dp_16
@@ -93,12 +95,7 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
                     }
 
                 }.lparams(matchParent) {
-                }
 
-                space = view {
-                    visibility = View.VISIBLE
-                }.lparams(matchParent) {
-                    topMargin = getIntDimen(R.dimen.dp_10)
                 }
             }.lparams(matchParent, wrapContent) {
                 rightOf(ivIconLeft)
@@ -126,10 +123,12 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
 
         if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
             btnMore.visibility = View.GONE
-            space.visibility=View.VISIBLE
+            container.bottomPadding = getIntDimen(R.dimen.dp_10)
+            (textContainer.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
         } else {
             btnMore.visibility = View.VISIBLE
-            space.visibility=View.GONE
+            (textContainer.layoutParams as RelativeLayout.LayoutParams).removeRule(RelativeLayout.CENTER_VERTICAL)
+            container.bottomPadding = 0
         }
 
         if (gameSettingsStatListViewModel.selected) {
