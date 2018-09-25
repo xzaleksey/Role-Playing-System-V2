@@ -51,8 +51,8 @@
             "ru": "Ловкость"
           },
           "description": {
-            "default": "Includes endurance, fitness, health and physical resistance to adversities, injuries, and illnesses",
-            "ru": "Contains several physical attributes, including coordination, agility, reaction speed, reflexes and sense of balance."
+            "default": "Contains of several physical attributes, including coordination, agility, reaction speed, reflexes and sense of balance.",
+            "ru": "Заключает в себе несколько физических атрибутов, включая координацию, проворство, скорость реакции, рефлексы и чувство равновесия."
           }
         },
         "intelligence": {

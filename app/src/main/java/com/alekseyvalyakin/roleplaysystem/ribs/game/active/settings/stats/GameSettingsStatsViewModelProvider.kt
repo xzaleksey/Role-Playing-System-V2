@@ -183,7 +183,7 @@ class GameSettingsStatsViewModelProviderImpl(
                             )
                         }
                 ),
-                GameSettingsStatViewModel.Step.SHOW_ALL
+                GameSettingsStatViewModel.Step.EXPANDED
         )
     }
 
@@ -199,7 +199,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun updateShowStatsModel() {
         statViewModel.accept(statViewModel.value.copy(toolBarModel = getShowStatToolbarModel(),
-                step = GameSettingsStatViewModel.Step.SHOW_ALL))
+                step = GameSettingsStatViewModel.Step.EXPANDED))
     }
 
     private fun updateNewStatModel() {
@@ -236,7 +236,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 },
                 title = stringRepository.getMyStat()
         ),
-                step = GameSettingsStatViewModel.Step.NEW_STAT))
+                step = GameSettingsStatViewModel.Step.COLLAPSED))
     }
 
     private fun updateItemsInList() {

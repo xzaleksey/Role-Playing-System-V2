@@ -1,10 +1,10 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
+package com.alekseyvalyakin.roleplaysystem.views.backdrop.def
 
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
 import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
 
-data class GameSettingsStatViewModel(
+data class DefaultBackDropViewModel(
         val toolBarModel: CustomToolbarView.Model,
         val frontModel: DefaultFrontView.Model,
         val backModel: DefaultBackView.Model,
