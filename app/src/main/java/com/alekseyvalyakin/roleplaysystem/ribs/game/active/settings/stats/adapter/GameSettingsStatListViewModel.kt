@@ -6,19 +6,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemViewModel
 import eu.davidea.flexibleadapter.FlexibleAdapter
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.wrapContent
 
 class GameSettingsStatListViewModel(
         val gameStat: GameStat,
-        val selected: Boolean = gameStat.selected(),
-        val title: String = gameStat.getDisplayedName(),
-        val description: String = gameStat.getDisplayedDescription(),
-        val leftIcon: Drawable
-) : AbstractFlexibleItem<GameSettingsStatsViewHolder>(), Comparable<GameSettingsStatListViewModel> {
+        leftIcon: Drawable
+) : GameSettingsDefaultItemViewModel<GameSettingsStatsViewHolder>(
+        gameStat.id,
+        gameStat.selected(),
+        gameStat.getDisplayedName(),
+        gameStat.getDisplayedDescription(),
+        leftIcon
+) {
 
     override fun getLayoutRes(): Int {
         return FlexibleLayoutTypes.GAME_SETTINGS_ITEM
@@ -33,22 +36,4 @@ class GameSettingsStatListViewModel(
     override fun bindViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, holderStats: GameSettingsStatsViewHolder, position: Int, payloads: MutableList<Any?>?) {
         holderStats.update(this, (adapter as GameSettingsStatAdapter).relay)
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is GameSettingsStatListViewModel) {
-            return false
-        }
-        return gameStat.id == other.gameStat.id && selected == other.selected
-    }
-
-    override fun hashCode(): Int {
-        return gameStat.id.hashCode()
-    }
-
-    override fun compareTo(other: GameSettingsStatListViewModel): Int {
-        return compareTitles(other)
-    }
-
-    private fun compareTitles(other: GameSettingsStatListViewModel) = title.compareTo(other.title)
-
 }

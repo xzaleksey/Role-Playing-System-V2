@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import io.reactivex.Observable
 
 /**

@@ -1,12 +1,11 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatAdapter
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
 import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView

@@ -7,10 +7,11 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
 
-class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
+class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
 
     private lateinit var ivIconLeft: ImageView
     private lateinit var ivIconRight: ImageView
@@ -112,16 +113,16 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
 
     }
 
-    fun update(gameSettingsStatClassViewModel: GameSettingsStatClassViewModel,
+    fun update(viewModel: GameSettingsDefaultItemViewModel<*>,
                onClickListener: OnClickListener,
                longClickListener: OnLongClickListener) {
-        tvTitle.text = gameSettingsStatClassViewModel.title
+        tvTitle.text = viewModel.title
         tvDescription.maxLines = maxLinesDefault
-        tvDescription.visibility = if (gameSettingsStatClassViewModel.selected) View.GONE else View.VISIBLE
-        tvDescription.text = gameSettingsStatClassViewModel.description
-        ivIconLeft.setImageDrawable(gameSettingsStatClassViewModel.leftIcon)
+        tvDescription.visibility = if (viewModel.selected) View.GONE else View.VISIBLE
+        tvDescription.text = viewModel.description
+        ivIconLeft.setImageDrawable(viewModel.leftIcon)
 
-        if (gameSettingsStatClassViewModel.selected || tvDescription.isAllTextVisible()) {
+        if (viewModel.selected || tvDescription.isAllTextVisible()) {
             btnMore.visibility = View.GONE
             container.bottomPadding = getIntDimen(R.dimen.dp_10)
             (textContainer.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
@@ -131,7 +132,7 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
             container.bottomPadding = 0
         }
 
-        if (gameSettingsStatClassViewModel.selected) {
+        if (viewModel.selected) {
             ivIconRight.imageResource = R.drawable.ic_confirm_selected
             ivIconLeft.tintImage(disabledColor)
             tvTitle.setTextColor(disabledColor)

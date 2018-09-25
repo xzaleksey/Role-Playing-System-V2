@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def
 
 import android.content.Context
 import android.view.Gravity

@@ -2,14 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.ada
 
 import android.support.v7.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassPresenter
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassViewModel
 import com.jakewharton.rxrelay2.Relay
 
 class GameSettingsClassesViewHolder(
-        private val gsView: GameSettingsStatItemView
+        private val gsView: GameSettingsDefaultItemView
 ) : RecyclerView.ViewHolder(gsView) {
 
-    fun update(gameSettingsViewModel: GameSettingsClassViewModel, relay: Relay<GameSettingsClassPresenter.UiEvent>) {
+    fun update(gameSettingsViewModel: GameSettingsClassItemViewModel, relay: Relay<GameSettingsClassPresenter.UiEvent>) {
 //        gsView.update(gameSettingsViewModel, View.OnClickListener {
 //            Timber.d("OnCkick")
 //            relay.accept(

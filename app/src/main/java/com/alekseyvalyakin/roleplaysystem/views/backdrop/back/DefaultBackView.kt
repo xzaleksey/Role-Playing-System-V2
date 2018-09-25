@@ -8,7 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable

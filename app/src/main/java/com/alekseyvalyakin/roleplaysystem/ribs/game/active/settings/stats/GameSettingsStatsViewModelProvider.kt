@@ -8,7 +8,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
@@ -135,8 +135,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     defaultStatsMap.minus(gameStatsMap.keys).values.forEach {
                         result.add(
                                 GameSettingsStatListViewModel(it,
-                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id)),
-                                        selected = false)
+                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id)))
                         )
                     }
                     result.sort()
