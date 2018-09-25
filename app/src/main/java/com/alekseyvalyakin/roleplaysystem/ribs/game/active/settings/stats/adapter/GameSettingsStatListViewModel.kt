@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemViewModel
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -28,7 +29,7 @@ class GameSettingsStatListViewModel(
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>?, inflater: LayoutInflater?, parent: ViewGroup): GameSettingsStatsViewHolder {
-        val gameSettingsView = GameSettingsStatItemView(parent.context)
+        val gameSettingsView = GameSettingsDefaultItemView(parent.context)
         gameSettingsView.layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
         return GameSettingsStatsViewHolder(gameSettingsView)
     }

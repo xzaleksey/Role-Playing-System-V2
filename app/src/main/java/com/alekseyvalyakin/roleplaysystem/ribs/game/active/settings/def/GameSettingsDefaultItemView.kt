@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def
 
 import android.content.Context
 import android.view.View
@@ -7,10 +7,40 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
-import org.jetbrains.anko.*
+import com.alekseyvalyakin.roleplaysystem.utils.dividerDrawable
+import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBackGround
+import com.alekseyvalyakin.roleplaysystem.utils.isAllTextVisible
+import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
+import com.alekseyvalyakin.roleplaysystem.utils.tintImage
+import org.jetbrains.anko._LinearLayout
+import org.jetbrains.anko.alignParentEnd
+import org.jetbrains.anko.allCaps
+import org.jetbrains.anko.backgroundDrawable
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.bottomPadding
+import org.jetbrains.anko.centerVertically
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.imageView
+import org.jetbrains.anko.leftOf
+import org.jetbrains.anko.leftPadding
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.relativeLayout
+import org.jetbrains.anko.rightOf
+import org.jetbrains.anko.rightPadding
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textResource
+import org.jetbrains.anko.textSizeDimen
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.topPadding
+import org.jetbrains.anko.verticalLayout
+import org.jetbrains.anko.view
+import org.jetbrains.anko.wrapContent
 
-class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
+class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
 
     private lateinit var ivIconLeft: ImageView
     private lateinit var ivIconRight: ImageView
@@ -112,16 +142,16 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
 
     }
 
-    fun update(gameSettingsStatListViewModel: GameSettingsStatListViewModel,
+    fun update(viewModel: GameSettingsDefaultItemViewModel<*>,
                onClickListener: OnClickListener,
                longClickListener: OnLongClickListener) {
-        tvTitle.text = gameSettingsStatListViewModel.title
+        tvTitle.text = viewModel.title
         tvDescription.maxLines = maxLinesDefault
-        tvDescription.visibility = if (gameSettingsStatListViewModel.selected) View.GONE else View.VISIBLE
-        tvDescription.text = gameSettingsStatListViewModel.description
-        ivIconLeft.setImageDrawable(gameSettingsStatListViewModel.leftIcon)
+        tvDescription.visibility = if (viewModel.selected) View.GONE else View.VISIBLE
+        tvDescription.text = viewModel.description
+        ivIconLeft.setImageDrawable(viewModel.leftIcon)
 
-        if (gameSettingsStatListViewModel.selected || tvDescription.isAllTextVisible()) {
+        if (viewModel.selected || tvDescription.isAllTextVisible()) {
             btnMore.visibility = View.GONE
             container.bottomPadding = getIntDimen(R.dimen.dp_10)
             (textContainer.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
@@ -131,7 +161,7 @@ class GameSettingsStatItemView(context: Context) : _LinearLayout(context) {
             container.bottomPadding = 0
         }
 
-        if (gameSettingsStatListViewModel.selected) {
+        if (viewModel.selected) {
             ivIconRight.imageResource = R.drawable.ic_confirm_selected
             ivIconLeft.tintImage(disabledColor)
             tvTitle.setTextColor(disabledColor)
