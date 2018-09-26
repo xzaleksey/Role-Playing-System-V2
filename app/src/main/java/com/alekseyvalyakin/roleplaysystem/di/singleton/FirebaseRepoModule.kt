@@ -10,6 +10,10 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesI
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepositoryIml
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
@@ -33,10 +37,15 @@ class FirebaseRepoModule {
 
     @Provides
     @Singleton
-    fun statRepository(): DefaultSettingStatsRepository {
+    fun defaultStatRepository(): DefaultSettingStatsRepository {
         return DefaultSettingStatsRepositoryImpl()
     }
 
+    @Provides
+    @Singleton
+    fun defaultClassesRepo(): DefaultSettingClassRepository {
+        return DefaultSettingClassRepositoryImpl()
+    }
 
     @Provides
     @Singleton
@@ -82,5 +91,10 @@ class FirebaseRepoModule {
         return GameStatsRepositoryImpl()
     }
 
+    @Provides
+    @Singleton
+    fun classesRepo(): GameClassRepository {
+        return GameClassRepositoryImpl()
+    }
 
 }

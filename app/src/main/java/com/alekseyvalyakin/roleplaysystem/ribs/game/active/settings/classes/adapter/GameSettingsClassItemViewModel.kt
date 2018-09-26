@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.GameClass
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClass
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemViewModel
@@ -18,7 +18,7 @@ class GameSettingsClassItemViewModel(
         leftIcon: Drawable
 ) : GameSettingsDefaultItemViewModel<GameSettingsClassesViewHolder>(
         gameClass.id,
-        gameClass.selected(),
+        gameClass.selected,
         gameClass.getDisplayedName(),
         gameClass.getDisplayedDescription(),
         leftIcon

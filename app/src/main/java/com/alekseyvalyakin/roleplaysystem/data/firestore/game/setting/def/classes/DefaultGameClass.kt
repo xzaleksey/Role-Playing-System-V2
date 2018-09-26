@@ -1,10 +1,11 @@
-package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.core.TrasnlatableField
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
 
-data class DefaultGameStat(
+data class DefaultGameClass(
         var name: TrasnlatableField = TrasnlatableField(),
         var description: TrasnlatableField = TrasnlatableField(),
 
@@ -36,7 +37,7 @@ data class DefaultGameStat(
     }
 
     @Exclude
-    fun toUserGameStat(): UserGameStat {
-        return UserGameStat(getDisplayedName(), getDisplayedDescription(), getIconId(), true, id)
+    fun toUserGameClass(): UserGameClass {
+        return UserGameClass(getDisplayedName(), getDisplayedDescription(), getIconId(), true, id)
     }
 }

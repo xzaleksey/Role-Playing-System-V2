@@ -1,22 +1,20 @@
-package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.class
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.google.firebase.firestore.Exclude
 
 
-interface GameClass : FireStoreIdModel {
+interface GameClass : FireStoreIdModel, Selectable {
     @Exclude
     fun getDisplayedName(): String
 
     @Exclude
     fun getDisplayedDescription(): String
 
-    fun selected(): Boolean
-
     @Exclude
     fun getIconId(): String
-
 
     enum class INFO(val id: String) {
         STRENGTH("strength") {

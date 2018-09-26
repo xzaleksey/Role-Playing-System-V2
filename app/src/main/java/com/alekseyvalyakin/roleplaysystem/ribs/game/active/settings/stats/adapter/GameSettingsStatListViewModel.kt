@@ -18,7 +18,7 @@ class GameSettingsStatListViewModel(
         leftIcon: Drawable
 ) : GameSettingsDefaultItemViewModel<GameSettingsStatsViewHolder>(
         gameStat.id,
-        gameStat.selected(),
+        gameStat.selected,
         gameStat.getDisplayedName(),
         gameStat.getDisplayedDescription(),
         leftIcon

@@ -2,17 +2,16 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.google.firebase.firestore.Exclude
 
 
-interface GameStat : FireStoreIdModel {
+interface GameStat : FireStoreIdModel, Selectable {
     @Exclude
     fun getDisplayedName(): String
 
     @Exclude
     fun getDisplayedDescription(): String
-
-    fun selected(): Boolean
 
     @Exclude
     fun getIconId(): String
