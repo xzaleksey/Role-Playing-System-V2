@@ -81,7 +81,7 @@ class GameSettingsStatsViewModelProviderImpl(
                         }
 
                         is GameSettingsStatPresenter.UiEvent.DeleteStat -> {
-                            return@flatMap deleteObservable(event.gameSettingsViewModel.gameStat)
+                            return@flatMap deleteObservable(event.gameSettingsViewModel.id)
                         }
                     }
                     return@flatMap Observable.empty<Any>()
@@ -102,7 +102,7 @@ class GameSettingsStatsViewModelProviderImpl(
         } else {
             if (gameStat is UserGameStat) {
                 return if (GameStat.INFO.isSupported(gameStat)) {
-                    deleteObservable(gameStat)
+                    deleteObservable(gameStat.id)
                 } else {
                     gameGameStatsRepository.setSelected(game.id, gameStat.id, false)
                             .toObservable<Any>()
@@ -114,8 +114,8 @@ class GameSettingsStatsViewModelProviderImpl(
         return Observable.empty<Any>()
     }
 
-    private fun deleteObservable(gameStat: GameStat): Observable<Any> {
-        return gameGameStatsRepository.deleteDocumentOffline(game.id, gameStat.id)
+    private fun deleteObservable(gameStatId: String): Observable<Any> {
+        return gameGameStatsRepository.deleteDocumentOffline(game.id, gameStatId)
                 .toObservable<Any>()!!
                 .startWith(Unit)
     }

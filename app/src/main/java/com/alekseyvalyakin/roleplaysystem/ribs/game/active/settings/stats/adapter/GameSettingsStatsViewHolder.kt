@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.UserGameStat
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatPresenter
 import com.jakewharton.rxrelay2.Relay
@@ -20,7 +19,7 @@ class GameSettingsStatsViewHolder(
             relay.accept(
                     GameSettingsStatPresenter.UiEvent.SelectStat(gameSettingsViewModel, adapterPosition))
         }, View.OnLongClickListener { _ ->
-            if (gameSettingsViewModel.gameStat is UserGameStat) {
+            if (gameSettingsViewModel.custom) {
                 MaterialDialog(gsView.context)
                         .title(R.string.delete)
                         .message(R.string.delete_stat)

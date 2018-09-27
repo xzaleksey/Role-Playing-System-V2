@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.UserGameStat
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemViewModel
@@ -21,7 +22,8 @@ class GameSettingsStatListViewModel(
         gameStat.selected,
         gameStat.getDisplayedName(),
         gameStat.getDisplayedDescription(),
-        leftIcon
+        leftIcon,
+        custom = gameStat is UserGameStat
 ) {
 
     override fun getLayoutRes(): Int {

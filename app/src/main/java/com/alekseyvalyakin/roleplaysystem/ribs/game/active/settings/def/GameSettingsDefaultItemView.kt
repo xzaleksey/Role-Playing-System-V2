@@ -7,38 +7,8 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.dividerDrawable
-import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
-import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBackGround
-import com.alekseyvalyakin.roleplaysystem.utils.isAllTextVisible
-import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
-import com.alekseyvalyakin.roleplaysystem.utils.tintImage
-import org.jetbrains.anko._LinearLayout
-import org.jetbrains.anko.alignParentEnd
-import org.jetbrains.anko.allCaps
-import org.jetbrains.anko.backgroundDrawable
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.bottomPadding
-import org.jetbrains.anko.centerVertically
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.imageView
-import org.jetbrains.anko.leftOf
-import org.jetbrains.anko.leftPadding
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.relativeLayout
-import org.jetbrains.anko.rightOf
-import org.jetbrains.anko.rightPadding
-import org.jetbrains.anko.textColorResource
-import org.jetbrains.anko.textResource
-import org.jetbrains.anko.textSizeDimen
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.topPadding
-import org.jetbrains.anko.verticalLayout
-import org.jetbrains.anko.view
-import org.jetbrains.anko.wrapContent
+import com.alekseyvalyakin.roleplaysystem.utils.*
+import org.jetbrains.anko.*
 
 class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
 
@@ -150,15 +120,13 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
         tvDescription.visibility = if (viewModel.selected) View.GONE else View.VISIBLE
         tvDescription.text = viewModel.description
         ivIconLeft.setImageDrawable(viewModel.leftIcon)
+        btnMore.textResource = R.string.more_details
+        btnMore.visibility = View.GONE
 
-        if (viewModel.selected || tvDescription.isAllTextVisible()) {
-            btnMore.visibility = View.GONE
-            container.bottomPadding = getIntDimen(R.dimen.dp_10)
-            (textContainer.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
+        if (tvDescription.layout == null) {
+            post { updateText(viewModel) }
         } else {
-            btnMore.visibility = View.VISIBLE
-            (textContainer.layoutParams as RelativeLayout.LayoutParams).removeRule(RelativeLayout.CENTER_VERTICAL)
-            container.bottomPadding = 0
+            updateText(viewModel)
         }
 
         if (viewModel.selected) {
@@ -172,5 +140,17 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
         }
         setOnClickListener(onClickListener)
         setOnLongClickListener(longClickListener)
+    }
+
+    private fun updateText(viewModel: GameSettingsDefaultItemViewModel<*>) {
+        if (viewModel.selected || tvDescription.isAllTextVisible()) {
+            btnMore.visibility = View.GONE
+            container.bottomPadding = getIntDimen(R.dimen.dp_10)
+            (textContainer.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
+        } else {
+            btnMore.visibility = View.VISIBLE
+            (textContainer.layoutParams as RelativeLayout.LayoutParams).removeRule(RelativeLayout.CENTER_VERTICAL)
+            container.bottomPadding = 0
+        }
     }
 }

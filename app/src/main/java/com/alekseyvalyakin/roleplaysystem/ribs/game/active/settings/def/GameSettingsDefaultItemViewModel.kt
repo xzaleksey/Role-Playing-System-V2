@@ -9,7 +9,8 @@ abstract class GameSettingsDefaultItemViewModel<T : RecyclerView.ViewHolder>(
         val selected: Boolean,
         val title: String,
         val description: String,
-        val leftIcon: Drawable
+        val leftIcon: Drawable,
+        val custom: Boolean
 ) : AbstractFlexibleItem<T>(), Comparable<GameSettingsDefaultItemViewModel<T>> {
 
     override fun hashCode(): Int {
