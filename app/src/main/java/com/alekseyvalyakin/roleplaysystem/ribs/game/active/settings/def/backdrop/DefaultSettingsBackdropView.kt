@@ -1,14 +1,13 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.backdrop
 
 import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatPresenter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatAdapter
-import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
-import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BaseViewContainer
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackViewContainer
@@ -24,15 +23,17 @@ import org.jetbrains.anko.backgroundColorResource
 /**
  * Top level view for {@link GameSettingsStatBuilder.GameSettingsStatScope}.
  */
-class DefaultSettingsBackdropView constructor(
-        context: Context
-) : BackDropView<CustomToolbarView, DefaultBackView, DefaultFrontView>(context,
-        BaseViewContainer(
-                CustomToolbarView(context),
-                height = context.getToolbarHeight() + context.getStatusBarHeight()
-        ),
-        BackViewContainer(DefaultBackView(context)),
-        FrontViewContainer(DefaultFrontView(context))
+abstract class DefaultSettingsBackdropView<T : CustomToolbarView,
+        B : DefaultBackView,
+        F : DefaultFrontView> constructor(
+        context: Context,
+        topContainer: BaseViewContainer<T>,
+        backContainer: BackViewContainer<B>,
+        frontViewContainer: FrontViewContainer<F>
+) : BackDropView<T, B, F>(context,
+        topContainer,
+        backContainer,
+        frontViewContainer
 ), GameSettingsStatPresenter {
 
     private val relay = PublishRelay.create<GameSettingsStatPresenter.UiEvent>()

@@ -14,7 +14,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import org.jetbrains.anko.*
 
-class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
+open class DefaultBackView(context: Context) : _LinearLayout(context), BackView {
 
     private var etTitle: EditText
     private var etSubtitle: EditText
