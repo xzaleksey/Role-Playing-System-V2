@@ -65,7 +65,7 @@ class SearchToolbar constructor(
                         id = R.id.action_icon
                         padding = getIntDimen(R.dimen.dp_8)
                         setBackgroundResource(getSelectableItemBorderless())
-                        setImageDrawable(getCompatDrawable(R.drawable.ic_search_black_24dp))
+                        setImageDrawable(getCompatDrawable(R.drawable.ic_search))
                     }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
                         centerVertically()
                         leftMargin = getIntDimen(R.dimen.dp_8)
@@ -187,7 +187,7 @@ class SearchToolbar constructor(
         tvTitle.visibility = View.VISIBLE
         searchEditText.visibility = View.INVISIBLE
         leftIcon.hideKeyboard()
-        leftIcon.setImageDrawable(getCompatDrawable(R.drawable.ic_search_black_24dp))
+        leftIcon.setImageDrawable(getCompatDrawable(R.drawable.ic_search))
     }
 
     private fun initSearchMode() {
