@@ -35,6 +35,7 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
             rightIcon = imageView {
                 id = R.id.right_icon
                 imageResource = R.drawable.ic_add
+                tintImageRes(R.color.colorAccent)
                 backgroundResource = getSelectableItemBorderless()
 
             }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {

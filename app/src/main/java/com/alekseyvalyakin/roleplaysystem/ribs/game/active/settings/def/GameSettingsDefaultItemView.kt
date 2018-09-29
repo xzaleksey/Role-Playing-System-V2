@@ -1,6 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def
 
 import android.content.Context
+import android.graphics.Rect
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,6 +11,7 @@ import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
+
 
 class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
 
@@ -48,6 +51,7 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
             ivIconRight = imageView {
                 id = R.id.right_icon
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
+                backgroundResource = getSelectableItemBorderless()
             }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
                 alignParentEnd()
                 centerVertically()
@@ -109,11 +113,20 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
             backgroundDrawable = dividerDrawable()
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_1)) {
         }
-
+        container.post {
+            val rect = Rect()
+            ivIconRight.getHitRect(rect)
+            rect.top -= getIntDimen(R.dimen.dp_8)
+            rect.left -= getIntDimen(R.dimen.dp_8)
+            rect.bottom += getIntDimen(R.dimen.dp_8)
+            rect.right += getIntDimen(R.dimen.dp_8)
+            container.touchDelegate = TouchDelegate(rect, ivIconRight)
+        }
     }
 
     fun update(viewModel: GameSettingsDefaultItemViewModel<*>,
                onClickListener: OnClickListener,
+               rightImageOnclickListener: OnClickListener,
                longClickListener: OnLongClickListener) {
         tvTitle.text = viewModel.title
         tvDescription.maxLines = maxLinesDefault
@@ -138,6 +151,8 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
             ivIconLeft.tintImage(commonIconColor)
             tvTitle.setTextColor(textColorPrimary)
         }
+
+        ivIconRight.setOnClickListener(rightImageOnclickListener)
         setOnClickListener(onClickListener)
         setOnLongClickListener(longClickListener)
     }

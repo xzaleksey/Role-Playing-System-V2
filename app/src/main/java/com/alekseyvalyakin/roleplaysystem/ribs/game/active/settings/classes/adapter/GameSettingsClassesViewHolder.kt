@@ -12,11 +12,13 @@ class GameSettingsClassesViewHolder(
 ) : RecyclerView.ViewHolder(gsView) {
 
     fun update(viewModel: GameSettingsClassItemViewModel, relay: Relay<GameSettingsClassPresenter.UiEvent>) {
-        gsView.update(viewModel, View.OnClickListener {
-            Timber.d("OnCkick")
-            relay.accept(
-                    GameSettingsClassPresenter.UiEvent.SelectClass(viewModel, adapterPosition))
-        }, View.OnLongClickListener { _ ->
+        gsView.update(viewModel,
+                View.OnClickListener {},
+                View.OnClickListener {
+                    Timber.d("OnCkick")
+                    relay.accept(
+                            GameSettingsClassPresenter.UiEvent.SelectClass(viewModel, adapterPosition))
+                }, View.OnLongClickListener { _ ->
             //            if (viewModel.gameClass is UserGameStat) {
 //                MaterialDialog(gsView.context)
 //                        .title(R.string.delete)

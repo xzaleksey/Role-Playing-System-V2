@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import io.reactivex.Observable
 
 /**
@@ -19,6 +19,11 @@ interface GameSettingsStatPresenter {
                 val gameSettingsStatListViewModel: GameSettingsStatListViewModel,
                 val adapterPosition: Int
         ) : UiEvent()
+
+        class ChangeStat(
+                val gameSettingsStatListViewModel: GameSettingsStatListViewModel
+        ) : UiEvent()
+
 
         class SubtitleInput(val text: String) : UiEvent()
         class DeleteStat(val gameSettingsViewModel: GameSettingsStatListViewModel) : UiEvent()
