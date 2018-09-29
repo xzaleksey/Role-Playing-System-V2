@@ -25,7 +25,7 @@ class GameListViewHolder(itemView: View, mAdapter: FlexibleAdapter<*>) : Flexibl
         if (gameListViewModel.isGameLocked) {
             iconRight.setImageResource(R.drawable.ic_lock_outline_black_24px)
         } else {
-            iconRight.setImageResource(R.drawable.ic_keyboard_arrow_right)
+            iconRight.setImageResource(R.drawable.ic_arrow_right)
         }
     }
 }

@@ -3,9 +3,9 @@
     <color name="colorPrimary">#795548</color>
     <color name="colorPrimaryDark">#5d4037</color>
     <color name="colorPrimaryLight">#D7CCC8</color>
-    <color name="colorAccentLight">#7FAD80</color>
+    <color name="colorAccentLight">#C5E1A5</color>
     <color name="colorAccent">#8BC34A</color>
-    <color name="colorAccentDark">#365A37</color>
+    <color name="colorAccentDark">#689F38</color>
     <color name="colorStatusBarProfile">#f83d2e2b</color>
     <color name="white7">#B2FFFFFF</color>
     <color name="white10">#19FFFFFF</color>

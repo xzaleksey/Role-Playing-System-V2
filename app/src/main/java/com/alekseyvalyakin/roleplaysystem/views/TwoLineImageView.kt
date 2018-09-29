@@ -30,7 +30,7 @@ class TwoLineImageView(context: Context) : _FrameLayout(context) {
                 imageView {
                     id = R.id.arrow_right
                     visibility = View.GONE
-                    imageResource = R.drawable.ic_keyboard_arrow_right
+                    imageResource = R.drawable.ic_arrow_right
                 }.lparams(width = getIntDimen(R.dimen.dp_24), height = getIntDimen(R.dimen.dp_24)) {
                     alignParentRight()
                     centerVertically()

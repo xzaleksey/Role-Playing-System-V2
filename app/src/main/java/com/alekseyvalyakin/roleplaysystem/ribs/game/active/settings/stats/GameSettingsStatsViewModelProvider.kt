@@ -155,7 +155,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 DefaultFrontView.Model(
                         DefaultFrontView.HeaderModel(
                                 stringRepository.getNewStat(),
-                                resourcesProvider.getDrawable(R.drawable.ic_add_black_24dp),
+                                resourcesProvider.getDrawable(R.drawable.ic_add),
                                 {
                                     presenter.collapseFront()
                                     updateNewStatModel()
@@ -203,12 +203,12 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun updateNewStatModel() {
         statViewModel.accept(statViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
-                leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close_black_24dp),
+                leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     presenter.expandFront()
                     updateShowStatsModel()
                 },
-                rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done_black_24dp),
+                rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
                     val value = statViewModel.value
                     val backModel = value.backModel

@@ -29,7 +29,7 @@ class GameListView(
 
                 imageView {
                     id = R.id.iv_right
-                    imageResource = R.drawable.ic_arrow_right
+                    imageResource = R.drawable.ic_arrow_next
                 }.lparams(width = getIntDimen(R.dimen.dp_24), height = getIntDimen(R.dimen.dp_24)) {
                     alignParentRight()
                     centerVertically()
@@ -47,7 +47,7 @@ class GameListView(
                 imageView {
                     id = R.id.icon
                     visibility = View.GONE
-                    imageResource = R.drawable.crown
+                    imageResource = R.drawable.ic_crown
                 }.lparams(width = getIntDimen(R.dimen.dp_18), height = getIntDimen(R.dimen.dp_18)) {
                     below(R.id.primary_line)
                     marginEnd = getIntDimen(R.dimen.dp_4)

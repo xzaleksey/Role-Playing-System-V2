@@ -59,7 +59,7 @@ class PhotoView constructor(
         }
         fab = floatingActionButton {
             id = R.id.fab
-            imageResource = R.drawable.ic_add_black_24dp
+            imageResource = R.drawable.ic_add
             imageTintList = ContextCompat.getColorStateList(getContext(), R.color.material_light_white)
             hide()
         }.lparams {

@@ -112,7 +112,7 @@ class CreateGameView constructor(
 
             fab = themedFloatingActionButton(R.style.AppTheme_TextWhite) {
                 id = R.id.fab
-                imageResource = R.drawable.ic_arrow_right
+                imageResource = R.drawable.ic_arrow_next
                 imageTintList = ContextCompat.getColorStateList(getContext(), R.color.fab_icon_color)
                 backgroundTintList = getCompatColorStateList(R.color.fab_background_color)
             }.lparams(width = wrapContent, height = wrapContent) {

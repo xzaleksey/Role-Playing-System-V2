@@ -25,7 +25,7 @@ class GameSettingsView(context: Context) : _RelativeLayout(context) {
 
         imageView {
             id = R.id.arrow_right
-            imageResource = R.drawable.ic_keyboard_arrow_right
+            imageResource = R.drawable.ic_arrow_right
         }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
             alignParentEnd()
             centerVertically()

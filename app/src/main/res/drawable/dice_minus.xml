@@ -12,7 +12,7 @@
             android:translateY="1529">
             <path
                 android:pathData="M0 2C0 0.895431 0.895431 0 2 0l29.6885 0c0 0 2.5481 14.3752 -6.9318 24.2892C15.2768 34.2031 0 31.7246 0 31.7246L0 2Z"
-                android:fillColor="#437045" />
+                android:fillColor="@color/colorAccentDark" />
         </group>
         <group
             android:translateX="852"

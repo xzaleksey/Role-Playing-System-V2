@@ -63,7 +63,7 @@ class MainView constructor(
                 id = R.id.fab
                 size = FloatingActionButton.SIZE_NORMAL
                 tintImageRes(R.color.material_light_white)
-                setImageDrawable(getCompatDrawable(R.drawable.ic_add_black_24dp))
+                setImageDrawable(getCompatDrawable(R.drawable.ic_add))
             }.lparams {
                 gravity = Gravity.BOTTOM or Gravity.END
                 margin = getIntDimen(R.dimen.dp_8)
