@@ -7,8 +7,8 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
@@ -54,7 +54,9 @@ class GameSettingsStatsViewModelProviderImpl(
                     when (event) {
                         is GameSettingsStatPresenter.UiEvent.CollapseFront -> {
                             activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
-                            updateNewStatModel()
+                            if (statViewModel.value.selectedModel == null) {
+                                updateNewStatModel()
+                            }
                         }
 
                         is GameSettingsStatPresenter.UiEvent.ExpandFront -> {
@@ -64,20 +66,37 @@ class GameSettingsStatsViewModelProviderImpl(
 
                         is GameSettingsStatPresenter.UiEvent.TitleInput -> {
                             val value = statViewModel.value
-                            statViewModel.accept(value.copy(backModel = value.backModel.copy(
-                                    titleText = event.text
-                            )))
+                            if (value.backModel.titleText != event.text) {
+                                statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                                        titleText = event.text
+                                )))
+                            }
                         }
 
                         is GameSettingsStatPresenter.UiEvent.SubtitleInput -> {
                             val value = statViewModel.value
-                            statViewModel.accept(value.copy(backModel = value.backModel.copy(
-                                    subtitleText = event.text
-                            )))
+                            if (value.backModel.subtitleText != event.text) {
+                                statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                                        subtitleText = event.text
+                                )))
+                            }
                         }
 
                         is GameSettingsStatPresenter.UiEvent.SelectStat -> {
                             return@flatMap handleSelectStat(event)
+                        }
+
+                        is GameSettingsStatPresenter.UiEvent.ChangeStat -> {
+                            val gameSettingsStatListViewModel = event.gameSettingsStatListViewModel
+                            if (gameSettingsStatListViewModel.custom) {
+                                updateSelectedStatModel(gameSettingsStatListViewModel.gameStat as UserGameStat)
+                            } else {
+                                updateSelectedStatModel(
+                                        (gameSettingsStatListViewModel.gameStat as DefaultGameStat).toUserGameStat()
+                                )
+                            }
+
+                            presenter.collapseFront()
                         }
 
                         is GameSettingsStatPresenter.UiEvent.DeleteStat -> {
@@ -88,6 +107,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 }
                 .subscribeWithErrorLogging()
     }
+
 
     private fun handleSelectStat(event: GameSettingsStatPresenter.UiEvent.SelectStat): Observable<out Any> {
         val gameStat = event.gameSettingsStatListViewModel.gameStat
@@ -135,7 +155,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     defaultStatsMap.minus(gameStatsMap.keys).values.forEach {
                         result.add(
                                 GameSettingsStatListViewModel(it,
-                                        leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.id)))
+                                        leftIcon = IconViewModel(resourcesProvider.getDrawable(GameStat.INFO.getIconId(it.getIconId())), it.getIconId()))
                         )
                     }
                     result.sort()
@@ -146,7 +166,8 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun gameSettingsStatListViewModel(gameStat: GameStat): GameSettingsStatListViewModel {
         return GameSettingsStatListViewModel(gameStat,
-                leftIcon = resourcesProvider.getDrawable(GameStat.INFO.getIconId(gameStat.getIconId())))
+                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameStat.INFO.getIconId(gameStat.getIconId())), gameStat.getIconId()))
+
     }
 
     private fun getDefaultModel(): GameSettingsStatViewModel {
@@ -182,7 +203,8 @@ class GameSettingsStatsViewModelProviderImpl(
                             )
                         }
                 ),
-                GameSettingsStatViewModel.Step.EXPANDED
+                GameSettingsStatViewModel.Step.EXPANDED,
+                selectedModel = null
         )
     }
 
@@ -201,8 +223,11 @@ class GameSettingsStatsViewModelProviderImpl(
                 step = GameSettingsStatViewModel.Step.EXPANDED))
     }
 
-    private fun updateNewStatModel() {
-        statViewModel.accept(statViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
+    private fun updateSelectedStatModel(userGameStat: UserGameStat) {
+        val customStat = !GameStat.INFO.isSupported(userGameStat)
+
+        val value = statViewModel.value
+        statViewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     presenter.expandFront()
@@ -210,11 +235,57 @@ class GameSettingsStatsViewModelProviderImpl(
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
+                    val backModel = statViewModel.value.backModel
+                    if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
+                        expandFront()
+                        disposable.add(gameGameStatsRepository.createDocumentWithId(
+                                game.id,
+                                userGameStat.copy(
+                                        name = backModel.titleText,
+                                        description = backModel.subtitleText,
+                                        icon = backModel.iconModel.id)
+                        ).subscribeWithErrorLogging { gameStat ->
+                            statViewModel.value.frontModel.items.asSequence().map {
+                                it as GameSettingsStatListViewModel
+                            }.toMutableList().apply {
+                                val element = gameSettingsStatListViewModel(gameStat)
+                                add(element)
+                                sort()
+                                presenter.scrollToPosition(indexOf(element))
+                            }
+
+                        })
+                    }
+                },
+                title = if (customStat) stringRepository.getMyStat() else userGameStat.name
+        ),
+                backModel = value.backModel.copy(
+                        titleText = userGameStat.name,
+                        subtitleText = userGameStat.description,
+                        iconModel = IconViewModel(
+                                resourcesProvider.getDrawable(GameStat.INFO.getIconId(userGameStat.icon)),
+                                userGameStat.icon),
+                        titleVisible = customStat,
+                        iconVisible = customStat
+                ),
+                step = GameSettingsStatViewModel.Step.COLLAPSED,
+                selectedModel = userGameStat))
+    }
+
+
+    private fun updateNewStatModel() {
+        statViewModel.accept(statViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
+                leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
+                leftIconClickListener = {
+                    expandFront()
+                    updateShowStatsModel()
+                },
+                rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
+                rightIconClickListener = {
                     val value = statViewModel.value
                     val backModel = value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
-                        presenter.clearBackView()
-                        presenter.expandFront()
+                        expandFront()
                         disposable.add(gameGameStatsRepository.createDocument(
                                 game.id,
                                 UserGameStat(backModel.titleText,
@@ -235,7 +306,22 @@ class GameSettingsStatsViewModelProviderImpl(
                 },
                 title = stringRepository.getMyStat()
         ),
-                step = GameSettingsStatViewModel.Step.COLLAPSED))
+                backModel = statViewModel.value.backModel.copy(
+                        titleText = "",
+                        subtitleText = "",
+                        titleVisible = true,
+                        iconVisible = true,
+                        iconModel = IconViewModel(
+                                resourcesProvider.getDrawable(R.drawable.ic_photo)
+                        )
+                ),
+                step = GameSettingsStatViewModel.Step.COLLAPSED,
+                selectedModel = null))
+    }
+
+    private fun expandFront() {
+        presenter.clearBackView()
+        presenter.expandFront()
     }
 
     private fun updateItemsInList() {

@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def
 
-import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 
@@ -9,7 +8,7 @@ abstract class GameSettingsDefaultItemViewModel<T : RecyclerView.ViewHolder>(
         val selected: Boolean,
         val title: String,
         val description: String,
-        val leftIcon: Drawable,
+        val leftIcon: IconViewModel,
         val custom: Boolean
 ) : AbstractFlexibleItem<T>(), Comparable<GameSettingsDefaultItemViewModel<T>> {
 
@@ -27,6 +26,10 @@ abstract class GameSettingsDefaultItemViewModel<T : RecyclerView.ViewHolder>(
         if (other !is GameSettingsDefaultItemViewModel<*>) {
             return false
         }
-        return id == other.id && selected == other.selected
+        return id == other.id
+                && selected == other.selected
+                && title == other.title
+                && description == other.description
+                && leftIcon.id == other.leftIcon.id
     }
 }

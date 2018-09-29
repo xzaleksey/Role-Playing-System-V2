@@ -2,14 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDescription
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasName
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
 
 data class UserGameStat(
         override var name: String = StringUtils.EMPTY_STRING,
         override var description: String = StringUtils.EMPTY_STRING,
-        var icon: String = StringUtils.EMPTY_STRING,
+        var icon: String = "default",
         override var selected: Boolean = true,
 
         @Exclude

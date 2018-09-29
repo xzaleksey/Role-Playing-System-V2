@@ -3,10 +3,12 @@ package com.alekseyvalyakin.roleplaysystem.views.backdrop.back
 import android.content.Context
 import android.text.InputType
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -19,6 +21,7 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
     private var etTitle: EditText
     private var etSubtitle: EditText
     private lateinit var ivIcon: ImageView
+    private lateinit var tvIcon: TextView
     private var imageContainer: ViewGroup
 
     init {
@@ -53,7 +56,7 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
                 gravity = Gravity.CENTER_VERTICAL
             }
 
-            textView {
+            tvIcon = textView {
                 textColorResource = R.color.colorWhite
                 textSizeDimen = R.dimen.dp_16
                 textResource = R.string.icon
@@ -75,8 +78,18 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
     fun update(model: Model) {
         etTitle.hint = model.titleHint
         etSubtitle.hint = model.subtitleHint
+        etTitle.setText(model.titleText)
+        etSubtitle.setText(model.subtitleText)
         ivIcon.setImageDrawable(model.iconModel.drawable)
         imageContainer.setOnClickListener { model.chooseIconListener() }
+        ivIcon.visibility = if (model.iconVisible) View.VISIBLE else View.GONE
+        tvIcon.visibility = if (model.iconVisible) View.VISIBLE else View.GONE
+        etTitle.visibility = if (model.titleVisible) View.VISIBLE else View.GONE
+        if (model.titleVisible) {
+            etTitle.setSelection(etTitle.length())
+        } else{
+            etSubtitle.setSelection(etSubtitle.length())
+        }
     }
 
     override fun onShown() {
@@ -98,6 +111,8 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
             val titleText: String = "",
             val subtitleText: String = "",
             val iconModel: IconViewModel,
-            val chooseIconListener: () -> Unit
+            val chooseIconListener: () -> Unit,
+            val titleVisible: Boolean = true,
+            val iconVisible: Boolean = true
     )
 }

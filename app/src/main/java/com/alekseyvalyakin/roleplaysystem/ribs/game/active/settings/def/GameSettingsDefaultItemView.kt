@@ -132,7 +132,7 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
         tvDescription.maxLines = maxLinesDefault
         tvDescription.visibility = if (viewModel.selected) View.GONE else View.VISIBLE
         tvDescription.text = viewModel.description
-        ivIconLeft.setImageDrawable(viewModel.leftIcon)
+        ivIconLeft.setImageDrawable(viewModel.leftIcon.drawable)
         btnMore.textResource = R.string.more_details
         btnMore.visibility = View.GONE
 
