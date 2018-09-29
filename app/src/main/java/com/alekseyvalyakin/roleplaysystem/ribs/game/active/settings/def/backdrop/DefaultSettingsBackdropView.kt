@@ -67,10 +67,6 @@ abstract class DefaultSettingsBackdropView<T : CustomToolbarView,
         relay.accept(GameSettingsStatPresenter.UiEvent.CollapseFront)
     }
 
-    override fun clearBackView() {
-        backViewContainer.view.clear()
-    }
-
     override fun updateStartEndScrollPositions(adapterPosition: Int) {
         frontViewContainer.view.updateStartEndPositions(adapterPosition)
     }

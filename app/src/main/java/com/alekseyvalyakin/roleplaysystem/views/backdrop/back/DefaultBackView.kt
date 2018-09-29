@@ -78,16 +78,20 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
     fun update(model: Model) {
         etTitle.hint = model.titleHint
         etSubtitle.hint = model.subtitleHint
-        etTitle.setText(model.titleText)
-        etSubtitle.setText(model.subtitleText)
+        if (etTitle.text.toString() != model.titleText) {
+            etTitle.setText(model.titleText)
+        }
+        if (etSubtitle.text.toString() != model.subtitleText) {
+            etSubtitle.setText(model.subtitleText)
+        }
         ivIcon.setImageDrawable(model.iconModel.drawable)
         imageContainer.setOnClickListener { model.chooseIconListener() }
         ivIcon.visibility = if (model.iconVisible) View.VISIBLE else View.GONE
         tvIcon.visibility = if (model.iconVisible) View.VISIBLE else View.GONE
         etTitle.visibility = if (model.titleVisible) View.VISIBLE else View.GONE
-        if (model.titleVisible) {
+        if (model.titleVisible && etTitle.hasFocus()) {
             etTitle.setSelection(etTitle.length())
-        } else{
+        } else {
             etSubtitle.setSelection(etSubtitle.length())
         }
     }
@@ -100,16 +104,11 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
         etTitle.hideKeyboard(100L)
     }
 
-    fun clear() {
-        etTitle.setText(StringUtils.EMPTY_STRING)
-        etSubtitle.setText(StringUtils.EMPTY_STRING)
-    }
-
     data class Model(
             val titleHint: String,
             val subtitleHint: String,
-            val titleText: String = "",
-            val subtitleText: String = "",
+            val titleText: String = StringUtils.EMPTY_STRING,
+            val subtitleText: String = StringUtils.EMPTY_STRING,
             val iconModel: IconViewModel,
             val chooseIconListener: () -> Unit,
             val titleVisible: Boolean = true,

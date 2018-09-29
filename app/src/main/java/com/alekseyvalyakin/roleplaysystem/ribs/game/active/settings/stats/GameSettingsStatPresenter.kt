@@ -37,8 +37,6 @@ interface GameSettingsStatPresenter {
 
     fun collapseFront()
 
-    fun clearBackView()
-
     fun updateStartEndScrollPositions(adapterPosition: Int)
 
     fun scrollToPosition(position: Int)

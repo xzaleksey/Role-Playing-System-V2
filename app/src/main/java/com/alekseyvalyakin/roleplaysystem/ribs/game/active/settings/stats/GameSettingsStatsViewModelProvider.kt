@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
+import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
@@ -220,7 +221,8 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun updateShowStatsModel() {
         statViewModel.accept(statViewModel.value.copy(toolBarModel = getShowStatToolbarModel(),
-                step = GameSettingsStatViewModel.Step.EXPANDED))
+                step = GameSettingsStatViewModel.Step.EXPANDED,
+                selectedModel = null))
     }
 
     private fun updateSelectedStatModel(userGameStat: UserGameStat) {
@@ -307,8 +309,8 @@ class GameSettingsStatsViewModelProviderImpl(
                 title = stringRepository.getMyStat()
         ),
                 backModel = statViewModel.value.backModel.copy(
-                        titleText = "",
-                        subtitleText = "",
+                        titleText = StringUtils.EMPTY_STRING,
+                        subtitleText = StringUtils.EMPTY_STRING,
                         titleVisible = true,
                         iconVisible = true,
                         iconModel = IconViewModel(
@@ -320,7 +322,6 @@ class GameSettingsStatsViewModelProviderImpl(
     }
 
     private fun expandFront() {
-        presenter.clearBackView()
         presenter.expandFront()
     }
 

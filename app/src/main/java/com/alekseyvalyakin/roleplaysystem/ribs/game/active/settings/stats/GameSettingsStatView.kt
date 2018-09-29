@@ -4,8 +4,8 @@ import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatAdapter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
 import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView
@@ -63,10 +63,6 @@ class GameSettingsStatView constructor(
 
     override fun onCollapsed() {
         relay.accept(GameSettingsStatPresenter.UiEvent.CollapseFront)
-    }
-
-    override fun clearBackView() {
-        backViewContainer.view.clear()
     }
 
     override fun updateStartEndScrollPositions(adapterPosition: Int) {

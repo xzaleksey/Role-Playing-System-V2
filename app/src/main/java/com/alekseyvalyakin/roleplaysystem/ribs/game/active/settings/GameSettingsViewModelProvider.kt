@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
+import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.adapter.GameSettingsListViewModel
-import com.alekseyvalyakin.roleplaysystem.R
 
 class GameSettingsViewModelProviderImpl(
         private val stringRepository: StringRepository,
@@ -31,17 +31,17 @@ class GameSettingsViewModelProviderImpl(
                         GameSettingsListViewModel(
                                 stringRepository.getSkills(),
                                 GameSettingsViewModel.GameSettingsItemType.SKILLS,
-                                resourcesProvider.getDrawable(R.drawable.ic_races)
+                                resourcesProvider.getDrawable(R.drawable.ic_skills)
                         ),
                         GameSettingsListViewModel(
                                 stringRepository.getSpells(),
                                 GameSettingsViewModel.GameSettingsItemType.SPELLS,
-                                resourcesProvider.getDrawable(R.drawable.ic_races)
+                                resourcesProvider.getDrawable(R.drawable.ic_spells)
                         ),
                         GameSettingsListViewModel(
                                 stringRepository.getEquipment(),
                                 GameSettingsViewModel.GameSettingsItemType.EQUIPMENT,
-                                resourcesProvider.getDrawable(R.drawable.ic_races)
+                                resourcesProvider.getDrawable(R.drawable.ic_equiment)
                         ),
                         GameSettingsListViewModel(
                                 stringRepository.getDicesChecks(),
