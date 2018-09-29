@@ -30,7 +30,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 5
-        versionName "1.0.5"
+        versionName "1.0.6"
         buildConfigField("String", "MASTER_PASSWORD", "\"$project.password\"")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
