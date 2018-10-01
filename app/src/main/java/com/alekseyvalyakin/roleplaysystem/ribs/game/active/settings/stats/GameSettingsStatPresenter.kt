@@ -1,13 +1,13 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.backdrop.DefaultBackDropView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import io.reactivex.Observable
 
 /**
  * Presenter interface implemented by this RIB's view.
  */
-interface GameSettingsStatPresenter {
+interface GameSettingsStatPresenter : DefaultBackDropView {
 
     sealed class UiEvent {
 
@@ -32,14 +32,4 @@ interface GameSettingsStatPresenter {
     fun observeUiEvents(): Observable<UiEvent>
 
     fun update(viewModel: GameSettingsStatViewModel)
-
-    fun expandFront()
-
-    fun collapseFront()
-
-    fun updateStartEndScrollPositions(adapterPosition: Int)
-
-    fun scrollToPosition(position: Int)
-
-    fun chooseIcon(callback: (IconViewModel) -> Unit, items: List<IconViewModel>)
 }

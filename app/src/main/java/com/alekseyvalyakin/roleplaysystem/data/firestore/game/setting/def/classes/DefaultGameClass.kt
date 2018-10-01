@@ -1,7 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.core.TrasnlatableField
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
 
@@ -19,7 +18,7 @@ data class DefaultGameClass(
         @get:Exclude
         @Volatile
         override var id: String = StringUtils.EMPTY_STRING
-) : GameStat {
+) : GameClass {
 
     @Exclude
     override fun getDisplayedName(): String {

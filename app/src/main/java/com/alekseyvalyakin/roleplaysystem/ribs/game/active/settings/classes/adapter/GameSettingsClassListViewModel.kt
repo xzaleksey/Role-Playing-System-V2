@@ -14,7 +14,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.wrapContent
 
-class GameSettingsClassItemViewModel(
+class GameSettingsClassListViewModel(
         val gameClass: GameClass,
         leftIcon: IconViewModel
 ) : GameSettingsDefaultItemViewModel<GameSettingsClassesViewHolder>(
