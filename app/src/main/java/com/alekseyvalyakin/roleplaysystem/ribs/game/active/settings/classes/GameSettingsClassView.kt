@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 import android.content.Context
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.adapter.GameSettingsClassAdapter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.backdrop.DefaultSettingsBackdropView
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
 import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.BaseViewContainer
@@ -43,7 +42,7 @@ class GameSettingsClassView constructor(
         )
     }
 
-    override fun update(viewModel: GameSettingsStatViewModel) {
+    override fun update(viewModel: GameSettingsClassViewModel) {
         topViewContainer.view.update(viewModel.toolBarModel)
         frontViewContainer.view.update(viewModel.frontModel)
         backViewContainer.view.update(viewModel.backModel)

@@ -2,9 +2,17 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
+import com.jakewharton.rxrelay2.Relay
+import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -15,7 +23,7 @@ import javax.inject.Scope
  * Builder for the {@link GameSettingsClassScope}.
  *
  */
-class GameSettingsClassBuilder(dependency: ParentComponent) : ViewBuilder<GameSettingsClassView, GameSettingsClassRouter, GameSettingsClassBuilder.ParentComponent>(dependency) {
+class GameSettingsClassBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsClassView, GameSettingsClassRouter, GameSettingsClassBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [GameSettingsClassRouter].
@@ -23,7 +31,7 @@ class GameSettingsClassBuilder(dependency: ParentComponent) : ViewBuilder<GameSe
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [GameSettingsClassRouter].
      */
-    fun build(parentViewGroup: ViewGroup): GameSettingsClassRouter {
+    override fun build(parentViewGroup: ViewGroup): GameSettingsClassRouter {
         val view = createView(parentViewGroup)
         val interactor = GameSettingsClassInteractor()
         val component = DaggerGameSettingsClassBuilder_Component.builder()
@@ -59,7 +67,32 @@ class GameSettingsClassBuilder(dependency: ParentComponent) : ViewBuilder<GameSe
                     interactor: GameSettingsClassInteractor): GameSettingsClassRouter {
                 return GameSettingsClassRouter(view, interactor, component)
             }
+
+            @GameSettingsClassScope
+            @Provides
+            @JvmStatic
+            fun viewModelProvider(
+                    view: GameSettingsClassView,
+                    defaultSettingsStatsRepository: DefaultSettingClassRepository,
+                    game: Game,
+                    stringRepository: StringRepository,
+                    resourcesProvider: ResourcesProvider,
+                    activityListener: ActivityListener,
+                    activeGameEventRelay: Relay<ActiveGameEvent>,
+                    gameClassRepository: GameClassRepository
+            ): GameSettingsClassViewModelProvider {
+                return GameSettingsClassViewModelProviderImpl(
+                        defaultSettingsStatsRepository,
+                        game,
+                        stringRepository,
+                        resourcesProvider,
+                        view,
+                        activityListener,
+                        activeGameEventRelay,
+                        gameClassRepository)
+            }
         }
+
 
     }
 

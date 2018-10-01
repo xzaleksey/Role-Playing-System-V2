@@ -2,7 +2,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.adapter.GameSettingsClassListViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.backdrop.DefaultBackDropView
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatViewModel
 import io.reactivex.Observable
 
 /**
@@ -25,14 +24,14 @@ interface GameSettingsClassPresenter : DefaultBackDropView {
 
 
         class ChangeClass(
-                val gameSettingsStatListViewModel: GameSettingsClassListViewModel
+                val gameSettingsListViewModel: GameSettingsClassListViewModel
         ) : UiEvent()
 
-        class DeleteClass(val gameSettingsViewModel: GameSettingsClassListViewModel) : UiEvent()
+        class DeleteClass(val gameSettingsListViewModel: GameSettingsClassListViewModel) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>
 
-    fun update(viewModel: GameSettingsStatViewModel)
+    fun update(viewModel: GameSettingsClassViewModel)
 
 }

@@ -140,5 +140,7 @@
     <string name="spells">Заклинания</string>
     <string name="equipment">Экипировка</string>
     <string name="dices_checks">Кубы при проверках</string>
+    <string name="new_class">Новый класс</string>
+    <string name="my_class">Мой класс</string>
 
 </resources>

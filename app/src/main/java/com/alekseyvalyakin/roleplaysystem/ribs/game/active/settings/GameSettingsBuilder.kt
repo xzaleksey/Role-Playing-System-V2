@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatBuilder
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -62,7 +63,12 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
                     view: GameSettingsView,
                     interactor: GameSettingsInteractor,
                     routerNavigatorFactory: RouterNavigatorFactory): GameSettingsRouter {
-                return GameSettingsRouter(view, interactor, component, GameSettingsStatBuilder(component), routerNavigatorFactory)
+                return GameSettingsRouter(view,
+                        interactor,
+                        component,
+                        GameSettingsStatBuilder(component),
+                        GameSettingsClassBuilder(component),
+                        routerNavigatorFactory)
             }
 
             @GameSettingsScope
@@ -77,7 +83,7 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
 
     @GameSettingsScope
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
-    interface Component : InteractorBaseComponent<GameSettingsInteractor>, BuilderComponent, ActiveGameDependencyProvider, GameSettingsStatBuilder.ParentComponent {
+    interface Component : InteractorBaseComponent<GameSettingsInteractor>, BuilderComponent, ActiveGameDependencyProvider, GameSettingsStatBuilder.ParentComponent, GameSettingsClassBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {

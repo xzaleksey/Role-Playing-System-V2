@@ -10,7 +10,7 @@ class DefaultSettingClassRepositoryImpl :
         DefaultSettingClassRepository {
 
     override fun getCollection(): CollectionReference {
-        return FirestoreCollection.DEFAULT_STATS.getDbCollection()
+        return FirestoreCollection.DEFAULT_CLASSES.getDbCollection()
     }
 }
 

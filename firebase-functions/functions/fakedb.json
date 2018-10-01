@@ -3,9 +3,9 @@
     "default": {
       "name": "Default",
       "classes": {
-        "warrior": {
+        "fighter": {
           "name": {
-            "default": "Warrior",
+            "default": "Fighter",
             "ru": "Воин"
           },
           "description": {

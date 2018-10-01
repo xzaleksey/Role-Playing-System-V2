@@ -26,6 +26,7 @@ sealed class FirestoreCollection(
 
 
     object DEFAULT_STATS : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/stats")
+    object DEFAULT_CLASSES : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/classes")
 
     private fun getFullPath(): String {
         return (root?.getFullPath()?.plus("/") ?: StringUtils.EMPTY_STRING) + directory

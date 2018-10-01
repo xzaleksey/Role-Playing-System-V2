@@ -1,5 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatRouter
 import com.uber.rib.core.*
@@ -13,6 +15,7 @@ class GameSettingsRouter(
         interactor: GameSettingsInteractor,
         component: GameSettingsBuilder.Component,
         private val gameSettingsStatBuilder: GameSettingsStatBuilder,
+        private val gameSettingsClassBuilder: GameSettingsClassBuilder,
         private val routerNavigatorFactory: RouterNavigatorFactory
 ) : ViewRouter<GameSettingsView, GameSettingsInteractor, GameSettingsBuilder.Component>(view, interactor, component) {
 
@@ -26,7 +29,19 @@ class GameSettingsRouter(
             gameSettingsStatBuilder, view
     ) {}
 
+    private val classesAttachTransition = object : DefaultContainerAttachTransition<
+            GameSettingsClassRouter,
+            State,
+            GameSettingsClassBuilder,
+            GameSettingsView
+            >(
+            gameSettingsClassBuilder, view
+    ) {}
+
     private val statsDetachTransition = DefaultContainerDetachTransition<GameSettingsStatRouter, State, GameSettingsView>(
+            view
+    )
+   private val classesDetachTransition = DefaultContainerDetachTransition<GameSettingsClassRouter, State, GameSettingsView>(
             view
     )
 
@@ -35,6 +50,10 @@ class GameSettingsRouter(
             GameSettingsViewModel.GameSettingsItemType.STATS -> {
                 router.pushTransientState(State.Stats, statsAttachTransition, statsDetachTransition)
             }
+            GameSettingsViewModel.GameSettingsItemType.CLASSES -> {
+                router.pushTransientState(State.Classes, classesAttachTransition, classesDetachTransition)
+            }
+
         }
     }
 
@@ -46,6 +65,7 @@ class GameSettingsRouter(
 
         companion object {
             val Stats = State("Stats")
+            val Classes = State("Classes")
         }
     }
 

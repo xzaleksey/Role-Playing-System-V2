@@ -20,7 +20,6 @@ class GameSettingsStatsViewHolder(
                             GameSettingsStatPresenter.UiEvent.ChangeStat(gameSettingsViewModel))
                 },
                 View.OnClickListener {
-                    Timber.d("OnCkick")
                     relay.accept(
                             GameSettingsStatPresenter.UiEvent.SelectStat(gameSettingsViewModel, adapterPosition))
                 }, View.OnLongClickListener { _ ->

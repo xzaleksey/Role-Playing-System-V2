@@ -17,34 +17,14 @@ interface GameClass : FireStoreIdModel, Selectable {
     fun getIconId(): String
 
     enum class INFO(val id: String) {
-        STRENGTH("strength") {
+        FIGHTER("fighter") {
             override fun getIconRes(): Int {
                 return R.drawable.ic_strength
             }
         },
-        CONSTITUTION("constitution") {
-            override fun getIconRes(): Int {
-                return R.drawable.ic_constitution
-            }
-        },
-        DEXTERITY("dexterity") {
+        RANGER("ranger") {
             override fun getIconRes(): Int {
                 return R.drawable.ic_dexterity
-            }
-        },
-        INTELLIGENCE("intelligence") {
-            override fun getIconRes(): Int {
-                return R.drawable.ic_intelligence
-            }
-        },
-        WISDOM("wisdom") {
-            override fun getIconRes(): Int {
-                return R.drawable.ic_wisdom
-            }
-        },
-        CHARISMA("charisma") {
-            override fun getIconRes(): Int {
-                return R.drawable.ic_charisma
             }
         };
 

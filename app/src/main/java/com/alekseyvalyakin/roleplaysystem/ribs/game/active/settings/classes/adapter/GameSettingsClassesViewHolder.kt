@@ -15,7 +15,10 @@ class GameSettingsClassesViewHolder(
 
     fun update(viewModel: GameSettingsClassListViewModel, relay: Relay<GameSettingsClassPresenter.UiEvent>) {
         gsView.update(viewModel,
-                View.OnClickListener {},
+                View.OnClickListener {
+                    relay.accept(
+                            GameSettingsClassPresenter.UiEvent.ChangeClass(viewModel))
+                },
                 View.OnClickListener {
                     relay.accept(
                             GameSettingsClassPresenter.UiEvent.SelectClass(viewModel, adapterPosition))

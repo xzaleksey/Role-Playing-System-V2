@@ -2,11 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultGameClass
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClass
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.UserGameClass
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.*
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -40,12 +36,12 @@ class GameSettingsClassViewModelProviderImpl(
         private val gameGameClassRepository: GameClassRepository
 ) : GameSettingsClassViewModelProvider {
 
-    private val defaultGameStats = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
-    private val statViewModel = BehaviorRelay.createDefault<GameSettingsClassViewModel>(getDefaultModel())
+    private val defaultGameClasses = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
+    private val viewModel = BehaviorRelay.createDefault<GameSettingsClassViewModel>(getDefaultModel())
     private val disposable = CompositeDisposable()
 
     override fun observeViewModel(): Flowable<GameSettingsClassViewModel> {
-        return statViewModel.toFlowable(BackpressureStrategy.LATEST)
+        return viewModel.toFlowable(BackpressureStrategy.LATEST)
                 .doOnSubscribe {
                     getDefaultGamesDisposable().addTo(disposable)
                     getPresenterEvents().addTo(disposable)
@@ -59,45 +55,45 @@ class GameSettingsClassViewModelProviderImpl(
                     when (event) {
                         is GameSettingsClassPresenter.UiEvent.CollapseFront -> {
                             activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
-                            if (statViewModel.value.selectedModel == null) {
-                                updateNewStatModel()
+                            if (viewModel.value.selectedModel == null) {
+                                updateNewItemModel()
                             }
                         }
 
                         is GameSettingsClassPresenter.UiEvent.ExpandFront -> {
-                            updateShowStatsModel()
+                            updateShowItemsModel()
                             activeGameEventRelay.accept(ActiveGameEvent.ShowBottomBar)
                         }
 
                         is GameSettingsClassPresenter.UiEvent.TitleInput -> {
-                            val value = statViewModel.value
+                            val value = viewModel.value
                             if (value.backModel.titleText != event.text) {
-                                statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                                viewModel.accept(value.copy(backModel = value.backModel.copy(
                                         titleText = event.text
                                 )))
                             }
                         }
 
                         is GameSettingsClassPresenter.UiEvent.SubtitleInput -> {
-                            val value = statViewModel.value
+                            val value = viewModel.value
                             if (value.backModel.subtitleText != event.text) {
-                                statViewModel.accept(value.copy(backModel = value.backModel.copy(
+                                viewModel.accept(value.copy(backModel = value.backModel.copy(
                                         subtitleText = event.text
                                 )))
                             }
                         }
 
                         is GameSettingsClassPresenter.UiEvent.SelectClass -> {
-                            return@flatMap handleSelectStat(event)
+                            return@flatMap handleSelectItem(event)
                         }
 
                         is GameSettingsClassPresenter.UiEvent.ChangeClass -> {
-                            val GameSettingsClassListViewModel = event.gameSettingsStatListViewModel
-                            if (GameSettingsClassListViewModel.custom) {
-                                updateSelectedStatModel(GameSettingsClassListViewModel.gameClass as UserGameClass)
+                            val gameSettingsClassListViewModel = event.gameSettingsListViewModel
+                            if (gameSettingsClassListViewModel.custom) {
+                                updateSelectedItemModel(gameSettingsClassListViewModel.gameClass as UserGameClass)
                             } else {
-                                updateSelectedStatModel(
-                                        (GameSettingsClassListViewModel.gameClass as DefaultGameClass).toUserGameClass()
+                                updateSelectedItemModel(
+                                        (gameSettingsClassListViewModel.gameClass as DefaultGameClass).toUserGameClass()
                                 )
                             }
 
@@ -105,7 +101,7 @@ class GameSettingsClassViewModelProviderImpl(
                         }
 
                         is GameSettingsClassPresenter.UiEvent.DeleteClass -> {
-                            return@flatMap deleteObservable(event.gameSettingsViewModel.id)
+                            return@flatMap deleteObservable(event.gameSettingsListViewModel.id)
                         }
                     }
                     return@flatMap Observable.empty<Any>()
@@ -114,22 +110,22 @@ class GameSettingsClassViewModelProviderImpl(
     }
 
 
-    private fun handleSelectStat(event: GameSettingsClassPresenter.UiEvent.SelectClass): Observable<out Any> {
-        val gameStat = event.gameSettingsClassListViewModel.gameClass
+    private fun handleSelectItem(event: GameSettingsClassPresenter.UiEvent.SelectClass): Observable<out Any> {
+        val gameClass = event.gameSettingsClassListViewModel.gameClass
         if (!event.gameSettingsClassListViewModel.selected) {
-            return if (gameStat is DefaultGameClass) {
-                gameGameClassRepository.createDocumentWithId(game.id, gameStat.toUserGameClass())
+            return if (gameClass is DefaultGameClass) {
+                gameGameClassRepository.createDocumentWithId(game.id, gameClass.toUserGameClass())
                         .toObservable()
             } else {
-                gameGameClassRepository.setSelected(game.id, gameStat.id, true)
+                gameGameClassRepository.setSelected(game.id, gameClass.id, true)
                         .toObservable<Any>()
             }
         } else {
-            if (gameStat is UserGameClass) {
-                return if (GameClass.INFO.isSupported(gameStat)) {
-                    deleteObservable(gameStat.id)
+            if (gameClass is UserGameClass) {
+                return if (GameClass.INFO.isSupported(gameClass)) {
+                    deleteObservable(gameClass.id)
                 } else {
-                    gameGameClassRepository.setSelected(game.id, gameStat.id, false)
+                    gameGameClassRepository.setSelected(game.id, gameClass.id, false)
                             .toObservable<Any>()
                 }.doOnNext {
                     presenter.updateStartEndScrollPositions(event.adapterPosition)
@@ -139,8 +135,8 @@ class GameSettingsClassViewModelProviderImpl(
         return Observable.empty<Any>()
     }
 
-    private fun deleteObservable(gameStatId: String): Observable<Any> {
-        return gameGameClassRepository.deleteDocumentOffline(game.id, gameStatId)
+    private fun deleteObservable(id: String): Observable<Any> {
+        return gameGameClassRepository.deleteDocumentOffline(game.id, id)
                 .toObservable<Any>()!!
                 .startWith(Unit)
     }
@@ -150,41 +146,41 @@ class GameSettingsClassViewModelProviderImpl(
                 gameGameClassRepository.observeDiceCollectionsOrdered(game.id),
                 defaultSettingsClassRepository.observeCollection()
                         .map { list -> list.filter { GameClass.INFO.isSupported(it) } },
-                BiFunction { gameStats: List<GameClass>, defaultStats: List<GameClass> ->
+                BiFunction { gameClasses: List<GameClass>, defaultClasses: List<GameClass> ->
                     val result = mutableListOf<GameSettingsClassListViewModel>()
                     val keySelector: (GameClass) -> String = { it.id }
-                    val gameStatsMap = gameStats.associateBy(keySelector)
-                    val defaultStatsMap = defaultStats.associateBy { it.id }
-                    gameStats.forEach { stat -> result.add(GameSettingsClassListViewModel(stat)) }
+                    val gameClassesMap = gameClasses.associateBy(keySelector)
+                    val defaultClassesMap = defaultClasses.associateBy { it.id }
+                    gameClasses.forEach { gameClass -> result.add(gameSettingsClassListViewModel(gameClass)) }
 
-                    defaultStatsMap.minus(gameStatsMap.keys).values.forEach {
+                    defaultClassesMap.minus(gameClassesMap.keys).values.forEach {
                         result.add(
                                 GameSettingsClassListViewModel(it,
                                         leftIcon = IconViewModel(resourcesProvider.getDrawable(GameClass.INFO.getIconId(it.getIconId())), it.getIconId()))
                         )
                     }
                     result.sort()
-                    defaultGameStats.accept(result)
+                    defaultGameClasses.accept(result)
                 }).subscribeWithErrorLogging { _ -> updateItemsInList() }
 
     }
 
-    private fun GameSettingsClassListViewModel(gameStat: GameClass): GameSettingsClassListViewModel {
-        return GameSettingsClassListViewModel(gameStat,
-                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameClass.INFO.getIconId(gameStat.getIconId())), gameStat.getIconId()))
+    private fun gameSettingsClassListViewModel(gameClass: GameClass): GameSettingsClassListViewModel {
+        return GameSettingsClassListViewModel(gameClass,
+                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameClass.INFO.getIconId(gameClass.getIconId())), gameClass.getIconId()))
 
     }
 
     private fun getDefaultModel(): GameSettingsClassViewModel {
         return GameSettingsClassViewModel(
-                getShowStatToolbarModel(),
+                getShowClassToolbarModel(),
                 DefaultFrontView.Model(
                         DefaultFrontView.HeaderModel(
-                                stringRepository.getNewStat(),
+                                stringRepository.getNewClass(),
                                 resourcesProvider.getDrawable(R.drawable.ic_add),
                                 {
                                     presenter.collapseFront()
-                                    updateNewStatModel()
+                                    updateNewItemModel()
                                 }
                         ),
                         emptyList()
@@ -196,8 +192,8 @@ class GameSettingsClassViewModelProviderImpl(
                         chooseIconListener = {
                             presenter.chooseIcon(
                                     { iconViewModel ->
-                                        statViewModel.value.let {
-                                            statViewModel.accept(it.copy(
+                                        viewModel.value.let {
+                                            viewModel.accept(it.copy(
                                                     backModel = it.backModel.copy(iconModel = iconViewModel)
                                             ))
                                         }
@@ -213,48 +209,48 @@ class GameSettingsClassViewModelProviderImpl(
         )
     }
 
-    private fun getShowStatToolbarModel(): CustomToolbarView.Model {
+    private fun getShowClassToolbarModel(): CustomToolbarView.Model {
         return CustomToolbarView.Model(
                 resourcesProvider.getDrawable(R.drawable.ic_arrow_back),
                 { activityListener.backPress() },
                 null,
                 {},
-                stringRepository.getStats()
+                stringRepository.getClasses()
         )
     }
 
-    private fun updateShowStatsModel() {
-        statViewModel.accept(statViewModel.value.copy(toolBarModel = getShowStatToolbarModel(),
+    private fun updateShowItemsModel() {
+        viewModel.accept(viewModel.value.copy(toolBarModel = getShowClassToolbarModel(),
                 step = GameSettingsClassViewModel.Step.EXPANDED,
                 selectedModel = null))
     }
 
-    private fun updateSelectedStatModel(userGameStat: UserGameClass) {
-        val customStat = !GameClass.INFO.isSupported(userGameStat)
+    private fun updateSelectedItemModel(userGameClass: UserGameClass) {
+        val customClass = !GameClass.INFO.isSupported(userGameClass)
 
-        val value = statViewModel.value
-        statViewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
+        val value = viewModel.value
+        viewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     presenter.expandFront()
-                    updateShowStatsModel()
+                    updateShowItemsModel()
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
-                    val backModel = statViewModel.value.backModel
+                    val backModel = viewModel.value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
                         disposable.add(gameGameClassRepository.createDocumentWithId(
                                 game.id,
-                                userGameStat.copy(
+                                userGameClass.copy(
                                         name = backModel.titleText,
                                         description = backModel.subtitleText,
                                         icon = backModel.iconModel.id)
-                        ).subscribeWithErrorLogging { gameStat ->
-                            statViewModel.value.frontModel.items.asSequence().map {
+                        ).subscribeWithErrorLogging { gameClass ->
+                            viewModel.value.frontModel.items.asSequence().map {
                                 it as GameSettingsClassListViewModel
                             }.toMutableList().apply {
-                                val element = GameSettingsClassListViewModel(gameStat)
+                                val element = gameSettingsClassListViewModel(gameClass)
                                 add(element)
                                 sort()
                                 presenter.scrollToPosition(indexOf(element))
@@ -263,32 +259,32 @@ class GameSettingsClassViewModelProviderImpl(
                         })
                     }
                 },
-                title = if (customStat) stringRepository.getMyStat() else userGameStat.name
+                title = if (customClass) stringRepository.getMyClass() else userGameClass.name
         ),
                 backModel = value.backModel.copy(
-                        titleText = userGameStat.name,
-                        subtitleText = userGameStat.description,
+                        titleText = userGameClass.name,
+                        subtitleText = userGameClass.description,
                         iconModel = IconViewModel(
-                                resourcesProvider.getDrawable(GameClass.INFO.getIconId(userGameStat.icon)),
-                                userGameStat.icon),
-                        titleVisible = customStat,
-                        iconVisible = customStat
+                                resourcesProvider.getDrawable(GameClass.INFO.getIconId(userGameClass.icon)),
+                                userGameClass.icon),
+                        titleVisible = customClass,
+                        iconVisible = customClass
                 ),
                 step = GameSettingsClassViewModel.Step.COLLAPSED,
-                selectedModel = userGameStat))
+                selectedModel = userGameClass))
     }
 
 
-    private fun updateNewStatModel() {
-        statViewModel.accept(statViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
+    private fun updateNewItemModel() {
+        viewModel.accept(viewModel.value.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     expandFront()
-                    updateShowStatsModel()
+                    updateShowItemsModel()
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
-                    val value = statViewModel.value
+                    val value = viewModel.value
                     val backModel = value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
@@ -297,11 +293,11 @@ class GameSettingsClassViewModelProviderImpl(
                                 UserGameClass(backModel.titleText,
                                         backModel.subtitleText,
                                         icon = backModel.iconModel.id)
-                        ).subscribeWithErrorLogging { gameStat ->
+                        ).subscribeWithErrorLogging { gameClass ->
                             value.frontModel.items.asSequence().map {
                                 it as GameSettingsClassListViewModel
                             }.toMutableList().apply {
-                                val element = GameSettingsClassListViewModel(gameStat)
+                                val element = gameSettingsClassListViewModel(gameClass)
                                 add(element)
                                 sort()
                                 presenter.scrollToPosition(indexOf(element))
@@ -310,9 +306,9 @@ class GameSettingsClassViewModelProviderImpl(
                         })
                     }
                 },
-                title = stringRepository.getMyStat()
+                title = stringRepository.getMyClass()
         ),
-                backModel = statViewModel.value.backModel.copy(
+                backModel = viewModel.value.backModel.copy(
                         titleText = StringUtils.EMPTY_STRING,
                         subtitleText = StringUtils.EMPTY_STRING,
                         titleVisible = true,
@@ -330,8 +326,8 @@ class GameSettingsClassViewModelProviderImpl(
     }
 
     private fun updateItemsInList() {
-        statViewModel.accept(statViewModel.value.let {
-            it.copy(frontModel = it.frontModel.copy(items = defaultGameStats.value))
+        viewModel.accept(viewModel.value.let {
+            it.copy(frontModel = it.frontModel.copy(items = defaultGameClasses.value))
         })
     }
 }
