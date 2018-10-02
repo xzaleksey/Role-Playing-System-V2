@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.image.ImagesResult
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
@@ -35,11 +36,16 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
     lateinit var localImageProvider: LocalImageProvider
     @Inject
     lateinit var userAvatarRepository: UserAvatarRepository
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
+    private val screenName = "Profile"
 
     private var currentModel: ProfileViewModel? = null
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+
         userAvatarRepository.subscribeForUpdates()
                 .addToDisposables()
 

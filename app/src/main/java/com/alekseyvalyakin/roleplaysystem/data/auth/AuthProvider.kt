@@ -14,7 +14,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.rxfirebase2.RxFirebaseAuth
 import com.rxfirebase2.RxFirebaseUser
-import io.reactivex.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
@@ -71,6 +76,7 @@ class AuthProviderImpl @Inject constructor(
                                         userResult.photoUrl = currentUserInfo.photoUrl
                                     }
                                     analyticsReporter.setCurrentUser(userResult.id)
+                                    analyticsReporter.setUserEmail(userResult.email)
                                     Timber.d("Update user $userResult")
 
                                     return@flatMap userRepository.createUser(userResult)
@@ -115,7 +121,7 @@ class AuthProviderImpl @Inject constructor(
                 .startWith(FirebaseAuth.getInstance())
                 .switchMap { firebaseAuth ->
                     if (firebaseAuth.currentUser == null) {
-                        analyticsReporter.setCurrentUser(null)
+                        analyticsReporter.reset()
                         return@switchMap Observable.just(false)
                     }
 

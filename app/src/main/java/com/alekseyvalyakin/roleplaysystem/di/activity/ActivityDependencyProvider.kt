@@ -9,4 +9,5 @@ interface ActivityDependencyProvider {
     fun provideActivityListener(): ActivityListener
 
     fun provideLocalImageProvider(): LocalImageProvider
+
 }

@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.google.firebase.auth.AuthResult
 import com.uber.rib.core.BaseInteractor
@@ -19,7 +20,6 @@ import javax.inject.Inject
 /**
  * Coordinates Business Logic for [AuthScope].
  *
- * TODO describe the logic of this scope.
  */
 @RibInteractor
 class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>() {
@@ -34,15 +34,18 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
     lateinit var googleSignInProvider: GoogleSignInProvider
     @Inject
     lateinit var userRepository: UserRepository
-
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.IO)]
     lateinit var ioScheduler: Scheduler
-
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
+    private val screenName = "Authorization"
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+
         presenter.restoreEmail(localKeyValueStorage.getLogin())
         presenter.observeUiEvents()
                 .flatMap(this::handleEvent)

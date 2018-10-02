@@ -7,8 +7,16 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameInteractor.
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.Interactor
+import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.Router
+import com.uber.rib.core.getSerializable
+import com.uber.rib.core.putSerializable
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.Serializable
@@ -32,11 +40,16 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     lateinit var gameRepository: GameRepository
     @Inject
     lateinit var activeGameEventObservable: Observable<ActiveGameEvent>
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
 
+    private val screenName = "ActiveGame"
     private var model: Model = Model(NavigationId.CHARACTERS)
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+
         savedInstanceState?.run {
             model = this.getSerializable(KEY)
         }

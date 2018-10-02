@@ -8,6 +8,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.BaseInteractor
@@ -44,11 +45,15 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var mainRibListener: MainRibListener
     @Inject
     lateinit var createEmptyGameObservableProvider: CreateEmptyGameObservableProvider
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
 
+    private val screenName = "Main"
     private val filterRelay = BehaviorRelay.createDefault<FilterModel>(FilterModel())
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
 
         presenter.observeUiEvents()
                 .flatMap(this::handleEvent)
@@ -74,7 +79,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                         }
                     }
                 }.addToDisposables()
-
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
