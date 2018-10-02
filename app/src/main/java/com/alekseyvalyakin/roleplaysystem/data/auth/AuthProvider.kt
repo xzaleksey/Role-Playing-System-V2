@@ -14,12 +14,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.rxfirebase2.RxFirebaseAuth
 import com.rxfirebase2.RxFirebaseUser
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
@@ -50,7 +45,7 @@ class AuthProviderImpl @Inject constructor(
                     observeLoggedInStateInternal
                             .skip(1)
                             .toFlowable(BackpressureStrategy.LATEST)
-                            .filter { it }
+                            .filter { it && userRepository.getCurrentUserInfo() != null }
                             .map { userRepository.getCurrentUserInfo()!! },
                     localUser.toFlowable(BackpressureStrategy.LATEST),
                     BiFunction { currentUserInfo: CurrentUserInfo, localUser: User ->
@@ -67,7 +62,7 @@ class AuthProviderImpl @Inject constructor(
                                     }
 
                                     if (userResult.id.isEmpty()) {
-                                        userResult.id = userRepository.getCurrentUserInfo()!!.uid
+                                        userResult.id = currentUserInfo.uid
                                     }
 
                                     userResult.token = userWithToken.second.token
@@ -80,6 +75,7 @@ class AuthProviderImpl @Inject constructor(
                                     Timber.d("Update user $userResult")
 
                                     return@flatMap userRepository.createUser(userResult)
+                                            .onErrorComplete()
                                             .andThen(Single.just(userResult))
                                 }
                     })
