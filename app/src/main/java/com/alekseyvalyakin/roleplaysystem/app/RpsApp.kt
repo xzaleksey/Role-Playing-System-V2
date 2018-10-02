@@ -25,7 +25,6 @@ class RpsApp : Application() {
                 .setPersistenceEnabled(true)
                 .setTimestampsInSnapshotsEnabled(true)
                 .build()
-
     }
 
     fun getAppComponent(): AppComponent {

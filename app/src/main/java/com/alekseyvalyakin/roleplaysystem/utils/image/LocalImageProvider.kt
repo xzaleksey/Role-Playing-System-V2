@@ -21,7 +21,7 @@ class LocalImageProviderImpl(
     private val callbacks = activity.callbacks().share()!!
     private var imagePicker = ImagePicker(activity)
     private val relay = PublishRelay.create<ImagesResult>()
-    private val internalCacheLocation = 200
+    private val cacheLocation = 200
     private val imagePickerCallback = object : ImagePickerCallback {
         override fun onImagesChosen(images: MutableList<ChosenImage>) {
             relay.accept(ImagesResult.Success(images))
@@ -36,7 +36,7 @@ class LocalImageProviderImpl(
         imagePicker.setImagePickerCallback(imagePickerCallback)
         imagePicker.shouldGenerateMetadata(false)
         imagePicker.shouldGenerateThumbnails(false)
-        imagePicker.setCacheLocation(internalCacheLocation)
+        imagePicker.setCacheLocation(cacheLocation)
     }
 
     override fun subscribe(): Disposable {

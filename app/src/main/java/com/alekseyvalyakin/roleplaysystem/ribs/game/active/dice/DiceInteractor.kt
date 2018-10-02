@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollec
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.SingleDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.*
@@ -33,11 +34,16 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
     lateinit var game: Game
     @Inject
     lateinit var diceRepository: DicesRepository
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
 
     private val relay = BehaviorRelay.createDefault(getEmptyModel())
+    private val screenName = "GameDices"
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+
         savedInstanceState?.run {
             relay.accept(this.getSerializable(KEY))
         }

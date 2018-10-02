@@ -13,6 +13,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.
 import com.alekseyvalyakin.roleplaysystem.utils.createCompletable
 import com.alekseyvalyakin.roleplaysystem.utils.image.ImagesResult
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.BaseInteractor
@@ -52,12 +53,16 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
     lateinit var firebaseStorageRepository: FirebaseStorageRepository
     @Inject
     lateinit var activeGameEventRelay: Relay<ActiveGameEvent>
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
+    private val screenName = "GamePhotos"
 
     @Inject
     lateinit var game: Game
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
 
         observeCreatePhotoUpload()
 

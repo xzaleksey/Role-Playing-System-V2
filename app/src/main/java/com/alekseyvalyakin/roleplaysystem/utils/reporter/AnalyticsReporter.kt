@@ -63,6 +63,7 @@ interface AnalyticsReporter {
     fun attachActivity(activity: Activity)
 
     fun detachActivity()
+
     fun setCurrentScreen(currentScreenName: String, currentScreenClass: String)
 }
 
