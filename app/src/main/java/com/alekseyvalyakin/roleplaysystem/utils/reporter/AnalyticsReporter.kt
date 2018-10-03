@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.uber.rib.core.toAndroidBundle
 import java.lang.ref.WeakReference
+import java.util.*
 
 class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
 
@@ -17,16 +18,15 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
 
     override fun logEvent(event: AnalyticsEvent) {
         fireBaseAnalytics.logEvent(event.name,
-                event.bundle.toAndroidBundle())
+                event.bundle?.toAndroidBundle())
     }
 
-    override fun setUserEmail(email: String?) {
-        setUserProperty(EMAIL_KEY, email)
+    override fun updateUserLocale() {
+        setUserProperty(LOCALE, Locale.getDefault().country)
     }
 
     override fun reset() {
         setCurrentUser(null)
-        setUserEmail(null)
     }
 
     override fun setCurrentScreen(currentScreenName: String, currentScreenClass: String) {
@@ -48,7 +48,7 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
     }
 
     companion object {
-        const val EMAIL_KEY = "email"
+        const val LOCALE = "locale"
     }
 }
 
@@ -57,8 +57,6 @@ interface AnalyticsReporter {
 
     fun logEvent(event: AnalyticsEvent)
 
-    fun setUserEmail(email: String?)
-
     fun reset()
 
     fun attachActivity(activity: Activity)
@@ -66,9 +64,11 @@ interface AnalyticsReporter {
     fun detachActivity()
 
     fun setCurrentScreen(currentScreenName: String, currentScreenClass: String)
+
+    fun updateUserLocale()
 }
 
-data class AnalyticsEvent(
+open class AnalyticsEvent(
         val name: String,
-        val bundle: com.uber.rib.core.Bundle
+        val bundle: com.uber.rib.core.Bundle? = null
 )

@@ -24,6 +24,7 @@ class MainActivity : RibActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         analyticsReporter.attachActivity(this)
+        analyticsReporter.updateUserLocale()
     }
 
     override fun onDestroy() {

@@ -18,7 +18,6 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -94,10 +93,12 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
             }
             is UiEvents.FabClick -> {
                 return Observable.fromCallable {
+                    analyticsReporter.logEvent(MainAnalyticsEvent.CreateGame)
                     createEmptyGameObservableProvider.createEmptyGameModel()
                 }
             }
             is UiEvents.Logout -> {
+                analyticsReporter.logEvent(MainAnalyticsEvent.Logout)
                 return authProvider.signOut().toObservable<Any>()
             }
             is UiEvents.RecyclerItemClick -> {
@@ -111,11 +112,12 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     private fun handleRecyclerViewItemClick(item: IFlexible<*>): Observable<*> {
         when (item.layoutRes) {
             FlexibleLayoutTypes.USER_PROFILE -> {
+                analyticsReporter.logEvent(MainAnalyticsEvent.ProfileClick)
                 mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.MyProfile((item as UserProfileViewModel).user))
             }
             FlexibleLayoutTypes.GAME -> {
                 (item as GameListViewModel).game.let {
-                    Timber.d("Game clicked")
+                    analyticsReporter.logEvent(MainAnalyticsEvent.GameClick(it))
                     if (userRepository.isCurrentUser(it.masterId)) {
                         if (it.isDraft()) {
                             mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(it))
@@ -145,12 +147,13 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         fun updateModel(model: MainViewModel)
 
         fun showError(message: String)
-
     }
 
     sealed class UiEvents {
         object SearchRightIconClick : UiEvents()
+
         object Logout : UiEvents()
+
         object FabClick : UiEvents()
 
         class SearchInput(val text: String) : UiEvents()

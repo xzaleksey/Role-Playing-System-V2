@@ -71,7 +71,6 @@ class AuthProviderImpl @Inject constructor(
                                         userResult.photoUrl = currentUserInfo.photoUrl
                                     }
                                     analyticsReporter.setCurrentUser(userResult.id)
-                                    analyticsReporter.setUserEmail(userResult.email)
                                     Timber.d("Update user $userResult")
 
                                     return@flatMap userRepository.createUser(userResult)
