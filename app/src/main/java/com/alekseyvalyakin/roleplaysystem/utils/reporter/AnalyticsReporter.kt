@@ -20,12 +20,13 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
                 event.bundle.toAndroidBundle())
     }
 
-    override fun setUserEmail(email: String) {
+    override fun setUserEmail(email: String?) {
         setUserProperty(EMAIL_KEY, email)
     }
 
     override fun reset() {
-        return fireBaseAnalytics.resetAnalyticsData()
+        setCurrentUser(null)
+        setUserEmail(null)
     }
 
     override fun setCurrentScreen(currentScreenName: String, currentScreenClass: String) {
@@ -42,7 +43,7 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
         this.activity = WeakReference<Activity>(null)
     }
 
-    private fun setUserProperty(key: String, value: String) {
+    private fun setUserProperty(key: String, value: String?) {
         fireBaseAnalytics.setUserProperty(key, value)
     }
 
@@ -56,7 +57,7 @@ interface AnalyticsReporter {
 
     fun logEvent(event: AnalyticsEvent)
 
-    fun setUserEmail(email: String)
+    fun setUserEmail(email: String?)
 
     fun reset()
 
