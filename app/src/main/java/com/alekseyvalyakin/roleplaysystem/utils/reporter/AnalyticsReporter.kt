@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.utils.reporter
 
 import android.app.Activity
 import android.content.Context
+import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.uber.rib.core.toAndroidBundle
 import java.lang.ref.WeakReference
@@ -14,6 +15,7 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
 
     override fun setCurrentUser(userId: String?) {
         fireBaseAnalytics.setUserId(userId)
+        Crashlytics.setUserIdentifier(userId)
     }
 
     override fun logEvent(event: AnalyticsEvent) {
@@ -27,12 +29,14 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
 
     override fun reset() {
         setCurrentUser(null)
+        Crashlytics.setUserIdentifier(null)
     }
 
     override fun setCurrentScreen(currentScreenName: String, currentScreenClass: String) {
         activity.get()?.run {
             fireBaseAnalytics.setCurrentScreen(this, currentScreenName, currentScreenClass)
         }
+        Crashlytics.setString(CRASHLYTICS_SCREEN, currentScreenName)
     }
 
     override fun attachActivity(activity: Activity) {
@@ -49,6 +53,7 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
 
     companion object {
         const val LOCALE = "locale"
+        const val CRASHLYTICS_SCREEN = "screen"
     }
 }
 

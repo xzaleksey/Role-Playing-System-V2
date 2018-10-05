@@ -70,7 +70,10 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                         is ActiveGamePresenter.Event.Navigate -> {
                             val navigationId = NavigationId.findById(it.id)
                             model = Model(navigationId)
-                            Timber.d("id %s", navigationId)
+                            analyticsReporter.logEvent(
+                                    ActiveGameAnalyticsEvent.Navigate(
+                                            viewModelProvider.getCurrentGame(),
+                                            navigationId))
                             handleNavigation(navigationId)
 //                            if (navigationId == NavigationId.MENU) {
 //                                gameRepository.deleteDocumentOffline(viewModelProvider.getCurrentGame().id)
@@ -86,7 +89,7 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                 is ActiveGameEvent.HideBottomBar -> {
                     presenter.hideBottomBar()
                 }
-                is ActiveGameEvent.ShowBottomBar ->{
+                is ActiveGameEvent.ShowBottomBar -> {
                     presenter.showBottomBar()
                 }
             }

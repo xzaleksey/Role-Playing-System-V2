@@ -56,13 +56,14 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
                     presenter.updateViewModel(it)
                 }.addToDisposables()
 
-        localImageProvider.observeImage().flatMapSingle {
-            val single = if (it is ImagesResult.Success) {
-                userAvatarRepository.uploadAvatar(it.images.first().originalPath)
+        localImageProvider.observeImage().flatMapSingle { imagesResult ->
+            val single = if (imagesResult is ImagesResult.Success) {
+                userAvatarRepository.uploadAvatar(imagesResult.images.first().originalPath)
                         .doOnSubscribe { _ -> presenter.showLoadingContent(true) }
+                        .doOnSuccess { analyticsReporter.logEvent(ProfileAnalyticsEvent.UpdateAvatar) }
                         .doAfterTerminate { presenter.showLoadingContent(false) }
             } else {
-                Single.error<String>(RuntimeException((it as ImagesResult.Error).error))
+                Single.error<String>(RuntimeException((imagesResult as ImagesResult.Error).error))
             }
             return@flatMapSingle single.onErrorReturn { t ->
                 Timber.e(t)
@@ -101,6 +102,7 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
             }
 
             is ProfilePresenter.Event.EditNameConfirm -> {
+                analyticsReporter.logEvent(ProfileAnalyticsEvent.ChangeUserName)
                 return profileViewModelProvider.onNameChanged(event.name).toObservable<Any>()
             }
         }

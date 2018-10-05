@@ -15,11 +15,11 @@ data class BottomItem(
         val imageHolder: ImageHolder
 ) : Serializable
 
-enum class NavigationId(val id: Int) {
-    CHARACTERS(R.id.bottom_menu_characters),
-    DICES(R.id.bottom_menu_dices),
-    PICTURES(R.id.bottom_menu_photos),
-    MENU(R.id.bottom_menu_other);
+enum class NavigationId(val id: Int, val textId: String) {
+    CHARACTERS(R.id.bottom_menu_characters, "Characters"),
+    DICES(R.id.bottom_menu_dices, "Dices"),
+    PICTURES(R.id.bottom_menu_photos, "Pictures"),
+    MENU(R.id.bottom_menu_other,"Other");
 
     companion object {
 
