@@ -6,13 +6,13 @@ data class GameSettingsViewModel(
         val items: List<IFlexible<*>>
 ) {
 
-    enum class GameSettingsItemType {
-        STATS,
-        CLASSES,
-        RACES,
-        SKILLS,
-        SPELLS,
-        EQUIPMENT,
-        DICES,
+    enum class GameSettingsItemType(val textId: String) {
+        STATS("Stats"),
+        CLASSES("Classes"),
+        RACES("Races"),
+        SKILLS("Skills"),
+        SPELLS("Spells"),
+        EQUIPMENT("Equipment"),
+        DICES("Dices"),
     }
 }

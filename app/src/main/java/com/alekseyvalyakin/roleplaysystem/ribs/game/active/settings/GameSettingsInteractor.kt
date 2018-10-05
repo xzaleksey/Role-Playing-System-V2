@@ -34,7 +34,9 @@ class GameSettingsInteractor : BaseInteractor<GameSettingsPresenter, GameSetting
                 .subscribeWithErrorLogging { uiEvent ->
                     when (uiEvent) {
                         is GameSettingsPresenter.UiEvent.GameSettingsClick -> {
-                            router.attach(uiEvent.gameSettingsListViewModel.type)
+                            val type = uiEvent.gameSettingsListViewModel.type
+                            analyticsReporter.logEvent(GameSettingsAnalyticsEvent.Navigate(game, type))
+                            router.attach(type)
                         }
                     }
                 }
