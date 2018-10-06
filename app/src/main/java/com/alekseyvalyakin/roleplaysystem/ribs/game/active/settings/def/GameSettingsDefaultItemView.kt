@@ -25,7 +25,8 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
     private var container: ViewGroup
     private var divider: View
 
-    private val disabledColor = getCompatColor(R.color.colorDisabled)
+    private val selectedColor = getCompatColor(R.color.colorPrimary)
+    private val unselectedColor = getCompatColor(R.color.colorAccent)
     private val textColorPrimary = getCompatColor(R.color.colorTextPrimary)
     private val commonIconColor = getCompatColor(R.color.colorPrimary)
     private val maxLinesDefault = 2
@@ -43,6 +44,7 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
             ivIconLeft = imageView {
                 id = R.id.left_icon
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
+                tintImage(commonIconColor)
             }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
                 marginEnd = getDoubleCommonDimen()
                 centerVertically()
@@ -143,12 +145,12 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
         }
 
         if (viewModel.selected) {
-            ivIconRight.imageResource = R.drawable.ic_confirm_selected
-            ivIconLeft.tintImage(disabledColor)
-            tvTitle.setTextColor(disabledColor)
+            ivIconRight.imageResource = R.drawable.ic_minus_circle
+            tvTitle.setTextColor(selectedColor)
+            ivIconRight.tintImage(selectedColor)
         } else {
-            ivIconRight.imageResource = R.drawable.ic_confirm
-            ivIconLeft.tintImage(commonIconColor)
+            ivIconRight.imageResource = R.drawable.ic_add_circle
+            ivIconRight.tintImage(unselectedColor)
             tvTitle.setTextColor(textColorPrimary)
         }
 

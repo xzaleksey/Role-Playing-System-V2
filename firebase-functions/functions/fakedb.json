@@ -3,24 +3,124 @@
     "default": {
       "name": "Default",
       "classes": {
+        "barbarian": {
+          "name": {
+            "default": "Barbarian",
+            "ru": "Варвар"
+          },
+          "description": {
+            "default": "A fierce warrior of a primitive background who can enter a battle rage, d12, Strength and Constitution, light and medium armor, shields, simple and martial weapons.",
+            "ru": "Жестокий воин, который может впасть в ярость битвы, d12, Сила и Телосоложение, легкая и средняя броня, щиты, простое и боевое оружие."
+          }
+        },
         "fighter": {
           "name": {
             "default": "Fighter",
             "ru": "Воин"
           },
           "description": {
-            "default": "Powerful man",
-            "ru": "Могучий хрен"
+            "default": "A master of martial combat, skilled with a variety of weapons and armours, d10, Strength & Constitution, all armor, shields, simple and martial weapons.",
+            "ru": "Мастер боевых единоборств, владеющий различными видами оружия и доспехов, d10, Сила и Телосложение, все доспехи, щиты, простое и боевое оружие."
           }
         },
         "ranger": {
           "name": {
             "default": "Ranger",
-            "ru": "Рэнджер"
+            "ru": "Следопыт"
           },
           "description": {
-            "default": "Good fighter",
-            "ru": "Хороший стрелок"
+            "default": "A master of ranged combat, one with nature, d10, Dexterity & Strength, light and medium armor, shield, simple weapons, martial weapons.",
+            "ru": "Мастер дальнего боя, един с природой, d10, Ловкость и Сила, легкая и средняя броня, щит, простое оружие и боевое оружие."
+          }
+        },
+        "monk": {
+          "name": {
+            "default": "Monk",
+            "ru": "Монах"
+          },
+          "description": {
+            "default": "A master of martial arts, skilled with fighting hands and martial monk weapons, d8, Dexterity and Strength simple weapons, short swords.",
+            "ru": "Мастер боевых искусств, обученный сражаться голыми руками и монашеским боевым оружием, d8, Ловкость и Сила, простое оружие, короткие мечи."
+          }
+        },
+        "bard": {
+          "name": {
+            "default": "Bard",
+            "ru": "Бард"
+          },
+          "description": {
+            "default": "An inspiring magician whose power echoes the music of creation, d8, Dexterity & Charisma, light armor, simple weapons, hand crossbows, long swords, rapiers, short swords.",
+            "ru": "Маг, чья сила вторит музыке творения, d8, Ловкость и Харизма, легкая броня, простое оружию, ручные арбалеты, длинные мечи, рапиры, короткие мечи."
+          }
+        },
+        "cleric": {
+          "name": {
+            "default": "Cleric",
+            "ru": "Жрец"
+          },
+          "description": {
+            "default": "A priestly champion who wields divine magic in service of a higher power, d8, Wisdom & Charisma, light and medium armor, shields, simple weapons.",
+            "ru": "Священник, обладающий божественной магией в служении высшей власти, d8, Мудрость и Харизма, легкая и средняя броня, щиты, простое оружие."
+          }
+        },
+        "druid": {
+          "name": {
+            "default": "Druid",
+            "ru": "Друид"
+          },
+          "description": {
+            "default": "A priest of the Old Faith, wielding the powers of nature — moonlight and plant growth, fire and lightning— and adopting animal forms, d8, Intelligence & Wisdom, light and medium armor (non-metal), shields (non-metal), clubs, daggers, darts, javelins, maces, quarterstaffs, scimitars, sickles, slings, spears.",
+            "ru": "Приверженец старой веры, обладающий силой природы - лунный свет и рост растений, огонь и молния - и принятие животных форм, d8, разведка и мудрость, легкая и средняя броня (не металл), щиты (неметаллические), клубы, кинжалы, дротики, копья, булавы, посохи, скимитары, серпы, пращи, копья."
+          }
+        },
+        "paladin": {
+          "name": {
+            "default": "Paladin",
+            "ru": "Паладин"
+          },
+          "description": {
+            "default": "A holy warrior bound to a sacred oath, d10, Strength, Wisdom & Charisma, all armor, shields, simple and martial weapons.",
+            "ru": "Священный воин, привязанный к священной клятве, d10, Сила, Мудрость и Харизма, все доспехи, щиты, простое и боевое оружие."
+          }
+        },
+        "rogue": {
+          "name": {
+            "default": "Rogue",
+            "ru": "Плут"
+          },
+          "description": {
+            "default": "A scoundrel and agile warrior who uses stealth and trickery to overcome obstacles and enemies, d8, Dexterity & Intelligence, light armor, simple weapons, hand crossbows, long swords, rapiers, short swords.",
+            "ru": "Быстрый негодяй, который использует хитрость и обман, чтобы преодолеть препятствия и победить врагов, d8, Ловкость и Интеллект, легкую броню, простое оружие, ручные арбалеты, длинные мечи, рапиры, короткие мечи."
+          }
+        },
+        "sorcerer": {
+          "name": {
+            "default": "Sorcerer",
+            "ru": "Чародей"
+          },
+          "description": {
+            "default": "A spellcaster who draws on inherent magic from a gift or bloodline, d6, Constitution & Charisma, daggers, darts, slings, quarterstaffs, light crossbows.",
+            "ru": "Заклинатель, который черпает магию из дара или родословной, d6, Телосложение и Харизма, кинжалы, дротики, пращи, посохи, легкие арбалеты."
+          }
+        },
+        "warlock": {
+          "name": {
+            "default": "Warlock",
+            "ru": "Колдун"
+          },
+          "description": {
+            "default": "A wielder of magic that is derived from a bargain with an extraplanar entity, d8, Wisdom & Charisma, light armor, simple weapons.",
+            "ru": "Обладатель волшебства, полученного от сделки с сущностью другого плана, d8, Мудрость и Харизма, легкая броня, простое оружием"
+          }
+        },
+        "wizard": {
+          "name": {
+            "default": "Wizard",
+            "ru": "Волшебник"
+          },
+          "description": {
+            "default": "A scholarly magic-user capable of manipulating the structures of reality, d6, Intelligence & Wisdom, daggers, darts, slings, quarterstaffs, light crossbows.",
+            "ru": "Ученый-волшебник, способный манипулировать структурами реальности, d6, Интеллект и Мудрость, кинжалы, дротики, пращи, посохи, легкие арбалеты."
           }
         }
       },
@@ -83,6 +183,26 @@
           "description": {
             "default": "Measures the character's credibility, personal attractiveness, and the ability to be a leader",
             "ru": "Измеряет убедительность персонажа, личностную притягательность, и способность быть лидером"
+          }
+        },
+        "perception": {
+          "name": {
+            "default": "Perception",
+            "ru": "Восприятие"
+          },
+          "description": {
+            "default": "The ability to notice the environment and capture the essence of what is happening",
+            "ru": "Способность замечать окружающее и улавливать суть происходящего"
+          }
+        },
+        "will": {
+          "name": {
+            "default": "Will",
+            "ru": "Сила воли"
+          },
+          "description": {
+            "default": "Is responsible for resistance to magical impulses on the body, to psionics",
+            "ru": "Отвечает за устойчивость к магическим наводкам на организм, к псионике"
           }
         }
       }

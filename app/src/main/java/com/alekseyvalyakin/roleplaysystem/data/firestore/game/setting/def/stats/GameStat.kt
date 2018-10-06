@@ -47,6 +47,16 @@ interface GameStat : FireStoreIdModel, Selectable {
             override fun getIconRes(): Int {
                 return R.drawable.ic_charisma
             }
+        },
+        PERCEPTION("perception") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_perception
+            }
+        },
+        WILL("will") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_will
+            }
         };
 
         abstract fun getIconRes(): Int

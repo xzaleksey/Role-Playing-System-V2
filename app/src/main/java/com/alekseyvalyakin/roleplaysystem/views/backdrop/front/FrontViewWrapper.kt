@@ -14,7 +14,7 @@ import org.jetbrains.anko.backgroundResource
 
 @SuppressLint("ViewConstructor")
 class FrontViewWrapper<T : View>(context: Context,
-                                 private val frontViewContainer: FrontViewContainer<T>,
+                                 frontViewContainer: FrontViewContainer<T>,
                                  private val backDropDelegate: BackDropDelegate
 ) : _FrameLayout(context) {
 
@@ -24,7 +24,7 @@ class FrontViewWrapper<T : View>(context: Context,
         elevation = getIntDimen(R.dimen.dp_4).toFloat()
         outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
-                outline.setRoundRect(0, 0, view.width, (view.height + getIntDimen(R.dimen.dp_4)), getIntDimen(R.dimen.dp_4).toFloat())
+                outline.setRoundRect(0, 0, view.width, (view.height + getIntDimen(R.dimen.dp_16)), getIntDimen(R.dimen.dp_16).toFloat())
             }
         }
         this.addView(frontViewContainer.view, LinearLayout.LayoutParams(frontViewContainer.width, frontViewContainer.height))

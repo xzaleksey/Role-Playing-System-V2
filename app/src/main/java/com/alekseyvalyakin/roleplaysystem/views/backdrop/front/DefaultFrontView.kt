@@ -27,7 +27,7 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
 
     init {
         backgroundColorResource = R.color.colorWhite
-        topPadding = getIntDimen(R.dimen.dp_12)
+        topPadding = getDoubleCommonDimen()
 
         topContainer = relativeLayout {
             id = R.id.top_container
@@ -57,7 +57,7 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
                 background = context.getDividerDrawable()
             }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_1)) {
                 below(R.id.tv_title)
-                topMargin = getIntDimen(R.dimen.dp_12)
+                topMargin = getDoubleCommonDimen()
             }
 
         }.lparams(matchParent, wrapContent)
