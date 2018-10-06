@@ -59,7 +59,7 @@ data class Game(
 
         const val FIELD_NAME = "name"
         const val FIELD_STATUS = "status"
-        const val FIELD_DESCRIPTION = "getDescription"
+        const val FIELD_DESCRIPTION = "description"
         const val FIELD_PASSWORD = "password"
 
         const val STORAGE_KEY = "games"

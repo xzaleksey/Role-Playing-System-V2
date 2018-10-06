@@ -10,6 +10,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.adapter.GameSettingsClassListViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
@@ -33,7 +34,8 @@ class GameSettingsClassViewModelProviderImpl(
         private val presenter: GameSettingsClassPresenter,
         private val activityListener: ActivityListener,
         private val activeGameEventRelay: Relay<ActiveGameEvent>,
-        private val gameGameClassRepository: GameClassRepository
+        private val gameGameClassRepository: GameClassRepository,
+        private val analyticsReporter: AnalyticsReporter
 ) : GameSettingsClassViewModelProvider {
 
     private val defaultGameClasses = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
@@ -89,6 +91,7 @@ class GameSettingsClassViewModelProviderImpl(
 
                         is GameSettingsClassPresenter.UiEvent.ChangeClass -> {
                             val gameSettingsClassListViewModel = event.gameSettingsListViewModel
+                            analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.UpdateClass(game, gameSettingsClassListViewModel.gameClass))
                             if (gameSettingsClassListViewModel.custom) {
                                 updateSelectedItemModel(gameSettingsClassListViewModel.gameClass as UserGameClass)
                             } else {
@@ -101,7 +104,9 @@ class GameSettingsClassViewModelProviderImpl(
                         }
 
                         is GameSettingsClassPresenter.UiEvent.DeleteClass -> {
-                            return@flatMap deleteObservable(event.gameSettingsListViewModel.id)
+                            val gameSettingsListViewModel = event.gameSettingsListViewModel
+                            analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.DeleteCustomClass(game, gameSettingsListViewModel.gameClass))
+                            return@flatMap deleteObservable(gameSettingsListViewModel.id)
                         }
                     }
                     return@flatMap Observable.empty<Any>()
@@ -114,19 +119,22 @@ class GameSettingsClassViewModelProviderImpl(
         val gameClass = event.gameSettingsClassListViewModel.gameClass
         if (!event.gameSettingsClassListViewModel.selected) {
             return if (gameClass is DefaultGameClass) {
+                analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.SelectDefaultClass(game, gameClass))
                 gameGameClassRepository.setDocumentWithId(game.id, gameClass.toUserGameClass())
                         .toObservable()
             } else {
+                analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.SelectCustomClass(game, gameClass))
                 gameGameClassRepository.setSelected(game.id, gameClass.id, true)
                         .toObservable<Any>()
             }
         } else {
             if (gameClass is UserGameClass) {
                 return if (GameClass.INFO.isSupported(gameClass)) {
+                    analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.UnselectDefaultClass(game, gameClass))
                     deleteObservable(gameClass.id)
                 } else {
-                    gameGameClassRepository.setSelected(game.id, gameClass.id, false)
-                            .toObservable<Any>()
+                    analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.UnselectCustomClass(game, gameClass))
+                    gameGameClassRepository.setSelected(game.id, gameClass.id, false).toObservable<Any>()
                 }.doOnNext {
                     presenter.updateStartEndScrollPositions(event.adapterPosition)
                 }
@@ -288,11 +296,13 @@ class GameSettingsClassViewModelProviderImpl(
                     val backModel = value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
+                        val userGameClass = UserGameClass(backModel.titleText,
+                                backModel.subtitleText,
+                                icon = backModel.iconModel.id)
+                        analyticsReporter.logEvent(GameSettingsClassAnalyticsEvent.CreateClass(game, userGameClass))
                         disposable.add(gameGameClassRepository.createDocument(
                                 game.id,
-                                UserGameClass(backModel.titleText,
-                                        backModel.subtitleText,
-                                        icon = backModel.iconModel.id)
+                                userGameClass
                         ).subscribeWithErrorLogging { gameClass ->
                             value.frontModel.items.asSequence().map {
                                 it as GameSettingsClassListViewModel

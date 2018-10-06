@@ -1,7 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProvider
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.uber.rib.core.*
@@ -27,11 +29,18 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     lateinit var createGameProvider: CreateGameProvider
     @Inject
     lateinit var createGameListener: CreateGameListener
+    @Inject
+    lateinit var game: Game
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
 
+    private val screenName = "CreateGame"
     private val model: BehaviorRelay<CreateGameViewModel> = BehaviorRelay.create()
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
+        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+
         initModel(savedInstanceState)
         presenter.updateFabShowDisposable(model.toFlowable(BackpressureStrategy.LATEST).toObservable())
                 .addToDisposables()
@@ -64,6 +73,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
                 presenter.showConfirmDeleteDialog()
             }
             is CreateGameUiEvent.ConfirmDeleteGame -> {
+                analyticsReporter.logEvent(CreateGameAnalyticsEvent.DeleteGame(game))
                 return createGameProvider.deleteGame().doOnComplete {
                     model.accept(model.value.copy(isDeleted = true))
                     activityListener.backPress()
@@ -79,11 +89,13 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         val nextStep = step.getNextStep()
 
         return if (nextStep == CreateGameStep.NONE) {
+            analyticsReporter.logEvent(CreateGameAnalyticsEvent.ActivateGame(game))
             createGameProvider.onChangeInfo(step, event.text).toObservable<Any>()
                     .doOnComplete {
                         createGameListener.onCreateGameEvent(CreateGameListener.CreateGameEvent.CompleteCreate(createGameProvider.getGame()))
                     }
         } else {
+            analyticsReporter.logEvent(CreateGameAnalyticsEvent.ClickNext(game, step, nextStep))
             val newModel = viewModelProvider.getCreateGameViewModel(nextStep, createGameProvider.getGame())
             model.accept(newModel)
             presenter.updateView(newModel)
@@ -100,6 +112,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         }
 
         val newModel = viewModelProvider.getCreateGameViewModel(previousStep, createGameProvider.getGame())
+        analyticsReporter.logEvent(CreateGameAnalyticsEvent.ClickBack(game, value.step, previousStep))
 
         model.accept(newModel)
         presenter.updateView(newModel)
@@ -114,10 +127,6 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(CreateGameViewModel.KEY, model.value)
-    }
-
-    override fun willResignActive() {
-        super.willResignActive()
     }
 
     /**

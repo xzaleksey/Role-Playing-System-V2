@@ -35,18 +35,36 @@ const val UNSELECT_CUSTOM_STAT = "unselect_custom_stat"
 const val DELETE_CUSTOM_STAT = "delete_custom_stat"
 const val UPDATE_STAT = "update_stat"
 
+//Game settings classes
+const val CREATE_CUSTOM_CLASS = "create_custom_class"
+const val SELECT_DEFAULT_CLASS = "select_default_class"
+const val UNSELECT_DEFAULT_CLASS = "unselect_default_class"
+const val UNSELECT_CUSTOM_CLASS = "unselect_custom_class"
+const val DELETE_CUSTOM_CLASS = "delete_custom_class"
+const val UPDATE_CLASS = "update_class"
+
+//Create game
+const val ACTIVATE_GAME = "activate_game"
+const val DELETE_GAME = "delete_game"
+
 
 //Common
 const val NAVIGATE = "navigate"
 const val SKIP = "skip"
+const val CLICK_NEXT = "click_next"
+const val CLICK_BACK = "click_back"
 
 //PARAMS
 const val PHOTO_ID = "photo_id"
 const val GAME_ID_PARAM = "game_id"
 const val STAT_ID_PARAM = "stat_id"
+const val CLASS_ID_PARAM = "class_id"
 const val NAME_PARAM = "name"
 const val DEFAULT_PARAM = "default"
 const val VISIBILITY = "visibility"
 const val ACTIVE_PARAM = "active"
 const val STATUS_PARAM = "status"
+const val CURRENT_STEP_PARAM = "current_step"
+const val NEXT_STEP_PARAM = "next_step"
+const val PREVIOUS_STEP_PARAM = "previous_step"
 const val SCREEN_PARAM = "screen"

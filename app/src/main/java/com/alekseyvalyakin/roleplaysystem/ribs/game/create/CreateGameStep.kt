@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
-enum class CreateGameStep(val value: Int) {
-    TITLE(1) {
+enum class CreateGameStep(val value: Int, val text: String) {
+    TITLE(1, "Title") {
         override fun getPreviousStep(): CreateGameStep {
             return NONE
         }
@@ -10,7 +10,7 @@ enum class CreateGameStep(val value: Int) {
             return DESCRIPTION
         }
     },
-    DESCRIPTION(2) {
+    DESCRIPTION(2, "Description") {
         override fun getPreviousStep(): CreateGameStep {
             return TITLE
         }
@@ -19,7 +19,7 @@ enum class CreateGameStep(val value: Int) {
             return PASSWORD
         }
     },
-    PASSWORD(3) {
+    PASSWORD(3, "Password") {
         override fun getPreviousStep(): CreateGameStep {
             return DESCRIPTION
         }
@@ -28,7 +28,7 @@ enum class CreateGameStep(val value: Int) {
             return NONE
         }
     },
-    NONE(Int.MAX_VALUE) {
+    NONE(Int.MAX_VALUE, "None") {
         override fun getPreviousStep(): CreateGameStep {
             return NONE
         }
