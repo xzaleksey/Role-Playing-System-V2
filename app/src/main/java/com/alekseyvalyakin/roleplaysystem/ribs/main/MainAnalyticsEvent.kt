@@ -9,6 +9,12 @@ sealed class MainAnalyticsEvent(name: String, bundle: Bundle? = null) : Analytic
     object CreateGame : MainAnalyticsEvent(CREATE_GAME)
     object Logout : MainAnalyticsEvent(LOGOUT)
 
+    class SearchModeToggle(
+            mode: Boolean
+    ) : MainAnalyticsEvent(SEARCH_MODE_TOGGLE, Bundle().apply {
+        putString(ACTIVE_PARAM, mode.toString())
+    })
+
     class GameClick(val game: Game) : MainAnalyticsEvent(GAME_CLICK, Bundle().apply {
         putString(GAME_ID_PARAM, game.id)
         putString(STATUS_PARAM, game.status.toString())

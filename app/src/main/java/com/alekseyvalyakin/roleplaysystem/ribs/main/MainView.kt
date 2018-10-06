@@ -105,10 +105,14 @@ class MainView constructor(
     }
 
     override fun observeUiEvents(): Observable<MainInteractor.UiEvents> {
-        return Observable.merge(observeSearchInput(),
-                observeSearchRightIconClick().requestPermissionsExternalReadWrite(rxPermissions),
-                relay.requestPermissionsExternalReadWrite(rxPermissions),
-                observeFabClick().requestPermissionsExternalReadWrite(rxPermissions))
+        return Observable.merge(
+                listOf(
+                        observeSearchInput(),
+                        observeSearchRightIconClick().requestPermissionsExternalReadWrite(rxPermissions),
+                        observeSearchToggle().requestPermissionsExternalReadWrite(rxPermissions),
+                        relay.requestPermissionsExternalReadWrite(rxPermissions),
+                        observeFabClick().requestPermissionsExternalReadWrite(rxPermissions)
+                ))
     }
 
     override fun showError(message: String) {
@@ -163,6 +167,9 @@ class MainView constructor(
 
     private fun observeSearchRightIconClick(): Observable<MainInteractor.UiEvents.SearchRightIconClick> = searchToolbar.observeRightImageClick()
             .map { MainInteractor.UiEvents.SearchRightIconClick }
+
+    private fun observeSearchToggle(): Observable<MainInteractor.UiEvents.SearchModeToggle> = searchToolbar.observeSearchModeToggle()
+            .map { MainInteractor.UiEvents.SearchModeToggle(it) }
 
     companion object {
         private const val LOGOUT = 1

@@ -97,6 +97,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                     createEmptyGameObservableProvider.createEmptyGameModel()
                 }
             }
+            is UiEvents.SearchModeToggle -> {
+                analyticsReporter.logEvent(MainAnalyticsEvent.SearchModeToggle(uiEvents.mode))
+            }
             is UiEvents.Logout -> {
                 analyticsReporter.logEvent(MainAnalyticsEvent.Logout)
                 return authProvider.signOut().toObservable<Any>()
@@ -155,6 +158,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         object Logout : UiEvents()
 
         object FabClick : UiEvents()
+
+        class SearchModeToggle(val mode: Boolean) : UiEvents()
 
         class SearchInput(val text: String) : UiEvents()
 

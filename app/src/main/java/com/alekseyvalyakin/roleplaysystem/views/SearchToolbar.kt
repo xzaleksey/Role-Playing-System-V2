@@ -12,6 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
@@ -28,6 +29,7 @@ class SearchToolbar constructor(
     private lateinit var searchEditText: EditText
     private lateinit var searchContainer: ViewGroup
     private var isSearchMode = false
+    private val relay = PublishRelay.create<Boolean>()
 
     init {
         AnkoContext.createDelegate(this).apply {
@@ -171,6 +173,10 @@ class SearchToolbar constructor(
         return rightIcon
     }
 
+    fun observeSearchModeToggle(): Observable<Boolean> {
+        return relay
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
@@ -188,6 +194,7 @@ class SearchToolbar constructor(
         searchEditText.visibility = View.INVISIBLE
         leftIcon.hideKeyboard()
         leftIcon.setImageDrawable(getCompatDrawable(R.drawable.ic_search))
+        relay.accept(false)
     }
 
     private fun initSearchMode() {
@@ -195,6 +202,7 @@ class SearchToolbar constructor(
         searchEditText.visibility = View.VISIBLE
         searchEditText.showSoftKeyboard()
         tvTitle.visibility = View.INVISIBLE
+        relay.accept(true)
     }
 }
 

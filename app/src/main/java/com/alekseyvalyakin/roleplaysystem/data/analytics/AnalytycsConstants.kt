@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.data.analytics
 //Main
 const val CREATE_GAME = "create_game"
 const val LOGOUT = "logout"
+const val SEARCH_MODE_TOGGLE = "toggle_search_mode"
 const val GAME_CLICK = "click_game"
 const val PROFILE_CLICK = "click_profile"
 
@@ -34,5 +35,6 @@ const val SKIP = "skip"
 const val PHOTO_ID = "photo_id"
 const val VISIBILITY = "visibility"
 const val GAME_ID_PARAM = "game_id"
+const val ACTIVE_PARAM = "active"
 const val STATUS_PARAM = "status"
 const val SCREEN_PARAM = "screen"
