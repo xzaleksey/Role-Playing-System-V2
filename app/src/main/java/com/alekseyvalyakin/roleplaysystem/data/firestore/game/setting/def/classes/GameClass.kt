@@ -26,6 +26,56 @@ interface GameClass : FireStoreIdModel, Selectable {
             override fun getIconRes(): Int {
                 return R.drawable.ic_dexterity
             }
+        },
+        BARD("bard") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_wisdom
+            }
+        },
+        CLERIC("cleric") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_will
+            }
+        },
+        DRUID("druid") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_perception
+            }
+        },
+        PALADIN("paladin") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_constitution
+            }
+        },
+        BARBARIAN("barbarian") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_constitution
+            }
+        },
+        ROGUE("rogue") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
+        },
+        SORCERER("sorcerer") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_wisdom
+            }
+        },
+        WARLOCK("warlock") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_wisdom
+            }
+        },
+        WIZARD("wizard") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_intelligence
+            }
+        },
+        MONK("monk") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_will
+            }
         };
 
         abstract fun getIconRes(): Int

@@ -28,6 +28,8 @@ exports.DeleteGameFunction = functions.firestore
         const database = getDatabase();
 
         const usersInGame = getGameCollection().doc(gameId).collection("users");
+        const statsInGame = getGameCollection().doc(gameId).collection("stats");
+        const classesInGame = getGameCollection().doc(gameId).collection("classes");
         const photosInGame = getGameCollection().doc(gameId).collection("photos");
 
         const deleteGameInUser =
@@ -66,9 +68,10 @@ exports.DeleteGameFunction = functions.firestore
         });
 
         const deleteUsersInGame = deleteCollection(database, usersInGame, BATCH_SIZE);
+        const deleteStatsInGame = deleteCollection(database, statsInGame, BATCH_SIZE);
+        const deleteClassesInGame = deleteCollection(database, classesInGame, BATCH_SIZE);
 
-        return Promise.all([deletePhotos, deleteGameInUser, deleteUsersInGame]);
-
+        return Promise.all([deletePhotos, deleteGameInUser, deleteUsersInGame, deleteStatsInGame, deleteClassesInGame]);
     });
 
 function getPhotosInGameReference(gameId, photoId) {
