@@ -78,11 +78,6 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                 .subscribeWithErrorLogging {
 
                 }
-        photoInGameDao.all().subscribeWithErrorLogging { photos ->
-            photos.forEach {
-                Timber.d(it.toString())
-            }
-        }
     }
 
     private fun handleUiEvent(uiEvent: PhotoPresenter.UiEvent): Observable<*> {
@@ -92,15 +87,18 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
             }
             is PhotoPresenter.UiEvent.SwitchVisibility -> {
                 val model = uiEvent.photoFlexibleViewModel
+                val fireStoreVisibility = if (!model.visible) FireStoreVisibility.VISIBLE_TO_ALL else FireStoreVisibility.HIDDEN
+                analyticsReporter.logEvent(GamePhotoAnalyticsEvent.SwitchPhotoVisibility(game, model.id, fireStoreVisibility.value.toString()))
                 return photoInGameRepository.switchVisibility(
                         game.id,
                         model.id,
-                        if (!model.visible) FireStoreVisibility.VISIBLE_TO_ALL else FireStoreVisibility.HIDDEN
+                        fireStoreVisibility
                 ).onErrorComplete().toObservable<Any>()
             }
 
             is PhotoPresenter.UiEvent.DeletePhoto -> {
                 val model = uiEvent.photoFlexibleViewModel
+                analyticsReporter.logEvent(GamePhotoAnalyticsEvent.DeletePhoto(game, model.id))
                 return photoInGameRepository.deleteDocumentOffline(
                         game.id,
                         model.id
@@ -115,6 +113,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
 
             is PhotoPresenter.UiEvent.OpenFullSize -> {
                 val photoFlexibleViewModel = uiEvent.photoFlexibleViewModel
+                analyticsReporter.logEvent(GamePhotoAnalyticsEvent.OpenPhoto(game, photoFlexibleViewModel.id))
                 activeGameEventRelay.accept(ActiveGameEvent.OpenFullSizePhoto(
                         FullSizePhotoModel(photoFlexibleViewModel.imageData,
                                 photoFlexibleViewModel.name)
@@ -134,6 +133,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                     )
                     photoInGame.id = photoInGameDao.insert(photoInGame)
                     workManagerWrapper.startUploadPhotoInGameWork(photoInGame)
+                    analyticsReporter.logEvent(GamePhotoAnalyticsEvent.UploadPhoto(game))
                 }, ioScheduler)
             } else {
                 Completable.error(RuntimeException((it as ImagesResult.Error).error))
@@ -147,10 +147,6 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
         }
                 .subscribeWithErrorLogging()
                 .addToDisposables()
-    }
-
-    override fun willResignActive() {
-        super.willResignActive()
     }
 }
 

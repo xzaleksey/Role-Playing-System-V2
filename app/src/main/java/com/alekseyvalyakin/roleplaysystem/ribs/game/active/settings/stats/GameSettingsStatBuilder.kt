@@ -10,6 +10,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -81,7 +82,8 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
                     resourcesProvider: ResourcesProvider,
                     activityListener: ActivityListener,
                     activeGameEventRelay: Relay<ActiveGameEvent>,
-                    gameGameStatsRepository: GameStatsRepository
+                    gameGameStatsRepository: GameStatsRepository,
+                    analyticsReporter: AnalyticsReporter
             ): GameSettingsStatsViewModelProvider {
                 return GameSettingsStatsViewModelProviderImpl(
                         defaultSettingsStatsRepository,
@@ -91,7 +93,8 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
                         view,
                         activityListener,
                         activeGameEventRelay,
-                        gameGameStatsRepository)
+                        gameGameStatsRepository,
+                        analyticsReporter)
             }
         }
 

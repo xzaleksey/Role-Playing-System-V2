@@ -10,6 +10,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.adapter.GameSettingsStatListViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
@@ -33,7 +34,8 @@ class GameSettingsStatsViewModelProviderImpl(
         private val presenter: GameSettingsStatPresenter,
         private val activityListener: ActivityListener,
         private val activeGameEventRelay: Relay<ActiveGameEvent>,
-        private val gameGameStatsRepository: GameStatsRepository
+        private val gameGameStatsRepository: GameStatsRepository,
+        private val analyticsReporter: AnalyticsReporter
 ) : GameSettingsStatsViewModelProvider {
 
     private val defaultGameStats = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())

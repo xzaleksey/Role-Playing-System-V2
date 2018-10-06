@@ -74,10 +74,12 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
             }
             is DicePresenter.UiEvent.Cancel -> {
                 Observable.fromCallable {
+                    analyticsReporter.logEvent(GameDiceAnalyticsEvent.CancelButtonCLick(game))
                     relay.accept(getEmptyModel())
                 }
             }
             is DicePresenter.UiEvent.Save -> {
+                analyticsReporter.logEvent(GameDiceAnalyticsEvent.CreateDiceCollection(game))
                 val diceCollection = DiceCollection.createDiceCollectionFromSingleDiceCollections(
                         relay.value.dices
                 )
@@ -91,21 +93,25 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
             }
             is DicePresenter.UiEvent.SelectCollection -> {
                 Observable.fromCallable {
+                    analyticsReporter.logEvent(GameDiceAnalyticsEvent.SelectDiceCollection(game))
                     relay.accept(DicesInteractorModel(uiEvent.diceCollection.toSingleDiceCollections()))
                 }
             }
 
             is DicePresenter.UiEvent.UnSelectCollection -> {
                 Observable.fromCallable {
+                    analyticsReporter.logEvent(GameDiceAnalyticsEvent.UnselectDiceCollection(game))
                     relay.accept(getEmptyModel())
                 }
             }
             is DicePresenter.UiEvent.DeleteCollection -> {
+                analyticsReporter.logEvent(GameDiceAnalyticsEvent.DeleteGameCollection(game))
                 return diceRepository.deleteDocument(uiEvent.diceCollection.id, game.id).toObservable<Any>()
             }
 
             is DicePresenter.UiEvent.Throw -> {
                 Observable.fromCallable {
+                    analyticsReporter.logEvent(GameDiceAnalyticsEvent.ThrowDice(game))
                     router.attachDiceResult(DiceCollectionResult.createResult(relay.value.dices))
                 }
             }

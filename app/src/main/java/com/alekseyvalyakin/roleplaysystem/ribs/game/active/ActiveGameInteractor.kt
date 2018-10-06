@@ -71,7 +71,7 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                             val navigationId = NavigationId.findById(it.id)
                             model = Model(navigationId)
                             analyticsReporter.logEvent(
-                                    ActiveGameAnalyticsEvent.Navigate(
+                                    ActiveGameAnalyticsAnalyticsEvent.Navigate(
                                             viewModelProvider.getCurrentGame(),
                                             navigationId))
                             handleNavigation(navigationId)

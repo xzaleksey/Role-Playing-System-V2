@@ -4,7 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsEvent
 import com.uber.rib.core.Bundle
 
-class GameEvent(
+open class GameAnalyticsEvent(
         name: String,
         game: Game,
         bundle: Bundle = Bundle()

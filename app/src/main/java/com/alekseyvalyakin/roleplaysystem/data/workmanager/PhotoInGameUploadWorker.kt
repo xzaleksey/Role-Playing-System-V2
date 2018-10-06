@@ -72,8 +72,7 @@ class PhotoInGameUploadWorker : Worker() {
                 val uri = firebaseStorageRepository.uploadPhotoInGameAndGetUri(
                         gameId, photoId, Uri.fromFile(compressedFile),
                         OnProgressListener { snapshot ->
-                            Timber.d("Bytes transferred ${snapshot.bytesTransferred}" +
-                                    "Total bytes ${snapshot.totalByteCount}")
+                            Timber.d("Bytes transferred ${snapshot.bytesTransferred} Total bytes ${snapshot.totalByteCount}")
                             notificationInteractor.showProgressNotification(notificationId,
                                     RpsApp.app.getString(R.string.uploading_photo),
                                     snapshot.bytesTransferred,
