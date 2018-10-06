@@ -40,7 +40,7 @@ abstract class BaseGameFireStoreRepository<T : HasId>(
         return RxFirestore.addDocumentHasId(getCollection(gameId), data)
     }
 
-    override fun createDocumentWithId(gameId: String, data: T): Single<T> {
+    override fun setDocumentWithId(gameId: String, data: T): Single<T> {
         return RxFirestore.setDocumentOffline(getCollection(gameId).document(data.id), data)
                 .toSingleDefault(data)
     }

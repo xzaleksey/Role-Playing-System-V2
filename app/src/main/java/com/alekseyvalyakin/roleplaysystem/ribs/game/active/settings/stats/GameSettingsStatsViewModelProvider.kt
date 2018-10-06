@@ -91,6 +91,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
                         is GameSettingsStatPresenter.UiEvent.ChangeStat -> {
                             val gameSettingsStatListViewModel = event.gameSettingsStatListViewModel
+                            analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.UpdateStat(game, gameSettingsStatListViewModel.gameStat))
                             if (gameSettingsStatListViewModel.custom) {
                                 updateSelectedStatModel(gameSettingsStatListViewModel.gameStat as UserGameStat)
                             } else {
@@ -103,7 +104,9 @@ class GameSettingsStatsViewModelProviderImpl(
                         }
 
                         is GameSettingsStatPresenter.UiEvent.DeleteStat -> {
-                            return@flatMap deleteObservable(event.gameSettingsViewModel.id)
+                            val gameSettingsViewModel = event.gameSettingsViewModel
+                            analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.DeleteCustomStat(game, gameSettingsViewModel.gameStat))
+                            return@flatMap deleteObservable(gameSettingsViewModel.id)
                         }
                     }
                     return@flatMap Observable.empty<Any>()
@@ -116,17 +119,21 @@ class GameSettingsStatsViewModelProviderImpl(
         val gameStat = event.gameSettingsStatListViewModel.gameStat
         if (!event.gameSettingsStatListViewModel.selected) {
             return if (gameStat is DefaultGameStat) {
-                gameGameStatsRepository.createDocumentWithId(game.id, gameStat.toUserGameStat())
+                analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.SelectDefaultStat(game, gameStat))
+                gameGameStatsRepository.setDocumentWithId(game.id, gameStat.toUserGameStat())
                         .toObservable()
             } else {
+                analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.SelectCustomStat(game, gameStat))
                 gameGameStatsRepository.setSelected(game.id, gameStat.id, true)
                         .toObservable<Any>()
             }
         } else {
             if (gameStat is UserGameStat) {
                 return if (GameStat.INFO.isSupported(gameStat)) {
+                    analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.UnselectDefaultStat(game, gameStat))
                     deleteObservable(gameStat.id)
                 } else {
+                    analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.UnselectCustomStat(game, gameStat))
                     gameGameStatsRepository.setSelected(game.id, gameStat.id, false)
                             .toObservable<Any>()
                 }.doOnNext {
@@ -242,7 +249,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     val backModel = statViewModel.value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
-                        disposable.add(gameGameStatsRepository.createDocumentWithId(
+                        disposable.add(gameGameStatsRepository.setDocumentWithId(
                                 game.id,
                                 userGameStat.copy(
                                         name = backModel.titleText,
@@ -290,11 +297,13 @@ class GameSettingsStatsViewModelProviderImpl(
                     val backModel = value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
+                        val userGameStat = UserGameStat(backModel.titleText,
+                                backModel.subtitleText,
+                                icon = backModel.iconModel.id)
+                        analyticsReporter.logEvent(GameSettingsStatAnalyticsEvent.CreateStat(game, userGameStat))
                         disposable.add(gameGameStatsRepository.createDocument(
                                 game.id,
-                                UserGameStat(backModel.titleText,
-                                        backModel.subtitleText,
-                                        icon = backModel.iconModel.id)
+                                userGameStat
                         ).subscribeWithErrorLogging { gameStat ->
                             value.frontModel.items.asSequence().map {
                                 it as GameSettingsStatListViewModel

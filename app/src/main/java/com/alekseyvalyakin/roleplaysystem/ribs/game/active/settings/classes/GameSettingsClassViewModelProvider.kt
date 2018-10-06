@@ -114,7 +114,7 @@ class GameSettingsClassViewModelProviderImpl(
         val gameClass = event.gameSettingsClassListViewModel.gameClass
         if (!event.gameSettingsClassListViewModel.selected) {
             return if (gameClass is DefaultGameClass) {
-                gameGameClassRepository.createDocumentWithId(game.id, gameClass.toUserGameClass())
+                gameGameClassRepository.setDocumentWithId(game.id, gameClass.toUserGameClass())
                         .toObservable()
             } else {
                 gameGameClassRepository.setSelected(game.id, gameClass.id, true)
@@ -240,7 +240,7 @@ class GameSettingsClassViewModelProviderImpl(
                     val backModel = viewModel.value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
-                        disposable.add(gameGameClassRepository.createDocumentWithId(
+                        disposable.add(gameGameClassRepository.setDocumentWithId(
                                 game.id,
                                 userGameClass.copy(
                                         name = backModel.titleText,

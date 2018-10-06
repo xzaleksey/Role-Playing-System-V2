@@ -27,14 +27,26 @@ const val SELECT_DICE_COLLECTION = "select_dice_collection"
 const val UNSELECT_DICE_COLLECTION = "unselect_dice_collection"
 const val CANCEL_BUTTON_CLICK = "click_cancel_button"
 
+//Game settings stats
+const val CREATE_CUSTOM_STAT = "create_custom_stat"
+const val SELECT_DEFAULT_STAT = "select_default_stat"
+const val UNSELECT_DEFAULT_STAT = "unselect_default_stat"
+const val UNSELECT_CUSTOM_STAT = "unselect_custom_stat"
+const val DELETE_CUSTOM_STAT = "delete_custom_stat"
+const val UPDATE_STAT = "update_stat"
+
+
 //Common
 const val NAVIGATE = "navigate"
 const val SKIP = "skip"
 
 //PARAMS
 const val PHOTO_ID = "photo_id"
-const val VISIBILITY = "visibility"
 const val GAME_ID_PARAM = "game_id"
+const val STAT_ID_PARAM = "stat_id"
+const val NAME_PARAM = "name"
+const val DEFAULT_PARAM = "default"
+const val VISIBILITY = "visibility"
 const val ACTIVE_PARAM = "active"
 const val STATUS_PARAM = "status"
 const val SCREEN_PARAM = "screen"
