@@ -70,7 +70,7 @@ object RxFirestore {
     fun addDocument(ref: CollectionReference,
                     data: Map<String, Any>): Single<DocumentReference> {
         return Single.create { emitter ->
-            ref.add(data).addOnCompleteListener { task -> emitter.onSuccess(task.result) }.addOnFailureListener { e ->
+            ref.add(data).addOnSuccessListener { documentReference -> emitter.onSuccess(documentReference) }.addOnFailureListener { e ->
                 if (!emitter.isDisposed)
                     emitter.onError(e)
             }

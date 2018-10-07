@@ -193,7 +193,7 @@ object RxFirebaseStorage {
                 storageRef.downloadUrl
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    emitter.onSuccess(task.result)
+                    emitter.onSuccess(task.result!!)
                 } else {
                     if (!emitter.isDisposed) {
                         emitter.onError(task.exception as Throwable)
