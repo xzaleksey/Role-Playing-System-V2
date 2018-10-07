@@ -72,6 +72,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                     when (event) {
                         is CreateGameListener.CreateGameEvent.CompleteCreate -> {
                             router.detachCreateGame()
+                            router.attachOpenActiveGame(event.game)
                         }
                     }
                 }.addToDisposables()
