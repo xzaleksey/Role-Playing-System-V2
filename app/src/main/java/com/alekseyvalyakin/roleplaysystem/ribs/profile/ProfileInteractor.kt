@@ -109,6 +109,7 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
             }
             is ProfilePresenter.Event.GameClick -> {
                 Observable.fromCallable {
+                    analyticsReporter.logEvent(ProfileAnalyticsEvent.GameClick(event.game))
                     profileListener.openGame(event.game)
                 }
             }
