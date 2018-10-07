@@ -75,9 +75,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
 
         presenter.observeUiEvents()
                 .flatMap(this::handleUiEvent)
-                .subscribeWithErrorLogging {
-
-                }
+                .subscribeWithErrorLogging()
     }
 
     private fun handleUiEvent(uiEvent: PhotoPresenter.UiEvent): Observable<*> {

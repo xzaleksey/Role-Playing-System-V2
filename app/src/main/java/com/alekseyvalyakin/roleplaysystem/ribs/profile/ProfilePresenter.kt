@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import io.reactivex.Observable
 
 /**
@@ -12,6 +13,7 @@ interface ProfilePresenter {
         object EditNamePress : Event()
         class EditNameConfirm(val name: String) : Event()
         object ChooseAvatar : Event()
+        class GameClick(val game: Game) : Event()
     }
 
     fun observeUiEvents(): Observable<Event>

@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.input.InputCallback
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -214,6 +215,14 @@ class ProfileView constructor(
             visibility = View.GONE
         }.lparams {
             gravity = Gravity.CENTER
+        }
+        flexibleAdapter.mItemClickListener = FlexibleAdapter.OnItemClickListener { position ->
+            val item = flexibleAdapter.getItem(position)
+            if (item is GameListViewModel) {
+                relay.accept(ProfilePresenter.Event.GameClick(item.game))
+                return@OnItemClickListener true
+            }
+            false
         }
     }
 

@@ -11,7 +11,6 @@ interface PhotoPresenter {
 
     sealed class UiEvent {
         object FabClicked : UiEvent()
-
         class DeletePhoto(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class SwitchVisibility(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class OpenFullSize(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()

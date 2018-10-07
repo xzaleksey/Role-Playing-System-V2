@@ -2,11 +2,14 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileListener
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileRouter
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.*
@@ -22,8 +25,7 @@ import javax.inject.Inject
  * Base router
  */
 @RibInteractor
-class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>() {
-
+class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(), ProfileListener {
     @Inject
     lateinit var presenter: RootPresenter
     @Inject
@@ -80,8 +82,8 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
         localImageProvider.subscribe().addToDisposables()
     }
 
-    override fun willResignActive() {
-        super.willResignActive()
+    override fun openGame(game: Game) {
+        router.attachOpenActiveGame(game)
     }
 
     override fun handleBackPress(): Boolean {
@@ -99,6 +101,12 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
             Timber.d("Restored active game Router")
             router.attachMain()
             router.attachOpenActiveGame(childInfo as Game)
+        }
+
+        if (clazz == ProfileRouter::class.java) {
+            Timber.d("Restored Profile Router")
+            router.attachMain()
+            router.attachMyProfile(childInfo as User)
         }
     }
 

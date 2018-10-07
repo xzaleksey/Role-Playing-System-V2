@@ -7,7 +7,6 @@ import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
-import java.io.Serializable
 import java.util.*
 
 data class Game(
@@ -25,7 +24,7 @@ data class Game(
         @get:Exclude
         @Volatile
         override var id: String = StringUtils.EMPTY_STRING
-) : FireStoreIdModel, Serializable, HasDateCreate {
+) : FireStoreIdModel, HasDateCreate {
 
     @Exclude
     fun isFiltered(text: String): Boolean {

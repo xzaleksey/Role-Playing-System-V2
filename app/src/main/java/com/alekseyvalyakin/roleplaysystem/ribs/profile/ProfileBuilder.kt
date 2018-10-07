@@ -2,10 +2,10 @@ package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
@@ -47,7 +47,9 @@ class ProfileBuilder(dependency: ParentComponent) : ViewBuilder<ProfileView, Pro
         return ProfileView(parentViewGroup.context)
     }
 
-    interface ParentComponent : RibDependencyProvider
+    interface ParentComponent : RibDependencyProvider {
+        fun getProfileListener(): ProfileListener
+    }
 
     @dagger.Module
     abstract class Module {
@@ -65,8 +67,9 @@ class ProfileBuilder(dependency: ParentComponent) : ViewBuilder<ProfileView, Pro
             internal fun router(
                     component: Component,
                     view: ProfileView,
-                    interactor: ProfileInteractor): ProfileRouter {
-                return ProfileRouter(view, interactor, component)
+                    interactor: ProfileInteractor,
+                    profileUserProvider: ProfileUserProvider): ProfileRouter {
+                return ProfileRouter(view, interactor, component, profileUserProvider)
             }
 
             @ProfileScope

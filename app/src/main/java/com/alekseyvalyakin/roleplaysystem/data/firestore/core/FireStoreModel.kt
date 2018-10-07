@@ -1,4 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.core
 
-interface FireStoreModel {
-}
+import java.io.Serializable
+
+interface FireStoreModel : Serializable

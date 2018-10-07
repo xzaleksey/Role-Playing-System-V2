@@ -37,6 +37,8 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
     @Inject
     lateinit var userAvatarRepository: UserAvatarRepository
     @Inject
+    lateinit var profileListener: ProfileListener
+    @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     private val screenName = "Profile"
 
@@ -104,6 +106,11 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
             is ProfilePresenter.Event.EditNameConfirm -> {
                 analyticsReporter.logEvent(ProfileAnalyticsEvent.ChangeUserName)
                 return profileViewModelProvider.onNameChanged(event.name).toObservable<Any>()
+            }
+            is ProfilePresenter.Event.GameClick -> {
+                Observable.fromCallable {
+                    profileListener.openGame(event.game)
+                }
             }
         }
     }

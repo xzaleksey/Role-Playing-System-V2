@@ -73,7 +73,6 @@ class PhotoView constructor(
             gravity = Gravity.BOTTOM or Gravity.END
             margin = getIntDimen(R.dimen.dp_8)
         }
-
     }
 
     override fun update(photoViewModel: PhotoViewModel) {

@@ -11,6 +11,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileListener
 import com.jakewharton.rxrelay2.PublishRelay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -113,6 +114,13 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             @JvmStatic
             fun createGameRibEventObservable(relay: PublishRelay<CreateGameListener.CreateGameEvent>): Observable<CreateGameListener.CreateGameEvent> {
                 return relay
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            fun profileListener(rootInteractor: RootInteractor): ProfileListener {
+                return rootInteractor
             }
 
             @RootScope

@@ -20,7 +20,7 @@ class ProfileRouterTest : RibTestBasePlaceholder() {
   fun setup() {
     MockitoAnnotations.initMocks(this)
 
-    router = ProfileRouter(view, interactor, component)
+    router = ProfileRouter(view, interactor, component, profileUserProvider)
   }
 
   /**

@@ -26,6 +26,10 @@ class ProfileUserProviderImpl(
                 .flatMap { relay.toFlowable(BackpressureStrategy.LATEST) }
     }
 
+    override fun getCurrentUser(): User {
+        return relay.value
+    }
+
     override fun isCurrentUser(id: String): Boolean {
         return userRepository.isCurrentUser(id)
     }
@@ -37,4 +41,6 @@ interface ProfileUserProvider {
     fun isCurrentUser(id: String): Boolean
 
     fun onNameChanged(name: String): Completable
+
+    fun getCurrentUser(): User
 }
