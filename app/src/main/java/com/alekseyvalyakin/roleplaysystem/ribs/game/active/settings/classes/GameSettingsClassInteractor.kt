@@ -1,10 +1,14 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -20,6 +24,10 @@ class GameSettingsClassInteractor : BaseInteractor<GameSettingsClassPresenter, G
     lateinit var viewModelProvider: GameSettingsClassViewModelProvider
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
+    @Inject
+    lateinit var gameTagsRepository: GameTagsRepository
+    @Inject
+    lateinit var game: Game
     private val screenName = "GameSettingsClasses"
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
@@ -30,6 +38,15 @@ class GameSettingsClassInteractor : BaseInteractor<GameSettingsClassPresenter, G
                 .subscribeWithErrorLogging {
                     presenter.update(it)
                 }.addToDisposables()
+
+        gameTagsRepository.observeTagsOrdered(game.id).subscribeWithErrorLogging { list ->
+            list.forEach { Timber.d(it.toString()) }
+        }
+
+        gameTagsRepository.setDocumentWithId(game.id, Tag(
+                id = "attack",
+                skillIds = listOf("id1", "id2")
+        )).subscribeWithErrorLogging()
     }
 
 }

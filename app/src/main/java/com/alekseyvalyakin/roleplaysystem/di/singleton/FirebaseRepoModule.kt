@@ -20,6 +20,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
 import dagger.Module
@@ -96,5 +98,12 @@ class FirebaseRepoModule {
     fun classesRepo(): GameClassRepository {
         return GameClassRepositoryImpl()
     }
+
+    @Provides
+    @Singleton
+    fun tagsRepo(): GameTagsRepository {
+        return GameTagsRepositoryImpl()
+    }
+
 
 }

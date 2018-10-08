@@ -110,7 +110,7 @@ class SearchToolbar constructor(
                         singleLine = true
                         imeOptions = EditorInfo.IME_ACTION_SEARCH
                         visibility = View.INVISIBLE
-                        setOnEditorActionListener { v, actionId, event ->
+                        setOnEditorActionListener { _, actionId, _ ->
                             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                                 hideKeyboard()
                                 return@setOnEditorActionListener true

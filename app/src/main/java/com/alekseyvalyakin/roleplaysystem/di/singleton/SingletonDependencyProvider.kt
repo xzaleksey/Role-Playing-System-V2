@@ -12,6 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classe
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
@@ -55,7 +56,7 @@ interface SingletonDependencyProvider {
 
     fun resourceProvider(): ResourcesProvider
 
-    fun sinmpleCryptoRovider(): SimpleCryptoProvider
+    fun simpleCryptoProvider(): SimpleCryptoProvider
 
     fun fileInfoProvider(): FileInfoProvider
 
@@ -85,4 +86,5 @@ interface SingletonDependencyProvider {
 
     fun classesRepo(): GameClassRepository
 
+    fun tagsRepo(): GameTagsRepository
 }
