@@ -4,7 +4,11 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Transaction
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -23,7 +27,6 @@ class GameTagsRepositoryImpl() : BaseGameFireStoreRepository<Tag>(Tag::class.jav
     override fun getCollection(gameId: String): CollectionReference {
         return FirestoreCollection.TagsInGame(gameId).getDbCollection()
     }
-
 
     override fun addSkill(id: String, skillId: String, gameId: String): Completable {
         val tag = Tag(id = id, skillIds = listOf(skillId))
