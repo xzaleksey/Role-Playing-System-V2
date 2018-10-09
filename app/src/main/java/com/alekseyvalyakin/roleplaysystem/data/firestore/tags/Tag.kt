@@ -16,4 +16,9 @@ data class Tag(
         @set:Exclude
         @get:Exclude
         override var id: String = StringUtils.EMPTY_STRING
-) : FireStoreIdModel, HasDateCreate
+) : FireStoreIdModel, HasDateCreate {
+
+    companion object {
+        const val SKILL_IDS_FIELD = "skillIds"
+    }
+}

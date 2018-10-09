@@ -24,7 +24,7 @@ object RxFirestore {
      * @param function  The function to execute within the transaction context.
      */
     fun runTransaction(firestore: FirebaseFirestore,
-                       function: Transaction.Function<Any>): Completable {
+                       function: Transaction.Function<Any?>): Completable {
         return Completable.create { emitter -> RxCompletableHandler.assignOnTask(emitter, firestore.runTransaction(function)) }
     }
 
