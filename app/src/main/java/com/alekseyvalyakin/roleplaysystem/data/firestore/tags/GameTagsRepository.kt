@@ -37,7 +37,6 @@ class GameTagsRepositoryImpl() : BaseGameFireStoreRepository<Tag>(Tag::class.jav
                 Timber.d("Document exists")
                 transaction.update(tagReference, Tag.SKILL_IDS_FIELD, FieldValue.arrayUnion(skillId))
             }
-            Timber.d("Updating document")
         })
     }
 }
