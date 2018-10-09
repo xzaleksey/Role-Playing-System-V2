@@ -28,18 +28,17 @@ class GameTagsRepositoryImpl() : BaseGameFireStoreRepository<Tag>(Tag::class.jav
     override fun addSkill(id: String, skillId: String, gameId: String): Completable {
         val tag = Tag(id = id, skillIds = listOf(skillId))
         val tagReference = getDocumentReference(id, gameId)
-        RxFirestore.runTransaction(instance, Transaction.Function { transaction ->
+        return RxFirestore.runTransaction(instance, Transaction.Function { transaction ->
             val documentSnapshot = transaction.get(tagReference)
             if (!documentSnapshot.exists()) {
                 Timber.d("creating document $tag")
                 transaction.set(tagReference, tag)
             } else {
                 Timber.d("Document exists")
+                transaction.update(tagReference, Tag.SKILL_IDS_FIELD, FieldValue.arrayUnion(skillId))
             }
-            transaction.update(tagReference, Tag.SKILL_IDS_FIELD, FieldValue.arrayUnion(skillId))
             Timber.d("Updating document")
         })
-        return Completable.complete()
     }
 }
 
