@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkill
 import com.google.firebase.firestore.Exclude
 
 
@@ -63,18 +64,14 @@ interface GameStat : FireStoreIdModel, Selectable {
 
         companion object {
             const val DEFAULT = "default"
+            private val valuesMap: Map<String, INFO> = INFO.values().associateBy { it.id }
 
-            fun isSupported(gameStat: GameStat): Boolean {
-                return values().any { it.id == gameStat.id }
+            fun isSupported(item: GameStat): Boolean {
+                return valuesMap[item.id] != null
             }
 
             fun getIconId(id: String): Int {
-                val iconRes = values().firstOrNull { it.id == id }?.getIconRes()
-                if (iconRes != null) {
-                    return iconRes
-                }
-
-                return R.drawable.ic_photo
+                return valuesMap[id]?.getIconRes() ?: R.drawable.ic_photo
             }
         }
     }

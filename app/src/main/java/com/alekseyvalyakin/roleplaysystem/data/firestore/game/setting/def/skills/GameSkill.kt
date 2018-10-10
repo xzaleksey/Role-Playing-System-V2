@@ -51,8 +51,8 @@ interface GameSkill : FireStoreIdModel, Selectable {
             const val DEFAULT = "default"
             private val valuesMap: Map<String, INFO> = values().associateBy { it.id }
 
-            fun isSupported(gameStat: GameSkill): Boolean {
-                return valuesMap[gameStat.id] != null
+            fun isSupported(item: GameSkill): Boolean {
+                return valuesMap[item.id] != null
             }
 
             fun getIconId(id: String): Int {

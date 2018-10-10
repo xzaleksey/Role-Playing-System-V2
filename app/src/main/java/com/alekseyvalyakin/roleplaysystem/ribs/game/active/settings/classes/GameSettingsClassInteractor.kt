@@ -38,12 +38,6 @@ class GameSettingsClassInteractor : BaseInteractor<GameSettingsClassPresenter, G
                 .subscribeWithErrorLogging {
                     presenter.update(it)
                 }.addToDisposables()
-
-        gameTagsRepository.observeTagsOrdered(game.id).subscribeWithErrorLogging { list ->
-            list.forEach { Timber.d(it.toString()) }
-        }
-
-        gameTagsRepository.addSkill("attack", UUID.randomUUID().toString(), game.id).subscribeWithErrorLogging()
     }
 
 }
