@@ -9,8 +9,16 @@ class Operation(
     override fun evaluate(): Double {
         if (valueLeft != null && valueRight != null) {
             return when (operationType) {
-                OperationType.DIVIDE -> valueLeft.evaluate() / valueLeft.evaluate()
-                OperationType.MULTIPLY -> valueLeft.evaluate() * valueRight.evaluate()
+                OperationType.DIVIDE -> {
+                    val left = valueLeft.evaluate()
+                    val right = valueRight.evaluate()
+                    return left / right
+                }
+                OperationType.MULTIPLY -> {
+                    val left = valueLeft.evaluate()
+                    val right = valueRight.evaluate()
+                    return left * right
+                }
                 OperationType.MINUS -> valueLeft.evaluate() - valueRight.evaluate()
                 OperationType.PLUS -> valueLeft.evaluate() + valueRight.evaluate()
             }
