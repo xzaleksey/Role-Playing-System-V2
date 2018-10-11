@@ -14,6 +14,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classe
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
@@ -105,5 +107,10 @@ class FirebaseRepoModule {
         return GameTagsRepositoryImpl()
     }
 
+    @Provides
+    @Singleton
+    fun gameSkillsRepo(): GameSkillsRepository {
+        return GameSkillsRepositoryImpl()
+    }
 
 }

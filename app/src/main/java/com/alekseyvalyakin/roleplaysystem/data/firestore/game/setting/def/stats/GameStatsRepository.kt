@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasName
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
 import com.google.firebase.firestore.CollectionReference
@@ -23,7 +24,7 @@ class GameStatsRepositoryImpl : BaseGameFireStoreRepository<UserGameStat>(UserGa
     }
 
     override fun setSelected(gameId: String, id: String, selected: Boolean): Completable {
-        return updateFieldOffline(id, selected, UserGameStat.SELECTED_FIELD, gameId)
+        return updateFieldOffline(id, selected, Selectable.SELECTED_FIELD, gameId)
     }
 
 }

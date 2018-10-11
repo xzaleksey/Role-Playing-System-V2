@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes
+package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasName
@@ -11,9 +11,9 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 
 
-class GameClassRepositoryImpl : BaseGameFireStoreRepository<UserGameClass>(UserGameClass::class.java), GameClassRepository {
+class GameSkillsRepositoryImpl : BaseGameFireStoreRepository<UserGameSkill>(UserGameSkill::class.java), GameSkillsRepository {
 
-    override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameClass>> {
+    override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameSkill>> {
         val query = getCollection(gameId)
                 .orderBy(HasName.NAME_FIELD, Query.Direction.ASCENDING)
         return observeQueryCollection(query, gameId)
@@ -29,8 +29,8 @@ class GameClassRepositoryImpl : BaseGameFireStoreRepository<UserGameClass>(UserG
 
 }
 
-interface GameClassRepository : GameFireStoreRepository<UserGameClass> {
-    fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameClass>>
+interface GameSkillsRepository : GameFireStoreRepository<UserGameSkill> {
+    fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameSkill>>
 
     fun setSelected(gameId: String, id: String, selected: Boolean): Completable
 }

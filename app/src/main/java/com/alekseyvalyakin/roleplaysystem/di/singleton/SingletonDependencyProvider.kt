@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesI
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
@@ -87,4 +88,6 @@ interface SingletonDependencyProvider {
     fun classesRepo(): GameClassRepository
 
     fun tagsRepo(): GameTagsRepository
+
+    fun gameSkillsRepo(): GameSkillsRepository
 }

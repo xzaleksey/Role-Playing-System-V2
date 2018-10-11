@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills
 
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.Dependency
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.Restriction
@@ -18,20 +18,15 @@ interface GameSkill : FireStoreIdModel, Selectable {
     @Exclude
     fun getIconId(): String
 
-    @Exclude
-    fun getTags(): List<String>
+    var tags: List<String>
 
-    @Exclude
-    fun getSuccessFormula(): String
+    var successFormula: String
 
-    @Exclude
-    fun getResultFormula(): String
+    var resultFormula: String
 
-    @Exclude
-    fun getDependencies(): List<Dependency>
+    var dependencies: List<Dependency>
 
-    @Exclude
-    fun getRestrictions(): List<Restriction>
+    var restrictions: List<Restriction>
 
     enum class INFO(val id: String) {
         STRIKE("strike") {
