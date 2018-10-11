@@ -27,6 +27,13 @@ class FormulaEvaluatorTest {
     }
 
     @Test
+    fun parseUnMinus() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("-7")
+        Assert.assertEquals(-7.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test
     fun parseMultiply() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5*5")
@@ -69,12 +76,29 @@ class FormulaEvaluatorTest {
     }
 
     @Test
+    fun parseThreeOperationsWith3Parentheses() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("(2+1)*((3+5)*2)")
+        Assert.assertEquals(48.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test
     fun parseDice() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("d6*5")
         val result = expression!!.evaluate()
         Assert.assertTrue(result <= 30)
         Assert.assertTrue(result >= 5)
+    }
+
+    @Test
+    fun parseCustomParser() {
+        val formulaEvaluator = FormulaEvaluator(listOf(
+                CustomParser("x1", 5.0)
+        ))
+
+        val expression = formulaEvaluator.parse("x1")
+        Assert.assertEquals(5.0, expression!!.evaluate(), 0.0)
     }
 
     @Test

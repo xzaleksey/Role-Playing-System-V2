@@ -29,7 +29,7 @@ class ComplexOperation : Expression {
         val expressions = ArrayList(expressions)
         val operationTypes = ArrayList(operationTypes)
 
-        while (expressions.size != 1) {
+        while (operationTypes.isNotEmpty()) {
             val maxPriority = getMaxPriority(operationTypes)
             var currentIndex = 0
             for ((index, operationType) in operationTypes.withIndex()) {
@@ -57,11 +57,4 @@ class ComplexOperation : Expression {
     private fun getMaxPriority(operationTypes: List<OperationType>): OperationType {
         return operationTypes.maxBy { it.priority }!!
     }
-
-    data class OperationInfo(
-            val operationType: OperationType,
-            val leftIndex: Int,
-            val rightIndex: Int
-    )
-
 }
