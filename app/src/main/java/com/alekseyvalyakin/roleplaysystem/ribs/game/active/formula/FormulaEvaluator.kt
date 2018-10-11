@@ -35,7 +35,7 @@ class FormulaEvaluator(
 
         for ((index, char) in string.withIndex()) {
             if (!formulaPreValidator.isValid(index, char)) {
-                Timber.e("Formula not prevalidated")
+                Timber.e("Formula not preValidated")
                 return null
             }
 
@@ -88,8 +88,8 @@ class FormulaEvaluator(
 
     @VisibleForTesting
     fun createExpressionIndexes(startExpressionIndexes: MutableList<Int>,
-                                endExpressionIndexes: MutableList<Int>): MutableList<ExperessionIndexes> {
-        val result = mutableListOf<ExperessionIndexes>()
+                                endExpressionIndexes: MutableList<Int>): MutableList<ExpressionIndexes> {
+        val result = mutableListOf<ExpressionIndexes>()
 
 
         for ((i, startIndex) in startExpressionIndexes.withIndex()) {
@@ -105,7 +105,7 @@ class FormulaEvaluator(
                 }
 
                 if (i == startExpressionIndexes.lastIndex) {
-                    result.add(ExperessionIndexes(startIndex, endIndex))
+                    result.add(ExpressionIndexes(startIndex, endIndex))
                     listIterator.remove()
                 } else {
                     var startExpressionIndex = i + 1
@@ -119,7 +119,7 @@ class FormulaEvaluator(
                     }
 
                     if (j == countOfExpressionStart) {
-                        result.add(ExperessionIndexes(startIndex, endIndex))
+                        result.add(ExpressionIndexes(startIndex, endIndex))
                         listIterator.remove()
                         break
                     }
@@ -142,10 +142,12 @@ class FormulaEvaluator(
 
         while (i <= endIndex) {
             val currentFormulaPart: FormulaPart = if (formulaParts[i] == ExpressionStart) {
-                val experessionIndexes = formulaResult.startExpressionIndexes.find { it.startIndex == i }
-                val createCustomExpression = createCustomExpression(formulaResult,
-                        experessionIndexes!!.startIndex + 1, experessionIndexes.endIndex - 1)
-                i = experessionIndexes.endIndex + 1
+                val expressionIndexes = formulaResult.startExpressionIndices.find { it.startIndex == i }
+                val createCustomExpression = createCustomExpression(
+                        formulaResult,
+                        expressionIndexes!!.startIndex + 1,
+                        expressionIndexes.endIndex - 1)
+                i = expressionIndexes.endIndex + 1
                 createCustomExpression
             } else {
                 val formulaPart = formulaParts[i]
@@ -185,8 +187,8 @@ class FormulaEvaluator(
     }
 
     class FormulaPreValidator(val string: String) {
-        var startExpression: Int = 0
-        var endExpression: Int = 0
+        private var startExpression: Int = 0
+        private var endExpression: Int = 0
 
         fun isValid(index: Int, char: Char): Boolean {
             if (char == ExpressionStart.value) {
@@ -211,14 +213,14 @@ class FormulaEvaluator(
             val currentParser: FormulaParser
     )
 
-    data class ExperessionIndexes(
+    data class ExpressionIndexes(
             val startIndex: Int,
             val endIndex: Int
     )
 
     data class FormulaResult(
             val formulaParts: List<FormulaPart>,
-            val startExpressionIndexes: List<ExperessionIndexes>
+            val startExpressionIndices: List<ExpressionIndexes>
     )
 
 }

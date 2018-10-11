@@ -111,9 +111,9 @@ class FormulaEvaluatorTest {
         )
 
         Assert.assertEquals(listOf(
-                FormulaEvaluator.ExperessionIndexes(0, 8),
-                FormulaEvaluator.ExperessionIndexes(1, 7),
-                FormulaEvaluator.ExperessionIndexes(2, 6)
+                FormulaEvaluator.ExpressionIndexes(0, 8),
+                FormulaEvaluator.ExpressionIndexes(1, 7),
+                FormulaEvaluator.ExpressionIndexes(2, 6)
         ), result)
 
     }
@@ -128,8 +128,8 @@ class FormulaEvaluatorTest {
         )
 
         Assert.assertEquals(listOf(
-                FormulaEvaluator.ExperessionIndexes(0, 7),
-                FormulaEvaluator.ExperessionIndexes(3, 6)
+                FormulaEvaluator.ExpressionIndexes(0, 7),
+                FormulaEvaluator.ExpressionIndexes(3, 6)
         ), result)
     }
 
@@ -143,9 +143,9 @@ class FormulaEvaluatorTest {
         )
 
         val listExpected = listOf(
-                FormulaEvaluator.ExperessionIndexes(0, 1),
-                FormulaEvaluator.ExperessionIndexes(2, 3),
-                FormulaEvaluator.ExperessionIndexes(4, 5)
+                FormulaEvaluator.ExpressionIndexes(0, 1),
+                FormulaEvaluator.ExpressionIndexes(2, 3),
+                FormulaEvaluator.ExpressionIndexes(4, 5)
         )
         Assert.assertEquals(listExpected, result)
     }
