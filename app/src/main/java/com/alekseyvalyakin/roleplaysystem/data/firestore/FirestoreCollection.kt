@@ -18,6 +18,7 @@ sealed class FirestoreCollection(
     class PhotosInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/photos")
     class StatsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/stats")
     class ClassesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/classes")
+    class RacesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/races")
     class TagsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/tags")
     class GamesInUser(userId: String) : FirestoreCollection(USERS, directory = "$userId/games")
 
@@ -26,8 +27,9 @@ sealed class FirestoreCollection(
                     directory = "$userId/dices/")
 
 
-    object DEFAULT_STATS : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/stats")
-    object DEFAULT_CLASSES : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/classes")
+    object DefaultStats : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/stats")
+    object DefaultClasses : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/classes")
+    object DefaultRaces : FirestoreCollection(SETTINGS, "${GameSetting.DEFAULT.title}/races")
 
     private fun getFullPath(): String {
         return (root?.getFullPath()?.plus("/") ?: StringUtils.EMPTY_STRING) + directory
