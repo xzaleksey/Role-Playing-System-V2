@@ -50,7 +50,9 @@ class ComplexOperation : Expression {
             }
             operationTypes.removeAt(currentIndex)
         }
-
+        if (expressions.isEmpty()) {
+            throw IllegalArgumentException("Empty expression")
+        }
         return expressions.first().evaluate()
     }
 

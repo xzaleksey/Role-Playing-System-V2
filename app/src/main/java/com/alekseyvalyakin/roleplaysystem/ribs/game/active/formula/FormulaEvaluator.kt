@@ -35,8 +35,7 @@ class FormulaEvaluator(
 
         for ((index, char) in string.withIndex()) {
             if (!formulaPreValidator.isValid(index, char)) {
-                Timber.e("Formula not preValidated")
-                return null
+                throw IllegalArgumentException("Formula not preValidated")
             }
 
             val nextIndex = index + 1
@@ -68,8 +67,9 @@ class FormulaEvaluator(
                 currentIndex = index
                 stringToParse = string.substring(index, nextIndex)
 
-                if (!checkIsFormulaEnded(parseInternal(stringToParse, currentFormulaInfo))) {
-                    currentIndex++
+                val newFormula = parseInternal(stringToParse, currentFormulaInfo)
+                if (!checkIsFormulaEnded(newFormula)) {
+                    currentFormulaInfo = newFormula
                 }
             }
 
@@ -77,11 +77,12 @@ class FormulaEvaluator(
 
         if (currentFormulaInfo != null) {
             list.add(currentFormulaInfo!!.formulaPart)
+            currentIndex = string.lastIndex
         }
 
-
-        Timber.d(list.toString())
-
+        if (currentIndex < string.lastIndex) {
+            throw IllegalArgumentException("Formula parsed partially")
+        }
 
         return createExpression(FormulaResult(list, createExpressionIndexes(startExpressionIndexes, endExpressionIndexes)))
     }
@@ -183,6 +184,7 @@ class FormulaEvaluator(
                 return FormulaInfo(formulaPart, it)
             }
         }
+
         return null
     }
 

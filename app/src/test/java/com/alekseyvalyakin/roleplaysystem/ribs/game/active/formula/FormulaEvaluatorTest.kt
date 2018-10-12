@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.formula
 
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class FormulaEvaluatorTest {
@@ -9,77 +10,84 @@ class FormulaEvaluatorTest {
     fun parseSum() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5+5")
-        Assert.assertEquals(10.0, expression!!.evaluate(), 0.0)
+        assertEquals(10.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseSumDouble() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5.2+5")
-        Assert.assertEquals(10.2, expression!!.evaluate(), 0.0)
+        assertEquals(10.2, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseMinus() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5-7")
-        Assert.assertEquals(-2.0, expression!!.evaluate(), 0.0)
+        assertEquals(-2.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test
+    fun parseValueInParenthesis() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("(4)")
+        assertEquals(4.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseUnMinus() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("-7")
-        Assert.assertEquals(-7.0, expression!!.evaluate(), 0.0)
+        assertEquals(-7.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseMultiply() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5*5")
-        Assert.assertEquals(25.0, expression!!.evaluate(), 0.0)
+        assertEquals(25.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseDivide() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("10/2")
-        Assert.assertEquals(5.0, expression!!.evaluate(), 0.0)
+        assertEquals(5.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseTwoOperationsSumAndMultiply() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5+2*3")
-        Assert.assertEquals(11.0, expression!!.evaluate(), 0.0)
+        assertEquals(11.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseThreeOperations() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5+2*3+5")
-        Assert.assertEquals(16.0, expression!!.evaluate(), 0.0)
+        assertEquals(16.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseThreeOperationsWithParentheses() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("5+2*(3+5)")
-        Assert.assertEquals(21.0, expression!!.evaluate(), 0.0)
+        assertEquals(21.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseThreeOperationsWithParentheses2() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("(5+2)*(3+5)")
-        Assert.assertEquals(56.0, expression!!.evaluate(), 0.0)
+        assertEquals(56.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
     fun parseThreeOperationsWith3Parentheses() {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("(2+1)*((3+5)*2)")
-        Assert.assertEquals(48.0, expression!!.evaluate(), 0.0)
+        assertEquals(48.0, expression!!.evaluate(), 0.0)
     }
 
     @Test
@@ -87,8 +95,8 @@ class FormulaEvaluatorTest {
         val formulaEvaluator = FormulaEvaluator()
         val expression = formulaEvaluator.parse("d6*5")
         val result = expression!!.evaluate()
-        Assert.assertTrue(result <= 30)
-        Assert.assertTrue(result >= 5)
+        assertTrue(result <= 30)
+        assertTrue(result >= 5)
     }
 
     @Test
@@ -98,7 +106,63 @@ class FormulaEvaluatorTest {
         ))
 
         val expression = formulaEvaluator.parse("x1")
-        Assert.assertEquals(5.0, expression!!.evaluate(), 0.0)
+        assertEquals(5.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseEmptyExpression() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseEmptyParenthesisExpression() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("()")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseWrongParenthesisExpression() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse(")5+4(")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseWrongParenthesisExpressionWithExpressionInside() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("(5+4())")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseTwoOperationsInRow() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("5++4")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseTwoExpressionsInRow() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("5d6+4")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseUnknownExpression() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("4x+5")
+        expression!!.evaluate()
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun parseUnknownExpression2() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("x2")
+        expression!!.evaluate()
     }
 
     @Test
@@ -110,7 +174,7 @@ class FormulaEvaluatorTest {
                 mutableListOf(6, 7, 8)
         )
 
-        Assert.assertEquals(listOf(
+        assertEquals(listOf(
                 FormulaEvaluator.ExpressionIndexes(0, 8),
                 FormulaEvaluator.ExpressionIndexes(1, 7),
                 FormulaEvaluator.ExpressionIndexes(2, 6)
@@ -127,7 +191,7 @@ class FormulaEvaluatorTest {
                 mutableListOf(6, 7)
         )
 
-        Assert.assertEquals(listOf(
+        assertEquals(listOf(
                 FormulaEvaluator.ExpressionIndexes(0, 7),
                 FormulaEvaluator.ExpressionIndexes(3, 6)
         ), result)
@@ -147,12 +211,11 @@ class FormulaEvaluatorTest {
                 FormulaEvaluator.ExpressionIndexes(2, 3),
                 FormulaEvaluator.ExpressionIndexes(4, 5)
         )
-        Assert.assertEquals(listExpected, result)
+        assertEquals(listExpected, result)
     }
 
-
     @Test
-    fun formulaPrevalidate() {
+    fun formulaPreValidate() {
         val string = ")("
         val formulaPreValidator = FormulaEvaluator.FormulaPreValidator(string)
 
@@ -165,11 +228,11 @@ class FormulaEvaluatorTest {
             }
         }
 
-        Assert.assertEquals(expectedResult, result)
+        assertEquals(expectedResult, result)
     }
 
     @Test
-    fun formulaPrevalidate1() {
+    fun formulaPreValidate1() {
         val string = "("
         val formulaPreValidator = FormulaEvaluator.FormulaPreValidator(string)
 
@@ -182,7 +245,7 @@ class FormulaEvaluatorTest {
             }
         }
 
-        Assert.assertEquals(expectedResult, result)
+        assertEquals(expectedResult, result)
     }
 
 
