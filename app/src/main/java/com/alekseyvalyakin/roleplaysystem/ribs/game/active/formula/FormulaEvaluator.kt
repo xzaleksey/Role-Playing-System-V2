@@ -77,10 +77,10 @@ class FormulaEvaluator(
 
         if (currentFormulaInfo != null) {
             list.add(currentFormulaInfo!!.formulaPart)
-            currentIndex = string.lastIndex
+            currentIndex = string.lastIndex + 1
         }
 
-        if (currentIndex < string.lastIndex) {
+        if (currentIndex <= string.lastIndex) {
             throw IllegalArgumentException("Formula parsed partially")
         }
 

@@ -165,6 +165,13 @@ class FormulaEvaluatorTest {
         expression!!.evaluate()
     }
 
+    @Test(expected = IllegalArgumentException::class)
+    fun parseInvalidNumber() {
+        val formulaEvaluator = FormulaEvaluator()
+        val expression = formulaEvaluator.parse("4..")
+        expression!!.evaluate()
+    }
+
     @Test
     fun createExpressionIndexesTriple() {
         val formulaEvaluator = FormulaEvaluator()
