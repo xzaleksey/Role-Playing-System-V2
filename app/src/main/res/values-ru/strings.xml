@@ -145,5 +145,5 @@
     <string name="my_class">Мой класс</string>
     <string name="delete_race">Удалить расу</string>
     <string name="my_race">Моя раса</string>
-
+    <string name="new_race">Новая раса</string>
 </resources>

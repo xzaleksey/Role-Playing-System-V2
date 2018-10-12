@@ -2,11 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.DefaultGameRace
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.DefaultSettingRaceRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRace
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.UserGameRace
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.*
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -95,13 +91,13 @@ class GameSettingsRaceViewModelProviderImpl(
                         }
 
                         is GameSettingsRacePresenter.UiEvent.ChangeRace -> {
-                            val gameSettingsClassListViewModel = event.listViewModel
-                            analyticsReporter.logEvent(GameSettingsRaceAnalyticsEvent.UpdateRace(game, gameSettingsClassListViewModel.gameRace))
-                            if (gameSettingsClassListViewModel.custom) {
-                                updateSelectedItemModel(gameSettingsClassListViewModel.gameRace as UserGameRace)
+                            val gameSettingsRaceListViewModel = event.listViewModel
+                            analyticsReporter.logEvent(GameSettingsRaceAnalyticsEvent.UpdateRace(game, gameSettingsRaceListViewModel.gameRace))
+                            if (gameSettingsRaceListViewModel.custom) {
+                                updateSelectedItemModel(gameSettingsRaceListViewModel.gameRace as UserGameRace)
                             } else {
                                 updateSelectedItemModel(
-                                        (gameSettingsClassListViewModel.gameRace as DefaultGameRace).toUserGameRace()
+                                        (gameSettingsRaceListViewModel.gameRace as DefaultGameRace).toUserGameRace()
                                 )
                             }
 
@@ -162,11 +158,11 @@ class GameSettingsRaceViewModelProviderImpl(
                 BiFunction { gameRaces: List<GameRace>, defaultClasses: List<GameRace> ->
                     val result = mutableListOf<GameSettingsRaceListViewModel>()
                     val keySelector: (GameRace) -> String = { it.id }
-                    val gameClassesMap = gameRaces.associateBy(keySelector)
+                    val gameracesMap = gameRaces.associateBy(keySelector)
                     val defaultClassesMap = defaultClasses.associateBy { it.id }
                     gameRaces.forEach { gameRace -> result.add(gameSettingsRaceListViewModel(gameRace)) }
 
-                    defaultClassesMap.minus(gameClassesMap.keys).values.forEach {
+                    defaultClassesMap.minus(gameracesMap.keys).values.forEach {
                         result.add(
                                 GameSettingsRaceListViewModel(it,
                                         leftIcon = IconViewModel(resourcesProvider.getDrawable(GameRace.INFO.getIconId(it.getIconId())), it.getIconId()))
@@ -189,7 +185,7 @@ class GameSettingsRaceViewModelProviderImpl(
                 getShowRaceToolbarModel(),
                 DefaultFrontView.Model(
                         DefaultFrontView.HeaderModel(
-                                stringRepository.getNewClass(),
+                                stringRepository.getNewRace(),
                                 resourcesProvider.getDrawable(R.drawable.ic_add),
                                 {
                                     presenter.collapseFront()

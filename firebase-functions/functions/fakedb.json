@@ -205,6 +205,28 @@
             "ru": "Отвечает за устойчивость к магическим наводкам на организм, к псионике"
           }
         }
+      },
+      "races": {
+        "elf": {
+          "name": {
+            "default": "Elf",
+            "ru": "Эльф"
+          },
+          "description": {
+            "default": "Description elf",
+            "ru": "Описание эльфа"
+          }
+        },
+        "human": {
+          "name": {
+            "default": "Human",
+            "ru": "Человек"
+          },
+          "description": {
+            "default": "Description human",
+            "ru": "Описание человека"
+          }
+        }
       }
     }
   }

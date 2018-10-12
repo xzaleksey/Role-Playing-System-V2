@@ -2,15 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.GameSettingsRaceBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.GameSettingsRaceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.GameSettingsSkillsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.GameSettingsSkillsRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatRouter
-import com.uber.rib.core.DefaultContainerAttachTransition
-import com.uber.rib.core.DefaultContainerDetachTransition
-import com.uber.rib.core.RouterNavigatorFactory
-import com.uber.rib.core.RouterNavigatorState
-import com.uber.rib.core.ViewRouter
+import com.uber.rib.core.*
 
 /**
  * Adds and removes children of {@link GameSettingsBuilder.GameSettingsScope}.
@@ -23,7 +21,8 @@ class GameSettingsRouter(
         private val gameSettingsStatBuilder: GameSettingsStatBuilder,
         private val gameSettingsClassBuilder: GameSettingsClassBuilder,
         private val gameSettingsSkillsBuilder: GameSettingsSkillsBuilder,
-        private val routerNavigatorFactory: RouterNavigatorFactory
+        private val gameSettingsRacesBuilder: GameSettingsRaceBuilder,
+        routerNavigatorFactory: RouterNavigatorFactory
 ) : ViewRouter<GameSettingsView, GameSettingsInteractor, GameSettingsBuilder.Component>(view, interactor, component) {
 
     private val router = routerNavigatorFactory.create<State>(this)!!
@@ -54,6 +53,15 @@ class GameSettingsRouter(
             gameSettingsSkillsBuilder, view
     ) {}
 
+    private val racesAttachTransition = object : DefaultContainerAttachTransition<
+            GameSettingsRaceRouter,
+            State,
+            GameSettingsRaceBuilder,
+            GameSettingsView
+            >(
+            gameSettingsRacesBuilder, view
+    ) {}
+
     private val statsDetachTransition = DefaultContainerDetachTransition<GameSettingsStatRouter, State, GameSettingsView>(
             view
     )
@@ -62,6 +70,9 @@ class GameSettingsRouter(
     )
 
     private val skillsDetachTransition = DefaultContainerDetachTransition<GameSettingsSkillsRouter, State, GameSettingsView>(
+            view
+    )
+    private val racesDetachTransition = DefaultContainerDetachTransition<GameSettingsRaceRouter, State, GameSettingsView>(
             view
     )
 
@@ -73,9 +84,11 @@ class GameSettingsRouter(
             GameSettingsViewModel.GameSettingsItemType.CLASSES -> {
                 router.pushTransientState(State.Classes, classesAttachTransition, classesDetachTransition)
             }
-
             GameSettingsViewModel.GameSettingsItemType.SKILLS -> {
                 router.pushTransientState(State.Skills, skillsAttachTransition, skillsDetachTransition)
+            }
+            GameSettingsViewModel.GameSettingsItemType.RACES -> {
+                router.pushTransientState(State.Races, racesAttachTransition, racesDetachTransition)
             }
         }
     }
@@ -89,6 +102,7 @@ class GameSettingsRouter(
         companion object {
             val Stats = State("Stats")
             val Classes = State("Classes")
+            val Races = State("Races")
             val Skills = State("Skills")
         }
     }
