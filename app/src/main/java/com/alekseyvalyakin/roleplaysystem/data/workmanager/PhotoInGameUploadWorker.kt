@@ -18,6 +18,8 @@ import com.google.firebase.storage.StorageException
 import com.rxfirebase2.DocumentNotExistsException
 import com.rxfirebase2.RxFirestore
 import id.zelory.compressor.Compressor
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -81,16 +83,16 @@ class PhotoInGameUploadWorker : Worker() {
                 ).blockingGet()
 
                 documentReference.set(FireStoreIdPhoto(
-                        fileName = compressedFile.name,
+                        name = DateTime.now().toString(DateTimeFormat.shortDateTime()),
                         url = uri.toString()))
 
                 photoInGameDao.deleteById(dbId)
             } catch (t: Throwable) {
-                result = if (t.cause is StorageException){
+                result = if (t.cause is StorageException) {
                     photoInGameDao.deleteById(dbId)
                     localFile.delete()
                     Result.FAILURE
-                } else{
+                } else {
                     Result.RETRY
                 }
                 Timber.e(t)

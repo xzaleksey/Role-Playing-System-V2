@@ -14,6 +14,8 @@ interface PhotoPresenter {
         class DeletePhoto(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class SwitchVisibility(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class OpenFullSize(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
+        class TitleChangeOpen(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
+        class EditNameConfirm(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>
@@ -21,4 +23,6 @@ interface PhotoPresenter {
     fun update(photoViewModel: PhotoViewModel)
 
     fun showError(localizedMessage: String)
+
+    fun showChangeTitleDialog(photoFlexibleViewModel: PhotoFlexibleViewModel)
 }

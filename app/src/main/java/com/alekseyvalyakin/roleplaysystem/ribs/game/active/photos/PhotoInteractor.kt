@@ -117,6 +117,17 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                                 photoFlexibleViewModel.name)
                 ))
             }
+            is PhotoPresenter.UiEvent.TitleChangeOpen -> {
+                return Observable.fromCallable {
+                    presenter.showChangeTitleDialog(uiEvent.photoFlexibleViewModel)
+                }
+            }
+            is PhotoPresenter.UiEvent.EditNameConfirm -> {
+                return photoInGameRepository.updateName(game.id,
+                        uiEvent.photoFlexibleViewModel.id,
+                        uiEvent.photoFlexibleViewModel.name)
+                        .toObservable<Any>()
+            }
         }
         return Observable.empty<Any>()
     }

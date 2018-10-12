@@ -6,11 +6,19 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.ProgressBar
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.WhichButton
+import com.afollestad.materialdialogs.actions.setActionButtonEnabled
+import com.afollestad.materialdialogs.input.InputCallback
+import com.afollestad.materialdialogs.input.getInputField
+import com.afollestad.materialdialogs.input.input
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.FabState
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoFlexibleViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoInGameAdapter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -31,6 +39,7 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 class PhotoView constructor(
         context: Context
 ) : _CoordinatorLayout(context), PhotoPresenter {
+
     val COLUMNS_COUNT = 2
     val COLUMSN_COUNT_LANDSCAPE = 3
 
@@ -40,6 +49,7 @@ class PhotoView constructor(
     private var progressBarBottom: ProgressBar
     private val relay = PublishRelay.create<PhotoPresenter.UiEvent>()
     private val flexibleAdapter = PhotoInGameAdapter(emptyList(), relay)
+    private var currentDialog: MaterialDialog? = null
 
     init {
         view {
@@ -106,4 +116,33 @@ class PhotoView constructor(
                 .requestPermissionsExternalReadWrite(rxPermissions)
                 .map { PhotoPresenter.UiEvent.FabClicked }
     }
+
+    override fun showChangeTitleDialog(photoFlexibleViewModel: PhotoFlexibleViewModel) {
+        if (currentDialog != null) {
+            return
+        }
+        currentDialog = MaterialDialog(context)
+                .title(R.string.photo_name)
+                .positiveButton(res = android.R.string.ok, click = {
+                    relay.accept(PhotoPresenter.UiEvent.EditNameConfirm(
+                            photoFlexibleViewModel.copy(name = it.getInputField()!!.text.toString()))
+                    )
+                })
+                .negativeButton(res = android.R.string.cancel)
+                .input(hint = getString(R.string.input_name),
+                        waitForPositiveButton = false,
+                        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
+                        prefill = photoFlexibleViewModel.name,
+                        callback = object : InputCallback {
+                            override fun invoke(dialog: MaterialDialog, text: CharSequence) {
+                                dialog.setActionButtonEnabled(WhichButton.POSITIVE, !text.isBlank())
+                            }
+                        })
+        currentDialog?.setOnDismissListener { currentDialog = null }
+        currentDialog?.show()
+        currentDialog?.getInputField()?.run {
+            this.setSelection(this.length())
+        }
+    }
+
 }

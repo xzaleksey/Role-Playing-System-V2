@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.support.v4.app.FragmentActivity
@@ -50,7 +49,7 @@ class ProfileView constructor(
     private lateinit var tvMasterGamesCount: TextView
     private lateinit var recyclerView: RecyclerView
     private val progressBarCenter: ProgressBar
-    private var currentDialog: Dialog? = null
+    private var currentDialog: MaterialDialog? = null
     private val relay = PublishRelay.create<ProfilePresenter.Event>()
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private var avatarDisposable = Disposables.disposed()
@@ -299,6 +298,9 @@ class ProfileView constructor(
                 })
         currentDialog?.setOnDismissListener { currentDialog = null }
         currentDialog?.show()
+        currentDialog?.getInputField()?.run {
+            this.setSelection(this.length())
+        }
     }
 
     override fun showLoadingContent(loading: Boolean) {

@@ -51,7 +51,7 @@ class PhotoInGameViewModelProviderImpl(
 
                                         PhotoFlexibleViewModel(photoId,
                                                 imageProvider,
-                                                photo.fileName,
+                                                photo.name,
                                                 isMaster,
                                                 photo.state.visibilityState == FireStoreVisibility.VISIBLE_TO_ALL.value,
                                                 size,

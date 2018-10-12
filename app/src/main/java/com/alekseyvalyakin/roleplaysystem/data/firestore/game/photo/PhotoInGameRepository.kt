@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasName
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.observeCollectionByDateCreate
@@ -25,10 +26,16 @@ class PhotoInGameRepositoryIml : BaseGameFireStoreRepository<FireStoreIdPhoto>(F
         return updateFieldOffline(id, updateMap, FireStoreIdPhoto.STATE_FIELD, gameId)
     }
 
+    override fun updateName(gameId: String, id: String, name: String): Completable {
+        return updateFieldOffline(id, name, HasName.NAME_FIELD, gameId)
+    }
+
 }
 
 interface PhotoInGameRepository : GameFireStoreRepository<FireStoreIdPhoto> {
     fun observeByDateCreate(gameId: String): Flowable<List<FireStoreIdPhoto>>
 
     fun switchVisibility(gameId: String, id: String, fireStoreVisibility: FireStoreVisibility): Completable
+
+    fun updateName(gameId: String, id: String, name: String): Completable
 }

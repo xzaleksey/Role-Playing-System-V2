@@ -30,7 +30,12 @@ class PhotoInGameItemViewHolder(
                             .show()
                 },
                 View.OnClickListener { relay.accept(PhotoPresenter.UiEvent.SwitchVisibility(photoFlexibleViewModel)) },
-                View.OnClickListener { relay.accept(PhotoPresenter.UiEvent.OpenFullSize(photoFlexibleViewModel)) }
+                View.OnClickListener { relay.accept(PhotoPresenter.UiEvent.OpenFullSize(photoFlexibleViewModel)) },
+                View.OnClickListener {
+                    if (photoFlexibleViewModel.canChange) {
+                        relay.accept(PhotoPresenter.UiEvent.TitleChangeOpen(photoFlexibleViewModel))
+                    }
+                }
         )
     }
 }

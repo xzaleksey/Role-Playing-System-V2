@@ -25,6 +25,7 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
     private lateinit var divider: View
     private var disposable = Disposables.disposed()
     private lateinit var switcherVisibility: SwitchCompat
+    private lateinit var bottomContainer: View
 
     init {
         id = R.id.card_view
@@ -34,10 +35,12 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                 id = R.id.icon
                 scaleType = ImageView.ScaleType.CENTER_CROP
             }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_132))
-            relativeLayout {
+            bottomContainer = relativeLayout {
                 leftPadding = getCommonDimen()
                 rightPadding = getCommonDimen()
+                backgroundResource = getSelectableItemBackGround()
                 topPadding = getCommonDimen()
+
                 deleteImageView = imageView {
                     id = R.id.iv_delete
                     backgroundResource = getSelectableItemBorderless()
@@ -113,7 +116,8 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                    imageProvider: ImageProvider,
                    deleteClickListener: OnClickListener,
                    switcherOnClickListener: OnClickListener,
-                   photoClickListener: OnClickListener) {
+                   photoClickListener: OnClickListener,
+                   bottomOnClickListener: OnClickListener) {
         layoutParams.width = size
         photoImageView.layoutParams.height = size
         tvName.text = name
@@ -124,7 +128,7 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
         switcherVisibility.isChecked = isChecked
         switcherVisibility.setOnClickListener(switcherOnClickListener)
         photoImageView.setOnClickListener(photoClickListener)
-
+        bottomContainer.setOnClickListener(bottomOnClickListener)
         if (this.imageProvider == null || this.imageProvider!!.getId() != imageProvider.getId()) {
             this.imageProvider = imageProvider
             photoImageView.setImageDrawable(null)
