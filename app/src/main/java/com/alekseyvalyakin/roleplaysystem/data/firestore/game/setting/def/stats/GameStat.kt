@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkill
 import com.google.firebase.firestore.Exclude
 
 

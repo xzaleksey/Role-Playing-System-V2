@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 object StringUtils {
     const val EMPTY_STRING = ""
     const val UNDEFINED = "UNDEFINED"
+    const val DEFAULT = "default"
     val FORMAT_SLASHES = "/%s/"
 
     fun formatWithCount(s: String, count: Int): String {
