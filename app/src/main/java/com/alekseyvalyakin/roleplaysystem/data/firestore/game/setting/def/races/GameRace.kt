@@ -26,6 +26,36 @@ interface GameRace : FireStoreIdModel, Selectable {
             override fun getIconRes(): Int {
                 return R.drawable.ic_dexterity
             }
+        },
+        HALF_ORC("half-orc") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
+        },
+        GNOME("gnome") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
+        },
+        DWARF("dwarf") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
+        },
+        TIEFLING("tiefling") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
+        },
+        DRAGONBORN("dragonborn") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
+        },
+        HALFLING("halfling") {
+            override fun getIconRes(): Int {
+                return R.drawable.ic_dexterity
+            }
         };
 
         abstract fun getIconRes(): Int

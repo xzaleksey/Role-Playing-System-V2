@@ -213,8 +213,8 @@
             "ru": "Эльф"
           },
           "description": {
-            "default": "Description elf",
-            "ru": "Описание эльфа"
+            "default": "Elves are a magical people of otherworldly grace, living in the world but not entirely part of it.",
+            "ru": "Эльфы - волшебный народ с чарующей грацией, что живет в этом в мире, но не до конца принадлежащий ему."
           }
         },
         "human": {
@@ -223,8 +223,68 @@
             "ru": "Человек"
           },
           "description": {
-            "default": "Description human",
-            "ru": "Описание человека"
+            "default": "Humans are the most adaptable and ambitious people among the common races. Whatever drives them, humans are the innovators, the achievers, and the pioneers of the worlds.",
+            "ru": "Люди являются самым адаптируемым и амбициозным народом среди обычных рас. Независимо от того, что ими управляет, люди - это новаторы, ученики и первооткрыватели."
+          }
+        },
+        "dwarf": {
+          "name": {
+            "default": "Dwarf",
+            "ru": "Дварф"
+          },
+          "description": {
+            "default": "Bold and hardy, dwarves are known as skilled warriors, miners, and workers of stone and metal.",
+            "ru": "Смелые и выносливые, дварфы известны как опытные воины, шахтеры и мастра в работе с камнем и металлом."
+          }
+        },
+        "dragonborn": {
+          "name": {
+            "default": "Dragonborn",
+            "ru": "Драконорожденный"
+          },
+          "description": {
+            "default": "Dragonborn look very much like dragons standing erect in humanoid form, though they lack wings or a tail.",
+            "ru": "Очень похожи на драконов в гуманоидной форме, несмотря на то что им не хватает крыльев и хвоста."
+          }
+        },
+        "gnome": {
+          "name": {
+            "default": "Gnome",
+            "ru": "Гном"
+          },
+          "description": {
+            "default": "A gnome’s energy and enthusiasm for living shines through every inch of his or her tiny body.",
+            "ru": "Энергия и любовь гнома к жизни отражается в каждом дюйме его крошечного тела."
+          }
+        },
+        "tiefling": {
+          "name": {
+            "default": "Tiefling",
+            "ru": "Тифлинг"
+          },
+          "description": {
+            "default": "To be greeted with stares and whispers, to suffer violence and insult on the street, to see mistrust and fear in every eye: this is the lot of the tiefling.",
+            "ru": "Каждый тифлинг мечтает быть встреченным взглядами и шепотом, страдать от насилия и оскорблений на улице, видеть недоверие и страх в каждом встречном."
+          }
+        },
+        "halfling": {
+          "name": {
+            "default": "Halfling",
+            "ru": "Хафлинг"
+          },
+          "description": {
+            "default": "The diminutive halflings survive in a world full of larger creatures by avoiding notice or, barring that, avoiding offense.",
+            "ru": "Миниатюрные халфлинги выживают в мире, полном больших существ, избегая их внимания и не допуская неожиданного нападения."
+          }
+        },
+        "half-orc": {
+          "name": {
+            "default": "Half-Orc",
+            "ru": "Полуорк"
+          },
+          "description": {
+            "default": "Half-orcs’ grayish pigmentation, sloping foreheads, jutting jaws, prominent teeth, and towering builds make their orcish heritage plain for all to see.",
+            "ru": "Наклонные лбы, выступающие челюсти, выдающиеся зубы, сероватый цвет кожи и возвышающиеся строения - те вещи, благодаря которым, можно легко узнать полуорка."
           }
         }
       }
