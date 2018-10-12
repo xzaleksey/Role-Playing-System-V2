@@ -133,6 +133,7 @@
     <string name="more_details">Подробнее</string>
     <string name="hide">Свернуть</string>
     <string name="delete_stat">Удалить характеристику</string>
+    <string name="delete_class">Удалить класс</string>
     <string name="icon">Картинка</string>
     <string name="choose_icon">Выберите иконку</string>
     <string name="character_races">Расы персонажей</string>
@@ -142,5 +143,7 @@
     <string name="dices_checks">Кубы при проверках</string>
     <string name="new_class">Новый класс</string>
     <string name="my_class">Мой класс</string>
+    <string name="delete_race">Удалить расу</string>
+    <string name="my_race">Моя раса</string>
 
 </resources>

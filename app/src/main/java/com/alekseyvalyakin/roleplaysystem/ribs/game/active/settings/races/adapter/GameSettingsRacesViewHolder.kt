@@ -1,34 +1,34 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.adapter
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.UserGameClass
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassPresenter
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.UserGameRace
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemView
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.GameSettingsRacePresenter
 import com.jakewharton.rxrelay2.Relay
 
-class GameSettingsClassesViewHolder(
+class GameSettingsRacesViewHolder(
         private val gsView: GameSettingsDefaultItemView
 ) : RecyclerView.ViewHolder(gsView) {
 
-    fun update(viewModel: GameSettingsClassListViewModel, relay: Relay<GameSettingsClassPresenter.UiEvent>) {
+    fun update(viewModel: GameSettingsRaceListViewModel, relay: Relay<GameSettingsRacePresenter.UiEvent>) {
         gsView.update(viewModel,
                 View.OnClickListener {
                     relay.accept(
-                            GameSettingsClassPresenter.UiEvent.ChangeClass(viewModel))
+                            GameSettingsRacePresenter.UiEvent.ChangeRace(viewModel))
                 },
                 View.OnClickListener {
                     relay.accept(
-                            GameSettingsClassPresenter.UiEvent.SelectClass(viewModel, adapterPosition))
+                            GameSettingsRacePresenter.UiEvent.SelectRace(viewModel, adapterPosition))
                 }, View.OnLongClickListener { _ ->
-            if (viewModel.gameClass is UserGameClass) {
+            if (viewModel.gameRace is UserGameRace) {
                 MaterialDialog(gsView.context)
                         .title(R.string.delete)
-                        .message(R.string.delete_class)
+                        .message(R.string.delete_race)
                         .positiveButton(android.R.string.ok, click = {
-                            relay.accept(GameSettingsClassPresenter.UiEvent.DeleteClass(viewModel))
+                            relay.accept(GameSettingsRacePresenter.UiEvent.DeleteRace(viewModel))
                         })
                         .negativeButton(android.R.string.cancel)
                         .show()

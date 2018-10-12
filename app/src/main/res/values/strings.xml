@@ -138,6 +138,8 @@
     <string name="more_details">More</string>
     <string name="hide">Hide</string>
     <string name="delete_stat">Delete stat</string>
+    <string name="delete_race">Delete race</string>
+    <string name="delete_class">Delete class</string>
     <string name="icon">Icon</string>
     <string name="choose_icon">Choose icon</string>
     <string name="character_races">Character races</string>
@@ -147,4 +149,5 @@
     <string name="dices_checks">Dice checks</string>
     <string name="new_class">New class</string>
     <string name="my_class">My class</string>
+    <string name="my_race">My race</string>
 </resources>

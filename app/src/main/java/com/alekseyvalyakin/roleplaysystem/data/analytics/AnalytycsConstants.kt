@@ -43,6 +43,14 @@ const val UNSELECT_CUSTOM_CLASS = "unselect_custom_class"
 const val DELETE_CUSTOM_CLASS = "delete_custom_class"
 const val UPDATE_CLASS = "update_class"
 
+//Game settings races
+const val CREATE_CUSTOM_RACE = "create_custom_race"
+const val SELECT_DEFAULT_RACE= "select_default_race"
+const val UNSELECT_DEFAULT_RACE = "unselect_default_race"
+const val UNSELECT_CUSTOM_RACE = "unselect_custom_race"
+const val DELETE_CUSTOM_RACE = "delete_custom_race"
+const val UPDATE_RACE = "update_race"
+
 //Create game
 const val ACTIVATE_GAME = "activate_game"
 const val DELETE_GAME = "delete_game"
@@ -59,6 +67,7 @@ const val PHOTO_ID = "photo_id"
 const val GAME_ID_PARAM = "game_id"
 const val STAT_ID_PARAM = "stat_id"
 const val CLASS_ID_PARAM = "class_id"
+const val RACE_ID_PARAM = "race_id"
 const val NAME_PARAM = "name"
 const val DEFAULT_PARAM = "default"
 const val VISIBILITY = "visibility"
