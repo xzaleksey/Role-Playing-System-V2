@@ -109,6 +109,46 @@ class FormulaEvaluatorTest {
         assertEquals(5.0, expression!!.evaluate(), 0.0)
     }
 
+    @Test
+    fun parseCustomParserDndDefault() {
+        val formulaEvaluator = FormulaEvaluator(listOf(
+                DndParser("mx1", 10.0)
+        ))
+
+        val expression = formulaEvaluator.parse("mx1")
+        assertEquals(0.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test
+    fun parseCustomParserDndDefaultNegative() {
+        val formulaEvaluator = FormulaEvaluator(listOf(
+                DndParser("mx1", 9.0)
+        ))
+
+        val expression = formulaEvaluator.parse("mx1")
+        assertEquals(-1.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test
+    fun parseCustomParserDndDefaultPositive() {
+        val formulaEvaluator = FormulaEvaluator(listOf(
+                DndParser("mx1", 11.0)
+        ))
+
+        val expression = formulaEvaluator.parse("mx1")
+        assertEquals(0.0, expression!!.evaluate(), 0.0)
+    }
+
+    @Test
+    fun parseCustomParserDndDefaultPositive2() {
+        val formulaEvaluator = FormulaEvaluator(listOf(
+                DndParser("mx1", 12.0)
+        ))
+
+        val expression = formulaEvaluator.parse("mx1")
+        assertEquals(1.0, expression!!.evaluate(), 0.0)
+    }
+
     @Test(expected = IllegalArgumentException::class)
     fun parseEmptyExpression() {
         val formulaEvaluator = FormulaEvaluator()
