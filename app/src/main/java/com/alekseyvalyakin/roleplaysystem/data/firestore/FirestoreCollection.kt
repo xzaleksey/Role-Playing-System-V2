@@ -20,6 +20,7 @@ sealed class FirestoreCollection(
     class ClassesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/classes")
     class RacesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/races")
     class TagsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/tags")
+    class LogsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/logs")
     class GamesInUser(userId: String) : FirestoreCollection(USERS, directory = "$userId/games")
 
     class DICES(gameId: String, userId: String) :

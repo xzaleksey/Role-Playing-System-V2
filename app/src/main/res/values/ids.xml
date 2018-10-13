@@ -93,4 +93,6 @@
     <item name="send_form" type="id" />
     <item name="icon_send" type="id" />
     <item name="input" type="id" />
+    <item name="tv_time" type="id" />
+    <item name="tv_text" type="id" />
 </resources>

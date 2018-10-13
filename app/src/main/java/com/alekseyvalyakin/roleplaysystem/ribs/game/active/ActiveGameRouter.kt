@@ -76,7 +76,7 @@ class ActiveGameRouter(
             }
 
             NavigationId.CHARACTERS -> {
-                modernRouter.pushRetainedState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
+                modernRouter.pushRetainedState(State.CHARACTERS, gameLogAttachTransition, gameLogsDetachTransition)
             }
         }
     }

@@ -8,6 +8,7 @@ import io.reactivex.Observable
 interface LogPresenter {
 
     sealed class UiEvent {
+        class SendTextMessage(val text: String) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>

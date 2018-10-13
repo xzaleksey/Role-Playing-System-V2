@@ -121,6 +121,23 @@ fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToStartOnNewItem(
         })
     }
 }
+fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToEndOnNewItem(
+        recyclerView: RecyclerView,
+        smoothScroller: RecyclerView.SmoothScroller,
+        items: List<IFlexible<*>>,
+        animated: Boolean = false) {
+
+    val oldItemCount = itemCount
+    updateDataSet(items, animated)
+    if (oldItemCount < items.size) {
+        recyclerView.post({
+            if (itemCount > 0) {
+                smoothScroller.targetPosition = items.size-1
+                recyclerView.layoutManager!!.startSmoothScroll(smoothScroller)
+            }
+        })
+    }
+}
 
 fun View.marginLayoutParams(): ViewGroup.MarginLayoutParams {
     return layoutParams as ViewGroup.MarginLayoutParams

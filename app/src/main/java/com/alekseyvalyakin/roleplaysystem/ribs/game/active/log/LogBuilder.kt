@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
@@ -55,8 +56,8 @@ class LogBuilder(dependency: ParentComponent) : BaseViewBuilder<LogView, LogRout
             @LogScope
             @Provides
             @JvmStatic
-            internal fun logViewModelProvider(game: Game): LogViewModelProvider {
-                return LogViewModelProviderImpl(game)
+            internal fun logViewModelProvider(game: Game, logRepository: LogRepository): LogViewModelProvider {
+                return LogViewModelProviderImpl(game, logRepository)
             }
         }
     }

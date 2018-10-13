@@ -3,12 +3,15 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
 import android.content.Context
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
-import com.afollestad.materialdialogs.MaterialDialog
+import android.widget.EditText
+import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
@@ -23,7 +26,14 @@ class LogView constructor(
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private val relay = PublishRelay.create<LogPresenter.UiEvent>()
     private val flexibleAdapter = LogAdapter(emptyList(), relay)
-    private var currentDialog: MaterialDialog? = null
+
+    private lateinit var input: EditText
+    private lateinit var sendView: FrameLayout
+    private val smoothScroller = object : LinearSmoothScroller(getContext()) {
+        override fun getVerticalSnapPreference(): Int {
+            return LinearSmoothScroller.SNAP_TO_END
+        }
+    }
 
     init {
         view {
@@ -32,14 +42,13 @@ class LogView constructor(
 
         relativeLayout {
             id = R.id.send_form
-            backgroundColorResource = R.color.white7
             view {
                 id = R.id.divider
                 backgroundColorResource = R.color.colorDivider
             }.lparams(width = matchParent, height = dip(1)) {
                 below(R.id.tv_name)
             }
-            frameLayout {
+            sendView = frameLayout {
                 id = R.id.icon_send
                 backgroundResource = getSelectableItemBorderless()
                 leftPadding = getDoubleCommonDimen()
@@ -53,7 +62,7 @@ class LogView constructor(
             }.lparams(height = dimen(R.dimen.dp_48)) {
                 alignParentRight()
             }
-            editText {
+            input = editText {
                 id = R.id.input
                 background = null
                 hintResource = R.string.your_message
@@ -67,13 +76,12 @@ class LogView constructor(
             alignParentBottom()
         }
 
-
         recyclerView = recyclerView {
             id = R.id.recycler_view
             clipToPadding = false
             leftPadding = getCommonDimen()
             rightPadding = getCommonDimen()
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
             adapter = flexibleAdapter
         }.lparams(width = matchParent, height = matchParent) {
             above(R.id.send_form)
@@ -82,12 +90,19 @@ class LogView constructor(
     }
 
     override fun update(viewModel: LogViewModel) {
-        flexibleAdapter.updateDataSet(viewModel.items, false)
+        flexibleAdapter.updateWithAnimateToEndOnNewItem(
+                recyclerView,
+                smoothScroller,
+                viewModel.items
+        )
     }
 
     override fun observeUiEvents(): Observable<LogPresenter.UiEvent> {
-        return Observable.empty()
+        return RxView.clicks(sendView).map {
+            val text = input.text.toString()
+            input.text = null
+            LogPresenter.UiEvent.SendTextMessage(text)
+        }
     }
-
 
 }

@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageReposi
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
@@ -96,4 +97,6 @@ interface SingletonDependencyProvider {
     fun gameRacesRepo(): GameRaceRepository
 
     fun defaultGameRacesRepo(): DefaultSettingRaceRepository
+
+    fun logsRepo(): LogRepository
 }

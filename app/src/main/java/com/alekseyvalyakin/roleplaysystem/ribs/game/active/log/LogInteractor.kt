@@ -1,6 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogMessage
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -22,11 +24,12 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     @Inject
     lateinit var logViewModelProvider: LogViewModelProvider
     @Inject
-    lateinit var analyticsReporter: AnalyticsReporter
-    private val screenName = "MasterLog"
-
+    lateinit var logRepository: LogRepository
     @Inject
     lateinit var game: Game
+    @Inject
+    lateinit var analyticsReporter: AnalyticsReporter
+    private val screenName = "MasterLog"
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
@@ -44,7 +47,12 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     }
 
     private fun handleUiEvent(uiEvent: LogPresenter.UiEvent): Observable<*> {
-        return Observable.empty<Any>()
+        return when (uiEvent) {
+            is LogPresenter.UiEvent.SendTextMessage -> {
+                logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
+                        .toObservable()
+            }
+        }
     }
 }
 

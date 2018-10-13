@@ -8,6 +8,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesReposito
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepositoryIml
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
@@ -127,6 +129,12 @@ class FirebaseRepoModule {
     @Singleton
     fun defaultGameRacesRepo(): DefaultSettingRaceRepository {
         return DefaultSettingRaceRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun logRepo(): LogRepository {
+        return LogRepositoryImpl()
     }
 
 }
