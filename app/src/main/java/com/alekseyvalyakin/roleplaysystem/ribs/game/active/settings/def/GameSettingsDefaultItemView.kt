@@ -148,10 +148,14 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
             ivIconRight.imageResource = R.drawable.ic_minus_circle
             tvTitle.setTextColor(selectedColor)
             ivIconRight.tintImage(selectedColor)
+            (ivIconLeft.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
+            (ivIconRight.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.CENTER_VERTICAL)
         } else {
             ivIconRight.imageResource = R.drawable.ic_add_circle
             ivIconRight.tintImage(unselectedColor)
             tvTitle.setTextColor(textColorPrimary)
+            (ivIconLeft.layoutParams as RelativeLayout.LayoutParams).removeRule(RelativeLayout.CENTER_VERTICAL)
+            (ivIconRight.layoutParams as RelativeLayout.LayoutParams).removeRule(RelativeLayout.CENTER_VERTICAL)
         }
 
         ivIconRight.setOnClickListener(rightImageOnclickListener)

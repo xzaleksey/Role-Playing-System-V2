@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.class
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
 import com.google.firebase.firestore.Exclude
 
 
@@ -20,69 +19,68 @@ interface GameClass : FireStoreIdModel, Selectable {
     enum class INFO(val id: String) {
         FIGHTER("fighter") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_strength
+                return R.drawable.ic_fighter
             }
         },
         RANGER("ranger") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.ic_ranger
             }
         },
         BARD("bard") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_wisdom
+                return R.drawable.ic_bard
             }
         },
         CLERIC("cleric") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_will
+                return R.drawable.ic_cleric
             }
         },
         DRUID("druid") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_perception
+                return R.drawable.ic_druid
             }
         },
         PALADIN("paladin") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_constitution
+                return R.drawable.ic_paladin
             }
         },
         BARBARIAN("barbarian") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_constitution
+                return R.drawable.ic_barbarian
             }
         },
         ROGUE("rogue") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_dexterity
+                return R.drawable.ic_rougue
             }
         },
         SORCERER("sorcerer") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_wisdom
+                return R.drawable.ic_sorcerer
             }
         },
         WARLOCK("warlock") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_wisdom
+                return R.drawable.ic_warlock
             }
         },
         WIZARD("wizard") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_intelligence
+                return R.drawable.ic_wizard
             }
         },
         MONK("monk") {
             override fun getIconRes(): Int {
-                return R.drawable.ic_will
+                return R.drawable.ic_monk
             }
         };
 
         abstract fun getIconRes(): Int
 
         companion object {
-            const val DEFAULT = "default"
             private val valuesMap: Map<String, INFO> = INFO.values().associateBy { it.id }
 
             fun isSupported(item: GameClass): Boolean {
