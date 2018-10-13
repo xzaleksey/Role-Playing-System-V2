@@ -29,8 +29,8 @@ android {
         applicationId "com.alekseyvalyakin.roleplaysystem"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.0.7"
+        versionCode 8
+        versionName "1.0.8"
         buildConfigField("String", "MASTER_PASSWORD", "\"$project.password\"")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
