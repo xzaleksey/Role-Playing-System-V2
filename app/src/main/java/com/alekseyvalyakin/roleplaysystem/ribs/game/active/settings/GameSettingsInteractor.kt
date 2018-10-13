@@ -27,7 +27,7 @@ class GameSettingsInteractor : BaseInteractor<GameSettingsPresenter, GameSetting
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         presenter.update(gameSettingsViewModelProvider.getSettingsViewModel())
         presenter.observeUiEvents()

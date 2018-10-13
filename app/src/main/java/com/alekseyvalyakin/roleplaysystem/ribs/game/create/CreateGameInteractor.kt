@@ -39,7 +39,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         initModel(savedInstanceState)
         presenter.updateFabShowDisposable(model.toFlowable(BackpressureStrategy.LATEST).toObservable())

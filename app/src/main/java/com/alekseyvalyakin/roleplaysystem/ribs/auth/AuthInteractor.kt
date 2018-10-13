@@ -44,7 +44,7 @@ class AuthInteractor : BaseInteractor<AuthInteractor.AuthPresenter, AuthRouter>(
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         presenter.restoreEmail(localKeyValueStorage.getLogin())
         presenter.observeUiEvents()

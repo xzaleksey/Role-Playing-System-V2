@@ -32,9 +32,9 @@ class AnalyticsReporterImpl(context: Context) : AnalyticsReporter {
         Crashlytics.setUserIdentifier(null)
     }
 
-    override fun setCurrentScreen(currentScreenName: String, currentScreenClass: String) {
+    override fun setCurrentScreen(currentScreenName: String) {
         activity.get()?.run {
-            fireBaseAnalytics.setCurrentScreen(this, currentScreenName, currentScreenClass)
+            fireBaseAnalytics.setCurrentScreen(this, currentScreenName, null)
         }
         Crashlytics.setString(CRASHLYTICS_SCREEN, currentScreenName)
     }
@@ -68,7 +68,7 @@ interface AnalyticsReporter {
 
     fun detachActivity()
 
-    fun setCurrentScreen(currentScreenName: String, currentScreenClass: String)
+    fun setCurrentScreen(currentScreenName: String)
 
     fun updateUserLocale()
 }

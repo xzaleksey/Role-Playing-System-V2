@@ -42,7 +42,7 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         savedInstanceState?.run {
             relay.accept(this.getSerializable(KEY))

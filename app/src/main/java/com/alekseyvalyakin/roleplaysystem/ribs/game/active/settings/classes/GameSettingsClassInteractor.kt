@@ -7,8 +7,6 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
-import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -32,7 +30,7 @@ class GameSettingsClassInteractor : BaseInteractor<GameSettingsClassPresenter, G
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         viewModelProvider.observeViewModel()
                 .subscribeWithErrorLogging {

@@ -46,7 +46,7 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         userAvatarRepository.subscribeForUpdates()
                 .addToDisposables()

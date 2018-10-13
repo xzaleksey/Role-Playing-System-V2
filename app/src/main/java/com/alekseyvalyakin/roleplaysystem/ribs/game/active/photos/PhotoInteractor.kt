@@ -62,7 +62,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
-        analyticsReporter.setCurrentScreen(screenName, presenter.javaClass.simpleName)
+        analyticsReporter.setCurrentScreen(screenName)
 
         observeCreatePhotoUpload()
 
@@ -77,6 +77,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                 .flatMap(this::handleUiEvent)
                 .onErrorReturn { Timber.e(it) }
                 .subscribeWithErrorLogging()
+                .addToDisposables()
     }
 
     private fun handleUiEvent(uiEvent: PhotoPresenter.UiEvent): Observable<*> {
