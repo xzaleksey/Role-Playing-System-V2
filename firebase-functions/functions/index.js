@@ -30,6 +30,8 @@ exports.DeleteGameFunction = functions.firestore
         const usersInGame = getGameCollection().doc(gameId).collection("users");
         const statsInGame = getGameCollection().doc(gameId).collection("stats");
         const classesInGame = getGameCollection().doc(gameId).collection("classes");
+        const racesInGame = getGameCollection().doc(gameId).collection("races");
+        const tagsInGame = getGameCollection().doc(gameId).collection("tags");
         const photosInGame = getGameCollection().doc(gameId).collection("photos");
 
         const deleteGameInUser =
@@ -70,8 +72,14 @@ exports.DeleteGameFunction = functions.firestore
         const deleteUsersInGame = deleteCollection(database, usersInGame, BATCH_SIZE);
         const deleteStatsInGame = deleteCollection(database, statsInGame, BATCH_SIZE);
         const deleteClassesInGame = deleteCollection(database, classesInGame, BATCH_SIZE);
+        const deleteRacesInGame = deleteCollection(database, racesInGame, BATCH_SIZE);
+        const deleteTagsInGame = deleteCollection(database, tagsInGame, BATCH_SIZE);
 
-        return Promise.all([deletePhotos, deleteGameInUser, deleteUsersInGame, deleteStatsInGame, deleteClassesInGame]);
+        return Promise.all([deletePhotos, deleteGameInUser,
+            deleteUsersInGame, deleteStatsInGame,
+            deleteClassesInGame, deleteRacesInGame,
+            deleteTagsInGame
+        ]);
     });
 
 function getPhotosInGameReference(gameId, photoId) {
