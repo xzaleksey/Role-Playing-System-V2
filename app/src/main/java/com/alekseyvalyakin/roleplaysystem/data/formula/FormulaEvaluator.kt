@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.formula
+package com.alekseyvalyakin.roleplaysystem.data.formula
 
 import android.support.annotation.VisibleForTesting
 import timber.log.Timber

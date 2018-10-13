@@ -5,6 +5,8 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharac
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharactersRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
@@ -13,7 +15,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsRouter
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGameInternalAttachTransition
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.BaseActiveGameInternalAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.DefaultActiveGameInternalDetachTransition
 import com.uber.rib.core.RestorableRouter
 import com.uber.rib.core.RouterNavigatorFactory
@@ -35,21 +37,26 @@ class ActiveGameRouter(
         private val photoBuilder: PhotoBuilder,
         private val gameSettingsBuilder: GameSettingsBuilder,
         private val fullSizePhotoBuilder: FullSizePhotoBuilder,
-        private val gameCharactersBuilder: GameCharactersBuilder
+        private val gameCharactersBuilder: GameCharactersBuilder,
+        private val logBuilder: LogBuilder
 ) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component), RestorableRouter {
 
     private val modernRouter = routerNavigatorFactory.create<State>(this)
-    private val dicesAttachTransition = ActiveGameInternalAttachTransition(diceBuilder, view)
+    private val dicesAttachTransition = BaseActiveGameInternalAttachTransition(diceBuilder, view)
     private val dicesDetachTransition = object : DefaultActiveGameInternalDetachTransition<DiceRouter, State>(view) {}
 
-    private val photoAttachTransition = ActiveGameInternalAttachTransition(photoBuilder, view)
+    private val photoAttachTransition = BaseActiveGameInternalAttachTransition(photoBuilder, view)
     private val photoDetachTransition = object : DefaultActiveGameInternalDetachTransition<PhotoRouter, State>(view) {}
 
-    private val gameSettingsAttachTransition = ActiveGameInternalAttachTransition(gameSettingsBuilder, view)
+    private val gameSettingsAttachTransition = BaseActiveGameInternalAttachTransition(gameSettingsBuilder, view)
     private val gameSettingsDetachTransition = object : DefaultActiveGameInternalDetachTransition<GameSettingsRouter, State>(view) {}
 
-    private val gameCharactersAttachTransition = ActiveGameInternalAttachTransition(gameCharactersBuilder, view)
+    private val gameCharactersAttachTransition = BaseActiveGameInternalAttachTransition(gameCharactersBuilder, view)
     private val gameCharacterssDetachTransition = object : DefaultActiveGameInternalDetachTransition<GameCharactersRouter, State>(view) {}
+
+    private val gameLogAttachTransition = BaseActiveGameInternalAttachTransition(logBuilder, view)
+    private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<LogRouter, State>(view) {}
+
 
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
@@ -133,6 +140,7 @@ class ActiveGameRouter(
             val PHOTOS = State("PHOTOS")
             val SETTINGS = State("SETTINGS")
             val CHARACTERS = State("CHARACTERS")
+            val LOG = State("LOG")
         }
     }
 }

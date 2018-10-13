@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.formula
+package com.alekseyvalyakin.roleplaysystem.data.formula
 
 object NumberParser : ExpressionParser {
     override fun parse(string: String): Expression? {

@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.formula
+package com.alekseyvalyakin.roleplaysystem.data.formula
 
 class Operation(
         val valueLeft: Expression? = null,

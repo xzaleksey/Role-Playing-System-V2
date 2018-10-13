@@ -90,5 +90,7 @@
     <item name="skip_game_setting" type="id" />
     <item name="left_icon" type="id" />
     <item name="right_icon" type="id" />
-
+    <item name="send_form" type="id" />
+    <item name="icon_send" type="id" />
+    <item name="input" type="id" />
 </resources>

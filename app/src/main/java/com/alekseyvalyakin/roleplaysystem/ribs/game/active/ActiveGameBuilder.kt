@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharactersBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
@@ -75,7 +76,8 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                     view: ActiveGameView,
                     interactor: ActiveGameInteractor,
                     routerNavigatorFactory: RouterNavigatorFactory,
-                    activeGameViewModelProvider: ActiveGameViewModelProvider): ActiveGameRouter {
+                    activeGameViewModelProvider: ActiveGameViewModelProvider,
+                    relay: Relay<ActiveGameEvent>): ActiveGameRouter {
 
                 return ActiveGameRouter(view,
                         interactor,
@@ -86,7 +88,8 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                         PhotoBuilder(component),
                         GameSettingsBuilder(component),
                         FullSizePhotoBuilder(component),
-                        GameCharactersBuilder(component))
+                        GameCharactersBuilder(component),
+                        LogBuilder(component))
             }
 
             @ActiveGameScope
@@ -125,7 +128,8 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
             PhotoBuilder.ParentComponent,
             FullSizePhotoBuilder.ParentComponent,
             GameSettingsBuilder.ParentComponent,
-            GameCharactersBuilder.ParentComponent {
+            GameCharactersBuilder.ParentComponent,
+            LogBuilder.ParentComponent {
         @dagger.Component.Builder
         interface Builder {
             @BindsInstance

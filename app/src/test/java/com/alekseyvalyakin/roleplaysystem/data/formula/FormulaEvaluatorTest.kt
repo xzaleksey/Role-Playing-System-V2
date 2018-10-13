@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.formula
+package com.alekseyvalyakin.roleplaysystem.data.formula
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
