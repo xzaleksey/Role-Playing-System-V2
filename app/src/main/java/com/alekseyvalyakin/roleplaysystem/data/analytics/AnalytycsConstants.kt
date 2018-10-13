@@ -13,6 +13,7 @@ const val UPDATE_AVATAR = "update_avatar"
 
 //GamePhoto
 const val OPEN_PHOTO = "open_photo"
+const val CHANGE_PHOTO_NAME = "change_photo_name"
 const val UPLOAD_PHOTO = "upload_photo"
 const val DELETE_PHOTO = "delete_photo"
 const val SWITCH_PHOTO_VISIBILITY = "switch_photo_visibility"

@@ -18,7 +18,6 @@ import org.jetbrains.anko.cardview.v7._CardView
 class PhotoInGameItemView(context: Context) : _CardView(context) {
 
     private lateinit var photoImageView: ImageView
-    private lateinit var deleteImageView: ImageView
     private lateinit var tvName: TextView
     private lateinit var masterContainer: RelativeLayout
     private var imageProvider: ImageProvider? = null
@@ -26,11 +25,18 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
     private var disposable = Disposables.disposed()
     private lateinit var switcherVisibility: SwitchCompat
     private lateinit var bottomContainer: View
+    private lateinit var anchorView: View
 
     init {
         id = R.id.card_view
         radius = getFloatDimen(R.dimen.dp_2)
         relativeLayout {
+            anchorView = view {
+
+            }.lparams(matchParent, 0) {
+                alignParentLeft()
+                alignParentTop()
+            }
             photoImageView = imageView {
                 id = R.id.icon
                 scaleType = ImageView.ScaleType.CENTER_CROP
@@ -41,18 +47,6 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                 backgroundResource = getSelectableItemBackGround()
                 topPadding = getCommonDimen()
 
-                deleteImageView = imageView {
-                    id = R.id.iv_delete
-                    backgroundResource = getSelectableItemBorderless()
-                    scaleType = ImageView.ScaleType.CENTER_CROP
-                    padding = getIntDimen(R.dimen.dp_2)
-                    tintImageRes(R.color.colorTextSecondary)
-                    visibility = View.GONE
-                    imageResource = R.drawable.ic_delete_black_24dp
-                }.lparams(width = getIntDimen(R.dimen.dp_24), height = getIntDimen(R.dimen.dp_24)) {
-                    alignParentRight()
-                    bottomMargin = getCommonDimen()
-                }
                 tvName = textView {
                     id = R.id.tv_name
                     maxLines = 2
@@ -60,7 +54,6 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                     textSizeDimen = R.dimen.dp_14
                 }.lparams(width = matchParent) {
                     bottomMargin = getCommonDimen()
-                    leftOf(R.id.iv_delete)
                 }
 
                 divider = view {
@@ -114,26 +107,28 @@ class PhotoInGameItemView(context: Context) : _CardView(context) {
                    isMaster: Boolean,
                    isChecked: Boolean,
                    imageProvider: ImageProvider,
-                   deleteClickListener: OnClickListener,
                    switcherOnClickListener: OnClickListener,
                    photoClickListener: OnClickListener,
-                   bottomOnClickListener: OnClickListener) {
+                   longClickListener: OnLongClickListener) {
         layoutParams.width = size
         photoImageView.layoutParams.height = size
         tvName.text = name
         divider.visibility = if (isMaster) View.VISIBLE else View.GONE
         masterContainer.visibility = if (isMaster) View.VISIBLE else View.GONE
-        deleteImageView.visibility = if (isMaster) View.VISIBLE else View.GONE
-        deleteImageView.setOnClickListener(deleteClickListener)
         switcherVisibility.isChecked = isChecked
         switcherVisibility.setOnClickListener(switcherOnClickListener)
         photoImageView.setOnClickListener(photoClickListener)
-        bottomContainer.setOnClickListener(bottomOnClickListener)
+        photoImageView.setOnLongClickListener(longClickListener)
+        setOnLongClickListener(longClickListener)
         if (this.imageProvider == null || this.imageProvider!!.getId() != imageProvider.getId()) {
             this.imageProvider = imageProvider
             photoImageView.setImageDrawable(null)
             subscribeImage()
         }
+    }
+
+    fun getAnchorView(): View {
+        return anchorView
     }
 
     override fun onAttachedToWindow() {

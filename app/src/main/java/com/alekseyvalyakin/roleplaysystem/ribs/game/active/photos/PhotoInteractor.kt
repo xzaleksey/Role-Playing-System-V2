@@ -75,6 +75,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
 
         presenter.observeUiEvents()
                 .flatMap(this::handleUiEvent)
+                .onErrorReturn { Timber.e(it) }
                 .subscribeWithErrorLogging()
     }
 
@@ -123,9 +124,12 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                 }
             }
             is PhotoPresenter.UiEvent.EditNameConfirm -> {
+                val photoFlexibleViewModel = uiEvent.photoFlexibleViewModel
+                analyticsReporter.logEvent(GamePhotoAnalyticsEvent.ChangePhotoName(game, photoFlexibleViewModel.id))
+
                 return photoInGameRepository.updateName(game.id,
-                        uiEvent.photoFlexibleViewModel.id,
-                        uiEvent.photoFlexibleViewModel.name)
+                        photoFlexibleViewModel.id,
+                        photoFlexibleViewModel.name)
                         .toObservable<Any>()
             }
         }

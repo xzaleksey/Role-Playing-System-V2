@@ -12,6 +12,12 @@ sealed class GamePhotoAnalyticsEvent(name: String, game: Game, bundle: Bundle = 
         putString(PHOTO_ID, photoId)
     })
 
+    class ChangePhotoName(
+            game: Game,
+            photoId: String
+    ) : GamePhotoAnalyticsEvent(CHANGE_PHOTO_NAME, game, Bundle().apply {
+        putString(PHOTO_ID, photoId)
+    })
 
     class UploadPhoto(
             game: Game

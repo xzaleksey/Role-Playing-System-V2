@@ -152,4 +152,6 @@
     <string name="my_race">My race</string>
     <string name="new_race">New race</string>
     <string name="photo_name">Name</string>
+    <string name="change_name">Change name</string>
+
 </resources>
