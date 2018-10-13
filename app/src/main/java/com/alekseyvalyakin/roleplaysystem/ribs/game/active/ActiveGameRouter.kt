@@ -31,14 +31,14 @@ class ActiveGameRouter(
         view: ActiveGameView,
         interactor: ActiveGameInteractor,
         component: ActiveGameBuilder.Component,
-        private val diceBuilder: DiceBuilder,
-        private val routerNavigatorFactory: RouterNavigatorFactory,
+        diceBuilder: DiceBuilder,
+        routerNavigatorFactory: RouterNavigatorFactory,
         private val activeGameViewModelProvider: ActiveGameViewModelProvider,
-        private val photoBuilder: PhotoBuilder,
-        private val gameSettingsBuilder: GameSettingsBuilder,
+        photoBuilder: PhotoBuilder,
+        gameSettingsBuilder: GameSettingsBuilder,
         private val fullSizePhotoBuilder: FullSizePhotoBuilder,
-        private val gameCharactersBuilder: GameCharactersBuilder,
-        private val logBuilder: LogBuilder
+        gameCharactersBuilder: GameCharactersBuilder,
+        logBuilder: LogBuilder
 ) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component), RestorableRouter {
 
     private val modernRouter = routerNavigatorFactory.create<State>(this)
@@ -63,21 +63,29 @@ class ActiveGameRouter(
     fun attachView(navigationId: NavigationId) {
         when (navigationId) {
             NavigationId.DICES -> {
-                modernRouter.pushTransientState(State.DICES, dicesAttachTransition, dicesDetachTransition)
+                onNavigate()
+                modernRouter.pushRetainedState(State.DICES, dicesAttachTransition, dicesDetachTransition)
             }
 
             NavigationId.PICTURES -> {
-                modernRouter.pushTransientState(State.PHOTOS, photoAttachTransition, photoDetachTransition)
+                onNavigate()
+                modernRouter.pushRetainedState(State.PHOTOS, photoAttachTransition, photoDetachTransition)
             }
 
             NavigationId.MENU -> {
-                modernRouter.pushTransientState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
+                onNavigate()
+                modernRouter.pushRetainedState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
             }
 
             NavigationId.CHARACTERS -> {
-                modernRouter.pushTransientState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
+                onNavigate()
+                modernRouter.pushRetainedState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
             }
         }
+    }
+
+    private fun onNavigate() {
+        modernRouter.popState()
     }
 
     fun attachFullSizePhoto(fullSizePhotoModel: FullSizePhotoModel) {
@@ -114,11 +122,13 @@ class ActiveGameRouter(
             return true
         }
 
-        if (modernRouter.peekRouter()?.handleBackPress() == false) {
-            return false
+        if (modernRouter.peekRouter()?.handleBackPress() == true) {
+            return true
         }
 
-        return true
+        modernRouter.popState()
+
+        return modernRouter.peekState() != null
     }
 
     fun onDelete() {
