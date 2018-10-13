@@ -121,6 +121,7 @@ fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToStartOnNewItem(
         })
     }
 }
+
 fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToEndOnNewItem(
         recyclerView: RecyclerView,
         smoothScroller: RecyclerView.SmoothScroller,
@@ -132,7 +133,7 @@ fun FlexibleAdapter<IFlexible<*>>.updateWithAnimateToEndOnNewItem(
     if (oldItemCount < items.size) {
         recyclerView.post({
             if (itemCount > 0) {
-                smoothScroller.targetPosition = items.size-1
+                smoothScroller.targetPosition = items.size - 1
                 recyclerView.layoutManager!!.startSmoothScroll(smoothScroller)
             }
         })
