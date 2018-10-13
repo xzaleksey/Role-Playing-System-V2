@@ -20,10 +20,12 @@ data class LogMessage(
         override var id: String = StringUtils.EMPTY_STRING
 ) : FireStoreIdModel, HasDateCreate {
 
+    @Exclude
     fun getMessageType(): MessageType {
         return MessageType.getTypeByValue(type)
     }
 
+    @Exclude
     fun getDate(): Date {
         if (dateCreate != null) {
             return dateCreate!!
