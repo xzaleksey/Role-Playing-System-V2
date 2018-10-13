@@ -61,24 +61,21 @@ class ActiveGameRouter(
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
     fun attachView(navigationId: NavigationId) {
+        onNavigate()
         when (navigationId) {
             NavigationId.DICES -> {
-                onNavigate()
                 modernRouter.pushRetainedState(State.DICES, dicesAttachTransition, dicesDetachTransition)
             }
 
             NavigationId.PICTURES -> {
-                onNavigate()
                 modernRouter.pushRetainedState(State.PHOTOS, photoAttachTransition, photoDetachTransition)
             }
 
             NavigationId.MENU -> {
-                onNavigate()
                 modernRouter.pushRetainedState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
             }
 
             NavigationId.CHARACTERS -> {
-                onNavigate()
                 modernRouter.pushRetainedState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
             }
         }
