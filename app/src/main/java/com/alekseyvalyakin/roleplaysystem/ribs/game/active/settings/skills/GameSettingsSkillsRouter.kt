@@ -5,7 +5,7 @@ import android.view.View
 import com.uber.rib.core.ViewRouter
 
 /**
- * Adds and removes children of {@link GameSettingsSkillsBuilder.GameSettingsSkillsScope}.
+ * Adds and removes children of {@link GameSettingsSpellsBuilder.GameSettingsSkillsScope}.
  *
  * TODO describe the possible child configurations of this scope.
  */

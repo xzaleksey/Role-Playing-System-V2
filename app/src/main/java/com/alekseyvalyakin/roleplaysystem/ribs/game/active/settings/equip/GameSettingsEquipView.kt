@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.equip
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -6,10 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
 
-/**
- * Top level view for {@link GameSettingsSpellsBuilder.GameSettingsSkillsScope}.
- */
-class GameSettingsSkillsView constructor(context: Context) : _LinearLayout(context), GameSettingsSkillsPresenter {
+class GameSettingsEquipView constructor(context: Context) : _LinearLayout(context), GameSettingsEquipPresenter {
 
     init {
         orientation = VERTICAL

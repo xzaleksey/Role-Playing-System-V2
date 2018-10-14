@@ -26,6 +26,7 @@
     <color name="colorWhite">#FFF</color>
     <color name="colorBlack">#000</color>
     <color name="commonIconColor">#53585D</color>
+    <color name="transparent">@android:color/transparent</color>
 
     <color name="material_amber_100">#FFECB3</color>
     <color name="material_amber_200">#FFE082</color>

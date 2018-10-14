@@ -58,6 +58,12 @@ fun Context.getSelectableItemBorderless(): Int {
     return outValue.resourceId
 }
 
+fun Context.getCotrolHighlightColor(): Int {
+    val outValue = TypedValue()
+    theme.resolveAttribute(android.R.attr.colorControlHighlight, outValue, true)
+    return outValue.resourceId
+}
+
 fun Context.getStatusBarHeight(): Int {
     val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
     if (resourceId > 0) {

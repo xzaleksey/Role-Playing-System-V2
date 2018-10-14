@@ -6,8 +6,11 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.GameSettingsClassBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.dices.GameSettingsDicesBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.equip.GameSettingsEquipBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.GameSettingsRaceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.GameSettingsSkillsBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.spells.GameSettingsSpellsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatBuilder
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -72,6 +75,9 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
                         GameSettingsClassBuilder(component),
                         GameSettingsSkillsBuilder(component),
                         GameSettingsRaceBuilder(component),
+                        GameSettingsSpellsBuilder(component),
+                        GameSettingsEquipBuilder(component),
+                        GameSettingsDicesBuilder(component),
                         routerNavigatorFactory)
             }
 
@@ -92,7 +98,11 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
             ActiveGameDependencyProvider,
             GameSettingsStatBuilder.ParentComponent,
             GameSettingsClassBuilder.ParentComponent,
-            GameSettingsSkillsBuilder.ParentComponent, GameSettingsRaceBuilder.ParentComponent {
+            GameSettingsSkillsBuilder.ParentComponent,
+            GameSettingsRaceBuilder.ParentComponent,
+            GameSettingsSpellsBuilder.ParentComponent,
+            GameSettingsEquipBuilder.ParentComponent,
+            GameSettingsDicesBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {
