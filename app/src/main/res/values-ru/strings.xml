@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Role Playing System</string>
+    <string name="app_name">RPG assistant</string>
     <string name="email_has_been_sent">Email отправлен</string>
     <string name="error_empty_field">%s не должен быть пустым</string>
     <string name="error_field_required">Обязательное поле</string>

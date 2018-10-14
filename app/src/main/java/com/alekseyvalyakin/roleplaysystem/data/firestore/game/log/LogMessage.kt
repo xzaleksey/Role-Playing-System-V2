@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.log
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
@@ -47,7 +48,7 @@ data class LogMessage(
 
 data class TextMessage(
         var text: String = StringUtils.EMPTY_STRING
-)
+) : FireStoreModel
 
 enum class MessageType(val value: Int) {
     UNKNOWN(0),
