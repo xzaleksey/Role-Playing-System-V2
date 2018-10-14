@@ -1,16 +1,18 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
+import com.jakewharton.rxrelay2.BehaviorRelay
 import eu.davidea.flexibleadapter.items.IFlexible
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
@@ -24,21 +26,26 @@ class ProfileViewModelProviderImpl(
         private val stringRepository: StringRepository,
         private val user: User
 ) : ProfileViewModelProvider {
+    private val gamesRelay = BehaviorRelay.createDefault<List<IFlexible<*>>>(emptyList())
 
     override fun observeProfileViewModel(): Flowable<ProfileViewModel> {
         return Flowable.combineLatest(getUserFlowable(),
-                getGamesFlowable(user.id).startWith(emptyList<IFlexible<*>>()), BiFunction { user, games ->
-            val masterGames = user.countOfGamesMastered
-            val playedGames = user.countOfGamesPlayed
-            ProfileViewModel(user.displayName,
-                    user.email,
-                    profileUserProvider.isCurrentUser(user.id),
-                    (masterGames + playedGames).toString(),
-                    masterGames.toString(),
-                    userAvatarRepository.getAvatarImageProvider(),
-                    games)
-        })
-
+                getGamesFlowable(user.id)
+                        .flatMap {
+                            gamesRelay.accept(it)
+                            gamesRelay.toFlowable(BackpressureStrategy.LATEST)
+                        },
+                BiFunction { user, games ->
+                    val masterGames = user.countOfGamesMastered
+                    val playedGames = user.countOfGamesPlayed
+                    ProfileViewModel(user.displayName,
+                            user.email,
+                            profileUserProvider.isCurrentUser(user.id),
+                            (masterGames + playedGames).toString(),
+                            masterGames.toString(),
+                            userAvatarRepository.getAvatarImageProvider(),
+                            games)
+                })
     }
 
     private fun getUserFlowable(): Flowable<User> {
