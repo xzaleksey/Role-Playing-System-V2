@@ -16,6 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
+
 class GoogleSignInProvider constructor(
         private val activity: MainActivity,
         private val stringRepository: StringRepository
@@ -59,7 +60,6 @@ class GoogleSignInProvider constructor(
                 }
 
     }
-
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Timber.e(p0.errorMessage)

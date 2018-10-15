@@ -150,10 +150,12 @@ class MainView constructor(
 
     override fun showSearchContextMenu() {
         val popupMenu = PopupMenu(context, searchToolbar.getPopupViewAnchor())
+        popupMenu.menu.add(0, DONATE, 0, "donate")
         popupMenu.menu.add(0, LOGOUT, 0, getString(R.string.logout))
         popupMenu.setOnMenuItemClickListener { item ->
             when {
                 item.itemId == LOGOUT -> relay.accept(MainInteractor.UiEvents.Logout)
+                item.itemId == DONATE -> relay.accept(MainInteractor.UiEvents.Donate)
             }
             return@setOnMenuItemClickListener true
         }
@@ -173,5 +175,6 @@ class MainView constructor(
 
     companion object {
         private const val LOGOUT = 1
+        private const val DONATE = 2
     }
 }

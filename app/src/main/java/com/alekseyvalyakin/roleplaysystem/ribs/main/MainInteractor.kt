@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.payment.PaymentsInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
@@ -18,6 +19,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -44,6 +46,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var mainRibListener: MainRibListener
     @Inject
     lateinit var createEmptyGameObservableProvider: CreateEmptyGameObservableProvider
+    @Inject
+    lateinit var paymentsInteractor: PaymentsInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 
@@ -78,6 +82,13 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                         }
                     }
                 }.addToDisposables()
+
+        paymentsInteractor.canPaySingle()
+                .subscribeWithErrorLogging {
+                    Timber.d("can pay $it")
+                }.addToDisposables()
+
+        paymentsInteractor.subscribeListeningPaymentEvents().addToDisposables()
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
@@ -103,6 +114,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
             is UiEvents.Logout -> {
                 analyticsReporter.logEvent(MainAnalyticsEvent.Logout)
                 return authProvider.signOut().toObservable<Any>()
+            }
+            is UiEvents.Donate -> {
+                paymentsInteractor.requestPayment()
             }
             is UiEvents.RecyclerItemClick -> {
                 return handleRecyclerViewItemClick(uiEvents.item)
@@ -156,6 +170,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         object SearchRightIconClick : UiEvents()
 
         object Logout : UiEvents()
+
+        object Donate : UiEvents()
 
         object FabClick : UiEvents()
 
