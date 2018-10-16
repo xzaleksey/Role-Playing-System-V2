@@ -9,7 +9,7 @@ import com.google.firebase.firestore.Exclude
  */
 data class User(
         var email: String = StringUtils.EMPTY_STRING,
-        var photoUrl: String? = null,
+        var photoUrl: String = StringUtils.EMPTY_STRING,
         var countOfGamesPlayed: Int = 0,
         var countOfGamesMastered: Int = 0,
         var displayName: String = StringUtils.EMPTY_STRING,

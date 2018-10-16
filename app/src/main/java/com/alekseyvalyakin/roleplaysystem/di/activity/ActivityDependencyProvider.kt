@@ -1,7 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.di.activity
 
 import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
-import com.alekseyvalyakin.roleplaysystem.data.payment.PaymentsInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 
 interface ActivityDependencyProvider {
@@ -10,7 +9,5 @@ interface ActivityDependencyProvider {
     fun provideActivityListener(): ActivityListener
 
     fun provideLocalImageProvider(): LocalImageProvider
-
-    fun providePaymentInteractor(): PaymentsInteractor
 
 }

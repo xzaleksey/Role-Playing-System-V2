@@ -2,8 +2,6 @@ package com.alekseyvalyakin.roleplaysystem.di.activity
 
 import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
-import com.alekseyvalyakin.roleplaysystem.data.payment.PaymentsInteractor
-import com.alekseyvalyakin.roleplaysystem.data.payment.PaymentsInteractorImpl
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProviderImpl
@@ -20,12 +18,6 @@ class ActivityModule(private val activity: MainActivity) {
     @ActivityScope
     fun provideGoogleSignInProvider(stringRepository: StringRepository): GoogleSignInProvider {
         return GoogleSignInProvider(activity, stringRepository)
-    }
-
-    @Provides
-    @ActivityScope
-    fun paymentInteractor(): PaymentsInteractor {
-        return PaymentsInteractorImpl(activity)
     }
 
     @Provides

@@ -153,5 +153,6 @@
     <string name="new_race">New race</string>
     <string name="photo_name">Name</string>
     <string name="change_name">Change name</string>
+    <string name="donate">Donate</string>
 
 </resources>

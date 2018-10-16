@@ -4,7 +4,6 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.payment.PaymentsInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
@@ -47,8 +46,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     @Inject
     lateinit var createEmptyGameObservableProvider: CreateEmptyGameObservableProvider
     @Inject
-    lateinit var paymentsInteractor: PaymentsInteractor
-    @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 
     private val screenName = "Main"
@@ -83,12 +80,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                     }
                 }.addToDisposables()
 
-        paymentsInteractor.canPaySingle()
-                .subscribeWithErrorLogging {
-                    Timber.d("can pay $it")
-                }.addToDisposables()
-
-        paymentsInteractor.subscribeListeningPaymentEvents().addToDisposables()
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
@@ -116,7 +107,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 return authProvider.signOut().toObservable<Any>()
             }
             is UiEvents.Donate -> {
-                paymentsInteractor.requestPayment()
+                Timber.d("Donate")
             }
             is UiEvents.RecyclerItemClick -> {
                 return handleRecyclerViewItemClick(uiEvents.item)
