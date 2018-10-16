@@ -106,10 +106,10 @@ class MainViewModelProviderImpl(
     private fun getUserViewModelFlowable(): Flowable<List<IFlexible<*>>> {
         return userRepository.observeCurrentUser().map { user ->
             val userId = user.id
-            val imageProvider = if (user.photoUrl.isNullOrBlank()) {
+            val imageProvider = if (user.photoUrl.isBlank()) {
                 MaterialDrawableProviderImpl(user.displayName, userId)
             } else {
-                val url = user.photoUrl!!
+                val url = user.photoUrl
                 CompositeImageProviderImpl(
                         MaterialDrawableProviderImpl(user.displayName, userId),
                         UrlRoundDrawableProviderImpl(url, resourceProvider),
