@@ -30,7 +30,6 @@ object GooglePay {
      * by a supported gateway after payer authorization
      *
      *
-     * TODO: check with your gateway on the parameters to pass
      *
      * @return payment data tokenization for the CARD payment method
      * @throws JSONException
@@ -43,8 +42,8 @@ object GooglePay {
             tokenizationSpecification.put(
                     "parameters",
                     JSONObject()
-                            .put("gateway", "example")
-                            .put("gatewayMerchantId", "exampleGatewayMerchantId"))
+                            .put("gateway", "sberbank")
+                            .put("gatewayMerchantId", "00776860608990539580"))
 
             return tokenizationSpecification
         }
@@ -129,7 +128,7 @@ object GooglePay {
     private val transactionInfo: JSONObject
         get() {
             val transactionInfo = JSONObject()
-            transactionInfo.put("totalPrice", "12.34")
+            transactionInfo.put("totalPrice", "1.00")
             transactionInfo.put("totalPriceStatus", "FINAL")
             transactionInfo.put("currencyCode", "USD")
 
@@ -144,7 +143,7 @@ object GooglePay {
      * @see [MerchantInfo](https://developers.google.com/pay/api/android/reference/object.MerchantInfo)
      */
     private val merchantInfo: JSONObject
-        get() = JSONObject().put("merchantName", "Example Merchant")
+        get() = JSONObject().put("merchantName", "RPG Assistant")
 
     /**
      * An object describing accepted forms of payment by your app, used to determine a viewer's
