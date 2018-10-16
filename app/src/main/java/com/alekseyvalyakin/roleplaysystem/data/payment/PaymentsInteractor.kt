@@ -4,7 +4,12 @@ import android.app.Activity
 import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.wallet.*
+import com.google.android.gms.wallet.AutoResolveHelper
+import com.google.android.gms.wallet.IsReadyToPayRequest
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.PaymentDataRequest
+import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.WalletConstants
 import com.uber.rib.core.lifecycle.ActivityCallbackEvent
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable

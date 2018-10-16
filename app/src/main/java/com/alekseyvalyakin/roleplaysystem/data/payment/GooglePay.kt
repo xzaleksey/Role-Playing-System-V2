@@ -42,8 +42,8 @@ object GooglePay {
             tokenizationSpecification.put(
                     "parameters",
                     JSONObject()
-                            .put("gateway", "sberbank")
-                            .put("gatewayMerchantId", "00776860608990539580"))
+                            .put("gateway", "example")
+                            .put("gatewayMerchantId", "example"))
 
             return tokenizationSpecification
         }
