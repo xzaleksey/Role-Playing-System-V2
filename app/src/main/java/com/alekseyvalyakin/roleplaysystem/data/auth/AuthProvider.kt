@@ -14,7 +14,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.rxfirebase2.RxFirebaseAuth
 import com.rxfirebase2.RxFirebaseUser
-import io.reactivex.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
@@ -67,7 +72,7 @@ class AuthProviderImpl @Inject constructor(
 
                                     userResult.token = userWithToken.second.token
 
-                                    if (userResult.photoUrl.isNullOrBlank() && !currentUserInfo.photoUrl.isNullOrBlank()) {
+                                    if (userResult.photoUrl.isBlank() && !currentUserInfo.photoUrl.isBlank()) {
                                         userResult.photoUrl = currentUserInfo.photoUrl
                                     }
                                     analyticsReporter.setCurrentUser(userResult.id)

@@ -154,5 +154,6 @@
     <string name="photo_name">Name</string>
     <string name="change_name">Change name</string>
     <string name="donate">Donate</string>
+    <string name="new_features">New features</string>
 
 </resources>

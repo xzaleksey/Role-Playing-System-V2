@@ -12,7 +12,12 @@ import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileListener
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileRouter
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.Interactor
+import com.uber.rib.core.InteractorBaseComponent
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.Router
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -64,6 +69,9 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                         }
                         is MainRibListener.MainRibEvent.MyProfile -> {
                             router.attachMyProfile(event.user)
+                        }
+                        is MainRibListener.MainRibEvent.NavigateToFeatures -> {
+                            router.attachMyFeatures()
                         }
                     }
                 }.addToDisposables()

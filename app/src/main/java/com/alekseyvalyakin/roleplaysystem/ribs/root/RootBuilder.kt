@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.features.FeaturesBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
@@ -74,7 +75,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                         MainBuilder(component),
                         CreateGameBuilder(component),
                         ProfileBuilder(component),
-                        ActiveGameBuilder(component))
+                        ActiveGameBuilder(component),
+                        FeaturesBuilder(component))
             }
 
             @RootScope
@@ -146,7 +148,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             MainBuilder.ParentComponent,
             CreateGameBuilder.ParentComponent,
             ProfileBuilder.ParentComponent,
-            ActiveGameBuilder.ParentComponent {
+            ActiveGameBuilder.ParentComponent,
+            FeaturesBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

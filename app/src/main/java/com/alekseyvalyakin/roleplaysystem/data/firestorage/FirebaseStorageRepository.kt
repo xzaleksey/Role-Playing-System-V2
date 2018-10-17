@@ -11,7 +11,7 @@ import com.rxfirebase2.RxFirebaseStorage
 import io.reactivex.Completable
 import io.reactivex.Single
 
-class FirebaseStorageRepositoryImpl() : FirebaseStorageRepository {
+class FirebaseStorageRepositoryImpl : FirebaseStorageRepository {
 
     override fun uploadPhotoInGameAndGetUri(gameId: String, photoId: String, uri: Uri, listener: OnProgressListener<in UploadTask.TaskSnapshot>?): Single<Uri> {
         val reference = getPhotoInGameReference(gameId, photoId)

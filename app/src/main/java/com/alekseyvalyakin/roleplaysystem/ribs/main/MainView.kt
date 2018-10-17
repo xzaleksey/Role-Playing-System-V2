@@ -11,7 +11,14 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.checkFabShow
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getString
+import com.alekseyvalyakin.roleplaysystem.utils.requestPermissionsExternalReadWrite
+import com.alekseyvalyakin.roleplaysystem.utils.searchToolbar
+import com.alekseyvalyakin.roleplaysystem.utils.showSnack
+import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.HideFablListener
 import com.jakewharton.rxbinding2.view.RxView
@@ -21,10 +28,15 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.floatingActionButton
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.margin
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.progressBar
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.wrapContent
 import java.util.concurrent.TimeUnit
 
 /**
@@ -150,12 +162,14 @@ class MainView constructor(
 
     override fun showSearchContextMenu() {
         val popupMenu = PopupMenu(context, searchToolbar.getPopupViewAnchor())
+        popupMenu.menu.add(0, NEW_FEATURES, 0, getString(R.string.new_features))
         popupMenu.menu.add(0, DONATE, 0, getString(R.string.donate))
         popupMenu.menu.add(0, LOGOUT, 0, getString(R.string.logout))
         popupMenu.setOnMenuItemClickListener { item ->
             when {
                 item.itemId == LOGOUT -> relay.accept(MainInteractor.UiEvents.Logout)
-                item.itemId == DONATE -> relay.accept(MainInteractor.UiEvents.Donate)
+                item.itemId == DONATE -> relay.accept(MainInteractor.UiEvents.NavigateToDonate)
+                item.itemId == NEW_FEATURES -> relay.accept(MainInteractor.UiEvents.NavigateToFeatures)
             }
             return@setOnMenuItemClickListener true
         }
@@ -176,5 +190,6 @@ class MainView constructor(
     companion object {
         private const val LOGOUT = 1
         private const val DONATE = 2
+        private const val NEW_FEATURES = 3
     }
 }

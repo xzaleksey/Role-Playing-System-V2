@@ -106,8 +106,11 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 analyticsReporter.logEvent(MainAnalyticsEvent.Logout)
                 return authProvider.signOut().toObservable<Any>()
             }
-            is UiEvents.Donate -> {
+            is UiEvents.NavigateToDonate -> {
                 Timber.d("Donate")
+            }
+            is UiEvents.NavigateToFeatures -> {
+                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.NavigateToFeatures)
             }
             is UiEvents.RecyclerItemClick -> {
                 return handleRecyclerViewItemClick(uiEvents.item)
@@ -162,7 +165,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
 
         object Logout : UiEvents()
 
-        object Donate : UiEvents()
+        object NavigateToDonate : UiEvents()
+
+        object NavigateToFeatures : UiEvents()
 
         object FabClick : UiEvents()
 

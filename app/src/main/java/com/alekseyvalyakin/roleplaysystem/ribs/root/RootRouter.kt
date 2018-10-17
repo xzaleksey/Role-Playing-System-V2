@@ -4,6 +4,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.features.FeaturesBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.features.FeaturesRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGameAttachTransition
@@ -34,7 +36,8 @@ class RootRouter(
         private val mainBuilder: MainBuilder,
         private val createGameBuilder: CreateGameBuilder,
         private val profileBuilder: ProfileBuilder,
-        private val activeGameBuilder: ActiveGameBuilder
+        private val activeGameBuilder: ActiveGameBuilder,
+        private val featuresBuilder: FeaturesBuilder
 ) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
 
     private val router = routerNavigatorFactory.create<RootState>(this)!!
@@ -47,6 +50,9 @@ class RootRouter(
     private val createGameDetachTransition = DefaultDetachTransition<CreateGameRouter, RootState>(view)
     private val profileDetachTransition = DefaultDetachTransition<ProfileRouter, RootState>(view)
     private val activeGameDetachTransition = DefaultDetachTransition<ActiveGameRouter, RootState>(view)
+
+    private val featuresAttachTransition = object : DefaultAttachTransition<FeaturesRouter, RootState, FeaturesBuilder>(featuresBuilder, view) {}
+    private val featuresDetachTransition = DefaultDetachTransition<FeaturesRouter, RootState>(view)
 
     fun attachAuth() {
         router.pushTransientState(RootState.AUTH, authAttachTransition, authDetachTransition)
@@ -91,6 +97,10 @@ class RootRouter(
         if (peekState == RootState.CREATE_GAME) {
             router.popState()
         }
+    }
+
+    fun attachMyFeatures() {
+        router.pushRetainedState(RootState.FEATURES, featuresAttachTransition, featuresDetachTransition)
     }
 
 }

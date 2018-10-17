@@ -13,6 +13,7 @@ data class RootState(val name: String) : RouterNavigatorState {
         val MAIN = RootState("Main")
         val CREATE_GAME = RootState("Create game")
         val ACTIVE_GAME = RootState("Active game")
+        val FEATURES = RootState("features")
         val PROFILE = RootState("Profile")
     }
 }

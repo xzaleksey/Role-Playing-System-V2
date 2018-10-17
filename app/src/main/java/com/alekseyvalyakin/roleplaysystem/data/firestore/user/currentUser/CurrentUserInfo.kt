@@ -8,5 +8,5 @@ class CurrentUserInfo constructor(
         val providerId: String = firebaseUser.providerId,
         val isAnonymous: Boolean = firebaseUser.isAnonymous,
         val email: String? = firebaseUser.email,
-        val photoUrl: String? = firebaseUser.photoUrl.toString()
+        val photoUrl: String = firebaseUser.photoUrl.toString()
 )
