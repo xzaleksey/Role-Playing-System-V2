@@ -12,6 +12,7 @@ sealed class FirestoreCollection(
     object USERS : FirestoreCollection(directory = "users")
     object GAMES : FirestoreCollection(directory = "games")
     object SETTINGS : FirestoreCollection(directory = "settings")
+    object FEATURES : FirestoreCollection(directory = "features")
     object NONE : FirestoreCollection(directory = "none")
 
     class UsersInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/users")

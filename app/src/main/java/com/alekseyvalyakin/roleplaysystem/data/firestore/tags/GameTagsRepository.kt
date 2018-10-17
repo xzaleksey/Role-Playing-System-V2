@@ -14,7 +14,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import timber.log.Timber
 
-class GameTagsRepositoryImpl() : BaseGameFireStoreRepository<Tag>(Tag::class.java), GameTagsRepository {
+class GameTagsRepositoryImpl : BaseGameFireStoreRepository<Tag>(Tag::class.java), GameTagsRepository {
     private val instance = FirebaseFirestore.getInstance()
 
     override fun observeTagsOrdered(gameId: String): Flowable<List<Tag>> {

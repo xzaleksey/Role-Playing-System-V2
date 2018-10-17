@@ -13,6 +13,7 @@ data class Feature(
         var description: String = EMPTY_STRING,
         @ServerTimestamp override var dateCreate: Date? = null,
         var votes: Int,
+        var userIds: List<String>,
 
         @Exclude
         @set:Exclude

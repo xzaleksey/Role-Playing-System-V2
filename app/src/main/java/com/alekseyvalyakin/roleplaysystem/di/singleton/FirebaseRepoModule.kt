@@ -2,6 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.features.FeaturesRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.features.FeaturesRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
@@ -135,6 +137,12 @@ class FirebaseRepoModule {
     @Singleton
     fun logRepo(): LogRepository {
         return LogRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun featuresRepo(): FeaturesRepository {
+        return FeaturesRepositoryImpl()
     }
 
 }
