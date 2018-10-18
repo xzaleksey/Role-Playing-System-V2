@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.core
 
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
@@ -9,6 +10,7 @@ import io.reactivex.Single
 abstract class BaseFireStoreRepository<T : HasId>(
         protected val clazz: Class<T>
 ) : FireStoreRepository<T> {
+    protected val firestoreInstance = FirebaseFirestore.getInstance()
 
     override fun getDocumentSingle(id: String): Single<T> {
         return RxFirestore.getDocumentSingleHasId(getDocumentReference(id), clazz)
