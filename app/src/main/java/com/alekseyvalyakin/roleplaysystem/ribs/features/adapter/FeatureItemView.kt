@@ -12,6 +12,7 @@ import org.jetbrains.anko.*
 class FeatureItemView(context: Context) : _LinearLayout(context) {
     private var tvTitle: TextView
     private var tvDescription: TextView
+    private var tvVotesCount: TextView
     private var btnVote: Button
 
     init {
@@ -30,6 +31,10 @@ class FeatureItemView(context: Context) : _LinearLayout(context) {
 
         }.lparams(matchParent, wrapContent)
 
+        tvVotesCount = textView {
+
+        }.lparams(matchParent, wrapContent)
+
         btnVote = button {
             visibility = View.GONE
             text = "Vote"
@@ -39,6 +44,7 @@ class FeatureItemView(context: Context) : _LinearLayout(context) {
     fun update(featureFlexibleViewModel: FeatureFlexibleViewModel, onClickListener: OnClickListener) {
         tvTitle.text = featureFlexibleViewModel.getName()
         tvDescription.text = featureFlexibleViewModel.getDescription()
+        tvVotesCount.text = featureFlexibleViewModel.getVotesCount().toString()
         btnVote.setOnClickListener(onClickListener)
         btnVote.visibility = if (featureFlexibleViewModel.canVote()) View.VISIBLE else View.GONE
     }

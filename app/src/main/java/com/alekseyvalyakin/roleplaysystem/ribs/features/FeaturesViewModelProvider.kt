@@ -21,10 +21,12 @@ class FeaturesViewModelProviderImpl(
                     val canVoteLambda = { canVote }
 
                     for (feature in features) {
+                        var votedByMe = false
                         if (feature.votes.contains(currentUserInfo.uid)) {
                             canVote = false
+                            votedByMe = true
                         }
-                        result.add(FeatureFlexibleViewModel(feature, canVoteLambda))
+                        result.add(FeatureFlexibleViewModel(feature, canVoteLambda, votedByMe))
                     }
                     FeaturesModel(result)
                 }

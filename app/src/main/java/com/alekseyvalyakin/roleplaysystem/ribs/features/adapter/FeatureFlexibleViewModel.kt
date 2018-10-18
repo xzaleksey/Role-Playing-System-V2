@@ -12,7 +12,8 @@ import org.jetbrains.anko.wrapContent
 
 data class FeatureFlexibleViewModel(
         val feature: Feature,
-        val canVote: () -> Boolean
+        val canVote: () -> Boolean,
+        val votedByMe: Boolean
 ) : AbstractFlexibleItem<FeatureItemViewHolder>() {
 
     fun getName(): String {
@@ -21,6 +22,10 @@ data class FeatureFlexibleViewModel(
 
     fun getDescription(): String {
         return feature.description
+    }
+
+    fun getVotesCount(): Int {
+        return feature.votes.size
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, inflater: LayoutInflater, parent: ViewGroup): FeatureItemViewHolder {
