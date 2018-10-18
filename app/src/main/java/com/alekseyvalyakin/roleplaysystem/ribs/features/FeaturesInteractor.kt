@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,21 +19,51 @@ class FeaturesInteractor : BaseInteractor<FeaturesPresenter, FeaturesRouter>() {
     lateinit var analyticsReporter: AnalyticsReporter
     @Inject
     lateinit var featuresRepository: FeaturesRepository
+    @Inject
+    lateinit var viewModelProvider: FeaturesViewModelProvider
 
     private val screenName = "Features"
+    private var blockVotes = false
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         analyticsReporter.setCurrentScreen(screenName)
-        featuresRepository.observeSortedFeatures()
-                .subscribeWithErrorLogging { features ->
-                    Timber.d("Features list")
-                    if (features.isNotEmpty()) {
-                        featuresRepository.voteForFeature(features.first())
-                                .subscribeWithErrorLogging()
-                                .addToDisposables()
+
+        presenter.observeUiEvents()
+                .flatMap(this::handleUiEvent)
+                .subscribeWithErrorLogging()
+                .addToDisposables()
+
+        viewModelProvider.subscribe().subscribeWithErrorLogging {
+            presenter.update(it)
+        }.addToDisposables()
+    }
+
+    private fun handleUiEvent(uiEvent: FeaturesPresenter.UiEvent): Observable<*> {
+        return when (uiEvent) {
+            is FeaturesPresenter.UiEvent.Vote -> {
+                Observable.fromCallable {
+                    if (!blockVotes) {
+                        presenter.showConfirmDialog(uiEvent.feature)
                     }
-                }.addToDisposables()
+                }
+            }
+
+            is FeaturesPresenter.UiEvent.ConfirmVote -> {
+                blockVotes = true
+                presenter.showLoading(true)
+                featuresRepository.voteForFeature(uiEvent.feature)
+                        .onErrorComplete {
+                            Timber.e(it)
+                            return@onErrorComplete true
+                        }
+                        .doOnComplete {
+                            presenter.showLoading(false)
+                            blockVotes = false
+                        }
+                        .toObservable<Any>()
+            }
+        }
     }
 
 }

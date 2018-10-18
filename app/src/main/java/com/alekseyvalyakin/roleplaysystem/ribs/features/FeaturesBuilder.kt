@@ -2,6 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.features
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.features.FeaturesRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
@@ -48,6 +50,13 @@ class FeaturesBuilder(dependency: ParentComponent) : BaseViewBuilder<FeaturesVie
                     view: FeaturesView,
                     interactor: FeaturesInteractor): FeaturesRouter {
                 return FeaturesRouter(view, interactor, component)
+            }
+
+            @FeaturesScope
+            @Provides
+            @JvmStatic
+            internal fun viewModelProvider(featuresRepository: FeaturesRepository, userRepository: UserRepository): FeaturesViewModelProvider {
+                return FeaturesViewModelProviderImpl(featuresRepository, userRepository)
             }
         }
 
