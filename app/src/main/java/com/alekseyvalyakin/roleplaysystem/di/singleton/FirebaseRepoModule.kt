@@ -141,8 +141,8 @@ class FirebaseRepoModule {
 
     @Provides
     @Singleton
-    fun featuresRepo(): FeaturesRepository {
-        return FeaturesRepositoryImpl()
+    fun featuresRepo(userReposiotory: UserRepository): FeaturesRepository {
+        return FeaturesRepositoryImpl(userReposiotory)
     }
 
 }

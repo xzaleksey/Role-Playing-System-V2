@@ -8,7 +8,7 @@ import com.google.firebase.firestore.Exclude
 data class Feature(
         var name: String = EMPTY_STRING,
         var description: String = EMPTY_STRING,
-        var votes: List<String>,
+        var votes: List<String> = emptyList(),
 
         @Exclude
         @set:Exclude

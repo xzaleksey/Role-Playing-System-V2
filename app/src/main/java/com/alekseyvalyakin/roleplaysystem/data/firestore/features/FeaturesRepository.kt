@@ -5,7 +5,6 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.BaseFireStoreRepos
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Transaction
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
@@ -17,9 +16,12 @@ class FeaturesRepositoryImpl(
 ) : BaseFireStoreRepository<Feature>(Feature::class.java), FeaturesRepository {
 
     override fun observeSortedFeatures(): Flowable<List<Feature>> {
-        val query = getCollection()
-                .orderBy(Feature.FIELD_VOTES, Query.Direction.DESCENDING)
-        return observeQueryCollection(query)
+        return observeCollection()
+                .map {
+                    return@map it.sortedByDescending {feature->
+                        feature.votes.size
+                    }
+                }
     }
 
     override fun voteForFeature(feature: Feature): Completable {
