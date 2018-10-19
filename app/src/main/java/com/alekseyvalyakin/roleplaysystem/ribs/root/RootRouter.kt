@@ -12,6 +12,8 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGame
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.transition.CreateGameAttachTransition
+import com.alekseyvalyakin.roleplaysystem.ribs.license.LicenseBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.license.LicenseRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
@@ -37,7 +39,8 @@ class RootRouter(
         private val createGameBuilder: CreateGameBuilder,
         private val profileBuilder: ProfileBuilder,
         private val activeGameBuilder: ActiveGameBuilder,
-        private val featuresBuilder: FeaturesBuilder
+        private val featuresBuilder: FeaturesBuilder,
+        private val licenseBuilder: LicenseBuilder
 ) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
 
     private val router = routerNavigatorFactory.create<RootState>(this)!!
@@ -53,6 +56,9 @@ class RootRouter(
 
     private val featuresAttachTransition = object : DefaultAttachTransition<FeaturesRouter, RootState, FeaturesBuilder>(featuresBuilder, view) {}
     private val featuresDetachTransition = DefaultDetachTransition<FeaturesRouter, RootState>(view)
+
+    private val licenseAttachTransition = object : DefaultAttachTransition<LicenseRouter, RootState, LicenseBuilder>(licenseBuilder, view) {}
+    private val licenseDetachTransition = DefaultDetachTransition<LicenseRouter, RootState>(view)
 
     fun attachAuth() {
         router.pushTransientState(RootState.AUTH, authAttachTransition, authDetachTransition)
@@ -101,6 +107,10 @@ class RootRouter(
 
     fun attachMyFeatures() {
         router.pushRetainedState(RootState.FEATURES, featuresAttachTransition, featuresDetachTransition)
+    }
+
+    fun attachLicense() {
+        router.pushRetainedState(RootState.LICENSE, licenseAttachTransition, licenseDetachTransition)
     }
 
 }

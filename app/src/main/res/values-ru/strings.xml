@@ -152,4 +152,6 @@
     <string name="new_features">Новые фичи</string>
     <string name="vote_feature_dialog_title">Проголосовать</string>
     <string name="vote_feature_dialog_body">Вы сможете проголосовать повторно только после реализации данной функциональности</string>
+    <string name="license">Лицензия</string>
+
 </resources>

@@ -111,6 +111,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
             is UiEvents.NavigateToDonate -> {
                 donateInteractor.donate()
             }
+            is UiEvents.NavigateToLicense -> {
+                mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.NavigateToLicense)
+            }
             is UiEvents.NavigateToFeatures -> {
                 mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.NavigateToFeatures)
             }
@@ -178,6 +181,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         class SearchInput(val text: String) : UiEvents()
 
         class RecyclerItemClick(val item: IFlexible<*>) : UiEvents()
-
+        object NavigateToLicense : UiEvents()
     }
 }

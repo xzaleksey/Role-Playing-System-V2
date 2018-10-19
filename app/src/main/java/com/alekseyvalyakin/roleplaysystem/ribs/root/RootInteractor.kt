@@ -73,6 +73,9 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                         is MainRibListener.MainRibEvent.NavigateToFeatures -> {
                             router.attachMyFeatures()
                         }
+                        is MainRibListener.MainRibEvent.NavigateToLicense -> {
+                            router.attachLicense()
+                        }
                     }
                 }.addToDisposables()
 

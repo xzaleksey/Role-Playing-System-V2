@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.features.FeaturesBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
+import com.alekseyvalyakin.roleplaysystem.ribs.license.LicenseBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRibListener
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
@@ -76,7 +77,9 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                         CreateGameBuilder(component),
                         ProfileBuilder(component),
                         ActiveGameBuilder(component),
-                        FeaturesBuilder(component))
+                        FeaturesBuilder(component),
+                        LicenseBuilder(component)
+                )
             }
 
             @RootScope
@@ -149,7 +152,7 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             CreateGameBuilder.ParentComponent,
             ProfileBuilder.ParentComponent,
             ActiveGameBuilder.ParentComponent,
-            FeaturesBuilder.ParentComponent {
+            FeaturesBuilder.ParentComponent, LicenseBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

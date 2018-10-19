@@ -14,5 +14,7 @@ interface MainRibListener {
         class MyProfile(val user: User) : MainRibEvent()
 
         object NavigateToFeatures : MainRibEvent()
+
+        object NavigateToLicense : MainRibEvent()
     }
 }
