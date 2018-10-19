@@ -31,4 +31,10 @@ class ActivityModule(private val activity: MainActivity) {
     fun provideLocalImageProvider(): LocalImageProvider {
         return LocalImageProviderImpl(activity)
     }
+
+    @Provides
+    @ActivityScope
+    fun provideActivity(): MainActivity {
+        return activity
+    }
 }

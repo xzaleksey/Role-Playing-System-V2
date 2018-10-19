@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.donate.DonateInteractor
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
@@ -18,7 +19,6 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -45,6 +45,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var mainRibListener: MainRibListener
     @Inject
     lateinit var createEmptyGameObservableProvider: CreateEmptyGameObservableProvider
+    @Inject
+    lateinit var donateInteractor: DonateInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 
@@ -107,7 +109,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 return authProvider.signOut().toObservable<Any>()
             }
             is UiEvents.NavigateToDonate -> {
-                Timber.d("Donate")
+                donateInteractor.donate()
             }
             is UiEvents.NavigateToFeatures -> {
                 mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.NavigateToFeatures)

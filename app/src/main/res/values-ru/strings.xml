@@ -148,7 +148,7 @@
     <string name="new_race">Новая раса</string>
     <string name="photo_name">Название</string>
     <string name="change_name">Изменить имя</string>
-    <string name="donate">Donate</string>
+    <string name="donate">Поддержать разработчика</string>
     <string name="new_features">Новые фичи</string>
     <string name="vote_feature_dialog_title">Проголосовать</string>
     <string name="vote_feature_dialog_body">Вы сможете проголосовать повторно только после реализации данной функциональности</string>

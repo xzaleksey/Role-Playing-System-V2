@@ -155,7 +155,7 @@
     <string name="change_name">Change name</string>
     <string name="donate">Donate</string>
     <string name="new_features">New features</string>
-    <string name="vote_feature_dialog_title">Проголосовать</string>
+    <string name="vote_feature_dialog_title">Vote</string>
     <string name="vote_feature_dialog_body">You will be able to vote again only after feature implementation</string>
 
 </resources>
