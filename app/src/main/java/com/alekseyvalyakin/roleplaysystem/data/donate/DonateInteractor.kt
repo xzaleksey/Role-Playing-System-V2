@@ -39,7 +39,8 @@ class DonateInteractorImpl(
     }
 
     companion object {
-        const val YANDEX_LINK = "https://money.yandex.ru/to/410017785296165/100"
+        const val YANDEX_LINK = "https://money.yandex.ru/to/410017785296165/150"
+        const val PAYPAL_LINK = "https://paypal.me/rpgassistant/150"
         const val HTTP_SCHEME = "http"
     }
 }
