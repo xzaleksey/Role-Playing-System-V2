@@ -40,9 +40,7 @@ class UserAvatarRepositoryImpl @Inject constructor(
     private var uploadAvatarDisposable = Disposables.disposed()
     private val updateAvatarObservable = userRepository.observeCurrentUser()
             .doOnNext { user ->
-                user?.photoUrl?.let {
-                    subject.onNext(it)
-                }
+                subject.onNext(user.photoUrl)
             }.share()
 
     override fun uploadAvatar(filePath: String): Single<String> {
