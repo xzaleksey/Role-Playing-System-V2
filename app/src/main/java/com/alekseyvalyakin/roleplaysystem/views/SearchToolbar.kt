@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -203,6 +204,10 @@ class SearchToolbar constructor(
         searchEditText.showSoftKeyboard()
         tvTitle.visibility = View.INVISIBLE
         relay.accept(true)
+    }
+
+    fun clearInput() {
+        searchEditText.setText(EMPTY_STRING)
     }
 }
 

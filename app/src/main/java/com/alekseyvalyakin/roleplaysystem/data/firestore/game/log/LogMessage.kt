@@ -48,7 +48,13 @@ data class LogMessage(
 
 data class TextMessage(
         var text: String = StringUtils.EMPTY_STRING
-) : FireStoreModel
+) : FireStoreModel {
+
+    @Exclude
+    fun isFiltered(text: String): Boolean {
+        return this.text.startsWith(text, true)
+    }
+}
 
 enum class MessageType(val value: Int) {
     UNKNOWN(0),

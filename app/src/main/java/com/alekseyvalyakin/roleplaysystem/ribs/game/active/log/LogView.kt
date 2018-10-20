@@ -1,7 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
 
 import android.content.Context
-import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
@@ -11,21 +10,25 @@ import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
-import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import java.util.concurrent.TimeUnit
 
 class LogView constructor(
         context: Context
 ) : _RelativeLayout(context), LogPresenter {
 
+    private var searchToolbar: SearchToolbar
     private val recyclerView: RecyclerView
-    private val rxPermissions = RxPermissions(context as FragmentActivity)
     private val relay = PublishRelay.create<LogPresenter.UiEvent>()
     private val flexibleAdapter = LogAdapter(emptyList(), relay)
+
 
     private lateinit var input: EditText
     private lateinit var sendView: FrameLayout
@@ -36,9 +39,10 @@ class LogView constructor(
     }
 
     init {
-        view {
-            backgroundColorResource = R.color.colorPrimaryDark
-        }.lparams(width = matchParent, height = getStatusBarHeight())
+        searchToolbar = searchToolbar {
+            id = R.id.search_view
+            setTitle(getString(R.string.log))
+        }.lparams(width = matchParent, height = wrapContent)
 
         relativeLayout {
             id = R.id.send_form
@@ -61,6 +65,7 @@ class LogView constructor(
                 }
             }.lparams(height = dimen(R.dimen.dp_48)) {
                 alignParentRight()
+                centerVertically()
             }
             input = editText {
                 id = R.id.input
@@ -72,7 +77,7 @@ class LogView constructor(
                 leftMargin = getDoubleCommonDimen()
                 leftOf(R.id.icon_send)
             }
-        }.lparams(width = matchParent, height = dimen(R.dimen.dp_48)) {
+        }.lparams(width = matchParent, height = wrapContent) {
             alignParentBottom()
         }
 
@@ -85,7 +90,7 @@ class LogView constructor(
             adapter = flexibleAdapter
         }.lparams(width = matchParent, height = matchParent) {
             above(R.id.send_form)
-            topMargin = getStatusBarHeight()
+            below(R.id.search_view)
         }
     }
 
@@ -97,12 +102,23 @@ class LogView constructor(
         )
     }
 
+    override fun clearSearchInput() {
+        searchToolbar.clearInput()
+    }
+
     override fun observeUiEvents(): Observable<LogPresenter.UiEvent> {
-        return RxView.clicks(sendView).map {
+        return Observable.merge(RxView.clicks(sendView).map {
             val text = input.text.toString()
             input.text = null
             LogPresenter.UiEvent.SendTextMessage(text)
-        }
+        }, observeSearchInput())
     }
+
+    private fun observeSearchInput(): Observable<LogPresenter.UiEvent.SearchInput> = searchToolbar.observeSearchInput()
+            .debounce(200L, TimeUnit.MILLISECONDS, Schedulers.computation())
+            .throttleLast(100L, TimeUnit.MILLISECONDS, Schedulers.computation())
+            .map { LogPresenter.UiEvent.SearchInput(it.toString()) }
+            .distinctUntilChanged()
+            .observeOn(AndroidSchedulers.mainThread())
 
 }

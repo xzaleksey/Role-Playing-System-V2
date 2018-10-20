@@ -1,15 +1,18 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
 
+import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogMessage
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,12 +33,13 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     private val screenName = "MasterLog"
+    private val filterRelay = BehaviorRelay.createDefault<FilterModel>(FilterModel())
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         analyticsReporter.setCurrentScreen(screenName)
 
-        logViewModelProvider.observeViewModel()
+        logViewModelProvider.observeViewModel(filterRelay.toFlowable(BackpressureStrategy.LATEST).distinctUntilChanged())
                 .subscribeWithErrorLogging { presenter.update(it) }
                 .addToDisposables()
 
@@ -49,8 +53,18 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     private fun handleUiEvent(uiEvent: LogPresenter.UiEvent): Observable<*> {
         return when (uiEvent) {
             is LogPresenter.UiEvent.SendTextMessage -> {
-                logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
-                        .toObservable()
+                if (uiEvent.text.isNotBlank()) {
+                    presenter.clearSearchInput()
+                    logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
+                            .toObservable()
+                }
+                Observable.empty<Any>()
+            }
+            is LogPresenter.UiEvent.SearchInput -> {
+                return Observable.fromCallable {
+                    val value = filterRelay.value
+                    filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvent.text))
+                }
             }
         }
     }

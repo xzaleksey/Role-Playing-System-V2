@@ -62,7 +62,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 .subscribeWithErrorLogging { }
                 .addToDisposables()
 
-        mainViewModelProvider.observeViewModel(filterRelay.toFlowable(BackpressureStrategy.LATEST))
+        mainViewModelProvider.observeViewModel(filterRelay.toFlowable(BackpressureStrategy.LATEST).distinctUntilChanged())
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
                     presenter.updateModel(it)
