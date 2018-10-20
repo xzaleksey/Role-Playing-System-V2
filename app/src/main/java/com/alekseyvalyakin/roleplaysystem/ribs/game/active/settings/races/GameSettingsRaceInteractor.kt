@@ -23,7 +23,7 @@ class GameSettingsRaceInteractor : BaseInteractor<GameSettingsRacePresenter, Gam
     lateinit var analyticsReporter: AnalyticsReporter
     @Inject
     lateinit var game: Game
-    private val screenName = "GameSettingsClasses"
+    private val screenName = "GameSettingsRaces"
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)

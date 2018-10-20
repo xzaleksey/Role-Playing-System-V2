@@ -20,6 +20,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInG
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
+import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
@@ -102,4 +103,6 @@ interface SingletonDependencyProvider {
     fun logsRepo(): LogRepository
 
     fun featuresRepo(): FeaturesRepository
+
+    fun remoteConfigProvider(): RemoteConfigProvider
 }

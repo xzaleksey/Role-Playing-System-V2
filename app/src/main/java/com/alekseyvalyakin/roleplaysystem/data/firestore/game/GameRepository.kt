@@ -51,14 +51,14 @@ class GameRepositoryImpl(
     }
 
     override fun updateDate(game: Game): Completable {
-        return userRepository.getCurrentUserSingle().doOnSuccess { user ->
+        return Completable.fromAction {
             val writeBatch = instance.batch()
             val gameId = game.id
 
             userInGameRepository.addCurrentUserInGame(writeBatch, gameId)
             gamesInUserRepository.addGameInUser(writeBatch, gameId)
             writeBatch.commit()
-        }.ignoreElement()
+        }
     }
 
     override fun createEmptyDocument(): Single<Game> {

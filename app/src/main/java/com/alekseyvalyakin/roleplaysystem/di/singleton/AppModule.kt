@@ -11,6 +11,8 @@ import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.prefs.SharedPreferencesHelper
+import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProvider
+import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
@@ -158,6 +160,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun notificationInteractor(context: Context): NotificationInteractor {
         return NotificationInteractorImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun remoteConfigProvider(): RemoteConfigProvider {
+        return RemoteConfigProviderImpl()
     }
 
 }
