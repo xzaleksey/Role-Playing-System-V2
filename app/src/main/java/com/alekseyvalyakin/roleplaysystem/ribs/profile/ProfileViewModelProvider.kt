@@ -56,12 +56,13 @@ class ProfileViewModelProviderImpl(
         return Flowable.combineLatest(gameRepository.observeAllGamesDescending().onErrorReturn { emptyList() },
                 gamesInUserRepository.observeUserGames(id),
                 BiFunction { games, gamesInUser ->
-                    val ids = gamesInUser.map { it.id }.toSet()
+                    val gameIdsMap = gamesInUser.associateBy { it.id }
                     val gamesInUserList = mutableListOf<IFlexible<*>>()
-                    for (game in games) {
+                    val gameInUsersListWithDate: MutableList<Pair<GameListViewModel, Long>> = mutableListOf()
 
-                        if (ids.contains(game.id)) {
-                            gamesInUserList.add(GameListViewModel(
+                    for (game in games) {
+                        if (gameIdsMap.contains(game.id)) {
+                            gameInUsersListWithDate.add(GameListViewModel(
                                     game.id,
                                     if (game.name.isBlank()) stringRepository.noName() else game.name,
                                     if (game.description.isBlank()) stringRepository.noDescription() else game.description,
@@ -69,10 +70,13 @@ class ProfileViewModelProviderImpl(
                                     FlexibleLayoutTypes.GAMES_IN_USER.toString(),
                                     game.password.isNotEmpty(),
                                     game
-                            ))
+                            ) to gameIdsMap[game.id]!!.dateUpdate.time)
                         }
                     }
-
+                    gameInUsersListWithDate.sortByDescending { it.second }
+                    for (pair in gameInUsersListWithDate) {
+                        gamesInUserList.add(pair.first)
+                    }
                     if (gamesInUserList.isNotEmpty()) {
                         gamesInUserList.add(0,
                                 SubHeaderViewModel("${stringRepository.getLastGames()} (${gamesInUserList.size})",

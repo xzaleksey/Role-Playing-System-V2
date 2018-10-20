@@ -50,6 +50,17 @@ class GameRepositoryImpl(
         return updateFieldOffline(id, GameStatus.ACTIVE.value, Game.FIELD_STATUS)
     }
 
+    override fun updateDate(game: Game): Completable {
+        return userRepository.getCurrentUserSingle().doOnSuccess { user ->
+            val writeBatch = instance.batch()
+            val gameId = game.id
+
+            userInGameRepository.addCurrentUserInGame(writeBatch, gameId)
+            gamesInUserRepository.addGameInUser(writeBatch, gameId)
+            writeBatch.commit()
+        }.ignoreElement()
+    }
+
     override fun createEmptyDocument(): Single<Game> {
         return userRepository.getCurrentUserSingle().flatMap { user ->
             val gameToCreate = Game(masterId = user.id, status = GameStatus.DRAFT.value, masterName = user.displayName)
@@ -82,4 +93,5 @@ interface GameRepository : FireStoreRepository<Game> {
     fun activateGame(id: String): Completable
 
     fun observeAllGamesDescending(): Flowable<List<Game>>
+    fun updateDate(game: Game): Completable
 }

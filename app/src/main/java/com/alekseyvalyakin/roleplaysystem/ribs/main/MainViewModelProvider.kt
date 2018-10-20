@@ -4,11 +4,11 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.base.image.CompositeImageProviderImpl
 import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.base.image.UrlRoundDrawableProviderImpl
-import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameStatus
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
@@ -55,9 +55,12 @@ class MainViewModelProviderImpl(
         return Flowable.combineLatest(filterFlowable, gameRepository.observeAllGamesDescending().onErrorReturn { FIRST_GAMES_OBJECT },
                 gamesInUserRepository.observeCurrentUserGames(),
                 Function3 { filterModel, games, gamesInUser ->
-                    val ids = gamesInUser.map { it.id }.toSet()
+                    val gameIdsMap = gamesInUser.associateBy { it.id }
+                    val gameInUsersListWithDate: MutableList<Pair<GameListViewModel, Long>> = mutableListOf()
+
                     val gamesInUserList = mutableListOf<IFlexible<*>>()
                     val allGames = mutableListOf<IFlexible<*>>()
+
                     for (game in games) {
                         if (game.isFiltered(filterModel.query)) {
                             if (game.status == GameStatus.ACTIVE.value) {
@@ -72,8 +75,8 @@ class MainViewModelProviderImpl(
                                 ))
                             }
 
-                            if (ids.contains(game.id)) {
-                                gamesInUserList.add(GameListViewModel(
+                            if (gameIdsMap.contains(game.id)) {
+                                gameInUsersListWithDate.add(GameListViewModel(
                                         game.id,
                                         if (game.name.isBlank()) stringRepository.noName() else game.name,
                                         if (game.description.isBlank()) stringRepository.noDescription() else game.description,
@@ -81,9 +84,13 @@ class MainViewModelProviderImpl(
                                         FlexibleLayoutTypes.GAMES_IN_USER.toString(),
                                         game.password.isNotEmpty(),
                                         game
-                                ))
+                                ) to gameIdsMap[game.id]!!.dateUpdate.time)
                             }
                         }
+                    }
+                    gameInUsersListWithDate.sortByDescending { it.second }
+                    for (pair in gameInUsersListWithDate) {
+                        gamesInUserList.add(pair.first)
                     }
                     if (allGames.isNotEmpty()) {
                         allGames.add(0,

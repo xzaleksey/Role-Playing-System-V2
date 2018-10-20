@@ -7,7 +7,7 @@ import java.io.Serializable
 import java.util.*
 
 data class UserInGameInfo(
-        @ServerTimestamp var dateUpdate: Date? = null,
+        @ServerTimestamp var dateUpdate: Date = Date(),
 
         @Exclude
         @set:Exclude

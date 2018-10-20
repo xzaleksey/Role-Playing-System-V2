@@ -9,14 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewM
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.BaseInteractor
-import com.uber.rib.core.Bundle
-import com.uber.rib.core.Interactor
-import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.RibInteractor
-import com.uber.rib.core.Router
-import com.uber.rib.core.getSerializable
-import com.uber.rib.core.putSerializable
+import com.uber.rib.core.*
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.Serializable
@@ -52,6 +45,11 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
 
         savedInstanceState?.run {
             model = this.getSerializable(KEY)
+        }
+        if (savedInstanceState == null) {
+            gameRepository.updateDate(viewModelProvider.getCurrentGame())
+                    .subscribeWithErrorLogging()
+                    .addToDisposables()
         }
 
         handleNavigation(model.navigationId)
