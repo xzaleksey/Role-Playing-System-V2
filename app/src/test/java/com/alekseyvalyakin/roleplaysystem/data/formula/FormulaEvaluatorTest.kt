@@ -129,6 +129,17 @@ class FormulaEvaluatorTest {
         assertEquals(-1.0, expression!!.evaluate(), 0.0)
     }
 
+
+    @Test
+    fun parseSkillLevel() {
+        val formulaEvaluator = FormulaEvaluator(listOf(
+                SkillLevelParser(9.0)
+        ))
+
+        val expression = formulaEvaluator.parse("sl")
+        assertEquals(9.0, expression!!.evaluate(), 0.0)
+    }
+
     @Test
     fun parseCustomParserDndDefaultPositive() {
         val formulaEvaluator = FormulaEvaluator(listOf(

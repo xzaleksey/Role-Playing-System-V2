@@ -11,6 +11,7 @@ import java.util.*
 data class LogMessage(
         @ServerTimestamp
         override var dateCreate: Date? = null,
+
         var localDate: Date = Date(),
         var type: Int = MessageType.TEXT.value,
         var textMessage: TextMessage? = null,
