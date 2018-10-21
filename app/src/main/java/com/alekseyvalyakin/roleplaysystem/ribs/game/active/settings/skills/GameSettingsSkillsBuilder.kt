@@ -2,7 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.SettingsDependencyProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
@@ -38,7 +38,7 @@ class GameSettingsSkillsBuilder(dependency: ParentComponent) : BaseViewBuilder<G
         return GameSettingsSkillsView(parentViewGroup.context)
     }
 
-    interface ParentComponent : ActiveGameDependencyProvider
+    interface ParentComponent : SettingsDependencyProvider
 
     @dagger.Module
     abstract class Module {

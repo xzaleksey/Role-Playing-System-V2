@@ -19,6 +19,7 @@ sealed class FirestoreCollection(
     class PhotosInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/photos")
     class StatsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/stats")
     class ClassesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/classes")
+    class SkillsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/skills")
     class RacesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/races")
     class TagsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/tags")
     class LogsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/logs")

@@ -2,6 +2,10 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.GameSettingsDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.GameSettingsDependencyProviderImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
@@ -87,6 +91,17 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
             internal fun viewModelProvider(stringRepository: StringRepository, resourcesProvider: ResourcesProvider): GameSettingsViewModelProvider {
                 return GameSettingsViewModelProviderImpl(stringRepository, resourcesProvider)
             }
+
+
+            @GameSettingsScope
+            @Provides
+            @JvmStatic
+            internal fun dependencyProvider(
+                    gameStatsRepository: GameStatsRepository,
+                    gameSkillsRepository: GameSkillsRepository,
+                    resourcesProvider: ResourcesProvider): GameSettingsDependencyProvider {
+                return GameSettingsDependencyProviderImpl(gameStatsRepository, gameSkillsRepository, resourcesProvider)
+            }
         }
 
     }
@@ -95,7 +110,7 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
     interface Component : InteractorBaseComponent<GameSettingsInteractor>,
             BuilderComponent,
-            ActiveGameDependencyProvider,
+            SettingsDependencyProvider,
             GameSettingsStatBuilder.ParentComponent,
             GameSettingsClassBuilder.ParentComponent,
             GameSettingsSkillsBuilder.ParentComponent,
