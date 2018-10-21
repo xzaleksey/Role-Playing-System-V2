@@ -2,8 +2,12 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.GameSettingsDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.GameSettingsDependencyProviderImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.GameSettingsRestrictionProvider
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.GameSettingsRestrictionProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
@@ -101,6 +105,17 @@ class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSet
                     gameSkillsRepository: GameSkillsRepository,
                     resourcesProvider: ResourcesProvider): GameSettingsDependencyProvider {
                 return GameSettingsDependencyProviderImpl(gameStatsRepository, gameSkillsRepository, resourcesProvider)
+            }
+
+            @GameSettingsScope
+            @Provides
+            @JvmStatic
+            internal fun restrictionsProvider(
+                    gameRaceRepository: GameRaceRepository,
+                    gameClassRepository: GameClassRepository,
+                    gameSkillsRepository: GameSkillsRepository,
+                    resourcesProvider: ResourcesProvider): GameSettingsRestrictionProvider {
+                return GameSettingsRestrictionProviderImpl(gameRaceRepository, gameClassRepository, gameSkillsRepository, resourcesProvider)
             }
         }
 

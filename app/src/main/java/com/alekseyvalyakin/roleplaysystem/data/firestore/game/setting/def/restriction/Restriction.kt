@@ -17,7 +17,7 @@ enum class RestrictionType(
     CLASS(2);
 
     companion object {
-        fun getDependency(value: Int): RestrictionType {
+        fun getRestrictionType(value: Int): RestrictionType {
             return values().firstOrNull { it.value == value } ?: UNKNOWN
         }
     }
