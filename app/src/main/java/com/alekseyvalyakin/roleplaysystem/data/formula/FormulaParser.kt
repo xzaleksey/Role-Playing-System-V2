@@ -1,5 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
 interface FormulaParser {
-    fun parse(string: String): FormulaPart?
+    fun parse(string: String): FormulaResult
 }

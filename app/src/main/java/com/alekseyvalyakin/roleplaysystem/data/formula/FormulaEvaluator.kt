@@ -4,19 +4,19 @@ import android.support.annotation.VisibleForTesting
 import timber.log.Timber
 
 class FormulaEvaluator(
-        private val customParsers: List<FormulaParser> = emptyList()
-) : ExpressionParser {
+        private val customPartParsers: List<FormulaPartParser> = emptyList()
+) : FormulaParser {
 
     private val formulaParsers = mutableListOf(
             NumberParser,
-            OperationTypeParser,
-            ExpressionStartParser,
-            ExpressionEndParser,
+            OperationTypePartParser,
+            ExpressionStartPartParser,
+            ExpressionEndPartParser,
             DiceParser).apply {
-        addAll(customParsers)
+        addAll(customPartParsers)
     }
 
-    override fun parse(string: String): Expression? {
+    override fun parse(string: String): FormulaResult {
         val list = mutableListOf<FormulaPart>()
         val startExpressionIndexes = mutableListOf<Int>()
         val endExpressionIndexes = mutableListOf<Int>()
@@ -84,7 +84,7 @@ class FormulaEvaluator(
             throw IllegalArgumentException("Formula parsed partially")
         }
 
-        return createExpression(FormulaResult(list, createExpressionIndexes(startExpressionIndexes, endExpressionIndexes)))
+        return createExpression(FormulaTempResult(list, createExpressionIndexes(startExpressionIndexes, endExpressionIndexes)))
     }
 
     @VisibleForTesting
@@ -131,11 +131,11 @@ class FormulaEvaluator(
         return result
     }
 
-    private fun createExpression(formulaResult: FormulaResult): Expression? {
-        return createCustomExpression(formulaResult, 0, formulaResult.formulaParts.lastIndex)
+    private fun createExpression(formulaResult: FormulaTempResult): FormulaResult {
+        return FormulaResult(createCustomExpression(formulaResult, 0, formulaResult.formulaParts.lastIndex))
     }
 
-    private fun createCustomExpression(formulaResult: FormulaResult, startIndex: Int, endIndex: Int): Expression {
+    private fun createCustomExpression(formulaResult: FormulaTempResult, startIndex: Int, endIndex: Int): Expression {
         val formulaParts = formulaResult.formulaParts
         val complexOperation = ComplexOperation()
 
@@ -172,7 +172,7 @@ class FormulaEvaluator(
 
     private fun parseInternal(string: String, currentFormulaInfo: FormulaInfo?): FormulaInfo? {
         if (currentFormulaInfo != null) {
-            val formulaPart = currentFormulaInfo.currentParser.parse(string)
+            val formulaPart = currentFormulaInfo.currentPartParser.parse(string)
             if (formulaPart != null) {
                 return currentFormulaInfo.copy(formulaPart = formulaPart)
             }
@@ -207,12 +207,11 @@ class FormulaEvaluator(
 
             return true
         }
-
     }
 
     data class FormulaInfo(
             val formulaPart: FormulaPart,
-            val currentParser: FormulaParser
+            val currentPartParser: FormulaPartParser
     )
 
     data class ExpressionIndexes(
@@ -220,7 +219,7 @@ class FormulaEvaluator(
             val endIndex: Int
     )
 
-    data class FormulaResult(
+    data class FormulaTempResult(
             val formulaParts: List<FormulaPart>,
             val startExpressionIndices: List<ExpressionIndexes>
     )

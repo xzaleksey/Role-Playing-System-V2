@@ -21,7 +21,7 @@ enum class OperationType(
     MULTIPLY("*", 3);
 }
 
-object ExpressionStartParser : FormulaParser {
+object ExpressionStartPartParser : FormulaPartParser {
 
     override fun parse(string: String): FormulaPart? {
         return if (string == ExpressionStart.value.toString()) ExpressionStart else null
@@ -29,14 +29,14 @@ object ExpressionStartParser : FormulaParser {
 
 }
 
-object ExpressionEndParser : FormulaParser {
+object ExpressionEndPartParser : FormulaPartParser {
     override fun parse(string: String): FormulaPart? {
         return if (string == ExpressionEnd.value.toString()) ExpressionEnd else null
     }
 
 }
 
-object OperationTypeParser : FormulaParser {
+object OperationTypePartParser : FormulaPartParser {
     override fun parse(string: String): OperationType? {
         return OperationType.values().firstOrNull { it.value == string }
     }

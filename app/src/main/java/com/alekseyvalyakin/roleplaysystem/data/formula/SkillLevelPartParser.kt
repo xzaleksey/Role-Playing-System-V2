@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
-class CustomParser(
-        private val string: String = "x1",
+class SkillLevelPartParser(
         private val value: Double
-) : FormulaParser {
+) : FormulaPartParser {
+    private val string: String = "sl"
 
     override fun parse(string: String): FormulaPart? {
         if (string == this.string) {

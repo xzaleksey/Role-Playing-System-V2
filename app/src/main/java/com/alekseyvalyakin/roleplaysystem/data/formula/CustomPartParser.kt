@@ -1,15 +1,13 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
-class DndParser(
-        private val string: String = "mx1",
+class CustomPartParser(
+        private val string: String = "x1",
         private val value: Double
-) : FormulaParser {
-
-    private val modifier = (value - value % 2 - 10) / 2
+) : FormulaPartParser {
 
     override fun parse(string: String): FormulaPart? {
         if (string == this.string) {
-            return Number(modifier)
+            return Number(value)
         }
 
         return null
