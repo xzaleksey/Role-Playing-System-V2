@@ -9,7 +9,7 @@ enum class DiceType(val resId: Int, private val dice: Dice) {
     D10(R.drawable.dice_d10, Dice(10)),
     D12(R.drawable.dice_d12, Dice(12)),
     D20(R.drawable.dice_d20, Dice(20)),
-    D100(R.drawable.dice_d20, Dice(99));
+    D100(R.drawable.dice_d20, Dice(100));
 
     val maxValue: Int
         get() = dice.maxValue
@@ -20,10 +20,6 @@ enum class DiceType(val resId: Int, private val dice: Dice) {
 
     fun createSingleDiceCollection(): SingleDiceCollection {
         return SingleDiceCollection.createEmptySingleDiceCollectionFromDice(getDice())
-    }
-
-    fun createDiceCollection(): DiceCollection {
-        return DiceCollection.createDiceCollectionFromDice(getDice())
     }
 
     companion object {
