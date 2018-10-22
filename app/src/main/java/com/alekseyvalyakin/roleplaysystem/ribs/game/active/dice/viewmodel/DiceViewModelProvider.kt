@@ -4,7 +4,9 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.FirebaseDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceInteractor
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.adapter.EmptyDiceViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceType
+import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import timber.log.Timber
@@ -39,12 +41,20 @@ class DiceViewModelProviderImpl(
                                 selected
                         )
                     }
+
+                    val diceItems = mutableListOf<IFlexible<*>>()
+
+                    singleDiceCollections.forEach { singleDiceCollection ->
+                        if (singleDiceCollection.dice == DiceType.D100.getDice()) {
+                            diceItems.add(EmptyDiceViewModel())
+                        }
+                        diceItems.add(DiceSingleCollectionViewModel(
+                                DiceType.getDiceType(singleDiceCollection.dice).resId,
+                                singleDiceCollection))
+                    }
+
                     return@BiFunction DiceViewModel(
-                            diceItems = singleDiceCollections.map { singleDiceCollection ->
-                                DiceSingleCollectionViewModel(
-                                        DiceType.getDiceType(singleDiceCollection.dice).resId,
-                                        singleDiceCollection)
-                            },
+                            diceItems = diceItems,
 
                             diceItemsCollectionsLoaded = diceItemsCollectionsLoaded,
                             buttonCancelEnabled = dicesChosen,

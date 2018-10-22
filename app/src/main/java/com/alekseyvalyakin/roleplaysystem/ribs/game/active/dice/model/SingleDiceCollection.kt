@@ -37,7 +37,8 @@ data class SingleDiceCollection(
                     DiceType.D8.createSingleDiceCollection(),
                     DiceType.D10.createSingleDiceCollection(),
                     DiceType.D12.createSingleDiceCollection(),
-                    DiceType.D20.createSingleDiceCollection()
+                    DiceType.D20.createSingleDiceCollection(),
+                    DiceType.D100.createSingleDiceCollection()
             )
         }
 

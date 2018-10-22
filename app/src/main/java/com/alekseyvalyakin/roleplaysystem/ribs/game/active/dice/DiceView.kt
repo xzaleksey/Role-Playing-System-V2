@@ -17,49 +17,14 @@ import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.adapter.DiceAdapter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModel
-import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatColorStateList
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
-import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
-import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
-import com.alekseyvalyakin.roleplaysystem.utils.getString
-import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
-import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.LinearOffsetItemDecortation
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import org.jetbrains.anko._RelativeLayout
-import org.jetbrains.anko.alignParentBottom
-import org.jetbrains.anko.alignParentLeft
-import org.jetbrains.anko.alignParentRight
-import org.jetbrains.anko.alignParentTop
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.below
-import org.jetbrains.anko.bottomPadding
-import org.jetbrains.anko.button
-import org.jetbrains.anko.cardview.v7.cardView
-import org.jetbrains.anko.frameLayout
-import org.jetbrains.anko.leftPadding
-import org.jetbrains.anko.linearLayout
-import org.jetbrains.anko.margin
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.padding
-import org.jetbrains.anko.progressBar
+import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
-import org.jetbrains.anko.relativeLayout
-import org.jetbrains.anko.rightPadding
-import org.jetbrains.anko.textColor
-import org.jetbrains.anko.textSizeDimen
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.topPadding
-import org.jetbrains.anko.view
-import org.jetbrains.anko.wrapContent
 
 /**
  * Top level view for {@link DiceBuilder.DiceScope}.
@@ -96,7 +61,7 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
             frameLayout {
                 layoutTransition = LayoutTransition()
                 bottomPadding = getIntDimen(R.dimen.dp_8)
-                topPadding = getIntDimen(R.dimen.dp_16)
+                topPadding = getIntDimen(R.dimen.dp_4)
 
                 progressBar = progressBar {
                     visibility = View.GONE
@@ -163,6 +128,8 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
 
         linearLayout {
             orientation = LinearLayout.HORIZONTAL
+            id = R.id.button_container
+            backgroundResource = R.color.colorWhite
             weightSum = 2f
             btnCancel = button {
                 id = R.id.btn_cancel
@@ -221,20 +188,19 @@ class DiceView constructor(context: Context) : _RelativeLayout(context), DicePre
         }.lparams(width = matchParent, height = wrapContent) {
             below(R.id.top_container)
         }
-        cardView {
-            rvDices = recyclerView {
-                id = R.id.recycler_view
-                backgroundColor = Color.WHITE
-                isVerticalScrollBarEnabled = true
-                padding = getCommonDimen()
-                layoutManager = GridLayoutManager(getContext(), diceColumnCount)
-                adapter = diceAdapter
-                addItemDecoration(ItemOffsetDecoration(getContext(), R.dimen.dp_8))
-            }.lparams(width = matchParent, height = wrapContent)
-
+        rvDices = recyclerView {
+            id = R.id.recycler_view
+            backgroundColor = Color.WHITE
+            isVerticalScrollBarEnabled = true
+            padding = getCommonDimen()
+            leftPadding = getDoubleCommonDimen()
+            rightPadding = getDoubleCommonDimen()
+            layoutManager = GridLayoutManager(getContext(), diceColumnCount)
+            adapter = diceAdapter
+            addItemDecoration(ItemOffsetDecoration(getContext(), R.dimen.dp_8))
         }.lparams(width = matchParent, height = wrapContent) {
             below(R.id.label_container)
-            margin = getCommonDimen()
+            above(R.id.button_container)
         }
     }
 

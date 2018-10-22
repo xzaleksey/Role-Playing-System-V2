@@ -46,7 +46,7 @@
     <dimen name="profile_avatar_top_margin">98dp</dimen>
     <dimen name="profile_top_content_height">232dp</dimen>
     <dimen name="profile_background_height">152dp</dimen>
-    <dimen name="bg_top_element_height_big">152dp</dimen>
+    <dimen name="bg_top_element_height_big">136dp</dimen>
     <dimen name="bg_top_element_height_medium">80dp</dimen>
 
 

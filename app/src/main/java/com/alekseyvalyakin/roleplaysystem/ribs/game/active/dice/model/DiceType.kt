@@ -8,7 +8,8 @@ enum class DiceType(val resId: Int, private val dice: Dice) {
     D8(R.drawable.dice_d8, Dice(8)),
     D10(R.drawable.dice_d10, Dice(10)),
     D12(R.drawable.dice_d12, Dice(12)),
-    D20(R.drawable.dice_d20, Dice(20));
+    D20(R.drawable.dice_d20, Dice(20)),
+    D100(R.drawable.dice_d20, Dice(99));
 
     val maxValue: Int
         get() = dice.maxValue
