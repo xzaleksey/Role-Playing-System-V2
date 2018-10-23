@@ -55,7 +55,7 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
             is LogPresenter.UiEvent.SendTextMessage -> {
                 if (uiEvent.text.isNotBlank()) {
                     presenter.clearSearchInput()
-                    logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
+                    return logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
                             .toObservable()
                 }
                 Observable.empty<Any>()
