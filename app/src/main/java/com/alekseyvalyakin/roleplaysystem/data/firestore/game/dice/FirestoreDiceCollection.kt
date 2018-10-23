@@ -4,11 +4,12 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.Dice
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
+import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
-class FirebaseDiceCollection(
+class FirestoreDiceCollection(
         var dices: HashMap<String, Int> = HashMap(),
         @ServerTimestamp override var dateCreate: Date? = null,
 
@@ -16,7 +17,7 @@ class FirebaseDiceCollection(
         @set:Exclude
         @get:Exclude
         @Volatile
-        override var id: String = ""
+        override var id: String = StringUtils.EMPTY_STRING
 ) : FireStoreIdModel, HasDateCreate {
 
     @Exclude
@@ -31,8 +32,8 @@ class FirebaseDiceCollection(
     }
 
     companion object {
-        fun newInstance(diceCollection: DiceCollection): FirebaseDiceCollection {
-            val firebaseDiceCollection = FirebaseDiceCollection()
+        fun newInstance(diceCollection: DiceCollection): FirestoreDiceCollection {
+            val firebaseDiceCollection = FirestoreDiceCollection()
             firebaseDiceCollection.id = diceCollection.id
 
             for ((key, value) in diceCollection.getDices()) {

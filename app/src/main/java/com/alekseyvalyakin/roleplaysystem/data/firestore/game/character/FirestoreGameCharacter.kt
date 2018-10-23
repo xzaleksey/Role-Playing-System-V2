@@ -20,9 +20,19 @@ data class FirestoreGameCharacter(
         override var dateCreate: Date? = null,
 
         var stats: List<StatHolder> = emptyList(),
+        var skills: List<FirestoreSkillHolder> = emptyList(),
         var classHolder: FirestoreClassHolder = FirestoreClassHolder(),
         var raceHolder: FirestoreRaceHolder = FirestoreRaceHolder(),
-        var money: Double = 0.0
+
+        var money: Double = 0.0,
+        var age: Int = 25,
+        var weight: Int = 65,
+        var sex: String = Sex.MALE.text
 
 ) : FireStoreIdModel, HasName, HasDescription, HasDateCreate {
+}
+
+enum class Sex(var text: String) {
+    MALE("male"),
+    FEMALE("female");
 }

@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
 class Operation(
-        val valueLeft: Expression? = null,
-        val valueRight: Expression? = null,
-        val operationType: OperationType
+        private val valueLeft: Expression? = null,
+        private val valueRight: Expression? = null,
+        private val operationType: OperationType
 ) : Expression, Comparable<Operation> {
 
     override fun evaluate(): Double {
@@ -31,6 +31,13 @@ class Operation(
         }
 
         return valueLeft!!.evaluate()
+    }
+
+    override fun getLength(): Int {
+        val left = valueLeft?.getLength() ?: 0
+        val right = valueRight?.getLength() ?: 0
+
+        return 1 + left + right
     }
 
     override fun compareTo(other: Operation): Int {

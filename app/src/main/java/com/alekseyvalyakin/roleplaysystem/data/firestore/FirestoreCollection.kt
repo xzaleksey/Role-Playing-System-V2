@@ -23,6 +23,7 @@ sealed class FirestoreCollection(
     class RacesInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/races")
     class TagsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/tags")
     class LogsInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/logs")
+    class CharactersInGame(gameId: String) : FirestoreCollection(GAMES, directory = "$gameId/characters")
     class GamesInUser(userId: String) : FirestoreCollection(USERS, directory = "$userId/games")
 
     class DICES(gameId: String, userId: String) :

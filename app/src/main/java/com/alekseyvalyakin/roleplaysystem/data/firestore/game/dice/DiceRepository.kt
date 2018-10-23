@@ -7,16 +7,14 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameUserFireS
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
-import com.rxfirebase2.RxFirestore
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 
 class DicesRepositoryImpl(
         userRepository: UserRepository
-) : BaseGameUserFireStoreRepository<FirebaseDiceCollection>(FirebaseDiceCollection::class.java, userRepository), DicesRepository {
+) : BaseGameUserFireStoreRepository<FirestoreDiceCollection>(FirestoreDiceCollection::class.java, userRepository), DicesRepository {
 
-    override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<FirebaseDiceCollection>> {
+    override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<FirestoreDiceCollection>> {
         val query = getCollection(gameId, getUserId())
                 .orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
         return observeQueryCollection(query)
@@ -29,6 +27,6 @@ class DicesRepositoryImpl(
 
 }
 
-interface DicesRepository : GameUserFireStoreRepository<FirebaseDiceCollection> {
-    fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<FirebaseDiceCollection>>
+interface DicesRepository : GameUserFireStoreRepository<FirestoreDiceCollection> {
+    fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<FirestoreDiceCollection>>
 }

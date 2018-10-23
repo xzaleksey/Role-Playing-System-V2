@@ -1,14 +1,23 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
 interface FormulaPart {
+    fun getLength(): Int
 }
 
 object ExpressionStart : FormulaPart {
-    val value = '('
+    const val value = '('
+
+    override fun getLength(): Int {
+        return 1
+    }
 }
 
 object ExpressionEnd : FormulaPart {
-    val value = ')'
+    const val value = ')'
+
+    override fun getLength(): Int {
+        return 1
+    }
 }
 
 enum class OperationType(
@@ -19,6 +28,10 @@ enum class OperationType(
     MINUS("-", 1),
     DIVIDE("/", 2),
     MULTIPLY("*", 3);
+
+    override fun getLength(): Int {
+        return 1
+    }
 }
 
 object ExpressionStartPartParser : FormulaPartParser {

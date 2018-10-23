@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
 class ComplexOperation : Expression {
+
     private val expressions = mutableListOf<Expression>()
     private val operationTypes = mutableListOf<OperationType>()
     private var lastAddedOperation = false
@@ -59,4 +60,9 @@ class ComplexOperation : Expression {
     private fun getMaxPriority(operationTypes: List<OperationType>): OperationType {
         return operationTypes.maxBy { it.priority }!!
     }
+
+    override fun getLength(): Int {
+        return operationTypes.size + expressions.sumBy { it.getLength() }
+    }
+
 }
