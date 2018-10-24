@@ -19,7 +19,10 @@ data class PhotoInGameUploadModel @Ignore constructor(
         var gameId: String = "",
 
         @ColumnInfo(name = "file_path")
-        var filePath: String = ""
+        var filePath: String = "",
+
+        @ColumnInfo(name = "photoId")
+        var photoId: String = ""
 ) {
     constructor() : this(id = 0)
 

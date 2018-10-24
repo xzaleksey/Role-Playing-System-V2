@@ -1,8 +1,13 @@
 package com.alekseyvalyakin.roleplaysystem.data.workmanager
 
-import androidx.work.*
-import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import com.alekseyvalyakin.roleplaysystem.data.analytics.PHOTO_ID
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker.Companion.KEY_GAME_ID
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker.Companion.KEY_ID
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker.Companion.KEY_PATH_TO_FILE
@@ -21,7 +26,8 @@ class WorkManagerWrapperImpl(
                 .putAll(mapOf(
                         KEY_ID to photoInGameUploadModel.id,
                         KEY_GAME_ID to photoInGameUploadModel.gameId,
-                        KEY_PATH_TO_FILE to photoInGameUploadModel.filePath
+                        KEY_PATH_TO_FILE to photoInGameUploadModel.filePath,
+                        PHOTO_ID to photoInGameUploadModel.photoId
                 ))
                 .build()
 

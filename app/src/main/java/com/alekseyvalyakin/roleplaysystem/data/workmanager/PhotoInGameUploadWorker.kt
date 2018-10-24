@@ -47,10 +47,9 @@ class PhotoInGameUploadWorker : Worker() {
         val dbId = inputData.getLong(KEY_ID, 0)
         val gameId = inputData.getString(KEY_GAME_ID)!!
         val pathToFile = inputData.getString(KEY_PATH_TO_FILE)!!
+        val photoId = inputData.getString(PHOTO_ID)!!
         val photosInGame = FirestoreCollection.PhotosInGame(gameId)
-        val documentReference = photosInGame.getDbCollection().document()
-        val photoId = documentReference.id
-
+        val documentReference = photosInGame.getDbCollection().document(photoId)
         val gameDocument = FirestoreCollection.GAMES.getDbCollection().document(gameId)
         val localFile = File(pathToFile)
 
@@ -88,7 +87,11 @@ class PhotoInGameUploadWorker : Worker() {
 
                 photoInGameDao.deleteById(dbId)
             } catch (t: Throwable) {
-                result = if (t.cause is StorageException) {
+                val cause = t.cause
+                result = if (cause is StorageException
+                        && (cause.errorCode == StorageException.ERROR_NOT_AUTHORIZED
+                                || cause.errorCode == StorageException.ERROR_NOT_AUTHENTICATED
+                                || cause.errorCode == StorageException.ERROR_RETRY_LIMIT_EXCEEDED)) {
                     photoInGameDao.deleteById(dbId)
                     localFile.delete()
                     Result.FAILURE
@@ -133,5 +136,6 @@ class PhotoInGameUploadWorker : Worker() {
         const val KEY_ID = "id"
         const val KEY_GAME_ID = "game_id"
         const val KEY_PATH_TO_FILE = "path_to_file"
+        const val PHOTO_ID = "photo_id"
     }
 }

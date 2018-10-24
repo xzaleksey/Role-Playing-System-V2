@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.FireStoreVisibility
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
@@ -143,7 +144,8 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                 createCompletable({
                     val photoInGame = PhotoInGameUploadModel(
                             gameId = game.id,
-                            filePath = it.images.first().originalPath
+                            filePath = it.images.first().originalPath,
+                            photoId = FirestoreCollection.PhotosInGame(game.id).getDbCollection().document().id
                     )
                     photoInGame.id = photoInGameDao.insert(photoInGame)
                     workManagerWrapper.startUploadPhotoInGameWork(photoInGame)
