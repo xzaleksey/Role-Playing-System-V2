@@ -7,6 +7,7 @@ import com.bumptech.glide.request.RequestOptions
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 open class UrlDrawableProviderImpl(
         private val url: String,
@@ -39,6 +40,7 @@ open class UrlDrawableProviderImpl(
     fun getBitmap(urlCacheProvider: UrlCacheProvider?, path: String): Bitmap {
         return if (urlCacheProvider != null) {
             if (urlCacheProvider.existsInCache()) {
+                Timber.d("get photo from cache $path")
                 getBitmapFromUrl(urlCacheProvider.getFilePath())
             } else {
                 getBitmapFromUrl(path).apply {
