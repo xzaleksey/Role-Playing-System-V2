@@ -2,13 +2,14 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skill
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasTags
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.Dependency
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.Restriction
 import com.google.firebase.firestore.Exclude
 
 
-interface GameSkill : FireStoreIdModel, Selectable {
+interface GameSkill : FireStoreIdModel, Selectable, HasTags {
     @Exclude
     fun getDisplayedName(): String
 
@@ -18,7 +19,7 @@ interface GameSkill : FireStoreIdModel, Selectable {
     @Exclude
     fun getIconId(): String
 
-    var tags: List<String>
+    override var tags: List<String>
 
     var successFormula: String
 

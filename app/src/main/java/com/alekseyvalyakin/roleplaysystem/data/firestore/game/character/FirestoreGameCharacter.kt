@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.*
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.value.StatHolder
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
+import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
 data class FirestoreGameCharacter(
@@ -14,7 +15,7 @@ data class FirestoreGameCharacter(
 
         override var name: String,
         override var description: String,
-        override var dateCreate: Date? = null,
+        @ServerTimestamp override var dateCreate: Date? = null,
         override var ownerId: String = StringUtils.EMPTY_STRING,
 
         var stats: List<StatHolder> = emptyList(),

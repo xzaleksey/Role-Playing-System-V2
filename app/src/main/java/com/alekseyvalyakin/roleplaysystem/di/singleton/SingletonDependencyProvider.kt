@@ -8,6 +8,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.character.FirestoreCharactersRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItemsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
@@ -108,4 +109,6 @@ interface SingletonDependencyProvider {
     fun remoteConfigProvider(): RemoteConfigProvider
 
     fun firebaseCharactersRepo(): FirestoreCharactersRepository
+
+    fun firestoreItemsRepo(): FirestoreItemsRepository
 }

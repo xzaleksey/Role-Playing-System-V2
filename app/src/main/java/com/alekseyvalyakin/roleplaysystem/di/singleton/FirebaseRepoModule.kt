@@ -12,6 +12,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesReposito
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItemsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItemsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
@@ -151,6 +153,12 @@ class FirebaseRepoModule {
     @Singleton
     fun firestoreCharactersRepo(userRepository: UserRepository): FirestoreCharactersRepository {
         return FirestoreCharactersRepositoryImpl(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun firestoreItemsRepo(): FirestoreItemsRepository {
+        return FirestoreItemsRepositoryImpl()
     }
 
 }
