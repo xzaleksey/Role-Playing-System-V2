@@ -24,8 +24,8 @@ data class FirestoreGameCharacter(
 
         var money: Double = 0.0,
         var age: Int = 25,
-        var weight: Int = 65,
-        var sex: String = Sex.MALE.text
+        var sex: String = Sex.MALE.text,
+        var weight: Int = if (sex == Sex.MALE.text) 75 else 60
 
 ) : FireStoreIdModel, HasName, HasDescription, HasDateCreate, HasOwner
 
