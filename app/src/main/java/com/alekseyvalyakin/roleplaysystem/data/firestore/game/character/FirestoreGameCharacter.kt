@@ -1,9 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.game.character
 
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreIdModel
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDescription
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasName
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.*
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.value.StatHolder
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.google.firebase.firestore.Exclude
@@ -18,6 +15,7 @@ data class FirestoreGameCharacter(
         override var name: String,
         override var description: String,
         override var dateCreate: Date? = null,
+        override var ownerId: String = StringUtils.EMPTY_STRING,
 
         var stats: List<StatHolder> = emptyList(),
         var skills: List<FirestoreSkillHolder> = emptyList(),
@@ -29,8 +27,7 @@ data class FirestoreGameCharacter(
         var weight: Int = 65,
         var sex: String = Sex.MALE.text
 
-) : FireStoreIdModel, HasName, HasDescription, HasDateCreate {
-}
+) : FireStoreIdModel, HasName, HasDescription, HasDateCreate, HasOwner
 
 enum class Sex(var text: String) {
     MALE("male"),
