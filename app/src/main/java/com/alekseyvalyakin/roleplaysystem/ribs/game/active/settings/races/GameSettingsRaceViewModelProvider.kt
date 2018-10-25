@@ -2,7 +2,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.*
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.DefaultGameRace
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.DefaultSettingRaceRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRace
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.UserGameRace
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -40,11 +44,11 @@ class GameSettingsRaceViewModelProviderImpl(
 ) : GameSettingsRaceViewModelProvider {
 
     private val defaultGameRaces = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
-    private val viewModel = BehaviorRelay.createDefault<GameSettingsRaceViewModel>(getDefaultModel())
+    private val raceViewModel = BehaviorRelay.createDefault<GameSettingsRaceViewModel>(getDefaultModel())
     private val disposable = CompositeDisposable()
 
     override fun observeViewModel(): Flowable<GameSettingsRaceViewModel> {
-        return viewModel.toFlowable(BackpressureStrategy.LATEST)
+        return raceViewModel.toFlowable(BackpressureStrategy.LATEST)
                 .doOnSubscribe {
                     getDefaultGamesDisposable().addTo(disposable)
                     getPresenterEvents().addTo(disposable)
@@ -58,7 +62,7 @@ class GameSettingsRaceViewModelProviderImpl(
                     when (event) {
                         is GameSettingsRacePresenter.UiEvent.CollapseFront -> {
                             activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
-                            if (viewModel.value.selectedModel == null) {
+                            if (raceViewModel.value.selectedModel == null) {
                                 updateNewItemModel()
                             }
                         }
@@ -69,18 +73,18 @@ class GameSettingsRaceViewModelProviderImpl(
                         }
 
                         is GameSettingsRacePresenter.UiEvent.TitleInput -> {
-                            val value = viewModel.value
+                            val value = raceViewModel.value
                             if (value.backModel.titleText != event.text) {
-                                viewModel.accept(value.copy(backModel = value.backModel.copy(
+                                raceViewModel.accept(value.copy(backModel = value.backModel.copy(
                                         titleText = event.text
                                 )))
                             }
                         }
 
                         is GameSettingsRacePresenter.UiEvent.SubtitleInput -> {
-                            val value = viewModel.value
+                            val value = raceViewModel.value
                             if (value.backModel.subtitleText != event.text) {
-                                viewModel.accept(value.copy(backModel = value.backModel.copy(
+                                raceViewModel.accept(value.copy(backModel = value.backModel.copy(
                                         subtitleText = event.text
                                 )))
                             }
@@ -201,8 +205,8 @@ class GameSettingsRaceViewModelProviderImpl(
                         chooseIconListener = {
                             presenter.chooseIcon(
                                     { iconViewModel ->
-                                        viewModel.value.let {
-                                            viewModel.accept(it.copy(
+                                        raceViewModel.value.let {
+                                            raceViewModel.accept(it.copy(
                                                     backModel = it.backModel.copy(iconModel = iconViewModel)
                                             ))
                                         }
@@ -229,7 +233,7 @@ class GameSettingsRaceViewModelProviderImpl(
     }
 
     private fun updateShowItemsModel() {
-        viewModel.accept(viewModel.value.copy(toolBarModel = getShowRaceToolbarModel(),
+        raceViewModel.accept(raceViewModel.value.copy(toolBarModel = getShowRaceToolbarModel(),
                 step = GameSettingsRaceViewModel.Step.EXPANDED,
                 selectedModel = null))
     }
@@ -237,8 +241,8 @@ class GameSettingsRaceViewModelProviderImpl(
     private fun updateSelectedItemModel(userGameRace: UserGameRace) {
         val customRace = !GameRace.INFO.isSupported(userGameRace)
 
-        val value = viewModel.value
-        viewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
+        val value = raceViewModel.value
+        raceViewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     presenter.expandFront()
@@ -246,7 +250,7 @@ class GameSettingsRaceViewModelProviderImpl(
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
-                    val backModel = viewModel.value.backModel
+                    val backModel = raceViewModel.value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
                         disposable.add(gameGameRaceRepository.setDocumentWithId(
@@ -256,7 +260,7 @@ class GameSettingsRaceViewModelProviderImpl(
                                         description = backModel.subtitleText,
                                         icon = backModel.iconModel.id)
                         ).subscribeWithErrorLogging { gameRace ->
-                            viewModel.value.frontModel.items.asSequence().map {
+                            raceViewModel.value.frontModel.items.asSequence().map {
                                 it as GameSettingsRaceListViewModel
                             }.toMutableList().apply {
                                 val element = gameSettingsRaceListViewModel(gameRace)
@@ -285,7 +289,7 @@ class GameSettingsRaceViewModelProviderImpl(
 
 
     private fun updateNewItemModel() {
-        viewModel.accept(viewModel.value.copy(toolBarModel = CustomToolbarView.Model(
+        raceViewModel.accept(raceViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     expandFront()
@@ -293,7 +297,7 @@ class GameSettingsRaceViewModelProviderImpl(
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
-                    val value = viewModel.value
+                    val value = raceViewModel.value
                     val backModel = value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
@@ -319,7 +323,7 @@ class GameSettingsRaceViewModelProviderImpl(
                 },
                 title = stringRepository.getMyRace()
         ),
-                backModel = viewModel.value.backModel.copy(
+                backModel = raceViewModel.value.backModel.copy(
                         titleText = StringUtils.EMPTY_STRING,
                         subtitleText = StringUtils.EMPTY_STRING,
                         titleVisible = true,
@@ -332,12 +336,22 @@ class GameSettingsRaceViewModelProviderImpl(
                 selectedModel = null))
     }
 
+    override fun handleBackPress(): Boolean {
+        if (raceViewModel.value.step == GameSettingsRaceViewModel.Step.COLLAPSED) {
+            presenter.expandFront()
+            updateShowItemsModel()
+            return true
+        }
+
+        return false
+    }
+
     private fun expandFront() {
         presenter.expandFront()
     }
 
     private fun updateItemsInList() {
-        viewModel.accept(viewModel.value.let {
+        raceViewModel.accept(raceViewModel.value.let {
             it.copy(frontModel = it.frontModel.copy(items = defaultGameRaces.value))
         })
     }
@@ -345,4 +359,5 @@ class GameSettingsRaceViewModelProviderImpl(
 
 interface GameSettingsRaceViewModelProvider {
     fun observeViewModel(): Flowable<GameSettingsRaceViewModel>
+    fun handleBackPress(): Boolean
 }
