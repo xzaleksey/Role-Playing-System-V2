@@ -33,4 +33,8 @@ class GameSettingsStatInteractor : BaseInteractor<GameSettingsStatPresenter, Gam
                 .addToDisposables()
     }
 
+    override fun handleBackPress(): Boolean {
+        return gameSettingsStatsViewModelProvider.handleBackPress()
+    }
+
 }

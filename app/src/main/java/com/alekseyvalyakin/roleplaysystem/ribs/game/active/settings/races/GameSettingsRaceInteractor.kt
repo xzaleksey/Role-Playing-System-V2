@@ -35,4 +35,8 @@ class GameSettingsRaceInteractor : BaseInteractor<GameSettingsRacePresenter, Gam
                 }.addToDisposables()
     }
 
+    override fun handleBackPress(): Boolean {
+        return viewModelProvider.handleBackPress()
+    }
+
 }

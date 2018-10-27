@@ -2,7 +2,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.*
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultGameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.UserGameStat
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -332,6 +336,16 @@ class GameSettingsStatsViewModelProviderImpl(
                 selectedModel = null))
     }
 
+    override fun handleBackPress(): Boolean {
+        if (statViewModel.value.step == GameSettingsStatViewModel.Step.COLLAPSED) {
+            presenter.expandFront()
+            updateShowStatsModel()
+            return true
+        }
+
+        return false
+    }
+
     private fun expandFront() {
         presenter.expandFront()
     }
@@ -345,4 +359,6 @@ class GameSettingsStatsViewModelProviderImpl(
 
 interface GameSettingsStatsViewModelProvider {
     fun observeViewModel(): Flowable<GameSettingsStatViewModel>
+
+    fun handleBackPress(): Boolean
 }

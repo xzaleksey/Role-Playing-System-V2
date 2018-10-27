@@ -1,7 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
@@ -23,8 +22,6 @@ class GameSettingsClassInteractor : BaseInteractor<GameSettingsClassPresenter, G
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     @Inject
-    lateinit var gameTagsRepository: GameTagsRepository
-    @Inject
     lateinit var game: Game
     private val screenName = "GameSettingsClasses"
 
@@ -37,5 +34,10 @@ class GameSettingsClassInteractor : BaseInteractor<GameSettingsClassPresenter, G
                     presenter.update(it)
                 }.addToDisposables()
     }
+
+    override fun handleBackPress(): Boolean {
+        return viewModelProvider.handleBackPress()
+    }
+
 
 }
