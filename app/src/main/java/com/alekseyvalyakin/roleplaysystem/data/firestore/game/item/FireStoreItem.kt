@@ -12,7 +12,6 @@ data class FireStoreItem(
         override var dateCreate: Date? = null,
         override var name: String,
         override var description: String,
-        override var count: Int = 1,
         override var tags: List<String>,
 
         var price: Double = 0.0,
@@ -22,4 +21,4 @@ data class FireStoreItem(
         @set:Exclude
         @get:Exclude
         override var id: String = StringUtils.EMPTY_STRING
-) : FireStoreIdModel, HasDateCreate, HasName, HasDescription, HasCount, HasTags
+) : FireStoreIdModel, HasDateCreate, HasName, HasDescription, HasTags

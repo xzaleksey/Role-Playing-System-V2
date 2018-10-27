@@ -22,6 +22,7 @@ data class FirestoreGameCharacter(
         var skills: List<FirestoreSkillHolder> = emptyList(),
         var classHolders: List<FirestoreClassHolder> = emptyList(),
         var raceHolder: FirestoreRaceHolder = FirestoreRaceHolder(),
+        var items: List<FirestoreItemHolder> = emptyList(),
 
         var money: Double = 0.0,
         var age: Int = 25,
