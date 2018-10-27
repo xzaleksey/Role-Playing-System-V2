@@ -32,7 +32,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporterImpl
-import com.uber.rib.core.RouterNavigatorFactory
+import com.uber.rib.core.*
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
@@ -101,9 +101,12 @@ class AppModule(private val mApp: RpsApp) {
     @Provides
     @Singleton
     fun provideRouterNavigatorFactory(): RouterNavigatorFactory {
-        return RouterNavigatorFactory(null)
+        return RouterNavigatorFactory(object : RouterNavigatorFactory.Strategy {
+            override fun <StateT : RouterNavigatorState> create(hostRouter: Router<*, *>): RouterNavigator<StateT> {
+                return MyModernRouterNavigator(hostRouter)
+            }
+        })
     }
-
 
     @Provides
     @Singleton
