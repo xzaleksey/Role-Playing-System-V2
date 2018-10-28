@@ -7,7 +7,4 @@ class DependencyInfo(
         val name: String,
         val description: String,
         val imageHolder: ImageHolder
-) {
-
-
-}
+)

@@ -4,6 +4,6 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.character.Firestor
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FireStoreItem
 
 data class CharacterItem(
-        val userGameClass: FireStoreItem,
+        val gameItem: FireStoreItem,
         val itemHolder: FirestoreItemHolder
 )

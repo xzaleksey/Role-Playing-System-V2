@@ -156,7 +156,7 @@ class GameSettingsRaceViewModelProviderImpl(
 
     private fun getDefaultGamesDisposable(): Disposable {
         return Flowable.combineLatest(
-                gameGameRaceRepository.observeDiceCollectionsOrdered(game.id),
+                gameGameRaceRepository.observeCollectionsOrdered(game.id),
                 defaultSettingsRaceRepository.observeCollection()
                         .map { list -> list.filter { GameRace.INFO.isSupported(it) } },
                 BiFunction { gameRaces: List<GameRace>, defaultClasses: List<GameRace> ->

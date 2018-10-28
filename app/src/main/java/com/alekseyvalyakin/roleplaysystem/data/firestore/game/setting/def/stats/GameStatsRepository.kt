@@ -13,7 +13,7 @@ import io.reactivex.Flowable
 
 class GameStatsRepositoryImpl : BaseGameFireStoreRepository<UserGameStat>(UserGameStat::class.java), GameStatsRepository {
 
-    override fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameStat>> {
+    override fun observeStatsCollectionsOrdered(gameId: String): Flowable<List<UserGameStat>> {
         val query = getCollection(gameId)
                 .orderBy(HasName.NAME_FIELD, Query.Direction.ASCENDING)
         return observeQueryCollection(query, gameId)
@@ -30,7 +30,7 @@ class GameStatsRepositoryImpl : BaseGameFireStoreRepository<UserGameStat>(UserGa
 }
 
 interface GameStatsRepository : GameFireStoreRepository<UserGameStat> {
-    fun observeDiceCollectionsOrdered(gameId: String): Flowable<List<UserGameStat>>
+    fun observeStatsCollectionsOrdered(gameId: String): Flowable<List<UserGameStat>>
 
     fun setSelected(gameId: String, id: String, selected: Boolean): Completable
 }

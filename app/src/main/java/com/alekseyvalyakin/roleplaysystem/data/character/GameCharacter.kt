@@ -11,14 +11,14 @@ import java.util.*
 
 data class GameCharacter(
         val id: String = StringUtils.EMPTY_STRING,
-        override var name: String,
-        override var description: String,
+        override var name: String = StringUtils.EMPTY_STRING,
+        override var description: String = StringUtils.EMPTY_STRING,
         @ServerTimestamp override var dateCreate: Date? = null,
         override var ownerId: String = StringUtils.EMPTY_STRING,
 
         var stats: List<CharacterStat> = emptyList(),
         var skills: List<CharacterSkill> = emptyList(),
-        var classHolders: List<CharacterClass> = emptyList(),
+        var classes: List<CharacterClass> = emptyList(),
         val race: CharacterRace = CharacterRace(),
         var items: List<CharacterItem> = emptyList(),
 
