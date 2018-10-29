@@ -6,10 +6,15 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProvi
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.getSerializable
+import com.uber.rib.core.putSerializable
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -127,6 +132,10 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(CreateGameViewModel.KEY, model.value)
+    }
+
+    override fun getRestorableInfo(): Serializable? {
+        return createGameProvider.getGame()
     }
 
     /**

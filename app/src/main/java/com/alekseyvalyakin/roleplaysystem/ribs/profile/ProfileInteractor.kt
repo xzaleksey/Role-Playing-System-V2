@@ -15,6 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import timber.log.Timber
+import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -114,6 +115,10 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
                 }
             }
         }
+    }
+
+    override fun getRestorableInfo(): Serializable? {
+        return profileViewModelProvider.getCurrentUser()
     }
 
 }

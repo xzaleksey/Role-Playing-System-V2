@@ -118,6 +118,10 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
         }
     }
 
+    override fun getRestorableInfo(): Serializable? {
+        return viewModelProvider.getCurrentGame()
+    }
+
     data class Model(
             val navigationId: NavigationId
     ) : Serializable {

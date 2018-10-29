@@ -53,6 +53,8 @@ class ProfileViewModelProviderImpl(
         return profileUserProvider.observeCurrentUser()
     }
 
+    override fun getCurrentUser() = profileUserProvider.getCurrentUser()
+
     private fun getGamesFlowable(id: String): Flowable<List<IFlexible<*>>> {
         return Flowable.combineLatest(gameRepository.observeAllGamesDescending().onErrorReturn { emptyList() },
                 gamesInUserRepository.observeUserGames(id),
@@ -100,4 +102,5 @@ interface ProfileViewModelProvider {
     fun observeProfileViewModel(): Flowable<ProfileViewModel>
 
     fun onNameChanged(name: String): Completable
+    fun getCurrentUser(): User
 }

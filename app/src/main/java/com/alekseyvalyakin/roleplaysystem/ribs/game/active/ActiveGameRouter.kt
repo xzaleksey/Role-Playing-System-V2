@@ -17,11 +17,9 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettings
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.BaseActiveGameInternalAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.DefaultActiveGameInternalDetachTransition
-import com.uber.rib.core.RestorableRouter
 import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.RouterNavigatorState
 import com.uber.rib.core.ViewRouter
-import java.io.Serializable
 
 /**
  * Adds and removes children of {@link ActiveGameBuilder.ActiveGameScope}.
@@ -39,7 +37,7 @@ class ActiveGameRouter(
         private val fullSizePhotoBuilder: FullSizePhotoBuilder,
         gameCharactersBuilder: GameCharactersBuilder,
         logBuilder: LogBuilder
-) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component), RestorableRouter {
+) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component) {
 
     private val modernRouter = routerNavigatorFactory.create<State>(this)
     private val dicesAttachTransition = BaseActiveGameInternalAttachTransition(diceBuilder, view)
@@ -135,10 +133,6 @@ class ActiveGameRouter(
 
     fun onDelete() {
         canBeClosed = true
-    }
-
-    override fun getRestorableInfo(): Serializable? {
-        return activeGameViewModelProvider.getCurrentGame()
     }
 
     data class State(val name: String) : RouterNavigatorState {

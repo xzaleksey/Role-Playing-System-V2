@@ -10,6 +10,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
+import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -66,5 +67,10 @@ class DiceResultInteractor : BaseInteractor<DiceResultPresenter, DiceResultRoute
     private fun updateView(diceCollectionResult: DiceCollectionResult) {
         presenter.update(diceResultViewModelProvider.mapDiceResult(diceCollectionResult))
     }
+
+    override fun getRestorableInfo(): Serializable? {
+        return diceCollectionResult
+    }
+
 
 }

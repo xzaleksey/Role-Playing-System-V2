@@ -7,7 +7,7 @@ import timber.log.Timber
 import java.io.Serializable
 
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
-abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> : Interactor<P, R>() {
+abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> : Interactor<P, R>(), RestorableInteractor {
     private val compositeDisposable = CompositeDisposable()
     private val childrenKey = "childrenKey"
     protected val modelKey = "modelKey"
@@ -31,8 +31,10 @@ abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out Interactor
 
     override fun onSaveInstanceState(outState: Bundle) {
         val pairs = router.children.map { r ->
-            if (r is RestorableRouter) {
-                return@map r.javaClass to r.getRestorableInfo()
+            val interactor = r.interactor
+
+            if (interactor is RestorableInteractor) {
+                return@map r.javaClass to interactor.getRestorableInfo()
             }
             return@map r.javaClass to null
         }
@@ -42,6 +44,10 @@ abstract class BaseInteractor<P, R : Router<out Interactor<*, *>, out Interactor
     override fun willResignActive() {
         super.willResignActive()
         compositeDisposable.clear()
+    }
+
+    override fun getRestorableInfo(): Serializable? {
+        return null
     }
 
     protected fun Disposable.addToDisposables() {
