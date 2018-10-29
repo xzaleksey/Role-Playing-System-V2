@@ -9,6 +9,5 @@ data class CharacterSkill(
         val userGameSkill: UserGameSkill,
         val skillHolder: FirestoreSkillHolder,
         val dependencies: MutableList<DependencyInfo>,
-        val successFormulaParser: FormulaEvaluator,
-        val resultFormulaParser: FormulaEvaluator? = null
+        val formulaEvaluator: FormulaEvaluator
 )

@@ -12,7 +12,6 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.formula.CustomPartParser
 import com.alekseyvalyakin.roleplaysystem.data.formula.FormulaEvaluator
-import com.alekseyvalyakin.roleplaysystem.data.formula.FormulaPartParser
 import com.alekseyvalyakin.roleplaysystem.data.formula.InvalidParser
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import io.reactivex.Flowable
@@ -100,41 +99,38 @@ class GameCharacterRepositoryImpl(
         character.skills.forEach { skillHolder ->
             skillsMap[skillHolder.id]?.let { userSkill ->
                 val dependencies = mutableListOf<DependencyInfo>()
-                val customPartParsers = mutableListOf<FormulaPartParser>()
-
-                customPartParsers.add(CustomPartParser(CustomPartParser.Type.CurrentObjectLevel.text, skillHolder.getValue()))
-                customPartParsers.add(characterLevelParser)
-
-                val formulaEvaluator = FormulaEvaluator(customPartParsers)
-
+                val formulaEvaluator = FormulaEvaluator(mutableListOf(
+                        characterLevelParser,
+                        CustomPartParser(CustomPartParser.Type.CurrentObjectLevel.text, skillHolder.getValue()))
+                )
                 characterSkills.put(skillHolder.id, CharacterSkill(userSkill, skillHolder, dependencies, formulaEvaluator))
-
             } ?: Timber.e("skill does not exist ${skillHolder.id}")
         }
 
         for (characterSkill in characterSkills.values) {
             for ((index, dependency) in characterSkill.userGameSkill.dependencies.withIndex()) {
-                val text = CustomPartParser.Type.Dependency(index).text
+                val parserText = CustomPartParser.Type.Dependency(index).text
                 var dependencyInfo = DependencyInfo()
-                val customPartParsers = characterSkill.successFormulaParser.customPartParsers
+                val customPartParsers = characterSkill.formulaEvaluator.customPartParsers
 
                 when {
                     dependency.getDependencyType() == DependencyType.STAT -> {
                         characterStats[dependency.dependentId]?.run {
                             dependencyInfo = this.userGameStat.toDependencyInfo(resourcesProvider)
-                            customPartParsers.add(CustomPartParser(text, this.statHolder.getValue()))
-                        }
+                            customPartParsers.add(CustomPartParser(parserText, this.statHolder.getValue()))
+                        } ?: Timber.e("Dependent stat doesn't exist ${dependency.dependentId}")
                     }
+
                     dependency.getDependencyType() == DependencyType.SKILL -> {
                         characterSkills[dependency.dependentId]?.run {
                             dependencyInfo = this.userGameSkill.toDependencyInfo(resourcesProvider)
-                            customPartParsers.add(CustomPartParser(text, this.skillHolder.getValue()))
-                        }
+                            customPartParsers.add(CustomPartParser(parserText, this.skillHolder.getValue()))
+                        } ?: Timber.e("Dependent skill doesn't exist ${dependency.dependentId}")
                     }
                 }
 
                 if (!dependencyInfo.isValid()) {
-                    customPartParsers.add(InvalidParser(text))
+                    customPartParsers.add(InvalidParser(parserText))
                 }
 
                 characterSkill.dependencies.add(dependencyInfo)
