@@ -4,7 +4,7 @@ import android.support.annotation.VisibleForTesting
 import timber.log.Timber
 
 class FormulaEvaluator(
-        private val customPartParsers: List<FormulaPartParser> = emptyList()
+        val customPartParsers: MutableList<FormulaPartParser> = mutableListOf()
 ) : FormulaParser {
 
     private val formulaParsers = mutableListOf(

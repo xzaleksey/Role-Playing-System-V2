@@ -2,11 +2,23 @@ package com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.depen
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.FireStoreModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
+import com.google.firebase.firestore.Exclude
 
 data class Dependency(
         var dependencyType: Int = DependencyType.UNKNOWN.value,
         var dependentId: String = StringUtils.EMPTY_STRING
-) : FireStoreModel
+) : FireStoreModel {
+
+    @Exclude
+    fun getDependencyType(): DependencyType {
+        return DependencyType.getDependency(dependencyType)
+    }
+
+    @Exclude
+    fun isValid(): Boolean {
+        return DependencyType.getDependency(dependencyType) != DependencyType.UNKNOWN && dependentId.isNotBlank()
+    }
+}
 
 enum class DependencyType(
         val value: Int

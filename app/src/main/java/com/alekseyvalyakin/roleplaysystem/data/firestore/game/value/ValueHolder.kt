@@ -12,7 +12,8 @@ interface ValueHolder : FireStoreIdModel {
 enum class ValueType {
     STAT,
     CLASS,
-    SKILL
+    SKILL,
+    CHARACTER
 }
 
 data class StatHolder(

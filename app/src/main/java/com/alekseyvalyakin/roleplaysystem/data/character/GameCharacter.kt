@@ -25,5 +25,6 @@ data class GameCharacter(
         var money: Double = 0.0,
         var age: Int = 25,
         var sex: String = Sex.MALE.text,
-        var weight: Int = if (sex == Sex.MALE.text) 75 else 60
+        var weight: Int = if (sex == Sex.MALE.text) 75 else 60,
+        var level:Int = 1
 ) : HasName, HasDescription, HasOwner, HasDateCreate

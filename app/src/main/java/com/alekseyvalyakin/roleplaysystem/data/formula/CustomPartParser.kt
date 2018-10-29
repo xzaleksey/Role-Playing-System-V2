@@ -12,4 +12,11 @@ class CustomPartParser(
 
         return null
     }
+
+    sealed class Type(val text: String) {
+        object CurrentObjectLevel : Type("l")
+        object ClassLevel : Type("cl")
+        object CharacterLevel : Type("ul")
+        class Dependency(index: Int) : Type("x$index")
+    }
 }

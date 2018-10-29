@@ -39,10 +39,6 @@ data class UserGameStat(
         return icon
     }
 
-    companion object {
-        const val SELECTED_FIELD = "selected"
-    }
-
     @Exclude
     fun toDependencyInfo(resourcesProvider: ResourcesProvider): DependencyInfo {
         return DependencyInfo(Dependency(DependencyType.STAT.value, id),
@@ -51,6 +47,4 @@ data class UserGameStat(
                 ResourceImageHolderImpl(GameStat.INFO.getIconId(id), resourcesProvider)
         )
     }
-
-
 }

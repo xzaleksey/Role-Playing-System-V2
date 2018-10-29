@@ -1,11 +1,20 @@
 package com.alekseyvalyakin.roleplaysystem.data.character
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.character.FirestoreCharactersRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.character.FirestoreGameCharacter
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItemsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.DependencyInfo
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.DependencyType
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.formula.CustomPartParser
+import com.alekseyvalyakin.roleplaysystem.data.formula.FormulaEvaluator
+import com.alekseyvalyakin.roleplaysystem.data.formula.FormulaPartParser
+import com.alekseyvalyakin.roleplaysystem.data.formula.InvalidParser
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.Flowables
 import timber.log.Timber
@@ -16,8 +25,8 @@ class GameCharacterRepositoryImpl(
         private val firestoreStatsRepository: GameStatsRepository,
         private val firestoreClassRepository: GameClassRepository,
         private val firestoreRaceRepository: GameRaceRepository,
-        private val firestoreSkillsRepository: GameSkillsRepository
-
+        private val firestoreSkillsRepository: GameSkillsRepository,
+        private val resourcesProvider: ResourcesProvider
 ) : GameCharacterRepository {
 
     override fun observeCharacter(id: String, gameId: String): Flowable<GameCharacter> {
@@ -33,36 +42,34 @@ class GameCharacterRepositoryImpl(
                     val classesMap = classes.associateBy { it.id }
                     val racesMap = races.associateBy { it.id }
                     val skillsMap = skills.associateBy { it.id }
-                    val characterItems = mutableListOf<CharacterItem>()
-                    val characterStats = mutableListOf<CharacterStat>()
-                    val characterClasses = mutableListOf<CharacterClass>()
-                    val characterSkills = mutableListOf<CharacterSkill>()
-
-                    character.items.forEach { item ->
-                        itemsMap[item.id]?.let {
-                            characterItems.add(CharacterItem(it, item))
-                        } ?: Timber.e("class does not exist ${item.id}")
-                    }
-                    character.stats.forEach { stat ->
-                        statsMap[stat.id]?.let {
-                            characterStats.add(CharacterStat(it, stat))
-                        } ?: Timber.e("stat does not exist ${stat.id}")
-                    }
-                    character.classes.forEach { uClass ->
-                        classesMap[uClass.id]?.let {
-                            characterClasses.add(CharacterClass(it, uClass))
-                        } ?: Timber.e("class does not exist ${uClass.id}")
-                    }
-                    character.skills.forEach { skill ->
-                        skillsMap[skill.id]?.let {
-                            characterSkills.add(CharacterSkill(it, skill))
-                        } ?: Timber.e("skill does not exist ${skill.id}")
-                    }
+                    val characterItems = mutableMapOf<String, CharacterItem>()
+                    val characterStats = mutableMapOf<String, CharacterStat>()
+                    val characterClasses = mutableMapOf<String, CharacterClass>()
+                    val characterSkills = mutableMapOf<String, CharacterSkill>()
 
                     val race = racesMap[character.race.id]?.let {
                         CharacterRace(it, character.race)
                     } ?: CharacterRace()
 
+                    character.items.forEach { item ->
+                        itemsMap[item.id]?.let {
+                            characterItems.put(item.id, CharacterItem(it, item))
+                        } ?: Timber.e("class does not exist ${item.id}")
+                    }
+
+                    character.stats.forEach { stat ->
+                        statsMap[stat.id]?.let {
+                            characterStats.put(stat.id, CharacterStat(it, stat))
+                        } ?: Timber.e("stat does not exist ${stat.id}")
+                    }
+
+                    character.classes.forEach { uClass ->
+                        classesMap[uClass.id]?.let {
+                            characterClasses.put(uClass.id, CharacterClass(it, uClass))
+                        } ?: Timber.e("class does not exist ${uClass.id}")
+                    }
+
+                    fillSkills(character, skillsMap, characterSkills, characterStats)
 
                     return@combineLatest GameCharacter(
                             id = id,
@@ -74,13 +81,65 @@ class GameCharacterRepositoryImpl(
                             money = character.money,
                             sex = character.sex,
                             dateCreate = character.dateCreate,
-                            stats = characterStats,
-                            items = characterItems,
-                            classes = characterClasses,
+                            stats = characterStats.values.toList(),
+                            items = characterItems.values.toList(),
+                            classes = characterClasses.values.toList(),
                             race = race,
-                            skills = characterSkills
+                            skills = characterSkills.values.toList(),
+                            level = character.level
                     )
                 })
+    }
+
+    private fun fillSkills(character: FirestoreGameCharacter,
+                           skillsMap: Map<String, UserGameSkill>,
+                           characterSkills: MutableMap<String, CharacterSkill>,
+                           characterStats: MutableMap<String, CharacterStat>) {
+        val characterLevelParser = CustomPartParser(CustomPartParser.Type.CharacterLevel.text, character.getValue())
+
+        character.skills.forEach { skillHolder ->
+            skillsMap[skillHolder.id]?.let { userSkill ->
+                val dependencies = mutableListOf<DependencyInfo>()
+                val customPartParsers = mutableListOf<FormulaPartParser>()
+
+                customPartParsers.add(CustomPartParser(CustomPartParser.Type.CurrentObjectLevel.text, skillHolder.getValue()))
+                customPartParsers.add(characterLevelParser)
+
+                val formulaEvaluator = FormulaEvaluator(customPartParsers)
+
+                characterSkills.put(skillHolder.id, CharacterSkill(userSkill, skillHolder, dependencies, formulaEvaluator))
+
+            } ?: Timber.e("skill does not exist ${skillHolder.id}")
+        }
+
+        for (characterSkill in characterSkills.values) {
+            for ((index, dependency) in characterSkill.userGameSkill.dependencies.withIndex()) {
+                val text = CustomPartParser.Type.Dependency(index).text
+                var dependencyInfo = DependencyInfo()
+                val customPartParsers = characterSkill.successFormulaParser.customPartParsers
+
+                when {
+                    dependency.getDependencyType() == DependencyType.STAT -> {
+                        characterStats[dependency.dependentId]?.run {
+                            dependencyInfo = this.userGameStat.toDependencyInfo(resourcesProvider)
+                            customPartParsers.add(CustomPartParser(text, this.statHolder.getValue()))
+                        }
+                    }
+                    dependency.getDependencyType() == DependencyType.SKILL -> {
+                        characterSkills[dependency.dependentId]?.run {
+                            dependencyInfo = this.userGameSkill.toDependencyInfo(resourcesProvider)
+                            customPartParsers.add(CustomPartParser(text, this.skillHolder.getValue()))
+                        }
+                    }
+                }
+
+                if (!dependencyInfo.isValid()) {
+                    customPartParsers.add(InvalidParser(text))
+                }
+
+                characterSkill.dependencies.add(dependencyInfo)
+            }
+        }
     }
 
 
