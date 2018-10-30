@@ -1,5 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
+import com.alekseyvalyakin.roleplaysystem.data.character.GameCharacterRepository
+import com.alekseyvalyakin.roleplaysystem.data.character.GameCharacterRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.features.FeaturesRepository
@@ -38,6 +40,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -159,6 +162,26 @@ class FirebaseRepoModule {
     @Singleton
     fun firestoreItemsRepo(): FirestoreItemsRepository {
         return FirestoreItemsRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun gameCharactersRepo(
+            firestoreCharactersRepository: FirestoreCharactersRepository,
+            firestoreItemsRepository: FirestoreItemsRepository,
+            firestoreStatsRepository: GameStatsRepository,
+            firestoreClassRepository: GameClassRepository,
+            firestoreRaceRepository: GameRaceRepository,
+            firestoreSkillsRepository: GameSkillsRepository,
+            resourcesProvider: ResourcesProvider
+    ): GameCharacterRepository {
+        return GameCharacterRepositoryImpl(firestoreCharactersRepository,
+                firestoreItemsRepository,
+                firestoreStatsRepository,
+                firestoreClassRepository,
+                firestoreRaceRepository,
+                firestoreSkillsRepository,
+                resourcesProvider)
     }
 
 }

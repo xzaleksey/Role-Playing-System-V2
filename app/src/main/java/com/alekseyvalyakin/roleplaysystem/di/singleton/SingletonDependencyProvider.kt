@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.di.singleton
 
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
+import com.alekseyvalyakin.roleplaysystem.data.character.GameCharacterRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.features.FeaturesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
@@ -111,4 +112,6 @@ interface SingletonDependencyProvider {
     fun firebaseCharactersRepo(): FirestoreCharactersRepository
 
     fun firestoreItemsRepo(): FirestoreItemsRepository
+
+    fun gameCharacterRepo(): GameCharacterRepository
 }

@@ -53,7 +53,7 @@ class GameCharacterRepositoryImpl(
                     character.items.forEach { item ->
                         itemsMap[item.id]?.let {
                             characterItems.put(item.id, CharacterItem(it, item))
-                        } ?: Timber.e("class does not exist ${item.id}")
+                        } ?: Timber.e("item does not exist ${item.id}")
                     }
 
                     character.stats.forEach { stat ->
@@ -125,7 +125,10 @@ class GameCharacterRepositoryImpl(
                         characterSkills[dependency.dependentId]?.run {
                             dependencyInfo = this.userGameSkill.toDependencyInfo(resourcesProvider)
                             customPartParsers.add(CustomPartParser(parserText, this.skillHolder.getValue()))
-                        } ?: Timber.e("Dependent skill doesn't exist ${dependency.dependentId}")
+                        } ?: run {
+                            customPartParsers.add(CustomPartParser(parserText))
+                            Timber.e("Dependent skill doesn't exist ${dependency.dependentId}")
+                        }
                     }
                 }
 

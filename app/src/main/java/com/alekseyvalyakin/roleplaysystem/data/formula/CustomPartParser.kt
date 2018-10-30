@@ -2,7 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.data.formula
 
 class CustomPartParser(
         private val string: String = "x1",
-        private val value: Double
+        private val value: Double = 0.0
 ) : FormulaPartParser {
 
     override fun parse(string: String): FormulaPart? {
