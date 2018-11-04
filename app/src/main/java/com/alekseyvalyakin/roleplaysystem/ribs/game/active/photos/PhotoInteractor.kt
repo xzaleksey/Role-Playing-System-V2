@@ -83,7 +83,7 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
 
     private fun handleUiEvent(uiEvent: PhotoPresenter.UiEvent): Observable<*> {
         when (uiEvent) {
-            is PhotoPresenter.UiEvent.FabClicked -> {
+            is PhotoPresenter.UiEvent.ChoosePhoto -> {
                 localImageProvider.pickImage()
             }
             is PhotoPresenter.UiEvent.SwitchVisibility -> {
@@ -160,9 +160,9 @@ class PhotoInteractor : BaseInteractor<PhotoPresenter, PhotoRouter>() {
                         presenter.showError(t.localizedMessage)
                         true
                     }
-        }
-                .subscribeWithErrorLogging()
-                .addToDisposables()
+        }.subscribeWithErrorLogging {
+            presenter.collapseFab()
+        }.addToDisposables()
     }
 }
 

@@ -22,16 +22,16 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoF
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoInGameAdapter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.views.fabmenu.FabMenu
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
-import org.jetbrains.anko.design.floatingActionButton
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import timber.log.Timber
 
 /**
  * Top level view for {@link PhotoBuilder.PhotoScope}.
@@ -43,7 +43,7 @@ class PhotoView constructor(
     val COLUMNS_COUNT = 2
     val COLUMSN_COUNT_LANDSCAPE = 3
 
-    private val fab: FloatingActionButton
+    private val fab: FabMenu
     private val recyclerView: RecyclerView
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private var progressBarBottom: ProgressBar
@@ -67,14 +67,29 @@ class PhotoView constructor(
         }.lparams(width = matchParent) {
             topMargin = getStatusBarHeight()
         }
-        fab = floatingActionButton {
+        fab = fabMenu({
             id = R.id.fab
+            addFab(FloatingActionButton(context).apply {
+                imageResource = R.drawable.ic_photo
+                imageTintList = ContextCompat.getColorStateList(getContext(), R.color.material_light_white)
+                setOnClickListener {
+                    Observable.just(PhotoPresenter.UiEvent.ChoosePhoto)
+                            .requestPermissionsExternalReadWrite(rxPermissions)
+                            .subscribeWithErrorLogging { relay.accept(PhotoPresenter.UiEvent.ChoosePhoto) }
+                }
+            })
+            addFab(FloatingActionButton(context).apply {
+                imageResource = R.drawable.ic_monk
+                imageTintList = ContextCompat.getColorStateList(getContext(), R.color.material_light_white)
+                setOnClickListener {
+                    Timber.d("camera clicked")
+                }
+            })
+        }, FloatingActionButton(context).apply {
             imageResource = R.drawable.ic_add
             imageTintList = ContextCompat.getColorStateList(getContext(), R.color.material_light_white)
-            hide()
-        }.lparams {
+        }).lparams {
             gravity = Gravity.END or Gravity.BOTTOM
-            margin = getDoubleCommonDimen()
         }
 
         progressBarBottom = progressBar {
@@ -108,13 +123,11 @@ class PhotoView constructor(
     }
 
     override fun observeUiEvents(): Observable<PhotoPresenter.UiEvent> {
-        return Observable.merge(getFabClickedObservable(), relay.toFlowable(BackpressureStrategy.LATEST).toObservable())
+        return Observable.merge(Observable.empty(), relay.toFlowable(BackpressureStrategy.LATEST).toObservable())
     }
 
-    private fun getFabClickedObservable(): Observable<PhotoPresenter.UiEvent> {
-        return RxView.clicks(fab)
-                .requestPermissionsExternalReadWrite(rxPermissions)
-                .map { PhotoPresenter.UiEvent.FabClicked }
+    override fun collapseFab() {
+        fab.collapse()
     }
 
     override fun showChangeTitleDialog(photoFlexibleViewModel: PhotoFlexibleViewModel) {

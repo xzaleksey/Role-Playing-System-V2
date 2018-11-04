@@ -10,7 +10,7 @@ import io.reactivex.Observable
 interface PhotoPresenter {
 
     sealed class UiEvent {
-        object FabClicked : UiEvent()
+        object ChoosePhoto : UiEvent()
         class DeletePhoto(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class SwitchVisibility(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
         class OpenFullSize(val photoFlexibleViewModel: PhotoFlexibleViewModel) : UiEvent()
@@ -25,4 +25,6 @@ interface PhotoPresenter {
     fun showError(localizedMessage: String)
 
     fun showChangeTitleDialog(photoFlexibleViewModel: PhotoFlexibleViewModel)
+
+    fun collapseFab()
 }
