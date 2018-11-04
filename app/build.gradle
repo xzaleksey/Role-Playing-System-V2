@@ -14,6 +14,7 @@ ext {
     firebase_firestore_version = '17.1.2'
     firebase_messaging_version = '17.3.4'
     firebase_config_version = '16.1.0'
+    firebase_ml_version = '18.0.1'
     anko_version = '0.10.7'
     support_version = '28.0.0'
     room_version = '1.1.1'
@@ -81,9 +82,9 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
     implementation "com.google.firebase:firebase-messaging:$firebase_messaging_version"
     implementation "com.google.firebase:firebase-config:$firebase_config_version"
+    implementation "com.google.firebase:firebase-ml-vision:$firebase_ml_version"
 
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
 
     implementation "io.reactivex.rxjava2:rxjava:$rx_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"

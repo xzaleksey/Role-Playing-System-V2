@@ -9,6 +9,8 @@ import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.ml.TextRecognizer
+import com.alekseyvalyakin.roleplaysystem.data.ml.TextRecognizerImpl
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.prefs.SharedPreferencesHelper
 import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProvider
@@ -169,6 +171,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun remoteConfigProvider(): RemoteConfigProvider {
         return RemoteConfigProviderImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun textRecognizer(context: Context): TextRecognizer {
+        return TextRecognizerImpl(context)
     }
 
 }
