@@ -81,7 +81,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                         }
                     }
                 }.addToDisposables()
-
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {

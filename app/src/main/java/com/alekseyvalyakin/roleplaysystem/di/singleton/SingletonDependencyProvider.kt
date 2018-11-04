@@ -22,6 +22,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.useringame.UserInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.functions.FirebaseApi
 import com.alekseyvalyakin.roleplaysystem.data.ml.TextRecognizer
 import com.alekseyvalyakin.roleplaysystem.data.prefs.LocalKeyValueStorage
 import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProvider
@@ -117,4 +118,6 @@ interface SingletonDependencyProvider {
     fun gameCharacterRepo(): GameCharacterRepository
 
     fun textRecognizer(): TextRecognizer
+
+    fun firebaseApi(): FirebaseApi
 }

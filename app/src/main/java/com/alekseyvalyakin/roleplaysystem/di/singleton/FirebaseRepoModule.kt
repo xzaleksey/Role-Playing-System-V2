@@ -40,6 +40,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.functions.FirebaseApi
+import com.alekseyvalyakin.roleplaysystem.data.functions.FirebaseApiImpl
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import dagger.Module
 import dagger.Provides
@@ -182,6 +184,12 @@ class FirebaseRepoModule {
                 firestoreRaceRepository,
                 firestoreSkillsRepository,
                 resourcesProvider)
+    }
+
+    @Provides
+    @Singleton
+    fun firestoreFunctionsApi(): FirebaseApi {
+        return FirebaseApiImpl()
     }
 
 }

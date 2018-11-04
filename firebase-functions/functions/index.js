@@ -82,6 +82,11 @@ exports.DeleteGameFunction = functions.firestore
         ]);
     });
 
+exports.copyGame = functions.https.onCall((data, context) => {
+    console.log(data["gameId"]);
+    return data["gameId"];
+});
+
 function getPhotosInGameReference(gameId, photoId) {
     return getStorage().bucket("rpsupdated.appspot.com").file("games/" + gameId + "/photos/" + photoId);
 }
