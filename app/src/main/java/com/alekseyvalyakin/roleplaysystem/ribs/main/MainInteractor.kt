@@ -20,8 +20,6 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
