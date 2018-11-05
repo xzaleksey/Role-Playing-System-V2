@@ -46,7 +46,7 @@ import javax.inject.Singleton
 /**
  * Base app module
  */
-@Module(includes = [FirebaseRepoModule::class])
+@Module(includes = [FirebaseModule::class])
 class AppModule(private val mApp: RpsApp) {
 
     @Provides

@@ -11,6 +11,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesReposito
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItemsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.names.FirestoreNamesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
@@ -120,4 +121,6 @@ interface SingletonDependencyProvider {
     fun textRecognizer(): TextRecognizer
 
     fun firebaseApi(): FirebaseApi
+
+    fun firestoreNamesRepo(): FirestoreNamesRepository
 }

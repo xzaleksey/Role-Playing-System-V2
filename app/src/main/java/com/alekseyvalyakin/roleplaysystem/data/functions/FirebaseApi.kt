@@ -15,7 +15,7 @@ class FirebaseApiImpl : FirebaseApi {
     override fun copyGame(gameId: String): Single<Game> {
         return Single.create { emitter ->
             val data = mutableMapOf<String, Any>()
-            data["gameId"] = gameId
+            data[GAME_ID] = gameId
             functions.getHttpsCallable(COPY_GAME)
                     .call(data)
                     .continueWith { task ->
@@ -39,6 +39,7 @@ class FirebaseApiImpl : FirebaseApi {
 
     companion object {
         private const val COPY_GAME = "copyGame"
+        private const val GAME_ID = "game_id"
     }
 }
 

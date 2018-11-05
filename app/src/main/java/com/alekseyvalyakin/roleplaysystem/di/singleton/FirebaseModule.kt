@@ -18,6 +18,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItem
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.item.FirestoreItemsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.names.FirestoreNamesRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.names.FirestoreNamesRepositoryIml
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.photo.PhotoInGameRepositoryIml
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
@@ -48,7 +50,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class FirebaseRepoModule {
+class FirebaseModule {
 
     @Provides
     @Singleton
@@ -190,6 +192,12 @@ class FirebaseRepoModule {
     @Singleton
     fun firestoreFunctionsApi(): FirebaseApi {
         return FirebaseApiImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun firestoreNamesReop(): FirestoreNamesRepository {
+        return FirestoreNamesRepositoryIml()
     }
 
 }
