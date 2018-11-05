@@ -105,7 +105,7 @@ class AppModule(private val mApp: RpsApp) {
     fun provideRouterNavigatorFactory(): RouterNavigatorFactory {
         return RouterNavigatorFactory(object : RouterNavigatorFactory.Strategy {
             override fun <StateT : RouterNavigatorState> create(hostRouter: Router<*, *>): RouterNavigator<StateT> {
-                return MyModernRouterNavigator(hostRouter)
+                return ModernRouterNavigator(hostRouter)
             }
         })
     }

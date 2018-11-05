@@ -8,10 +8,10 @@ import java.util.*
  *
  * @param <StateT> type of state to switch on.
 </StateT> */
-class MyModernRouterNavigator<StateT : RouterNavigatorState>(
-        private val hostRouter: Router<*, *>
+class MyModernRouterNavigator<StateT : SerializableRouterNavigatorState>(
+        private val hostRouter: BaseRouter<*, *, StateT, *>
 ) : RestorableRouterNavigator<StateT> {
-
+    private val tag = "MyModernRouterNavigator"
     private val navigationStack = ArrayDeque<RouterNavigator.RouterAndState<StateT>>()
     private val hostRouterName: String = hostRouter.javaClass.simpleName
     private var currentTransientRouterAndState: RouterNavigator.RouterAndState<StateT>? = null
@@ -239,6 +239,10 @@ class MyModernRouterNavigator<StateT : RouterNavigatorState>(
         }
 
         return result
+    }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+//        bundle.putSerializable(tag, )
     }
 
     private fun peekCurrentRouterAndState(): RouterNavigator.RouterAndState<StateT>? {
