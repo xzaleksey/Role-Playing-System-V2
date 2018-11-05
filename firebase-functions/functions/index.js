@@ -47,9 +47,7 @@ exports.DeleteGameFunction = functions.firestore
                             deleteQueryBatch(getDatabase(), collection, 500, resolve, reject);
                         });
                     })
-                    .catch((error) => {
-                        console.log("Error getting documents: ", error);
-                    });
+                    .catch(reject);
             }));
 
         const deletePhotos = new Promise(((resolve, reject) => {
@@ -83,8 +81,18 @@ exports.DeleteGameFunction = functions.firestore
     });
 
 exports.copyGame = functions.https.onCall((data, context) => {
-    console.log(data["gameId"]);
-    return data["gameId"];
+    let gameId = data["gameId"];
+    console.log(gameId);
+    return new Promise(((resolve, reject) => {
+        getDatabase().collection("games").doc(gameId).get().then((value) => {
+            console.log("Test");
+            console.log(value.id);
+            console.log(value.data());
+            resolve(gameId);
+        }).catch((error) => {
+            reject(functions.https.HttpsError('unknown', error.toString()));
+        });
+    }));
 });
 
 function getPhotosInGameReference(gameId, photoId) {
@@ -228,4 +236,4 @@ function resolve(data, path = []) {
     }
 }
 
-resolve(data);
+// resolve(data);
