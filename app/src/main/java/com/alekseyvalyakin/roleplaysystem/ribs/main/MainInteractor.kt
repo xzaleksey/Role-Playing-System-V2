@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.donate.DonateInteractor
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.functions.FirebaseApi
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
@@ -19,6 +20,8 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -47,6 +50,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var createEmptyGameObservableProvider: CreateEmptyGameObservableProvider
     @Inject
     lateinit var donateInteractor: DonateInteractor
+    @Inject
+    lateinit var firebaseApi: FirebaseApi
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 
@@ -81,6 +86,13 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                         }
                     }
                 }.addToDisposables()
+
+//        firebaseApi.copyGame("lY7sMkZCi09KYqdBh5Db")
+//                .subscribeOn(Schedulers.io())
+//                .subscribeWithErrorLogging {
+//                    Timber.d("got Game")
+//                }
+//                .addToDisposables()
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
