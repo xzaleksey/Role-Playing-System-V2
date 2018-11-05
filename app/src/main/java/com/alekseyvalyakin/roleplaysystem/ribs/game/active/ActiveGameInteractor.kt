@@ -100,7 +100,12 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     }
 
     override fun handleBackPress(): Boolean {
-        return router.backPress()
+        val backPressed = router.backPress()
+        if (backPressed) {
+            model = Model(router.getCurrentNavigationId())
+            presenter.updateNavigationId(model.navigationId)
+        }
+        return backPressed
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

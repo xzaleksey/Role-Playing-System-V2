@@ -55,7 +55,6 @@ class ActiveGameRouter(
     private val gameLogAttachTransition = BaseActiveGameInternalAttachTransition(logBuilder, view)
     private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<LogRouter, State>(view) {}
 
-
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
     fun attachView(navigationId: NavigationId) {
@@ -84,7 +83,7 @@ class ActiveGameRouter(
 
     private fun onNavigate(newState: State) {
         if (newState != modernRouter.peekState()) {
-            modernRouter.popState()
+//            modernRouter.popState()
         }
     }
 
@@ -135,18 +134,22 @@ class ActiveGameRouter(
         canBeClosed = true
     }
 
-    data class State(val name: String) : RouterNavigatorState {
+    fun getCurrentNavigationId(): NavigationId {
+        return modernRouter.peekState()?.navigationId ?: NavigationId.CHARACTERS
+    }
+
+    data class State(val name: String, val navigationId: NavigationId) : RouterNavigatorState {
 
         override fun name(): String {
             return name
         }
 
         companion object {
-            val DICES = State("DICES")
-            val PHOTOS = State("PHOTOS")
-            val SETTINGS = State("SETTINGS")
-            val CHARACTERS = State("CHARACTERS")
-            val LOG = State("LOG")
+            val DICES = State("DICES", NavigationId.DICES)
+            val PHOTOS = State("PHOTOS", NavigationId.PICTURES)
+            val SETTINGS = State("SETTINGS", NavigationId.MENU)
+            val CHARACTERS = State("CHARACTERS", NavigationId.CHARACTERS)
+            val LOG = State("LOG", NavigationId.LOG)
         }
     }
 }

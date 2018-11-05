@@ -19,7 +19,8 @@ enum class NavigationId(val id: Int, val textId: String) {
     CHARACTERS(R.id.bottom_menu_characters, "Characters"),
     DICES(R.id.bottom_menu_dices, "Dices"),
     PICTURES(R.id.bottom_menu_photos, "Pictures"),
-    MENU(R.id.bottom_menu_other,"Other");
+    MENU(R.id.bottom_menu_other, "Other"),
+    LOG(R.id.bottom_menu_other,"Log");
 
     companion object {
 

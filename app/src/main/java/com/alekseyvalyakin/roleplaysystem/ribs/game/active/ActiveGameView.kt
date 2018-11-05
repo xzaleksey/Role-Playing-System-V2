@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.jakewharton.rxrelay2.PublishRelay
@@ -68,6 +69,10 @@ class ActiveGameView constructor(
         }
 
         bottomNavigationView.selectedItemId = bottomPanelMenu.items[bottomPanelMenu.selectedIndex].id.id
+    }
+
+    override fun updateNavigationId(navigationId: NavigationId) {
+        bottomNavigationView.selectedItemId = navigationId.id
     }
 
     override fun observeUiEvents(): Observable<ActiveGamePresenter.Event> {

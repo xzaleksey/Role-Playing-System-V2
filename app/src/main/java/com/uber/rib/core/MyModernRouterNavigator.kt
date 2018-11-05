@@ -10,7 +10,8 @@ import java.util.*
 </StateT> */
 class MyModernRouterNavigator<StateT : RouterNavigatorState>(
         private val hostRouter: Router<*, *>
-) : RouterNavigator<StateT> {
+) : RestorableRouterNavigator<StateT> {
+
     private val navigationStack = ArrayDeque<RouterNavigator.RouterAndState<StateT>>()
     private val hostRouterName: String = hostRouter.javaClass.simpleName
     private var currentTransientRouterAndState: RouterNavigator.RouterAndState<StateT>? = null
@@ -228,6 +229,16 @@ class MyModernRouterNavigator<StateT : RouterNavigatorState>(
                     Locale.getDefault(), "Attaching %s as a child of %s", newRouterName, hostRouterName))
             hostRouter.attachChild(newRouter)
         }
+    }
+
+    override fun getRouters(): Set<Router<*, *>> {
+        val result = mutableSetOf<Router<*, *>>()
+
+        for (routerAndState in navigationStack) {
+            result.add(routerAndState.router)
+        }
+
+        return result
     }
 
     private fun peekCurrentRouterAndState(): RouterNavigator.RouterAndState<StateT>? {

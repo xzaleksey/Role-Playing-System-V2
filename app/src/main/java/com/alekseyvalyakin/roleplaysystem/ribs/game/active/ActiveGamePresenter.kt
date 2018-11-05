@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
+import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
 import io.reactivex.Observable
 
@@ -8,6 +9,8 @@ import io.reactivex.Observable
  */
 interface ActiveGamePresenter {
     fun showModel(viewModel: ActiveGameViewModel)
+
+    fun updateNavigationId(navigationId: NavigationId)
 
     sealed class Event {
         class Navigate(val id: Int) : Event()
