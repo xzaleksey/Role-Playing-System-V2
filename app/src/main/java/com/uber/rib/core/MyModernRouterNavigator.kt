@@ -1,6 +1,7 @@
 package com.uber.rib.core
 
 import android.support.annotation.IntRange
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -241,8 +242,21 @@ class MyModernRouterNavigator<StateT : SerializableRouterNavigatorState>(
         return result
     }
 
+    override fun restoreState(bundle: Bundle) {
+        val savedState: SavedState<StateT> = bundle.getSerializable(tag)
+        for (attachInfo in savedState.stack) {
+            hostRouter.attachRib(attachInfo)
+        }
+        savedState.currentTransientState?.run {
+            hostRouter.attachRib(this)
+        }
+    }
+
     override fun onSaveInstanceState(bundle: Bundle) {
-//        bundle.putSerializable(tag, )
+        bundle.putSerializable(tag, SavedState(
+                navigationStack.toList().map { AttachInfo<StateT>(it.state, false) },
+                currentTransientRouterAndState?.state?.run { AttachInfo(this, true) }
+        ))
     }
 
     private fun peekCurrentRouterAndState(): RouterNavigator.RouterAndState<StateT>? {
@@ -259,4 +273,9 @@ class MyModernRouterNavigator<StateT : SerializableRouterNavigatorState>(
     private fun log(text: String) {
         Rib.getConfiguration().handleDebugMessage("%s: $text", "RouterNavigator")
     }
+
+    data class SavedState<StateT : SerializableRouterNavigatorState>(
+            val stack: List<AttachInfo<StateT>>,
+            val currentTransientState: AttachInfo<StateT>? = null
+    ) : Serializable
 }

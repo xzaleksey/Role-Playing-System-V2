@@ -21,4 +21,6 @@ import java.io.Serializable
  * Represents states for [ModernRouterNavigator]. Most often, this should be implemented using
  * an enum.
  */
-interface SerializableRouterNavigatorState : RouterNavigatorState, Serializable
+interface SerializableRouterNavigatorState : RouterNavigatorState, Serializable {
+    fun getRestorableInfo(): Serializable? = null
+}

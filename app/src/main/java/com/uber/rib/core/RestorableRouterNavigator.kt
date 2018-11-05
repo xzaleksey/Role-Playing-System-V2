@@ -15,8 +15,6 @@
  */
 package com.uber.rib.core
 
-import java.io.Serializable
-
 /**
  * Simple utility for switching a child router based on a state.
  */
@@ -24,10 +22,11 @@ interface RestorableRouterNavigator<StateT : SerializableRouterNavigatorState> :
     fun getRouters(): Set<Router<*, *>>
 
     fun onSaveInstanceState(bundle: Bundle)
+
+    fun restoreState(bundle: Bundle)
 }
 
 data class AttachInfo<RouterState : SerializableRouterNavigatorState>(
         val state: RouterState,
-        val restorableInfo: Serializable?,
         val isTransient: Boolean
 )
