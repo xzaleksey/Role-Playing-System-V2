@@ -82,15 +82,20 @@ exports.DeleteGameFunction = functions.firestore
 
 exports.copyGame = functions.https.onCall((data, context) => {
     let gameId = data["gameId"];
-    console.log(gameId);
     return new Promise(((resolve, reject) => {
         getDatabase().collection("games").doc(gameId).get().then((value) => {
-            console.log("Test");
-            console.log(value.id);
-            console.log(value.data());
-            resolve(gameId);
+            let data = value.data();
+            if (data === undefined) {
+                reject(new functions.https.HttpsError('not-found', "Game not found"));
+            } else {
+                console.log("Test");
+                console.log(value.id);
+                console.log(data);
+                resolve(gameId);
+            }
         }).catch((error) => {
-            reject(functions.https.HttpsError('unknown', error.toString()));
+            console.log(error.toString());
+            reject(new functions.https.HttpsError('unknown', error.toString()));
         });
     }));
 });
