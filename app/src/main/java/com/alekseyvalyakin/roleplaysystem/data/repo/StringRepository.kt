@@ -3,6 +3,14 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun getSettings(): String {
+        return resourcesProvider.getString(R.string.settings)
+    }
+
+    override fun getRecords(): String {
+        return resourcesProvider.getString(R.string.records)
+    }
+
     override fun getNewRace(): String {
         return resourcesProvider.getString(R.string.new_race)
     }
@@ -222,4 +230,6 @@ interface StringRepository {
     fun getRaces(): String
     fun getMyRace(): String
     fun getNewRace(): String
+    fun getRecords(): String
+    fun getSettings(): String
 }

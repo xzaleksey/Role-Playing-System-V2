@@ -11,7 +11,7 @@ class ComplexOperation : Expression {
         lastAddedOperation = false
         expressions.add(expression)
         if (expressions.size - operationTypes.size > 1) {
-            throw IllegalArgumentException("can' t be 2 expressions in a row")
+            throw IllegalArgumentException("can' t be 2 expressions file a row")
         }
     }
 
@@ -20,7 +20,7 @@ class ComplexOperation : Expression {
             isFirstOperation = true
         }
         if (lastAddedOperation) {
-            throw IllegalArgumentException("can' t be 2 operationsTypes in a row")
+            throw IllegalArgumentException("can' t be 2 operationsTypes file a row")
         }
         operationTypes.add(operationType)
         lastAddedOperation = true

@@ -37,15 +37,24 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     lateinit var analyticsReporter: AnalyticsReporter
 
     private val screenName = "ActiveGame"
-    private var model: Model = Model(NavigationId.CHARACTERS)
+    private lateinit var model: Model
+
+    private fun getDefaultModel(): Model {
+        return if (viewModelProvider.isMaster()) {
+            Model(NavigationId.RECORDS)
+        } else {
+            Model(NavigationId.CHARACTERS)
+        }
+    }
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         analyticsReporter.setCurrentScreen(screenName)
 
-        savedInstanceState?.run {
-            model = this.getSerializable(KEY)
-        }
+        model = savedInstanceState?.run {
+            getSerializable<Model>(KEY)
+        } ?: getDefaultModel()
+
         if (savedInstanceState == null) {
             gameRepository.updateDate(viewModelProvider.getCurrentGame())
                     .subscribeWithErrorLogging()
@@ -119,7 +128,7 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
             router.attachView(NavigationId.DICES)
         } else if (clazz == PhotoRouter::class.java) {
             Timber.d("Restored photos Router")
-            router.attachView(NavigationId.PICTURES)
+            router.attachView(NavigationId.PHOTOS)
         }
     }
 

@@ -38,6 +38,7 @@ class ActiveGameView constructor(
                 itemTextColor = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
                 itemIconTintList = ContextCompat.getColorStateList(context, R.color.bottom_menu_icon_color)
                 id = R.id.bottom_navigation_id
+                itemTextAppearanceActive = R.style.BottombarTextAppearence
             }.lparams(width = matchParent, height = wrapContent) {
                 alignParentBottom()
             }

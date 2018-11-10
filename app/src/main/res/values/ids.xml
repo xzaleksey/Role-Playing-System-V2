@@ -44,7 +44,10 @@
     <item name="main_container" type="id" />
     <item name="top_actions_container" type="id" />
     <item name="bottom_menu_characters" type="id" />
+    <item name="bottom_menu_info" type="id" />
     <item name="bottom_menu_dices" type="id" />
+    <item name="bottom_menu_records" type="id" />
+    <item name="bottom_menu_settings" type="id" />
     <item name="bottom_menu_photos" type="id" />
     <item name="bottom_menu_other" type="id" />
     <item name="bottom_navigation_id" type="id" />

@@ -57,6 +57,7 @@ class ActiveGameRouter(
 
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
+
     fun attachView(navigationId: NavigationId) {
         when (navigationId) {
             NavigationId.DICES -> {
@@ -64,19 +65,24 @@ class ActiveGameRouter(
                 modernRouter.pushRetainedState(State.DICES, dicesAttachTransition, dicesDetachTransition)
             }
 
-            NavigationId.PICTURES -> {
+            NavigationId.PHOTOS -> {
                 onNavigate(State.PHOTOS)
                 modernRouter.pushRetainedState(State.PHOTOS, photoAttachTransition, photoDetachTransition)
             }
 
-            NavigationId.MENU -> {
+            NavigationId.SETTINGS -> {
                 onNavigate(State.SETTINGS)
                 modernRouter.pushRetainedState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
             }
 
             NavigationId.CHARACTERS -> {
                 onNavigate(State.CHARACTERS)
-                modernRouter.pushRetainedState(State.CHARACTERS, gameLogAttachTransition, gameLogsDetachTransition)
+                modernRouter.pushRetainedState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
+            }
+
+            NavigationId.RECORDS -> {
+                onNavigate(State.RECORDS)
+                modernRouter.pushRetainedState(State.RECORDS, gameLogAttachTransition, gameLogsDetachTransition)
             }
         }
     }
@@ -146,10 +152,10 @@ class ActiveGameRouter(
 
         companion object {
             val DICES = State("DICES", NavigationId.DICES)
-            val PHOTOS = State("PHOTOS", NavigationId.PICTURES)
+            val PHOTOS = State("PHOTOS", NavigationId.PHOTOS)
             val SETTINGS = State("SETTINGS", NavigationId.MENU)
             val CHARACTERS = State("CHARACTERS", NavigationId.CHARACTERS)
-            val LOG = State("LOG", NavigationId.LOG)
+            val RECORDS = State("RECORDS", NavigationId.RECORDS)
         }
     }
 }

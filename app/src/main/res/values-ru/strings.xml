@@ -153,5 +153,6 @@
     <string name="vote_feature_dialog_title">Проголосовать</string>
     <string name="vote_feature_dialog_body">Вы сможете проголосовать повторно только после реализации данной функциональности</string>
     <string name="license">Лицензия</string>
+    <string name="records">Записи</string>
 
 </resources>

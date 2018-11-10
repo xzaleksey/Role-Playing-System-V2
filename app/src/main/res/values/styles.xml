@@ -61,4 +61,8 @@
         <item name="android:textColor">@color/material_blue_500</item>
     </style>
 
+    <style name="BottombarTextAppearence" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">10dp</item>
+    </style>
+
 </resources>

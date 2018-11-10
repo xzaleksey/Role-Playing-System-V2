@@ -17,10 +17,12 @@ data class BottomItem(
 
 enum class NavigationId(val id: Int, val textId: String) {
     CHARACTERS(R.id.bottom_menu_characters, "Characters"),
+    INFO(R.id.bottom_menu_info, "Info"),
     DICES(R.id.bottom_menu_dices, "Dices"),
-    PICTURES(R.id.bottom_menu_photos, "Pictures"),
+    SETTINGS(R.id.bottom_menu_settings, "Settings"),
+    PHOTOS(R.id.bottom_menu_photos, "Pictures"),
     MENU(R.id.bottom_menu_other, "Other"),
-    LOG(R.id.bottom_menu_other,"Log");
+    RECORDS(R.id.bottom_menu_records,"Records");
 
     companion object {
 

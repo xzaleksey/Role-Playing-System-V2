@@ -42,7 +42,7 @@ class GoogleSignInProvider constructor(
                 .cast(ActivityCallbackEvent.ActivityResult::class.java)
                 .subscribeWithErrorLogging { activityCallbackEvent ->
                     if (activityCallbackEvent.requestCode == RC_SIGN_IN) {
-                        Timber.d("google sign in event")
+                        Timber.d("google sign file event")
                         val signInResultFromIntent = Auth.GoogleSignInApi.getSignInResultFromIntent(activityCallbackEvent.data)
                         if (signInResultFromIntent == null || !signInResultFromIntent.isSuccess) {
                             relay.accept(GoogleSignInResult(
