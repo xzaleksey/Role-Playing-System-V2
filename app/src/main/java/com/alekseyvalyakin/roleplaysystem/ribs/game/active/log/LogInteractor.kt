@@ -76,6 +76,11 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                     Timber.d("Open texts")
                 }
             }
+            is LogPresenter.UiEvent.StartRecording -> {
+                return Observable.fromCallable {
+                    Timber.d("Start recording")
+                }
+            }
         }
     }
 }

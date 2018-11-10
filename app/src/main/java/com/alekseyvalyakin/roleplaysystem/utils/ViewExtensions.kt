@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.content.res.ColorStateList
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.support.annotation.*
 import android.support.design.widget.FloatingActionButton
@@ -8,11 +9,13 @@ import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.main.FabEnabledProvider
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
@@ -148,3 +151,15 @@ fun View.isOrientationLandscape(): Boolean {
     return context.isOrientationLandscape()
 }
 
+
+fun View.increaseTouchArea(size: Int = getIntDimen(R.dimen.dp_8)) {
+    this.post {
+        val rect = Rect()
+        this.getHitRect(rect)
+        rect.top -= size
+        rect.left -= size
+        rect.bottom += size
+        rect.right += size
+        (parent as View).touchDelegate = TouchDelegate(rect, this)
+    }
+}

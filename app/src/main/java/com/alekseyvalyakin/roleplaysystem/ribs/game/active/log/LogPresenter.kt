@@ -9,6 +9,7 @@ interface LogPresenter {
 
     sealed class UiEvent {
         class SendTextMessage(val text: String) : UiEvent()
+        object StartRecording : UiEvent()
         class SearchInput(val text: String) : UiEvent()
         object OpenTexts : UiEvent()
         object OpenAudio : UiEvent()

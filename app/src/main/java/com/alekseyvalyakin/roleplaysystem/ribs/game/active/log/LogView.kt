@@ -6,8 +6,8 @@ import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -36,7 +36,9 @@ class LogView constructor(
 
     private lateinit
     var input: EditText
-    private lateinit var inputActions: FrameLayout
+    private lateinit var inputActions: ViewGroup
+    private lateinit var sendBtn: View
+    private lateinit var micBtn: View
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
             return LinearSmoothScroller.SNAP_TO_START
@@ -69,22 +71,35 @@ class LogView constructor(
             backgroundResource = R.drawable.white_cornered_background
             elevation = getFloatDimen(R.dimen.dp_16)
             minimumHeight = getIntDimen(R.dimen.dp_48)
-            inputActions = frameLayout {
+            inputActions = linearLayout {
+                orientation = HORIZONTAL
                 id = R.id.input_actions
-                backgroundResource = getSelectableItemBorderless()
-                leftPadding = getDoubleCommonDimen()
-                rightPadding = getDoubleCommonDimen()
+                leftPadding = getCommonDimen()
+                rightPadding = getCommonDimen()
 
-                imageView {
-                    tintImageRes(R.color.colorAccent)
+                sendBtn = imageView {
+                    increaseTouchArea()
+                    padding = getCommonDimen()
+                    backgroundResource = getSelectableItemBorderless()
+                    tintImageRes(R.color.colorTextSecondary)
                     imageResource = R.drawable.ic_send_black_24dp
-                }.lparams(width = dimen(R.dimen.dp_24), height = dimen(R.dimen.dp_24)) {
+                }.lparams(width = dimen(R.dimen.dp_40), height = dimen(R.dimen.dp_40)) {
+                    gravity = Gravity.CENTER
+                }
+                micBtn = imageView {
+                    increaseTouchArea()
+                    padding = getCommonDimen()
+                    backgroundResource = getSelectableItemBorderless()
+                    tintImageRes(R.color.colorTextSecondary)
+                    imageResource = R.drawable.ic_mic
+                }.lparams(width = dimen(R.dimen.dp_40), height = dimen(R.dimen.dp_40)) {
                     gravity = Gravity.CENTER
                 }
             }.lparams(height = dimen(R.dimen.dp_48)) {
                 alignParentRight()
                 centerVertically()
             }
+
             input = editText {
                 id = R.id.input
                 background = null
@@ -113,7 +128,7 @@ class LogView constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         textDisposable = RxTextView.textChanges(input).subscribeWithErrorLogging {
-            inputActions.visibility = if (it.toString().isBlank()) View.GONE else View.VISIBLE
+            sendBtn.visibility = if (it.toString().isBlank()) View.GONE else View.VISIBLE
         }
     }
 
@@ -135,11 +150,21 @@ class LogView constructor(
     }
 
     override fun observeUiEvents(): Observable<LogPresenter.UiEvent> {
-        return Observable.merge(RxView.clicks(inputActions).map {
+        return Observable.merge(sendMessage(), startRecording(), observeSearchInput(), relay)
+    }
+
+    private fun sendMessage(): Observable<LogPresenter.UiEvent.SendTextMessage> {
+        return RxView.clicks(sendBtn).map {
             val text = input.text.toString()
             input.text = null
             LogPresenter.UiEvent.SendTextMessage(text)
-        }, observeSearchInput(), relay)
+        }
+    }
+
+    private fun startRecording(): Observable<LogPresenter.UiEvent.StartRecording> {
+        return RxView.clicks(micBtn).map {
+            LogPresenter.UiEvent.StartRecording
+        }
     }
 
     private fun observeSearchInput(): Observable<LogPresenter.UiEvent.SearchInput> = searchToolbar.observeSearchInput()

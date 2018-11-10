@@ -115,7 +115,7 @@ class GameSettingsDefaultItemView(context: Context) : _LinearLayout(context) {
             backgroundDrawable = dividerDrawable()
         }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_1)) {
         }
-        container.post {
+        ivIconRight.post {
             val rect = Rect()
             ivIconRight.getHitRect(rect)
             rect.top -= getIntDimen(R.dimen.dp_8)
