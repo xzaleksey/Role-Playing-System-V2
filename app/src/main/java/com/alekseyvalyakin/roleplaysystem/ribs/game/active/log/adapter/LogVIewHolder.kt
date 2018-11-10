@@ -7,8 +7,7 @@ class LogTextViewHolder(private val logTextView: LogTextItemView, flexibleAdapte
 
     fun bind(logItemTextViewModel: LogItemTextViewModel) {
         logTextView.update(
-                logItemTextViewModel.text,
-                logItemTextViewModel.time
+                logItemTextViewModel.text
         )
     }
 }

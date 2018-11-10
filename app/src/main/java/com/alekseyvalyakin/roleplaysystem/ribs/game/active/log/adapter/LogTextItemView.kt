@@ -1,49 +1,42 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter
 
 import android.content.Context
-import android.view.Gravity
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getFloatDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
 import org.jetbrains.anko.*
+import org.jetbrains.anko.cardview.v7.cardView
 
-class LogTextItemView(context: Context) : _RelativeLayout(context) {
+class LogTextItemView(context: Context) : _FrameLayout(context) {
 
-    private lateinit var tvTime: TextView
     private lateinit var tvText: TextView
 
     init {
-        backgroundColorResource = R.color.colorWhite
-        relativeLayout {
-            minimumHeight = dimen(R.dimen.dp_56)
-            bottomPadding = getCommonDimen()
-            leftPadding = getDoubleCommonDimen()
-            rightPadding = getDoubleCommonDimen()
-            topPadding = getCommonDimen()
+        clipToPadding = false
+        leftPadding = getDoubleCommonDimen()
+        rightPadding = getDoubleCommonDimen()
 
-            tvTime = textView {
-                id = R.id.tv_time
-                gravity = Gravity.BOTTOM
-                textColorResource = R.color.colorTextSecondary
-            }.lparams {
-                alignParentRight()
-                leftMargin = getCommonDimen()
-            }
+        cardView {
+            radius = getFloatDimen(R.dimen.dp_2)
+            cardElevation = getFloatDimen(R.dimen.dp_4)
             tvText = textView {
+                leftPadding = getDoubleCommonDimen()
+                rightPadding = getDoubleCommonDimen()
+                topPadding = getIntDimen(R.dimen.dp_12)
+                bottomPadding = getIntDimen(R.dimen.dp_12)
                 id = R.id.tv_text
                 textColorResource = R.color.colorTextPrimary
-            }.lparams(width = matchParent) {
-                centerVertically()
-                leftOf(R.id.tv_time)
-            }
+            }.lparams(width = matchParent)
         }.lparams(width = matchParent) {
+            bottomMargin = getCommonDimen()
         }
     }
 
-    fun update(text: String, time: String) {
+    fun update(text: String) {
         tvText.text = text
-        tvTime.text = time
     }
 
 }

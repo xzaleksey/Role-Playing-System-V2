@@ -156,5 +156,7 @@
     <string name="records">Записи</string>
     <string name="texts">Тексты</string>
     <string name="audio">Аудио</string>
-
+    <string name="input_something">Записать что-то…</string>
+    <string name="yesterday">Вчера</string>
+    <string name="today">Сегодня</string>
 </resources>

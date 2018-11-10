@@ -15,5 +15,6 @@ object FlexibleLayoutTypes {
     const val GAME_SETTINGS_ITEM = 12
     const val GAME_SETTINGS_STAT_ITEM = 13
     const val EMPTY_DICE = 14
+    const val SUB_HEADER_SECONDARY = 15
 
 }

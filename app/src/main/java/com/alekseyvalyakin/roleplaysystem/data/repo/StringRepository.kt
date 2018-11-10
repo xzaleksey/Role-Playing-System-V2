@@ -3,6 +3,14 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun getYesterday(): String {
+        return resourcesProvider.getString(R.string.yesterday)
+    }
+
+    override fun getToday(): String {
+        return resourcesProvider.getString(R.string.today)
+    }
+
     override fun getSettings(): String {
         return resourcesProvider.getString(R.string.settings)
     }
@@ -232,4 +240,6 @@ interface StringRepository {
     fun getNewRace(): String
     fun getRecords(): String
     fun getSettings(): String
+    fun getYesterday(): String
+    fun getToday(): String
 }

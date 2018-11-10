@@ -12,8 +12,7 @@ import org.jetbrains.anko.wrapContent
 
 data class LogItemTextViewModel(
         val id: String,
-        val text: String,
-        val time: String
+        val text: String
 ) : AbstractFlexibleItem<LogTextViewHolder>() {
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, inflater: LayoutInflater, parent: ViewGroup): LogTextViewHolder {

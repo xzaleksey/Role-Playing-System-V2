@@ -4,17 +4,19 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.MessageType
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.flexible.secondarysubheader.SecondarySubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogItemTextViewModel
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.Flowables
-import org.jetbrains.anko.collections.forEachReversedByIndex
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 class LogViewModelProviderImpl(
         private val game: Game,
-        private val logRepository: LogRepository
+        private val logRepository: LogRepository,
+        private val stringRepository: StringRepository
 ) : LogViewModelProvider {
 
     override fun observeViewModel(filterModelFlowable: Flowable<FilterModel>): Flowable<LogViewModel> {
@@ -22,13 +24,23 @@ class LogViewModelProviderImpl(
                 .map { pair ->
                     val items = mutableListOf<IFlexible<*>>()
                     val messages = pair.second
-                    messages.forEachReversedByIndex { message ->
+                    var currentDate: DateTime? = null
+                    val today = DateTime().withTimeAtStartOfDay()
+                    messages.forEach { message ->
                         if (message.getMessageType() == MessageType.TEXT
                                 && message.textMessage != null
                                 && message.textMessage!!.isFiltered(pair.first.query)) {
-                            items.add(LogItemTextViewModel(message.id,
-                                    message.textMessage!!.text,
-                                    DateTime(message.getDate().time).toString(DateTimeFormat.shortTime())))
+                            val messageDate = DateTime(message.getDate()).withTimeAtStartOfDay()
+                            if (messageDate != currentDate) {
+                                currentDate = messageDate
+                                val title = when {
+                                    today == messageDate -> stringRepository.getToday()
+                                    today.minusDays(1) == messageDate -> stringRepository.getYesterday()
+                                    else -> messageDate.toString(DateTimeFormat.forPattern("d MMMM"))
+                                }
+                                items.add(SecondarySubHeaderViewModel(title))
+                            }
+                            items.add(LogItemTextViewModel(message.id, message.textMessage!!.text))
                         }
                     }
                     return@map LogViewModel(items)

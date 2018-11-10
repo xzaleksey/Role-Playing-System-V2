@@ -14,9 +14,11 @@ import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -30,18 +32,21 @@ class LogView constructor(
     private val recyclerView: RecyclerView
     private val relay = PublishRelay.create<LogPresenter.UiEvent>()
     private val flexibleAdapter = LogAdapter(emptyList(), relay)
+    private lateinit var textDisposable: Disposable
 
-
-    private lateinit var input: EditText
-    private lateinit var sendView: FrameLayout
+    private lateinit
+    var input: EditText
+    private lateinit var inputActions: FrameLayout
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
-            return LinearSmoothScroller.SNAP_TO_END
+            return LinearSmoothScroller.SNAP_TO_START
         }
     }
 
     init {
         orientation = VERTICAL
+        clipChildren = false
+
         searchToolbar = searchToolbar({
             id = R.id.search_view
             setTitle(getString(R.string.records))
@@ -61,11 +66,15 @@ class LogView constructor(
 
         relativeLayout {
             id = R.id.send_form
-            sendView = frameLayout {
-                id = R.id.icon_send
+            backgroundResource = R.drawable.white_cornered_background
+            elevation = getFloatDimen(R.dimen.dp_16)
+            minimumHeight = getIntDimen(R.dimen.dp_48)
+            inputActions = frameLayout {
+                id = R.id.input_actions
                 backgroundResource = getSelectableItemBorderless()
                 leftPadding = getDoubleCommonDimen()
                 rightPadding = getDoubleCommonDimen()
+
                 imageView {
                     tintImageRes(R.color.colorAccent)
                     imageResource = R.drawable.ic_send_black_24dp
@@ -79,29 +88,42 @@ class LogView constructor(
             input = editText {
                 id = R.id.input
                 background = null
-                hintResource = R.string.your_message
+                hintResource = R.string.input_something
                 maxLines = 3
             }.lparams(width = matchParent) {
                 centerVertically()
                 leftMargin = getDoubleCommonDimen()
-                leftOf(R.id.icon_send)
+                leftOf(R.id.input_actions)
             }
         }.lparams(width = matchParent, height = wrapContent) {
+            leftMargin = getDoubleCommonDimen()
+            rightMargin = getDoubleCommonDimen()
         }
 
         recyclerView = recyclerView {
             id = R.id.recycler_view
             clipToPadding = false
-            leftPadding = getCommonDimen()
-            rightPadding = getCommonDimen()
-            layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
+            clipChildren = false
+            layoutManager = LinearLayoutManager(context)
             adapter = flexibleAdapter
         }.lparams(width = matchParent, height = matchParent) {
         }
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        textDisposable = RxTextView.textChanges(input).subscribeWithErrorLogging {
+            inputActions.visibility = if (it.toString().isBlank()) View.GONE else View.VISIBLE
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        textDisposable.dispose()
+        super.onDetachedFromWindow()
+    }
+
     override fun update(viewModel: LogViewModel) {
-        flexibleAdapter.updateWithAnimateToEndOnNewItem(
+        flexibleAdapter.updateWithAnimateToStartOnNewItem(
                 recyclerView,
                 smoothScroller,
                 viewModel.items
@@ -113,7 +135,7 @@ class LogView constructor(
     }
 
     override fun observeUiEvents(): Observable<LogPresenter.UiEvent> {
-        return Observable.merge(RxView.clicks(sendView).map {
+        return Observable.merge(RxView.clicks(inputActions).map {
             val text = input.text.toString()
             input.text = null
             LogPresenter.UiEvent.SendTextMessage(text)

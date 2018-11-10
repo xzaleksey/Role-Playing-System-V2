@@ -55,7 +55,7 @@ class SearchToolbar constructor(
 
                 searchContainer = relativeLayout {
                     id = R.id.top_toolbar_container
-                    backgroundResource = R.drawable.toolbar_search_background
+                    backgroundResource = R.drawable.white_cornered_background
                     clipChildren = false
                     topPadding = getIntDimen(R.dimen.dp_4)
                     bottomPadding = getIntDimen(R.dimen.dp_4)

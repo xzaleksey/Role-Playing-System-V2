@@ -160,7 +160,10 @@
     <string name="license">License</string>
     <string name="records">Records</string>
     <string name="texts">Texts</string>
-    <string name="audio">Аудио</string>
+    <string name="audio">Audio</string>
+    <string name="input_something">Log your message…</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
     <string name="dnd_license" formatted="false" translatable="false">
         <![CDATA[
         <P>THIS LICENSE IS APPROVED FOR GENERAL USE. PERMISSION TO DISTRIBUTE THIS LICENSE
