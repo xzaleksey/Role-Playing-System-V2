@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -18,8 +20,10 @@ import io.reactivex.Observable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.cardview.v7.cardView
 
+@SuppressLint("ViewConstructor")
 class SearchToolbar constructor(
-        context: Context
+        context: Context,
+        private val mode: Mode = Mode.CLASSIC
 ) : _FrameLayout(context) {
 
     private lateinit var bgImageView: ImageView
@@ -27,7 +31,9 @@ class SearchToolbar constructor(
     private lateinit var leftIcon: ImageView
     private lateinit var rightIcon: ImageView
     private lateinit var tvTitle: TextView
+    private lateinit var tvHiddenTitle: TextView
     private lateinit var searchEditText: EditText
+    private lateinit var hiddenContainer: RelativeLayout
     private lateinit var searchContainer: ViewGroup
     private var isSearchMode = false
     private val relay = PublishRelay.create<Boolean>()
@@ -52,6 +58,7 @@ class SearchToolbar constructor(
                     clipChildren = false
                     topPadding = getIntDimen(R.dimen.dp_4)
                     bottomPadding = getIntDimen(R.dimen.dp_4)
+                    visibility = if (mode == Mode.CLASSIC) View.VISIBLE else View.INVISIBLE
 
                     rightIcon = imageView {
                         id = R.id.more
@@ -129,6 +136,34 @@ class SearchToolbar constructor(
                     val margin = getIntDimen(R.dimen.dp_8)
                     setMargins(margin, context.getStatusBarHeight(), margin, margin)
                 }
+
+                hiddenContainer = relativeLayout {
+                    visibility = if (mode == Mode.HIDDEN) View.VISIBLE else View.GONE
+                    setOnClickListener {
+                        isSearchMode = true
+                        initSearchMode()
+                    }
+                    tvHiddenTitle = textView {
+                        setSanserifMediumTypeface()
+                        textColorResource = R.color.colorWhite
+                        textSizeDimen = R.dimen.dp_20
+                    }.lparams(wrapContent, wrapContent) {
+                        leftMargin = getDoubleCommonDimen()
+                        centerVertically()
+                    }
+
+                    imageView {
+                        imageResource = R.drawable.ic_search
+                        tintImageRes(R.color.colorWhite)
+                    }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
+                        rightMargin = getDoubleCommonDimen()
+                        centerVertically()
+                        alignParentEnd()
+                    }
+
+                }.lparams(matchParent, wrapContent) {
+                    topMargin = getStatusBarHeight()
+                }
             }.lparams(width = matchParent, height = wrapContent)
         }
 
@@ -154,6 +189,7 @@ class SearchToolbar constructor(
 
     fun setTitle(text: CharSequence) {
         tvTitle.text = text
+        tvHiddenTitle.text = text
     }
 
     fun observeRightImageClick(): Observable<Any> {
@@ -184,6 +220,7 @@ class SearchToolbar constructor(
         if (measuredHeight != bgImageView.measuredHeight) {
             bgImageView.post {
                 bgImageView.layoutParams.height = measuredHeight
+                hiddenContainer.layoutParams.height = measuredHeight - getStatusBarHeight()
                 bgImageView.requestLayout()
             }
         }
@@ -195,6 +232,10 @@ class SearchToolbar constructor(
         searchEditText.visibility = View.INVISIBLE
         leftIcon.hideKeyboard()
         leftIcon.setImageDrawable(getCompatDrawable(R.drawable.ic_search))
+        if (mode == Mode.HIDDEN) {
+            searchContainer.visibility = View.INVISIBLE
+            hiddenContainer.visibility = View.VISIBLE
+        }
         relay.accept(false)
     }
 
@@ -203,11 +244,20 @@ class SearchToolbar constructor(
         searchEditText.visibility = View.VISIBLE
         searchEditText.showSoftKeyboard()
         tvTitle.visibility = View.INVISIBLE
+        if (mode == Mode.HIDDEN) {
+            searchContainer.visibility = View.VISIBLE
+            hiddenContainer.visibility = View.GONE
+        }
         relay.accept(true)
     }
 
     fun clearInput() {
         searchEditText.setText(EMPTY_STRING)
+    }
+
+    enum class Mode {
+        CLASSIC,
+        HIDDEN
     }
 }
 

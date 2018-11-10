@@ -18,11 +18,16 @@ inline fun ViewManager.googleSignInButton(init: SignInButton.() -> Unit) = googl
 inline fun ViewManager.googleSignInButton(init: SignInButton.() -> Unit, theme: Int = 0) = ankoView(::SignInButton, theme, init)
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun ViewManager.searchToolbar(theme: Int = 0) = searchToolbar({}, theme)
+inline fun ViewManager.searchToolbar(theme: Int = 0, mode: SearchToolbar.Mode = SearchToolbar.Mode.CLASSIC) = searchToolbar({}, theme, mode)
 
-inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit) = searchToolbar(init, 0)
+@Suppress("NOTHING_TO_INLINE")
+inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit) = searchToolbar({}, SearchToolbar.Mode.CLASSIC)
 
-inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit, theme: Int = 0) = ankoView(::SearchToolbar, theme, init)
+inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit, mode: SearchToolbar.Mode = SearchToolbar.Mode.CLASSIC) = searchToolbar(init, 0, mode)
+
+inline fun ViewManager.searchToolbar(init: SearchToolbar.() -> Unit, theme: Int = 0, mode: SearchToolbar.Mode = SearchToolbar.Mode.CLASSIC) = ankoView({
+    SearchToolbar(it, mode)
+}, theme, init)
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun ViewManager.photoView(theme: Int = 0) = photoView({}, theme)

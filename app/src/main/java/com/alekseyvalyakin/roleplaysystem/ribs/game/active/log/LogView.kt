@@ -39,10 +39,10 @@ class LogView constructor(
     }
 
     init {
-        searchToolbar = searchToolbar {
+        searchToolbar = searchToolbar({
             id = R.id.search_view
-            setTitle(getString(R.string.log))
-        }.lparams(width = matchParent, height = wrapContent)
+            setTitle(getString(R.string.records))
+        }, SearchToolbar.Mode.HIDDEN).lparams(width = matchParent, height = wrapContent)
 
         relativeLayout {
             id = R.id.send_form
