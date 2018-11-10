@@ -66,6 +66,16 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                     filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvent.text))
                 }
             }
+            is LogPresenter.UiEvent.OpenAudio -> {
+                return Observable.fromCallable {
+                    Timber.d("Open audio")
+                }
+            }
+            is LogPresenter.UiEvent.OpenTexts -> {
+                return Observable.fromCallable {
+                    Timber.d("Open texts")
+                }
+            }
         }
     }
 }

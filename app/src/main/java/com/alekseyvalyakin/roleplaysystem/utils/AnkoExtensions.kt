@@ -4,6 +4,7 @@ import android.support.design.chip.Chip
 import android.support.design.chip.ChipGroup
 import android.support.design.widget.FloatingActionButton
 import android.view.ViewManager
+import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.fabmenu.FabMenu
 import com.github.chrisbanes.photoview.PhotoView
@@ -57,3 +58,10 @@ inline fun ViewManager.fabMenu(theme: Int = 0, floatingActionButton: FloatingAct
 inline fun ViewManager.fabMenu(init: FabMenu.() -> Unit, floatingActionButton: FloatingActionButton) = fabMenu(init, 0, floatingActionButton)
 
 inline fun ViewManager.fabMenu(init: FabMenu.() -> Unit, theme: Int = 0, floatingActionButton: FloatingActionButton) = ankoView({ FabMenu(it, floatingActionButton) }, theme, init)
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun ViewManager.buttonsView(theme: Int = 0, btnInfoList: List<ButtonsView.ButtonInfo>) = buttonsView({}, theme, btnInfoList)
+
+inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit, btnInfoList: List<ButtonsView.ButtonInfo>) = buttonsView(init, 0, btnInfoList)
+
+inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit, theme: Int = 0, btnInfoList: List<ButtonsView.ButtonInfo>) = ankoView({ ButtonsView(it, btnInfoList) }, theme, init)

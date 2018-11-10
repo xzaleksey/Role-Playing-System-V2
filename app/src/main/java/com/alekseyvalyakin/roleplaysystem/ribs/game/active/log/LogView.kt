@@ -5,11 +5,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
+import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -22,7 +24,7 @@ import java.util.concurrent.TimeUnit
 
 class LogView constructor(
         context: Context
-) : _RelativeLayout(context), LogPresenter {
+) : _LinearLayout(context), LogPresenter {
 
     private var searchToolbar: SearchToolbar
     private val recyclerView: RecyclerView
@@ -39,19 +41,26 @@ class LogView constructor(
     }
 
     init {
+        orientation = VERTICAL
         searchToolbar = searchToolbar({
             id = R.id.search_view
             setTitle(getString(R.string.records))
-        }, SearchToolbar.Mode.HIDDEN).lparams(width = matchParent, height = wrapContent)
+        }, SearchToolbar.Mode.HIDDEN).lparams(width = matchParent, height = wrapContent) {}
+
+        buttonsView({
+
+        }, listOf(ButtonsView.ButtonInfo(getString(R.string.texts), View.OnClickListener {
+            relay.accept(LogPresenter.UiEvent.OpenTexts)
+        }), ButtonsView.ButtonInfo(getString(R.string.audio), View.OnClickListener {
+            relay.accept(LogPresenter.UiEvent.OpenAudio)
+        }))).lparams(matchParent, wrapContent) {
+            val horMargin = getDoubleCommonDimen()
+            val vMargin = getCommonDimen()
+            setMargins(horMargin, vMargin, horMargin, vMargin)
+        }
 
         relativeLayout {
             id = R.id.send_form
-            view {
-                id = R.id.divider
-                backgroundColorResource = R.color.colorDivider
-            }.lparams(width = matchParent, height = dip(1)) {
-                below(R.id.tv_name)
-            }
             sendView = frameLayout {
                 id = R.id.icon_send
                 backgroundResource = getSelectableItemBorderless()
@@ -78,7 +87,6 @@ class LogView constructor(
                 leftOf(R.id.icon_send)
             }
         }.lparams(width = matchParent, height = wrapContent) {
-            alignParentBottom()
         }
 
         recyclerView = recyclerView {
@@ -89,8 +97,6 @@ class LogView constructor(
             layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
             adapter = flexibleAdapter
         }.lparams(width = matchParent, height = matchParent) {
-            above(R.id.send_form)
-            below(R.id.search_view)
         }
     }
 
@@ -111,7 +117,7 @@ class LogView constructor(
             val text = input.text.toString()
             input.text = null
             LogPresenter.UiEvent.SendTextMessage(text)
-        }, observeSearchInput())
+        }, observeSearchInput(), relay)
     }
 
     private fun observeSearchInput(): Observable<LogPresenter.UiEvent.SearchInput> = searchToolbar.observeSearchInput()

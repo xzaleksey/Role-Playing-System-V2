@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
@@ -18,7 +19,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*
-import org.jetbrains.anko.cardview.v7.cardView
+
 
 @SuppressLint("ViewConstructor")
 class SearchToolbar constructor(
@@ -40,10 +41,10 @@ class SearchToolbar constructor(
 
     init {
         AnkoContext.createDelegate(this).apply {
+            elevation = getFloatDimen(R.dimen.dp_16)
+            outlineProvider = ViewOutlineProvider.BOUNDS
 
-            cardView {
-                radius = 0f
-                cardElevation = getFloatDimen(R.dimen.dp_20)
+            frameLayout {
                 minimumHeight = getIntDimen(R.dimen.dp_56)
 
                 bgImageView = imageView {
@@ -185,6 +186,7 @@ class SearchToolbar constructor(
         clearIcon.setOnClickListener {
             searchEditText.setText("")
         }
+
     }
 
     fun setTitle(text: CharSequence) {
