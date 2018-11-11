@@ -2,5 +2,6 @@
 <resources>
     <array name="preloaded_fonts">
         <item>@font/rufina_regular</item>
+        <item>@font/righteous_regular</item>
     </array>
 </resources>

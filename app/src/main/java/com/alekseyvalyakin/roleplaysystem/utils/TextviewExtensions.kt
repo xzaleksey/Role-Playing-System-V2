@@ -15,6 +15,10 @@ fun TextView.setRufinaRegularTypeface() {
     typeface = ResourcesCompat.getFont(context, R.font.rufina_regular)
 }
 
+fun TextView.setRighteousRegularTypeface() {
+    typeface = ResourcesCompat.getFont(context, R.font.righteous_regular)
+}
+
 fun TextView.setAutoSizeTypeUniform() {
     TextViewCompat.setAutoSizeTextTypeWithDefaults(this, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
 }
