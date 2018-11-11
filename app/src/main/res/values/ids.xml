@@ -99,4 +99,5 @@
     <item name="tv_time" type="id" />
     <item name="tv_text" type="id" />
     <item name="button_container" type="id" />
+    <item name="iv_pause" type="id" />
 </resources>

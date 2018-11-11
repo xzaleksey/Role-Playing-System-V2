@@ -9,10 +9,12 @@ interface LogPresenter {
 
     sealed class UiEvent {
         class SendTextMessage(val text: String) : UiEvent()
-        object StartRecording : UiEvent()
         class SearchInput(val text: String) : UiEvent()
         object OpenTexts : UiEvent()
         object OpenAudio : UiEvent()
+        object StartRecording : UiEvent()
+        object StopRecording : UiEvent()
+        class PauseRecording(val logRecordState: LogRecordState) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>
@@ -21,4 +23,5 @@ interface LogPresenter {
 
     fun clearSearchInput()
 
+    fun updateRecordState(viewModel: LogRecordState)
 }

@@ -9,6 +9,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -38,9 +40,14 @@ class LogView constructor(
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private lateinit
     var input: EditText
+    lateinit var tvRecordTime: TextView
+    var recordViewGroup: ViewGroup
+    lateinit var ivStopRecord: ImageView
+    lateinit var ivPauseRecord: ImageView
     private lateinit var inputActions: ViewGroup
     private lateinit var sendBtn: View
     private lateinit var micBtn: View
+    private var latestRecordInfo: LogRecordState? = null
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
             return LinearSmoothScroller.SNAP_TO_START
@@ -55,10 +62,40 @@ class LogView constructor(
             id = R.id.search_view
             setTitle(getString(R.string.records))
         }, SearchToolbar.Mode.HIDDEN).lparams(width = matchParent, height = wrapContent) {}
+        recordViewGroup = relativeLayout {
+            backgroundColorResource = R.color.colorWhite
+            elevation = getFloatDimen(R.dimen.dp_1)
+            visibility = View.GONE
+            tvRecordTime = textView {
+                textColorResource = R.color.colorTextPrimary
+                textSizeDimen = R.dimen.dp_16
+            }.lparams {
+                leftMargin = getDoubleCommonDimen()
+                centerVertically()
+            }
 
-        buttonsView({
+            ivPauseRecord = imageView {
+                id = R.id.iv_pause
+                backgroundResource = getSelectableItemBorderless()
+                imageResource = R.drawable.ic_pause
+                padding = getCommonDimen()
+            }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
+                centerVertically()
+                alignParentEnd()
+                rightMargin = getCommonDimen()
+            }
 
-        }, listOf(ButtonsView.ButtonInfo(getString(R.string.texts), View.OnClickListener {
+            ivStopRecord = imageView {
+                backgroundResource = getSelectableItemBorderless()
+                padding = getCommonDimen()
+                imageResource = R.drawable.ic_stop
+            }.lparams(getIntDimen(R.dimen.dp_40), getIntDimen(R.dimen.dp_40)) {
+                centerVertically()
+                leftOf(R.id.iv_pause)
+            }
+
+        }.lparams(matchParent, getIntDimen(R.dimen.dp_48))
+        buttonsView({}, listOf(ButtonsView.ButtonInfo(getString(R.string.texts), View.OnClickListener {
             relay.accept(LogPresenter.UiEvent.OpenTexts)
         }), ButtonsView.ButtonInfo(getString(R.string.audio), View.OnClickListener {
             Observable.just(LogPresenter.UiEvent.OpenAudio).requestPermissionsExternalReadWriteAndAudioRecord(rxPermissions)
@@ -132,8 +169,12 @@ class LogView constructor(
         super.onAttachedToWindow()
         textDisposable = RxTextView.textChanges(input).subscribeWithErrorLogging {
             sendBtn.visibility = if (it.toString().isBlank()) View.GONE else View.VISIBLE
-            micBtn.visibility = if (it.toString().isBlank()) View.VISIBLE else View.GONE
+            updateMicVisibility(it)
         }
+    }
+
+    private fun updateMicVisibility(it: CharSequence) {
+        micBtn.visibility = if (it.toString().isBlank() && latestRecordInfo?.isShowMic() == true) View.VISIBLE else View.GONE
     }
 
     override fun onDetachedFromWindow() {
@@ -149,12 +190,30 @@ class LogView constructor(
         )
     }
 
+    override fun updateRecordState(viewModel: LogRecordState) {
+        latestRecordInfo = viewModel
+        val showRecordPlate = viewModel.isShowRecordPlate()
+        if (showRecordPlate) {
+            recordViewGroup.visibility = View.VISIBLE
+            tvRecordTime.text = viewModel.getTimePassed()
+            ivPauseRecord.imageResource = if (viewModel.isInProgress()) R.drawable.ic_pause else R.drawable.ic_play
+        } else {
+            recordViewGroup.visibility = View.GONE
+        }
+        updateMicVisibility(input.text)
+    }
+
     override fun clearSearchInput() {
         searchToolbar.clearInput()
     }
 
     override fun observeUiEvents(): Observable<LogPresenter.UiEvent> {
-        return Observable.merge(sendMessage(), startRecording(), observeSearchInput(), relay)
+        return Observable.merge(listOf(sendMessage(),
+                startRecording(),
+                observeSearchInput(),
+                stopRecording(),
+                pauseRecording(),
+                relay))
     }
 
     private fun sendMessage(): Observable<LogPresenter.UiEvent.SendTextMessage> {
@@ -162,6 +221,18 @@ class LogView constructor(
             val text = input.text.toString()
             input.text = null
             LogPresenter.UiEvent.SendTextMessage(text)
+        }
+    }
+
+    private fun stopRecording(): Observable<LogPresenter.UiEvent.StopRecording> {
+        return RxView.clicks(ivStopRecord).map {
+            LogPresenter.UiEvent.StopRecording
+        }
+    }
+
+    private fun pauseRecording(): Observable<LogPresenter.UiEvent.PauseRecording> {
+        return RxView.clicks(ivPauseRecord).map {
+            LogPresenter.UiEvent.PauseRecording(latestRecordInfo!!)
         }
     }
 

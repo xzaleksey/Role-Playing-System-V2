@@ -5,6 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogMessage
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
+import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -15,6 +16,7 @@ import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,6 +31,8 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     lateinit var logViewModelProvider: LogViewModelProvider
     @Inject
     lateinit var logRepository: LogRepository
+    @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
+    lateinit var uiScheduler: Scheduler
     @Inject
     lateinit var game: Game
     @Inject
@@ -51,6 +55,12 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                 .onErrorReturn { Timber.e(it) }
                 .subscribeWithErrorLogging()
                 .addToDisposables()
+
+        soundRecordInteractor.observeRecordingState()
+                .observeOn(uiScheduler)
+                .subscribeWithErrorLogging {
+                    presenter.updateRecordState(LogRecordState(it))
+                }
     }
 
     private fun handleUiEvent(uiEvent: LogPresenter.UiEvent): Observable<*> {
@@ -71,17 +81,29 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
             }
             is LogPresenter.UiEvent.OpenAudio -> {
                 return Observable.fromCallable {
-                    soundRecordInteractor.startRecordFile()
                 }
             }
             is LogPresenter.UiEvent.OpenTexts -> {
                 return Observable.fromCallable {
-                    soundRecordInteractor.stopRecordingFile()
                 }
             }
             is LogPresenter.UiEvent.StartRecording -> {
                 return Observable.fromCallable {
-                    soundRecordInteractor.pauseRecordingFile()
+                    soundRecordInteractor.startRecordFile()
+                }
+            }
+            LogPresenter.UiEvent.StopRecording -> {
+                return Observable.fromCallable {
+                    soundRecordInteractor.stopRecordingFile()
+                }
+            }
+            is LogPresenter.UiEvent.PauseRecording -> {
+                return Observable.fromCallable {
+                    if (uiEvent.logRecordState.isInProgress()) {
+                        soundRecordInteractor.pauseRecordingFile()
+                    } else {
+                        soundRecordInteractor.startRecordFile()
+                    }
                 }
             }
         }

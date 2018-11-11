@@ -91,7 +91,7 @@ class SoundRecordInteractorImpl(
                     emitter.onNext(RecordInfo(e = e))
                     return@create
                 }
-                var realStart = System.currentTimeMillis() - startTimeMillis
+                val realStart = System.currentTimeMillis() - startTimeMillis
                 var tempStart = realStart
 
                 recorder.startRecording()

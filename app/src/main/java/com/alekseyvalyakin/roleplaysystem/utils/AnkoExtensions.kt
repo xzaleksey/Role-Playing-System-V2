@@ -62,6 +62,6 @@ inline fun ViewManager.fabMenu(init: FabMenu.() -> Unit, theme: Int = 0, floatin
 @Suppress("NOTHING_TO_INLINE")
 inline fun ViewManager.buttonsView(theme: Int = 0, btnInfoList: List<ButtonsView.ButtonInfo>) = buttonsView({}, theme, btnInfoList)
 
-inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit, btnInfoList: List<ButtonsView.ButtonInfo>) = buttonsView(init, 0, btnInfoList)
+inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit = {}, btnInfoList: List<ButtonsView.ButtonInfo>) = buttonsView(init, 0, btnInfoList)
 
 inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit, theme: Int = 0, btnInfoList: List<ButtonsView.ButtonInfo>) = ankoView({ ButtonsView(it, btnInfoList) }, theme, init)
