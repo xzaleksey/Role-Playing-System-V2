@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogMessage
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
+import com.alekseyvalyakin.roleplaysystem.data.sound.ExoPlayerInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
@@ -61,6 +62,8 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                 .subscribeWithErrorLogging {
                     if (it.e != null) {
                         Timber.e(it.e)
+                    } else if (it.isRecordingFinished()) {
+                        Timber.d("Recording finished")
                     }
                     presenter.updateRecordState(LogRecordState(it))
                 }
