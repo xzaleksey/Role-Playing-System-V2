@@ -11,6 +11,10 @@ fun TextView.setSanserifMediumTypeface() {
     typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 }
 
+fun TextView.setSanserifRegularTypeface() {
+    typeface = Typeface.create("sans-serif-regular", Typeface.NORMAL)
+}
+
 fun TextView.setRufinaRegularTypeface() {
     typeface = ResourcesCompat.getFont(context, R.font.rufina_regular)
 }

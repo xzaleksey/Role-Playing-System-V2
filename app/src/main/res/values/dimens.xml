@@ -48,6 +48,7 @@
     <dimen name="profile_background_height">152dp</dimen>
     <dimen name="bg_top_element_height_big">136dp</dimen>
     <dimen name="bg_top_element_height_medium">80dp</dimen>
+    <dimen name="dp_34">34dp</dimen>
 
 
 </resources>
