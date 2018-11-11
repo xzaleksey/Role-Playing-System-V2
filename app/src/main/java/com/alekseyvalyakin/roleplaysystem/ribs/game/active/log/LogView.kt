@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
 
 import android.content.Context
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
+import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -33,7 +35,7 @@ class LogView constructor(
     private val relay = PublishRelay.create<LogPresenter.UiEvent>()
     private val flexibleAdapter = LogAdapter(emptyList(), relay)
     private lateinit var textDisposable: Disposable
-
+    private val rxPermissions = RxPermissions(context as FragmentActivity)
     private lateinit
     var input: EditText
     private lateinit var inputActions: ViewGroup
@@ -59,7 +61,8 @@ class LogView constructor(
         }, listOf(ButtonsView.ButtonInfo(getString(R.string.texts), View.OnClickListener {
             relay.accept(LogPresenter.UiEvent.OpenTexts)
         }), ButtonsView.ButtonInfo(getString(R.string.audio), View.OnClickListener {
-            relay.accept(LogPresenter.UiEvent.OpenAudio)
+            Observable.just(LogPresenter.UiEvent.OpenAudio).requestPermissionsExternalReadWriteAndAudioRecord(rxPermissions)
+                    .subscribeWithErrorLogging { relay.accept(LogPresenter.UiEvent.OpenAudio) }
         }))).lparams(matchParent, wrapContent) {
             val horMargin = getDoubleCommonDimen()
             val vMargin = getCommonDimen()
@@ -129,6 +132,7 @@ class LogView constructor(
         super.onAttachedToWindow()
         textDisposable = RxTextView.textChanges(input).subscribeWithErrorLogging {
             sendBtn.visibility = if (it.toString().isBlank()) View.GONE else View.VISIBLE
+            micBtn.visibility = if (it.toString().isBlank()) View.VISIBLE else View.GONE
         }
     }
 

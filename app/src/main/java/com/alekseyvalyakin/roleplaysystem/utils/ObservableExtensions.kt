@@ -86,3 +86,10 @@ fun <T> Observable<T>.requestPermissionsExternalReadWrite(rxPermissions: RxPermi
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
 }
+
+fun <T> Observable<T>.requestPermissionsExternalReadWriteAndAudioRecord(rxPermissions: RxPermissions): Observable<T> {
+    return requestPermissions(rxPermissions,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO)
+}

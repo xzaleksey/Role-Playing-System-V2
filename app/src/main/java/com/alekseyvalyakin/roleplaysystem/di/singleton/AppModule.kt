@@ -21,6 +21,8 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.room.AppDatabase
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractorImpl
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
@@ -177,6 +179,12 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun textRecognizer(context: Context): TextRecognizer {
         return TextRecognizerImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun soundRecordInteractor(fileInfoProvider: FileInfoProvider): SoundRecordInteractor {
+        return SoundRecordInteractorImpl(fileInfoProvider)
     }
 
 }

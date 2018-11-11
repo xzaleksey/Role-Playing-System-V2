@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogMessage
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -30,6 +31,8 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     lateinit var logRepository: LogRepository
     @Inject
     lateinit var game: Game
+    @Inject
+    lateinit var soundRecordInteractor: SoundRecordInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     private val screenName = "MasterLog"
@@ -68,17 +71,17 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
             }
             is LogPresenter.UiEvent.OpenAudio -> {
                 return Observable.fromCallable {
-                    Timber.d("Open audio")
+                    soundRecordInteractor.startRecordFile()
                 }
             }
             is LogPresenter.UiEvent.OpenTexts -> {
                 return Observable.fromCallable {
-                    Timber.d("Open texts")
+                    soundRecordInteractor.stopRecordingFile()
                 }
             }
             is LogPresenter.UiEvent.StartRecording -> {
                 return Observable.fromCallable {
-                    Timber.d("Start recording")
+                    soundRecordInteractor.pauseRecordingFile()
                 }
             }
         }

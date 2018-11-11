@@ -30,6 +30,7 @@ import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.WorkManagerWrapper
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
@@ -123,4 +124,6 @@ interface SingletonDependencyProvider {
     fun firebaseApi(): FirebaseApi
 
     fun firestoreNamesRepo(): FirestoreNamesRepository
+
+    fun soundRecordInteractor(): SoundRecordInteractor
 }

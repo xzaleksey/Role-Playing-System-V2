@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.utils.file
 
 import android.content.Context
 import android.os.Environment
+import android.os.Environment.DIRECTORY_MUSIC
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.kbeanie.multipicker.utils.FileUtils
@@ -26,6 +27,14 @@ class FileInfoProviderImpl(
         return File(FileUtils.getExternalFilesDir(Environment.DIRECTORY_PICTURES, context))
     }
 
+    override fun getRecordsTempDir(): File {
+        return File(FileUtils.getExternalFilesDir(Environment.DIRECTORY_MUSIC, context))
+    }
+
+    override fun getRecordsDir(): File {
+        return File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC), "Rpg assistant")
+    }
+
 }
 
 interface FileInfoProvider {
@@ -36,4 +45,8 @@ interface FileInfoProvider {
     fun getAvatarsPath(): File
 
     fun getPhotoInGameDirectory(gameId: String): File
+
+    fun getRecordsTempDir(): File
+
+    fun getRecordsDir(): File
 }

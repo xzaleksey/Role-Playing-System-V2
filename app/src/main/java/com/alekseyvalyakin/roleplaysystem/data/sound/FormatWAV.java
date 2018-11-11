@@ -12,11 +12,14 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 public class FormatWAV implements Encoder {
+    public static String FORMAT_NAME = ".wav";
+
     private int numSamples;
     private EncoderInfo info;
     private int bytesPerSample;
     private RandomAccessFile outFile;
     private ByteOrder order = ByteOrder.LITTLE_ENDIAN;
+
 
     public FormatWAV(EncoderInfo info, File out) {
         this.info = info;
@@ -48,11 +51,11 @@ public class FormatWAV implements Encoder {
 
         write("fmt ");
         write(subChunk1Size, order);
-        write((short)audioFormat, order); //short
+        write((short) audioFormat, order); //short
         write((short) info.getChannels(), order); // short
         write(info.getSampleRate(), order);
         write(byteRate, order);
-        write((short)blockAlign, order); // short
+        write((short) blockAlign, order); // short
         write((short) info.getBps(), order); // short
 
         write("data");
