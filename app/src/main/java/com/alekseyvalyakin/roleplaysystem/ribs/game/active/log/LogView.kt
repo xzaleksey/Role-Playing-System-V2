@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundService
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
@@ -38,10 +39,9 @@ class LogView constructor(
     private val flexibleAdapter = LogAdapter(emptyList(), relay)
     private lateinit var textDisposable: Disposable
     private val rxPermissions = RxPermissions(context as FragmentActivity)
-    private lateinit
-    var input: EditText
-    lateinit var tvRecordTime: TextView
-    var recordViewGroup: ViewGroup
+    private lateinit var input: EditText
+    private lateinit var tvRecordTime: TextView
+    private var recordViewGroup: ViewGroup
     lateinit var ivStopRecord: ImageView
     lateinit var ivPauseRecord: ImageView
     private lateinit var inputActions: ViewGroup
@@ -237,9 +237,9 @@ class LogView constructor(
     }
 
     private fun startRecording(): Observable<LogPresenter.UiEvent.StartRecording> {
-        return RxView.clicks(micBtn).map {
-            LogPresenter.UiEvent.StartRecording
-        }
+        return RxView.clicks(micBtn)
+                .requestPermissionsExternalReadWriteAndAudioRecord(rxPermissions)
+                .map { LogPresenter.UiEvent.StartRecording }
     }
 
     private fun observeSearchInput(): Observable<LogPresenter.UiEvent.SearchInput> = searchToolbar.observeSearchInput()

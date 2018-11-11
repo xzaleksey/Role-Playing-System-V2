@@ -159,4 +159,9 @@
     <string name="input_something">Записать что-то…</string>
     <string name="yesterday">Вчера</string>
     <string name="today">Сегодня</string>
+    <string name="stop">Стоп</string>
+    <string name="record_sound_paused">Запись приостановлена</string>
+    <string name="recording_sound">Ведется запись звука…</string>
+    <string name="pause">Пауза</string>
+    <string name="continue_record">Продолжить</string>
 </resources>

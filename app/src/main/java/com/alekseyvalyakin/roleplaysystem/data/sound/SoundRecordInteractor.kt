@@ -192,7 +192,10 @@ class SoundRecordInteractorImpl(
                             return@fromCallable (relay.value.copy(e = IllegalStateException("No temp file"), inProgress = false))
                         }
                     }
-                }.subscribeOn(Schedulers.newThread()).subscribeWithErrorLogging { relay.accept(it) }
+                }.subscribeOn(Schedulers.newThread()).subscribeWithErrorLogging {
+                    relay.accept(it)
+                    relay.accept(RecordInfo())
+                }
     }
 
     private fun getInfo(): EncoderInfo {
@@ -224,6 +227,10 @@ data class RecordInfo(
 
     fun isFinalFileEmpty(): Boolean {
         return !finalFile.exists()
+    }
+
+    fun isRecordingFinished(): Boolean {
+        return (!isFinalFileEmpty() || e != null) || (isTempFileEmpty() && isFinalFileEmpty())
     }
 
 }

@@ -297,5 +297,10 @@
         </P>
          ]]>
     </string>
+    <string name="stop">Stop</string>
+    <string name="record_sound_paused">Paused</string>
+    <string name="recording_sound">Recording…</string>
+    <string name="pause">Pause</string>
+    <string name="continue_record">Continue</string>
 
 </resources>

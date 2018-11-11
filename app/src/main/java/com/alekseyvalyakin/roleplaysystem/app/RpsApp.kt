@@ -39,6 +39,7 @@ class RpsApp : Application() {
         remoteConfig.setDefaults(R.xml.default_config)
 
         getAppComponent().remoteConfigProvider().fetch()
+        getAppComponent().appSubscriptionManager().subscribe()
     }
 
     fun getAppComponent(): AppComponent {

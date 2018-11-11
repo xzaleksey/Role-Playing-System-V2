@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
+import com.alekseyvalyakin.roleplaysystem.app.AppSubscriptionManager
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.character.GameCharacterRepository
@@ -126,4 +127,6 @@ interface SingletonDependencyProvider {
     fun firestoreNamesRepo(): FirestoreNamesRepository
 
     fun soundRecordInteractor(): SoundRecordInteractor
+
+    fun appSubscriptionManager(): AppSubscriptionManager
 }

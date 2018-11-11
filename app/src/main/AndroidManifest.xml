@@ -41,6 +41,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".data.sound.SoundService" />
+
         <activity
             android:name=".app.MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.alekseyvalyakin.roleplaysystem.BuildConfig
+import com.alekseyvalyakin.roleplaysystem.app.AppSubscriptionManager
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProvider
 import com.alekseyvalyakin.roleplaysystem.crypto.SimpleCryptoProviderImpl
@@ -21,6 +22,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.room.AppDatabase
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.sound.RecordSoundObserver
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractorImpl
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
@@ -185,6 +187,18 @@ class AppModule(private val mApp: RpsApp) {
     @Singleton
     fun soundRecordInteractor(fileInfoProvider: FileInfoProvider): SoundRecordInteractor {
         return SoundRecordInteractorImpl(fileInfoProvider)
+    }
+
+    @Provides
+    @Singleton
+    fun recordSoundObserver(soundInteractor: SoundRecordInteractor, context: Context): RecordSoundObserver {
+        return RecordSoundObserver(soundInteractor, context)
+    }
+
+    @Provides
+    @Singleton
+    fun appSubscriptionManager(recordSoundObserver: RecordSoundObserver): AppSubscriptionManager {
+        return AppSubscriptionManager(recordSoundObserver)
     }
 
 }
