@@ -59,6 +59,9 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
         soundRecordInteractor.observeRecordingState()
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
+                    if (it.e != null) {
+                        Timber.e(it.e)
+                    }
                     presenter.updateRecordState(LogRecordState(it))
                 }
     }

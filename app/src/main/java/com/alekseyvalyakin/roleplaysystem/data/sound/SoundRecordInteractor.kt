@@ -74,7 +74,7 @@ class SoundRecordInteractorImpl(
                 if (min <= 0) {
                     val e = IllegalStateException("Unable to initialize AudioRecord: Bad audio values")
                     Timber.e(e)
-                    emitter.onNext(RecordInfo(e = e))
+                    emitter.onNext(RecordInfo(e = e, inProgress = false))
                     return@create
                 }
 
@@ -86,7 +86,7 @@ class SoundRecordInteractorImpl(
                 if (recorder.state != AudioRecord.STATE_INITIALIZED) {
                     val e = IllegalStateException("audio state not initialized")
                     Timber.e(e)
-                    emitter.onNext(RecordInfo(e = e))
+                    emitter.onNext(RecordInfo(e = e, inProgress = false))
                     return@create
                 }
                 val realStart = System.currentTimeMillis() - startTimeMillis
@@ -119,7 +119,7 @@ class SoundRecordInteractorImpl(
                     }
                 }
             } catch (e: Exception) {
-                emitter.onNext(relay.value.copy(e = e))
+                emitter.onNext(relay.value.copy(e = e, inProgress = false))
             } finally {
                 recorder?.release()
                 rs?.close()

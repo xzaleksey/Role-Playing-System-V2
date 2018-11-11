@@ -200,8 +200,10 @@ class LogView constructor(
             recordViewGroup.visibility = View.GONE
         }
         updateMicVisibility(input.text)
-        if  (viewModel.isFinished()){
+        if (viewModel.isFinished()) {
             context.toast(R.string.record_saved)
+        } else if (viewModel.recordInfo.e != null) {
+            context.toast(R.string.record_error)
         }
     }
 
