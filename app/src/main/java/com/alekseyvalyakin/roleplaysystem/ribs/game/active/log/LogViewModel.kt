@@ -27,4 +27,6 @@ data class LogRecordState(
                 .withZone(DateTimeZone.UTC)
                 .toString("HH:mm:ss")
     }
+
+    fun isFinished(): Boolean = recordInfo.isRecordingFinished()
 }

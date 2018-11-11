@@ -302,5 +302,6 @@
     <string name="recording_sound">Recording…</string>
     <string name="pause">Pause</string>
     <string name="continue_record">Continue</string>
+    <string name="record_saved">Record saved</string>
 
 </resources>

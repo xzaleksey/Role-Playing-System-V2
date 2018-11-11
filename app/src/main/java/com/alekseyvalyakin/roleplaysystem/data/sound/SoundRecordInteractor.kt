@@ -35,8 +35,6 @@ class SoundRecordInteractorImpl(
         val value = relay.value!!
         val recordsTempDir = fileInfoProvider.getRecordsTempDir()
         recordsTempDir.mkdirs()
-        Timber.d("records tempdir %s", recordsTempDir.absolutePath)
-        Timber.d("recordsDir %s", fileInfoProvider.getRecordsDir().absolutePath)
 
         val tempFile = if (!value.isFinalFileEmpty() || value.isTempFileEmpty()) {
             File(recordsTempDir, DateTime().millis.toString() + FormatWAV.FORMAT_NAME)
@@ -117,7 +115,6 @@ class SoundRecordInteractorImpl(
                     if (stableRefresh || diff >= s) {
                         stableRefresh = true
                         rs.write(buffer)
-                        Timber.d("Start " + startTimeMillis + "totalMillis " + totalMillis)
                         emitter.onNext(RecordInfo(startTimeMillis, totalMillis, tempFile, inProgress = true))
                     }
                 }
@@ -230,7 +227,7 @@ data class RecordInfo(
     }
 
     fun isRecordingFinished(): Boolean {
-        return (!isFinalFileEmpty() || e != null) || (isTempFileEmpty() && isFinalFileEmpty())
+        return !isFinalFileEmpty()
     }
 
 }

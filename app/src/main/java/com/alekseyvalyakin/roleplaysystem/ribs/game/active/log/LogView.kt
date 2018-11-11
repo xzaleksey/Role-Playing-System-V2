@@ -12,7 +12,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.data.sound.SoundService
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
@@ -201,6 +200,9 @@ class LogView constructor(
             recordViewGroup.visibility = View.GONE
         }
         updateMicVisibility(input.text)
+        if  (viewModel.isFinished()){
+            context.toast(R.string.record_saved)
+        }
     }
 
     override fun clearSearchInput() {

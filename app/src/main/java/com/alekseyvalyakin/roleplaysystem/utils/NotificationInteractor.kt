@@ -34,6 +34,7 @@ class NotificationInteractorImpl(
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(caption)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setProgress(100, percentComplete, false)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
