@@ -46,7 +46,7 @@ const val UPDATE_CLASS = "update_class"
 
 //Game settings races
 const val CREATE_CUSTOM_RACE = "create_custom_race"
-const val SELECT_DEFAULT_RACE= "select_default_race"
+const val SELECT_DEFAULT_RACE = "select_default_race"
 const val UNSELECT_DEFAULT_RACE = "unselect_default_race"
 const val UNSELECT_CUSTOM_RACE = "unselect_custom_race"
 const val DELETE_CUSTOM_RACE = "delete_custom_race"
@@ -54,7 +54,7 @@ const val UPDATE_RACE = "update_race"
 
 //Game settings skills
 const val CREATE_CUSTOM_SKILL = "create_custom_skill"
-const val SELECT_DEFAULT_SKILL= "select_default_skill"
+const val SELECT_DEFAULT_SKILL = "select_default_skill"
 const val UNSELECT_DEFAULT_SKILL = "unselect_default_skill"
 const val UNSELECT_CUSTOM_SKILL = "unselect_custom_skill"
 const val DELETE_CUSTOM_SKILL = "delete_custom_skill"
@@ -62,11 +62,17 @@ const val UPDATE_SKILL = "update_skill"
 
 //Game settings spells
 const val CREATE_CUSTOM_SPELL = "create_custom_spell"
-const val SELECT_DEFAULT_SPELL= "select_default_spell"
+const val SELECT_DEFAULT_SPELL = "select_default_spell"
 const val UNSELECT_DEFAULT_SPELL = "unselect_default_spell"
 const val UNSELECT_CUSTOM_SPELL = "unselect_custom_spell"
 const val DELETE_CUSTOM_SPELL = "delete_custom_spell"
 const val UPDATE_SPELL = "update_spell"
+
+//GameLog
+const val OPEN_AUDIO = "open_audio"
+const val OPEN_TEXTS = "open_texts"
+const val START_RECORD = "start_record"
+const val STOP_RECORD = "stop_record"
 
 //Create game
 const val ACTIVATE_GAME = "activate_game"

@@ -7,6 +7,8 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
@@ -36,7 +38,8 @@ class ActiveGameRouter(
         gameSettingsBuilder: GameSettingsBuilder,
         private val fullSizePhotoBuilder: FullSizePhotoBuilder,
         gameCharactersBuilder: GameCharactersBuilder,
-        logBuilder: LogBuilder
+        logBuilder: LogBuilder,
+        menuBuilder: MenuBuilder
 ) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component) {
 
     private val modernRouter = routerNavigatorFactory.create<State>(this)
@@ -54,6 +57,9 @@ class ActiveGameRouter(
 
     private val gameLogAttachTransition = BaseActiveGameInternalAttachTransition(logBuilder, view)
     private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<LogRouter, State>(view) {}
+
+    private val gameMenuAttachTransition = BaseActiveGameInternalAttachTransition(menuBuilder, view)
+    private val gameMenuDetachTransition = object : DefaultActiveGameInternalDetachTransition<MenuRouter, State>(view) {}
 
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
@@ -74,7 +80,10 @@ class ActiveGameRouter(
                 onNavigate(State.SETTINGS)
                 modernRouter.pushRetainedState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
             }
-
+            NavigationId.MENU -> {
+                onNavigate(State.MENU)
+                modernRouter.pushRetainedState(State.MENU, gameMenuAttachTransition, gameMenuDetachTransition)
+            }
             NavigationId.CHARACTERS -> {
                 onNavigate(State.CHARACTERS)
                 modernRouter.pushRetainedState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
@@ -153,9 +162,10 @@ class ActiveGameRouter(
         companion object {
             val DICES = State("DICES", NavigationId.DICES)
             val PHOTOS = State("PHOTOS", NavigationId.PHOTOS)
-            val SETTINGS = State("SETTINGS", NavigationId.MENU)
+            val SETTINGS = State("SETTINGS", NavigationId.SETTINGS)
             val CHARACTERS = State("CHARACTERS", NavigationId.CHARACTERS)
             val RECORDS = State("RECORDS", NavigationId.RECORDS)
+            val MENU = State("MENU", NavigationId.MENU)
         }
     }
 }
