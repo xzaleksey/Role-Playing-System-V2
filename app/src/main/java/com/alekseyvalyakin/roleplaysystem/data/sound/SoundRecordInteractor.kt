@@ -4,7 +4,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Process
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.FileEncoder
+import com.alekseyvalyakin.roleplaysystem.data.sound.Format3GP.FileEncoder
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
