@@ -241,4 +241,4 @@ function resolve(data, path = []) {
     }
 }
 
-resolve(data);
+//resolve(data);
