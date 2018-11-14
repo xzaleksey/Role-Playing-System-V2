@@ -13,6 +13,9 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
 ) : ViewRouter<V, I, C>(view, interactor, component), RouterNavigator<StateT> {
     private val myTag = "MyModernRouter"
     private val tempBundle = Bundle()
+    private val navigationStack = ArrayDeque<RouterNavigator.RouterAndState<StateT>>()
+    private val hostRouterName: String = javaClass.simpleName
+    private var currentTransientRouterAndState: RouterNavigator.RouterAndState<StateT>? = null
 
     @SuppressLint("VisibleForTests")
     override fun saveInstanceState(outState: Bundle) {
@@ -48,10 +51,6 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
     open fun attachRib(attachInfo: AttachInfo<StateT>) {
 
     }
-
-    private val navigationStack = ArrayDeque<RouterNavigator.RouterAndState<StateT>>()
-    private val hostRouterName: String = javaClass.simpleName
-    private var currentTransientRouterAndState: RouterNavigator.RouterAndState<StateT>? = null
 
     init {
         log(String.format(
