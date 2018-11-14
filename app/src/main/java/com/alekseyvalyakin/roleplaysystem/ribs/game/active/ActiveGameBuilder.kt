@@ -76,7 +76,6 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                     component: Component,
                     view: ActiveGameView,
                     interactor: ActiveGameInteractor,
-                    routerNavigatorFactory: RouterNavigatorFactory,
                     activeGameViewModelProvider: ActiveGameViewModelProvider,
                     relay: Relay<ActiveGameEvent>): ActiveGameRouter {
 
@@ -84,7 +83,6 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                         interactor,
                         component,
                         DiceBuilder(component),
-                        routerNavigatorFactory,
                         activeGameViewModelProvider,
                         PhotoBuilder(component),
                         GameSettingsBuilder(component),

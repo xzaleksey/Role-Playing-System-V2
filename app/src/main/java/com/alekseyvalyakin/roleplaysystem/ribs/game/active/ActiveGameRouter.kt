@@ -19,9 +19,10 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettings
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.BaseActiveGameInternalAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.DefaultActiveGameInternalDetachTransition
-import com.uber.rib.core.RouterNavigatorFactory
-import com.uber.rib.core.RouterNavigatorState
-import com.uber.rib.core.ViewRouter
+import com.uber.rib.core.AttachInfo
+import com.uber.rib.core.BaseRouter
+import com.uber.rib.core.SerializableRouterNavigatorState
+import timber.log.Timber
 
 /**
  * Adds and removes children of {@link ActiveGameBuilder.ActiveGameScope}.
@@ -32,7 +33,6 @@ class ActiveGameRouter(
         interactor: ActiveGameInteractor,
         component: ActiveGameBuilder.Component,
         diceBuilder: DiceBuilder,
-        routerNavigatorFactory: RouterNavigatorFactory,
         private val activeGameViewModelProvider: ActiveGameViewModelProvider,
         photoBuilder: PhotoBuilder,
         gameSettingsBuilder: GameSettingsBuilder,
@@ -40,9 +40,8 @@ class ActiveGameRouter(
         gameCharactersBuilder: GameCharactersBuilder,
         logBuilder: LogBuilder,
         menuBuilder: MenuBuilder
-) : ViewRouter<ActiveGameView, ActiveGameInteractor, ActiveGameBuilder.Component>(view, interactor, component) {
+) : BaseRouter<ActiveGameView, ActiveGameInteractor, ActiveGameRouter.State, ActiveGameBuilder.Component>(view, interactor, component) {
 
-    private val modernRouter = routerNavigatorFactory.create<State>(this)
     private val dicesAttachTransition = BaseActiveGameInternalAttachTransition(diceBuilder, view)
     private val dicesDetachTransition = object : DefaultActiveGameInternalDetachTransition<DiceRouter, State>(view) {}
 
@@ -60,45 +59,56 @@ class ActiveGameRouter(
 
     private val gameMenuAttachTransition = BaseActiveGameInternalAttachTransition(menuBuilder, view)
     private val gameMenuDetachTransition = object : DefaultActiveGameInternalDetachTransition<MenuRouter, State>(view) {}
+    private val navigator = mutableMapOf<NavigationId, (AttachInfo<State>) -> Unit>()
 
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
 
-    fun attachView(navigationId: NavigationId) {
-        when (navigationId) {
-            NavigationId.DICES -> {
-                onNavigate(State.DICES)
-                modernRouter.pushRetainedState(State.DICES, dicesAttachTransition, dicesDetachTransition)
-            }
-
-            NavigationId.PHOTOS -> {
-                onNavigate(State.PHOTOS)
-                modernRouter.pushRetainedState(State.PHOTOS, photoAttachTransition, photoDetachTransition)
-            }
-
-            NavigationId.SETTINGS -> {
-                onNavigate(State.SETTINGS)
-                modernRouter.pushRetainedState(State.SETTINGS, gameSettingsAttachTransition, gameSettingsDetachTransition)
-            }
-            NavigationId.MENU -> {
-                onNavigate(State.MENU)
-                modernRouter.pushRetainedState(State.MENU, gameMenuAttachTransition, gameMenuDetachTransition)
-            }
-            NavigationId.CHARACTERS -> {
-                onNavigate(State.CHARACTERS)
-                modernRouter.pushRetainedState(State.CHARACTERS, gameCharactersAttachTransition, gameCharacterssDetachTransition)
-            }
-
-            NavigationId.RECORDS -> {
-                onNavigate(State.RECORDS)
-                modernRouter.pushRetainedState(State.RECORDS, gameLogAttachTransition, gameLogsDetachTransition)
-            }
+    init {
+        navigator[NavigationId.DICES] = {
+            pushRetainedState(State.DICES(), dicesAttachTransition, dicesDetachTransition)
+        }
+        navigator[NavigationId.PHOTOS] = {
+            pushRetainedState(State.PHOTOS(), photoAttachTransition, photoDetachTransition)
+        }
+        navigator[NavigationId.SETTINGS] = {
+            pushRetainedState(State.SETTINGS(), gameSettingsAttachTransition, gameSettingsDetachTransition)
+        }
+        navigator[NavigationId.MENU] = {
+            pushRetainedState(State.MENU(), gameMenuAttachTransition, gameMenuDetachTransition)
+        }
+        navigator[NavigationId.CHARACTERS] = {
+            pushRetainedState(State.CHARACTERS(), gameCharactersAttachTransition, gameCharacterssDetachTransition)
+        }
+        navigator[NavigationId.RECORDS] = {
+            pushRetainedState(State.RECORDS(), gameLogAttachTransition, gameLogsDetachTransition)
         }
     }
 
-    private fun onNavigate(newState: State) {
-        if (newState != modernRouter.peekState()) {
-//            modernRouter.popState()
+
+    fun attachView(navigationId: NavigationId) {
+        when (navigationId) {
+            NavigationId.DICES -> {
+                attachRib(AttachInfo(State.DICES(), false))
+            }
+
+            NavigationId.PHOTOS -> {
+                attachRib(AttachInfo(State.PHOTOS(), false))
+            }
+
+            NavigationId.SETTINGS -> {
+                attachRib(AttachInfo(State.SETTINGS(), false))
+            }
+            NavigationId.MENU -> {
+                attachRib(AttachInfo(State.MENU(), false))
+            }
+            NavigationId.CHARACTERS -> {
+                attachRib(AttachInfo(State.CHARACTERS(), false))
+            }
+
+            NavigationId.RECORDS -> {
+                attachRib(AttachInfo(State.RECORDS(), false))
+            }
         }
     }
 
@@ -114,7 +124,7 @@ class ActiveGameRouter(
     private fun detachFullSizePhoto(): Boolean {
         if (fullSizePhotoRouter != null) {
             val fullScreenContainer = view.getFullScreenContainer()
-            detachChild(fullSizePhotoRouter)
+            detachChild(fullSizePhotoRouter!!)
             fullScreenContainer.removeView(fullSizePhotoRouter!!.view)
             fullSizePhotoRouter = null
             return true
@@ -128,7 +138,7 @@ class ActiveGameRouter(
             return false
         }
 
-        if (modernRouter.peekState() == null) {
+        if (peekState() == null) {
             return false
         }
 
@@ -136,36 +146,56 @@ class ActiveGameRouter(
             return true
         }
 
-        if (modernRouter.peekRouter()?.handleBackPress() == true) {
+        if (peekRouter()?.handleBackPress() == true) {
             return true
         }
 
-        modernRouter.popState()
+        popState()
 
-        return modernRouter.peekState() != null
+        return peekState() != null
     }
 
     fun onDelete() {
         canBeClosed = true
     }
 
-    fun getCurrentNavigationId(): NavigationId {
-        return modernRouter.peekState()?.navigationId ?: NavigationId.CHARACTERS
+    override fun attachRib(attachInfo: AttachInfo<State>) {
+        Timber.d("attach Rib ${attachInfo.state.navigationId}")
+        navigator[attachInfo.state.navigationId]?.invoke(attachInfo)
     }
 
-    data class State(val name: String, val navigationId: NavigationId) : RouterNavigatorState {
+    fun getCurrentNavigationId(): NavigationId {
+        return peekState()?.navigationId ?: NavigationId.CHARACTERS
+    }
+
+    sealed class State(val name: String, val navigationId: NavigationId) : SerializableRouterNavigatorState {
+        class DICES : State("DICES", NavigationId.DICES)
+        class PHOTOS : State("PHOTOS", NavigationId.PHOTOS)
+        class SETTINGS : State("SETTINGS", NavigationId.SETTINGS)
+        class CHARACTERS : State("CHARACTERS", NavigationId.CHARACTERS)
+        class RECORDS : State("RECORDS", NavigationId.RECORDS)
+        class MENU : State("MENU", NavigationId.MENU)
 
         override fun name(): String {
             return name
         }
 
-        companion object {
-            val DICES = State("DICES", NavigationId.DICES)
-            val PHOTOS = State("PHOTOS", NavigationId.PHOTOS)
-            val SETTINGS = State("SETTINGS", NavigationId.SETTINGS)
-            val CHARACTERS = State("CHARACTERS", NavigationId.CHARACTERS)
-            val RECORDS = State("RECORDS", NavigationId.RECORDS)
-            val MENU = State("MENU", NavigationId.MENU)
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as State
+
+            if (name != other.name) return false
+            if (navigationId != other.navigationId) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = name.hashCode()
+            result = 31 * result + navigationId.hashCode()
+            return result
         }
     }
 }

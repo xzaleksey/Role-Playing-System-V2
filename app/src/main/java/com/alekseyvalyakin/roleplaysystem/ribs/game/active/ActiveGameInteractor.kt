@@ -4,9 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameInteractor.Model.Companion.KEY
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.uber.rib.core.*
@@ -53,7 +51,9 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
 
         model = savedInstanceState?.run {
             getSerializable<Model>(KEY)
-        } ?: getDefaultModel()
+        } ?: getDefaultModel().apply {
+            handleNavigation(this.navigationId)
+        }
 
         if (savedInstanceState == null) {
             gameRepository.updateDate(viewModelProvider.getCurrentGame())
@@ -61,7 +61,6 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                     .addToDisposables()
         }
 
-        handleNavigation(model.navigationId)
         gameRepository.observeDocumentDelete(viewModelProvider.getCurrentGame().id)
                 .subscribeWithErrorLogging {
                     Timber.d("Game deleted")
@@ -123,13 +122,6 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     }
 
     override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>, childInfo: Serializable?) {
-        if (clazz == DiceRouter::class.java) {
-            Timber.d("Restored dice Router")
-            router.attachView(NavigationId.DICES)
-        } else if (clazz == PhotoRouter::class.java) {
-            Timber.d("Restored photos Router")
-            router.attachView(NavigationId.PHOTOS)
-        }
     }
 
     override fun getRestorableInfo(): Serializable? {
