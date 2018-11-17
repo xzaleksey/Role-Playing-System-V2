@@ -21,20 +21,7 @@ import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogAdapter
-import com.alekseyvalyakin.roleplaysystem.utils.buttonsView
-import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getFileNameInputFilter
-import com.alekseyvalyakin.roleplaysystem.utils.getFloatDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
-import com.alekseyvalyakin.roleplaysystem.utils.getString
-import com.alekseyvalyakin.roleplaysystem.utils.increaseTouchArea
-import com.alekseyvalyakin.roleplaysystem.utils.requestPermissionsExternalReadWriteAndAudioRecord
-import com.alekseyvalyakin.roleplaysystem.utils.searchToolbar
-import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
-import com.alekseyvalyakin.roleplaysystem.utils.updateWithAnimateToStartOnNewItem
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.jakewharton.rxbinding2.view.RxView
@@ -45,30 +32,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko._LinearLayout
-import org.jetbrains.anko.alignParentEnd
-import org.jetbrains.anko.alignParentRight
-import org.jetbrains.anko.backgroundColorResource
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.centerVertically
-import org.jetbrains.anko.dimen
-import org.jetbrains.anko.editText
-import org.jetbrains.anko.hintResource
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.imageView
-import org.jetbrains.anko.leftOf
-import org.jetbrains.anko.leftPadding
-import org.jetbrains.anko.linearLayout
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.padding
+import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
-import org.jetbrains.anko.relativeLayout
-import org.jetbrains.anko.rightPadding
-import org.jetbrains.anko.textColorResource
-import org.jetbrains.anko.textSizeDimen
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.wrapContent
 import java.util.concurrent.TimeUnit
 
 class LogView constructor(
@@ -98,7 +63,6 @@ class LogView constructor(
 
     init {
         orientation = VERTICAL
-        clipChildren = false
 
         searchToolbar = searchToolbar({
             id = R.id.search_view
@@ -249,23 +213,32 @@ class LogView constructor(
                     .input(hint = getString(R.string.input_name),
                             waitForPositiveButton = false,
                             inputType = InputType.TYPE_CLASS_TEXT,
-                            prefill = viewModel.recordInfo.finalFile.name,
+                            prefill = viewModel.recordInfo.finalFile.nameWithoutExtension,
                             callback = object : InputCallback {
                                 override fun invoke(dialog: MaterialDialog, text: CharSequence) {
                                     dialog.setActionButtonEnabled(WhichButton.POSITIVE, !text.isBlank())
                                 }
                             })
                     .positiveButton(android.R.string.ok, click = object : DialogCallback {
-                        override fun invoke(p1: MaterialDialog) {
-                            relay.accept(LogPresenter.UiEvent.SaveRecord(viewModel, p1.getInputField()!!.text.toString()))
+                        override fun invoke(m: MaterialDialog) {
+                            relay.accept(LogPresenter.UiEvent.SaveRecord(viewModel, m.getInputField()!!.text.toString()))
                         }
                     })
-                    .apply { this.getInputField()!!.filters = arrayOf(getFileNameInputFilter()) }
+                    .apply {
+                        this.getInputField()!!.run {
+                            this.filters = arrayOf(getFileNameInputFilter())
+                            this.setSelection(this.length())
+                        }
+                    }
                     .show()
 
         } else if (viewModel.recordInfo.e != null) {
             context.toast(R.string.record_error)
         }
+    }
+
+    override fun showSuccessSave() {
+        context.toast(R.string.record_saved)
     }
 
     override fun clearSearchInput() {

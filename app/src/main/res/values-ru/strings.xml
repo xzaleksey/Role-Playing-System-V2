@@ -167,5 +167,6 @@
     <string name="record_saved">Запись успешно сохранена</string>
     <string name="record_error">Произошла ошибка во время записи</string>
     <string name="confirm_record_name">Имя файла</string>
+    <string name="input_file_name">Введите имя файла</string>
 
 </resources>

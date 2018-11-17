@@ -25,4 +25,6 @@ interface LogPresenter {
     fun clearSearchInput()
 
     fun updateRecordState(viewModel: LogRecordState)
+
+    fun showSuccessSave()
 }

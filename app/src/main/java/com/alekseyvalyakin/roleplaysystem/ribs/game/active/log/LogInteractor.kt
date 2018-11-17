@@ -54,8 +54,11 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                 .addToDisposables()
 
         presenter.observeUiEvents()
-                .flatMap(this::handleUiEvent)
-                .onErrorReturn { Timber.e(it) }
+                .flatMap {
+                    return@flatMap handleUiEvent(it).onErrorReturn { t ->
+                        Timber.e(t)
+                    }
+                }
                 .subscribeWithErrorLogging()
                 .addToDisposables()
 
@@ -71,13 +74,14 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                 }
     }
 
-    private fun handleUiEvent(uiEvent: LogPresenter.UiEvent): Observable<*> {
+    private fun handleUiEvent(uiEvent: LogPresenter.UiEvent): Observable<Any> {
         return when (uiEvent) {
             is LogPresenter.UiEvent.SendTextMessage -> {
                 if (uiEvent.text.isNotBlank()) {
                     presenter.clearSearchInput()
                     return logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
                             .toObservable()
+                            .cast(Any::class.java)
                 }
                 Observable.empty<Any>()
             }
@@ -117,8 +121,11 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
             is LogPresenter.UiEvent.SaveRecord -> {
                 return Observable.fromCallable {
                     val finalFile = uiEvent.logRecordState.recordInfo.finalFile
-                    finalFile.renameTo(File(finalFile.parentFile, uiEvent.newFileName))
+                    finalFile.renameTo(File(finalFile.parentFile, "${uiEvent.newFileName}.${finalFile.extension}"))
                 }.subscribeOn(ioScheduler)
+                        .observeOn(uiScheduler)
+                        .doOnNext { presenter.showSuccessSave() }
+                        .cast(Any::class.java)
             }
         }
     }

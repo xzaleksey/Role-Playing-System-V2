@@ -37,7 +37,7 @@ class SoundRecordInteractorImpl(
         recordsTempDir.mkdirs()
 
         val tempFile = if (!value.isFinalFileEmpty() || value.isTempFileEmpty()) {
-            File(recordsTempDir, DateTime().millis.toString() + FormatWAV.FORMAT_NAME)
+            File(recordsTempDir, DateTime().toString("yyyy-MM-dd-hh-mm-ss") + FormatWAV.FORMAT_NAME)
         } else {
             value.tempFile
         }
