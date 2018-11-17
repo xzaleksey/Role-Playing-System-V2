@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.widget.TextViewCompat
+import android.text.InputFilter
 import android.text.TextUtils
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
@@ -31,6 +32,7 @@ fun TextView.getVisibleText(): String {
     val maxLines = TextViewCompat.getMaxLines(this)
     val lastLine = if (maxLines < 1 || maxLines > this.lineCount) this.lineCount else maxLines
 
+
     if (TextUtils.TruncateAt.END == this.ellipsize) {
         val ellCount = this.layout.getEllipsisCount(lastLine - 1)
 
@@ -46,4 +48,18 @@ fun TextView.getVisibleText(): String {
 
 fun TextView.isAllTextVisible(): Boolean {
     return text == getVisibleText()
+}
+
+fun getFileNameInputFilter(): InputFilter {
+    return InputFilter { source, start, end, dest, dstart, dend ->
+        if (source.isEmpty()) return@InputFilter null
+        val last = source[source.length - 1]
+
+        val reservedChars = "?:\"*|/\\<>"
+        if (reservedChars.indexOf(last) > -1) {
+            source.subSequence(0, source.length - 1)
+        } else {
+            null
+        }
+    }
 }

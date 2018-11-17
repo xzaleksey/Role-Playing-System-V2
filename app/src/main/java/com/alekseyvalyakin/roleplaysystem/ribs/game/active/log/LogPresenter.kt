@@ -15,6 +15,7 @@ interface LogPresenter {
         object StartRecording : UiEvent()
         object StopRecording : UiEvent()
         class PauseRecording(val logRecordState: LogRecordState) : UiEvent()
+        class SaveRecord(val logRecordState: LogRecordState, val newFileName: String) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>

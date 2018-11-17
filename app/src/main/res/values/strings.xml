@@ -304,5 +304,6 @@
     <string name="continue_record">Continue</string>
     <string name="record_saved">Record saved</string>
     <string name="record_error">Error during audio record</string>
+    <string name="confirm_record_name">File name</string>
 
 </resources>

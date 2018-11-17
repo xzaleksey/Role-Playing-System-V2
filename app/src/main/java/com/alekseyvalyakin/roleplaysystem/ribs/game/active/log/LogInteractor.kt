@@ -4,7 +4,6 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogMessage
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
-import com.alekseyvalyakin.roleplaysystem.data.sound.ExoPlayerInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
@@ -19,6 +18,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @RibInteractor
@@ -34,6 +34,8 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
     lateinit var logRepository: LogRepository
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
+    @field:[Inject ThreadConfig(ThreadConfig.TYPE.IO)]
+    lateinit var ioScheduler: Scheduler
     @Inject
     lateinit var game: Game
     @Inject
@@ -111,6 +113,12 @@ class LogInteractor : BaseInteractor<LogPresenter, LogRouter>() {
                         soundRecordInteractor.startRecordFile()
                     }
                 }
+            }
+            is LogPresenter.UiEvent.SaveRecord -> {
+                return Observable.fromCallable {
+                    val finalFile = uiEvent.logRecordState.recordInfo.finalFile
+                    finalFile.renameTo(File(finalFile.parentFile, uiEvent.newFileName))
+                }.subscribeOn(ioScheduler)
             }
         }
     }
