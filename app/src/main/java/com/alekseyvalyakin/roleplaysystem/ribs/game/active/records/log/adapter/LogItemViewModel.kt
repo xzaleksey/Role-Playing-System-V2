@@ -16,9 +16,9 @@ data class LogItemTextViewModel(
 ) : AbstractFlexibleItem<LogTextViewHolder>() {
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, inflater: LayoutInflater, parent: ViewGroup): LogTextViewHolder {
-        val photoInGameItemView = LogTextItemView(parent.context)
-        photoInGameItemView.layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
-        return LogTextViewHolder(photoInGameItemView, adapter)
+        val view = LogTextItemView(parent.context)
+        view.layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
+        return LogTextViewHolder(view, adapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>?, viewHolder: LogTextViewHolder, position: Int, payloads: MutableList<Any?>?) {
@@ -26,6 +26,6 @@ data class LogItemTextViewModel(
     }
 
     override fun getLayoutRes(): Int {
-        return FlexibleLayoutTypes.PHOTO_IN_GAME
+        return FlexibleLayoutTypes.LOG_ITEM_TEXT
     }
 }

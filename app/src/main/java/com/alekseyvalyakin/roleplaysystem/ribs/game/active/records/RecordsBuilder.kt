@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
-import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.AudioBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.LogBuilder
@@ -39,6 +38,7 @@ class RecordsBuilder(dependency: ParentComponent) : BaseViewBuilder<RecordsView,
 
     interface RecordComponent : ActiveGameDependencyProvider {
         fun getSearchFilterFlowable(): Flowable<FilterModel>
+        fun getSearchFilterInteractor(): SearchFilterInteractor
     }
 
     @dagger.Module
@@ -71,8 +71,19 @@ class RecordsBuilder(dependency: ParentComponent) : BaseViewBuilder<RecordsView,
             @RecordsScope
             @Provides
             @JvmStatic
+            internal fun searchFilterInteractor(view: RecordsView): SearchFilterInteractor {
+                return object : SearchFilterInteractor {
+                    override fun clearSearchInput() {
+                        view.clearSearchInput()
+                    }
+                }
+            }
+
+            @RecordsScope
+            @Provides
+            @JvmStatic
             internal fun searchFilterFlowable(behaviorRelay: BehaviorRelay<FilterModel>): Flowable<FilterModel> {
-                return behaviorRelay.toFlowable(BackpressureStrategy.LATEST)
+                return behaviorRelay.toFlowable(BackpressureStrategy.LATEST).distinctUntilChanged()
             }
         }
     }

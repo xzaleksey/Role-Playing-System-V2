@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordState
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.SearchFilterInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.Relay
@@ -39,6 +40,8 @@ class LogInteractor : BaseInteractor<LogPresenter, RecordsRouter>() {
     lateinit var soundRecordInteractor: SoundRecordInteractor
     @Inject
     lateinit var game: Game
+    @Inject
+    lateinit var searchFilterInteractor: SearchFilterInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     private val screenName = "Records_log"
@@ -77,7 +80,7 @@ class LogInteractor : BaseInteractor<LogPresenter, RecordsRouter>() {
         return when (uiEvent) {
             is LogPresenter.UiEvent.SendTextMessage -> {
                 if (uiEvent.text.isNotBlank()) {
-//                    presenter.clearSearchInput()
+                    searchFilterInteractor.clearSearchInput()
                     return logRepository.createDocument(game.id, LogMessage.createTextModel(uiEvent.text))
                             .toObservable()
                             .cast(Any::class.java)

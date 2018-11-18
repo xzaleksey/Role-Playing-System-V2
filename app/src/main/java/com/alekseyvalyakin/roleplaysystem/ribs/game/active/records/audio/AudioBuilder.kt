@@ -2,13 +2,17 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
+import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Flowable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -49,6 +53,16 @@ class AudioBuilder(dependency: ParentComponent) : BaseViewBuilder<AudioView, Aud
                     view: AudioView,
                     interactor: AudioInteractor): AudioRouter {
                 return AudioRouter(view, interactor, component)
+            }
+
+            @AudioScope
+            @Provides
+            @JvmStatic
+            internal fun viewModelProvider(stringRepository: StringRepository, filterModelFlowable: Flowable<FilterModel>, fileInfoProvider: FileInfoProvider): AudioViewModelProvider {
+                return AudioViewModelProviderImpl(
+                        stringRepository,
+                        filterModelFlowable,
+                        fileInfoProvider)
             }
         }
     }
