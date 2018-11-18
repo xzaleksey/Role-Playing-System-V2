@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.adapter
 
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.viewholders.FlexibleViewHolder

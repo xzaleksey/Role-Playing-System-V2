@@ -9,7 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharactersBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
@@ -19,7 +19,6 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettings
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.ViewBuilder
 import dagger.Binds
 import dagger.BindsInstance
@@ -88,7 +87,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                         GameSettingsBuilder(component),
                         FullSizePhotoBuilder(component),
                         GameCharactersBuilder(component),
-                        LogBuilder(component),
+                        RecordsBuilder(component),
                         MenuBuilder(component))
             }
 
@@ -129,7 +128,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
             FullSizePhotoBuilder.ParentComponent,
             GameSettingsBuilder.ParentComponent,
             GameCharactersBuilder.ParentComponent,
-            LogBuilder.ParentComponent,
+            RecordsBuilder.ParentComponent,
             MenuBuilder.ParentComponent {
         @dagger.Component.Builder
         interface Builder {

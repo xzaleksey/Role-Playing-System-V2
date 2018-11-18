@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log
 
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
@@ -6,7 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.MessageType
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.secondarysubheader.SecondarySubHeaderViewModel
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter.LogItemTextViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.adapter.LogItemTextViewModel
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.Flowables
@@ -16,10 +16,11 @@ import org.joda.time.format.DateTimeFormat
 class LogViewModelProviderImpl(
         private val game: Game,
         private val logRepository: LogRepository,
-        private val stringRepository: StringRepository
+        private val stringRepository: StringRepository,
+        private val filterModelFlowable: Flowable<FilterModel>
 ) : LogViewModelProvider {
 
-    override fun observeViewModel(filterModelFlowable: Flowable<FilterModel>): Flowable<LogViewModel> {
+    override fun observeViewModel(): Flowable<LogViewModel> {
         return Flowables.combineLatest(filterModelFlowable, logRepository.observeLogMessagesOrdered(game.id))
                 .map { pair ->
                     val items = mutableListOf<IFlexible<*>>()
@@ -49,5 +50,5 @@ class LogViewModelProviderImpl(
 }
 
 interface LogViewModelProvider {
-    fun observeViewModel(filterModelFlowable: Flowable<FilterModel>): Flowable<LogViewModel>
+    fun observeViewModel(): Flowable<LogViewModel>
 }

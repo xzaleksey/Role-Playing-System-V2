@@ -5,8 +5,6 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharac
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharactersRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceRouter
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogBuilder
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.LogRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
@@ -15,6 +13,8 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoRouter
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.BaseActiveGameInternalAttachTransition
@@ -38,7 +38,7 @@ class ActiveGameRouter(
         gameSettingsBuilder: GameSettingsBuilder,
         private val fullSizePhotoBuilder: FullSizePhotoBuilder,
         gameCharactersBuilder: GameCharactersBuilder,
-        logBuilder: LogBuilder,
+        recordsBuilder: RecordsBuilder,
         menuBuilder: MenuBuilder
 ) : BaseRouter<ActiveGameView, ActiveGameInteractor, ActiveGameRouter.State, ActiveGameBuilder.Component>(view, interactor, component) {
 
@@ -54,8 +54,8 @@ class ActiveGameRouter(
     private val gameCharactersAttachTransition = BaseActiveGameInternalAttachTransition(gameCharactersBuilder, view)
     private val gameCharacterssDetachTransition = object : DefaultActiveGameInternalDetachTransition<GameCharactersRouter, State>(view) {}
 
-    private val gameLogAttachTransition = BaseActiveGameInternalAttachTransition(logBuilder, view)
-    private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<LogRouter, State>(view) {}
+    private val gameLogAttachTransition = BaseActiveGameInternalAttachTransition(recordsBuilder, view)
+    private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<RecordsRouter, State>(view) {}
 
     private val gameMenuAttachTransition = BaseActiveGameInternalAttachTransition(menuBuilder, view)
     private val gameMenuDetachTransition = object : DefaultActiveGameInternalDetachTransition<MenuRouter, State>(view) {}

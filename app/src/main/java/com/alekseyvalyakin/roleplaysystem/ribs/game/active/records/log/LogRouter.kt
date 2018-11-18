@@ -1,4 +1,5 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log
+
 
 import com.uber.rib.core.ViewRouter
 

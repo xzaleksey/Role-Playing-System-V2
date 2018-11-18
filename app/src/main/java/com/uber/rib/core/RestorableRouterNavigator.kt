@@ -30,5 +30,5 @@ interface RestorableRouterNavigator<StateT : SerializableRouterNavigatorState> :
 
 data class AttachInfo<RouterState : SerializableRouterNavigatorState>(
         val state: RouterState,
-        val isTransient: Boolean
+        val isTransient: Boolean = true
 ) : Serializable

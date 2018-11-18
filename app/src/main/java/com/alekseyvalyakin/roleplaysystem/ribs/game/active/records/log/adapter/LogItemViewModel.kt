@@ -1,4 +1,4 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log.adapter
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

@@ -23,6 +23,7 @@ import com.uber.rib.core.DefaultAttachTransition
 import com.uber.rib.core.DefaultDetachTransition
 import com.uber.rib.core.RouterNavigatorFactory
 import com.uber.rib.core.ViewRouter
+import timber.log.Timber
 
 /**
  * Adds and removes children of {@link RootBuilder.RootScope}.
@@ -67,6 +68,7 @@ class RootRouter(
     fun attachMain() {
         val peekState = router.peekState()
         if (peekState == null || peekState == RootState.AUTH) {
+            Timber.d("Attach main")
             router.pushRetainedState(RootState.MAIN, mainAttachTransition, mainDetachTransition)
         }
     }

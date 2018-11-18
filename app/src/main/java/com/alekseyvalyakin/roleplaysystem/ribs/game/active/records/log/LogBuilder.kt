@@ -1,17 +1,19 @@
-package com.alekseyvalyakin.roleplaysystem.ribs.game.active.log
+package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
+import io.reactivex.Flowable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -32,7 +34,7 @@ class LogBuilder(dependency: ParentComponent) : BaseViewBuilder<LogView, LogRout
         return LogView(parentViewGroup.context)
     }
 
-    interface ParentComponent : ActiveGameDependencyProvider
+    interface ParentComponent : RecordsBuilder.RecordComponent
 
     @dagger.Module
     abstract class Module {
@@ -57,8 +59,11 @@ class LogBuilder(dependency: ParentComponent) : BaseViewBuilder<LogView, LogRout
             @LogScope
             @Provides
             @JvmStatic
-            internal fun logViewModelProvider(game: Game, logRepository: LogRepository, stringRepository: StringRepository): LogViewModelProvider {
-                return LogViewModelProviderImpl(game, logRepository,stringRepository)
+            internal fun logViewModelProvider(game: Game,
+                                              logRepository: LogRepository,
+                                              stringRepository: StringRepository,
+                                              filterModelFlowable: Flowable<FilterModel>): LogViewModelProvider {
+                return LogViewModelProviderImpl(game, logRepository, stringRepository, filterModelFlowable)
             }
         }
     }

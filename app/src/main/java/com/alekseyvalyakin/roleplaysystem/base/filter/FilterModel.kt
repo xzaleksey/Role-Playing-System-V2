@@ -12,4 +12,9 @@ data class FilterModel constructor(
 
     fun isCleared(): Boolean = previousQuery.isNotEmpty() && query.isEmpty()
 
+    companion object {
+        fun createFromFilterModel(filterModel: FilterModel, text: String): FilterModel {
+            return filterModel.copy(previousQuery = filterModel.query, query = text)
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.uber.rib.core
 import android.annotation.SuppressLint
 import android.support.annotation.IntRange
 import android.view.View
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsRouter
 import timber.log.Timber
 import java.io.Serializable
 import java.util.*
@@ -19,7 +20,7 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
 
     @SuppressLint("VisibleForTests")
     override fun saveInstanceState(outState: Bundle) {
-        val routersToSave: Set<Router<*, *>> = getRouters()
+        val routersToSave: Set<Router<*, *>> = getRoutersToSave()
         super.saveInstanceState(outState)
         val bundle = outState.getBundleExtra(KEY_CHILD_ROUTERS)!!
         for (router in routersToSave) {
@@ -40,7 +41,7 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
     }
 
     public override fun detachChild(childRouter: Router<out Interactor<*, *>, out InteractorBaseComponent<*>>) {
-        if (getRouters().contains(childRouter)) {
+        if (getRoutersToSave().contains(childRouter)) {
             val bundle = Bundle()
             childRouter.saveInstanceState(bundle)
             tempBundle.putBundleExtra(childRouter.tag, bundle)
@@ -267,16 +268,19 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         }
     }
 
-    private fun getRouters(): Set<Router<*, *>> {
+    private fun getRoutersToSave(): Set<Router<*, *>> {
         val result = mutableSetOf<Router<*, *>>()
 
         for (routerAndState in navigationStack) {
-            result.add(routerAndState.router)
+            if (!children.contains(routerAndState.router)) {
+                result.add(routerAndState.router)
+            }
         }
 
         return result
     }
 
+    @SuppressLint("BinaryOperationInTimber")
     private fun restoreState(bundle: Bundle) {
         Timber.d("restore state")
         val savedState: SavedState<StateT> = bundle.getSerializable(myTag)

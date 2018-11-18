@@ -24,3 +24,17 @@ import java.io.Serializable
 interface SerializableRouterNavigatorState : RouterNavigatorState, Serializable {
     fun getRestorableInfo(): Serializable? = null
 }
+
+abstract class BaseSerializableRouterNavigatorState : SerializableRouterNavigatorState {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SerializableRouterNavigatorState) {
+            return false
+        }
+        return this.name() == other.name()
+    }
+
+    override fun hashCode(): Int {
+        return name().hashCode()
+    }
+}
