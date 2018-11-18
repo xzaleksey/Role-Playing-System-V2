@@ -1,42 +1,60 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter
 
 import android.content.Context
+import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getFloatDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
-import org.jetbrains.anko.cardview.v7.cardView
 
 class AudioItemView(context: Context) : _FrameLayout(context) {
 
     private lateinit var tvText: TextView
+    private lateinit var tvSecondary: TextView
+    private lateinit var ivIcon: ImageView
 
     init {
-        clipToPadding = false
-        leftPadding = getDoubleCommonDimen()
-        rightPadding = getDoubleCommonDimen()
+        backgroundColorResource = R.color.colorWhite
 
-        cardView {
-            radius = getFloatDimen(R.dimen.dp_2)
-            cardElevation = getFloatDimen(R.dimen.dp_4)
+        relativeLayout {
+
+            leftPadding = getDoubleCommonDimen()
+            rightPadding = getDoubleCommonDimen()
+            topPadding = getIntDimen(R.dimen.dp_10)
+            bottomPadding = getIntDimen(R.dimen.dp_10)
+            backgroundResource = getSelectableItemBackGround()
+
+            ivIcon = imageView {
+                imageResource = R.drawable.ic_play
+                id = R.id.icon
+            }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
+                alignParentEnd()
+                centerVertically()
+            }
+
             tvText = textView {
-                leftPadding = getDoubleCommonDimen()
-                rightPadding = getDoubleCommonDimen()
-                topPadding = getIntDimen(R.dimen.dp_12)
-                bottomPadding = getIntDimen(R.dimen.dp_12)
                 id = R.id.tv_text
                 textColorResource = R.color.colorTextPrimary
-            }.lparams(width = matchParent)
-        }.lparams(width = matchParent) {
-            bottomMargin = getCommonDimen()
-        }
+                body1Style()
+            }.lparams(width = matchParent) {
+                alignParentLeft()
+                leftOf(R.id.icon)
+            }
+
+            tvSecondary = textView {
+                textColorResource = R.color.colorTextSecondary
+                text = "Test"
+                captionStyle()
+            }.lparams(width = matchParent) {
+                alignParentLeft()
+                leftOf(R.id.icon)
+                below(R.id.tv_text)
+            }
+        }.lparams(matchParent)
     }
 
-    fun update(text: String) {
-        tvText.text = text
+    fun update(audioItemViewModel: AudioItemViewModel) {
+        tvText.text = audioItemViewModel.text
     }
 
 }

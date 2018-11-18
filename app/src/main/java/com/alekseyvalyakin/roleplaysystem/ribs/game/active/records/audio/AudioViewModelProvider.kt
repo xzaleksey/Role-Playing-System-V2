@@ -4,13 +4,14 @@ import android.os.FileObserver
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.sound.FormatWAV
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioItemViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.Flowables
-import timber.log.Timber
 import java.io.File
 
 class AudioViewModelProviderImpl(
@@ -23,7 +24,7 @@ class AudioViewModelProviderImpl(
 
     private val fileObserver: FileObserver = object : FileObserver(fileInfoProvider.getRecordsDir().absolutePath) {
         override fun onEvent(event: Int, path: String?) {
-            if (event == FileObserver.CREATE || event == FileObserver.DELETE || event == FileObserver.MODIFY) {
+            if (event in setOf(FileObserver.CREATE, FileObserver.DELETE, FileObserver.MODIFY, FileObserver.MOVED_TO, FileObserver.MOVED_FROM)) {
                 filesRelay.accept(getFiles())
             }
         }
@@ -35,9 +36,14 @@ class AudioViewModelProviderImpl(
                     val items = mutableListOf<IFlexible<*>>()
                     val files = pair.second
                     files.forEach {
-                        Timber.d(it.absolutePath)
+                        items.add(AudioItemViewModel(it.absolutePath, it.nameWithoutExtension))
                     }
-                    return@map AudioViewModel(items)
+                    if (items.isNotEmpty()) {
+                        items.add(ShadowDividerViewModel(items.size))
+                    }
+                    val viewModel = AudioViewModel(items)
+
+                    return@map viewModel
                 }.doOnSubscribe {
                     fileObserver.startWatching()
                 }.doOnTerminate {

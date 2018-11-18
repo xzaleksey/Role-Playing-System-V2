@@ -24,7 +24,7 @@ class AudioInteractor : BaseInteractor<AudioPresenter, RecordsRouter>() {
         super.didBecomeActive(savedInstanceState)
         analyticsReporter.setCurrentScreen(screenName)
         audioViewModelProvider.observeViewModel()
-                .subscribeWithErrorLogging {  }
+                .subscribeWithErrorLogging { presenter.update(it) }
                 .addToDisposables()
     }
 

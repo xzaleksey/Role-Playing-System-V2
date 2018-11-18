@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_one"
+        android:icon="@drawable/ic_folder"
+        android:title="Sync" />
+
+    <item
+        android:id="@+id/action_two"
+        android:icon="@drawable/ic_audio_delete"
+        android:title="About" />
+</menu>
