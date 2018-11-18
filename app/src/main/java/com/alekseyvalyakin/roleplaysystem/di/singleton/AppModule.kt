@@ -205,4 +205,10 @@ class AppModule(private val mApp: RpsApp) {
         return ExoPlayerInteractorImpl(context)
     }
 
+    @Provides
+    @Singleton
+    fun audioInteractor(exoPlayerInteractor: ExoPlayerInteractor): AudioFileInteractor {
+        return AudioFileInteractorImpl(exoPlayerInteractor)
+    }
+
 }

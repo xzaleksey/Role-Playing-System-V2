@@ -11,6 +11,7 @@ import timber.log.Timber
 import java.io.File
 
 class ExoPlayerInteractorImpl(private val context: Context) : ExoPlayerInteractor {
+
     private val player: SimpleExoPlayer
 
     init {
@@ -42,6 +43,10 @@ class ExoPlayerInteractorImpl(private val context: Context) : ExoPlayerInteracto
 //                }
     }
 
+    override fun isStateEnded(): Boolean {
+        return player.playbackState == Player.STATE_ENDED
+    }
+
     override fun playFile(file: File) {
         val userAgent = "RPG assistant"
         val mediaSource = ExtractorMediaSource.Factory(DefaultDataSourceFactory(
@@ -52,8 +57,30 @@ class ExoPlayerInteractorImpl(private val context: Context) : ExoPlayerInteracto
         player.prepare(mediaSource)
         player.playWhenReady = true
     }
+
+    override fun pause() {
+        player.playWhenReady = false
+    }
+
+    override fun stop() {
+        player.stop(true)
+    }
+
+    override fun resume() {
+        player.playWhenReady = true
+    }
+
+    override fun getProgress(): Long {
+        return (player.currentPosition * 100) / player.duration
+    }
+
 }
 
 interface ExoPlayerInteractor {
     fun playFile(file: File)
+    fun pause()
+    fun resume()
+    fun getProgress(): Long
+    fun stop()
+    fun isStateEnded(): Boolean
 }

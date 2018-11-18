@@ -13,6 +13,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.updateWithAnimateToStartOnNewItem
 import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.Observable
 import org.jetbrains.anko._LinearLayout
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -51,6 +52,10 @@ class AudioView constructor(
                 viewModel.items,
                 animated = true
         )
+    }
+
+    override fun observe(): Observable<AudioPresenter.UiEvent> {
+        return relay
     }
 
     @SuppressLint("RestrictedApi")

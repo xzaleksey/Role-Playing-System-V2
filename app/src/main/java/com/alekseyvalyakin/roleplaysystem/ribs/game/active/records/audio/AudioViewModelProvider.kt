@@ -3,7 +3,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio
 import android.os.FileObserver
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.FormatWAV
+import com.alekseyvalyakin.roleplaysystem.data.sound.RawSamples
 import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioItemViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
@@ -12,12 +14,15 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.rxkotlin.Flowables
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import java.io.File
 
 class AudioViewModelProviderImpl(
         private val stringRepository: StringRepository,
         private val filterModelFlowable: Flowable<FilterModel>,
-        private val fileInfoProvider: FileInfoProvider
+        private val fileInfoProvider: FileInfoProvider,
+        private val audioFileInteractor: AudioFileInteractor
 ) : AudioViewModelProvider {
 
     private val filesRelay = BehaviorRelay.createDefault(getFiles())
@@ -31,12 +36,24 @@ class AudioViewModelProviderImpl(
     }
 
     override fun observeViewModel(): Flowable<AudioViewModel> {
-        return Flowables.combineLatest(filterModelFlowable, filesRelay.toFlowable(BackpressureStrategy.LATEST))
-                .map { pair ->
+        return Flowables.combineLatest(filterModelFlowable,
+                filesRelay.toFlowable(BackpressureStrategy.LATEST),
+                audioFileInteractor.observe())
+                .map { triple ->
                     val items = mutableListOf<IFlexible<*>>()
-                    val files = pair.second
+                    val files = triple.second
+                    val audioState = triple.third
+
                     files.forEach {
-                        items.add(AudioItemViewModel(it.absolutePath, it.nameWithoutExtension))
+                        val selected = audioState.file == it
+                        items.add(AudioItemViewModel(it,
+                                it.nameWithoutExtension,
+                                DateTime(RawSamples(it).duration)
+                                        .withZone(DateTimeZone.UTC)
+                                        .toString("HH:mm:ss"),
+                                selected,
+                                selected && audioState.isPlaying
+                        ))
                     }
                     if (items.isNotEmpty()) {
                         items.add(ShadowDividerViewModel(items.size))

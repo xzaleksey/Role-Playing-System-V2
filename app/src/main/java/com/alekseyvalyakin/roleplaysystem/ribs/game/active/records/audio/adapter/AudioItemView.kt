@@ -5,6 +5,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.animation.PulseAnimatorX1_5
+import com.daimajia.androidanimations.library.YoYo
+import com.daimajia.androidanimations.library.YoYo.INFINITE
 import org.jetbrains.anko.*
 
 class AudioItemView(context: Context) : _FrameLayout(context) {
@@ -12,9 +15,10 @@ class AudioItemView(context: Context) : _FrameLayout(context) {
     private lateinit var tvText: TextView
     private lateinit var tvSecondary: TextView
     private lateinit var ivIcon: ImageView
+    private var yoYo: YoYo.YoYoString? = null
 
     init {
-        backgroundColorResource = R.color.colorWhite
+        backgroundResource = R.drawable.audio_item_view_background
 
         relativeLayout {
 
@@ -26,6 +30,7 @@ class AudioItemView(context: Context) : _FrameLayout(context) {
 
             ivIcon = imageView {
                 imageResource = R.drawable.ic_play
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
                 id = R.id.icon
             }.lparams(getIntDimen(R.dimen.dp_24), getIntDimen(R.dimen.dp_24)) {
                 alignParentEnd()
@@ -43,7 +48,6 @@ class AudioItemView(context: Context) : _FrameLayout(context) {
 
             tvSecondary = textView {
                 textColorResource = R.color.colorTextSecondary
-                text = "Test"
                 captionStyle()
             }.lparams(width = matchParent) {
                 alignParentLeft()
@@ -53,8 +57,25 @@ class AudioItemView(context: Context) : _FrameLayout(context) {
         }.lparams(matchParent)
     }
 
-    fun update(audioItemViewModel: AudioItemViewModel) {
+
+    fun update(audioItemViewModel: AudioItemViewModel, onClickListener: OnClickListener) {
         tvText.text = audioItemViewModel.text
+        tvSecondary.text = audioItemViewModel.secondaryText
+        val selected = audioItemViewModel.selected
+        isSelected = selected
+        setOnClickListener(onClickListener)
+        ivIcon.imageResource = if (audioItemViewModel.isPlaying) R.drawable.ic_audio_selected else R.drawable.ic_play
+        if (audioItemViewModel.isPlaying) {
+            ivIcon.post {
+                yoYo = YoYo.with(PulseAnimatorX1_5())
+                        .duration(500L)
+                        .repeat(INFINITE)
+                        .playOn(ivIcon)
+            }
+
+        } else {
+            yoYo?.stop(true)
+        }
     }
 
 }

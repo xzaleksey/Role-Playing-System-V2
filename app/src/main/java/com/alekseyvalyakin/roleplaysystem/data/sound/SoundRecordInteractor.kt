@@ -24,7 +24,7 @@ class SoundRecordInteractorImpl(
     private val relay = BehaviorRelay.createDefault<RecordInfo>(RecordInfo())!!
     private var recordDisposable = Disposables.disposed()
     private var saveRecordDisposable = Disposables.disposed()
-    private val sampleRate = 8000
+    private val sampleRate = RawSamples.SAMPLE_RATE
 
     @Synchronized
     override fun startRecordFile() {

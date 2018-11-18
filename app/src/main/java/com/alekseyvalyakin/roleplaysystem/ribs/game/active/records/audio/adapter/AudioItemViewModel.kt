@@ -9,10 +9,14 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 import eu.davidea.flexibleadapter.items.IFlexible
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.wrapContent
+import java.io.File
 
 data class AudioItemViewModel(
-        val id: String,
-        val text: String
+        val file: File,
+        val text: String,
+        val secondaryText: String,
+        val selected: Boolean,
+        val isPlaying: Boolean
 ) : AbstractFlexibleItem<AudioViewHolder>() {
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, inflater: LayoutInflater, parent: ViewGroup): AudioViewHolder {
@@ -22,7 +26,7 @@ data class AudioItemViewModel(
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, viewHolder: AudioViewHolder, position: Int, payloads: MutableList<Any?>?) {
-        viewHolder.bind(this, adapter as AudioAdapter)
+        viewHolder.bind(this, (adapter as AudioAdapter).relay)
     }
 
     override fun getLayoutRes(): Int {

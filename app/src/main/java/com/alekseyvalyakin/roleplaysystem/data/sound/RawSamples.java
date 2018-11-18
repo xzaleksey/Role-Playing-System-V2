@@ -16,6 +16,7 @@ import java.nio.channels.FileChannel;
 public class RawSamples {
     public static int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     public static int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
+    public static int SAMPLE_RATE = 8000;
 
     // quite root gives me 20db
     public static int NOISE_DB = 20;
@@ -100,6 +101,10 @@ public class RawSamples {
 
     public long getSamples() {
         return getSamples(in.length());
+    }
+
+    public long getDuration() {
+        return getSamples() * 1000 / SAMPLE_RATE;
     }
 
     public static long getSamples(long len) {

@@ -31,6 +31,7 @@ import com.alekseyvalyakin.roleplaysystem.data.remoteconfig.RemoteConfigProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameDao
+import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.ExoPlayerInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
@@ -132,4 +133,6 @@ interface SingletonDependencyProvider {
     fun appSubscriptionManager(): AppSubscriptionManager
 
     fun exoPlayerInteractor(): ExoPlayerInteractor
+
+    fun audioFileInteractor(): AudioFileInteractor
 }
