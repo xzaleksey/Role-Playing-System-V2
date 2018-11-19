@@ -27,20 +27,11 @@ class ExoPlayerInteractorImpl(private val context: Context) : ExoPlayerInteracto
                 Timber.e(error)
             }
         })
-//
-//        Flowable.interval(500L, TimeUnit.MILLISECONDS, Schedulers.computation())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWithErrorLogging {
-//                    if (player.duration != 0L) {
-//                        val currentProgress = (player.currentPosition * 100) / player.duration
-//                        if (!player.playWhenReady) {
-//                            player.playWhenReady = true
-//                        } else if (currentProgress > 50L) {
-//                            player.playWhenReady = false
-//                        }
-//                        Timber.d("player progress $currentProgress")
-//                    }
-//                }
+
+    }
+
+    override fun seekTo(progress: Int) {
+        player.seekTo(player.duration * progress / 100)
     }
 
     override fun isStateEnded(): Boolean {
@@ -70,8 +61,8 @@ class ExoPlayerInteractorImpl(private val context: Context) : ExoPlayerInteracto
         player.playWhenReady = true
     }
 
-    override fun getProgress(): Long {
-        return (player.currentPosition * 100) / player.duration
+    override fun getProgress(): Int {
+        return ((player.currentPosition * 100) / player.duration).toInt()
     }
 
 }
@@ -80,7 +71,8 @@ interface ExoPlayerInteractor {
     fun playFile(file: File)
     fun pause()
     fun resume()
-    fun getProgress(): Long
+    fun getProgress(): Int
     fun stop()
     fun isStateEnded(): Boolean
+    fun seekTo(progress: Int)
 }

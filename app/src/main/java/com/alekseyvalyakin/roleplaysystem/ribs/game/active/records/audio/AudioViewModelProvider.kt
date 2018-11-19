@@ -58,7 +58,7 @@ class AudioViewModelProviderImpl(
                     if (items.isNotEmpty()) {
                         items.add(ShadowDividerViewModel(items.size))
                     }
-                    val viewModel = AudioViewModel(items)
+                    val viewModel = AudioViewModel(items, audioState)
 
                     return@map viewModel
                 }.doOnSubscribe {

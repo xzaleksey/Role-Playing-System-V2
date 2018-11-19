@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="external_files"
+        path="." />
+
+    <external-path
+        name="music"
+        path="Rpg assistant" />
+
+    <external-files-path
+        name="sdcard1"
+        path="." />
+
+</paths>

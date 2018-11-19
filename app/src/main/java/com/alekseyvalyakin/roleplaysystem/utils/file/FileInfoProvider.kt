@@ -2,7 +2,6 @@ package com.alekseyvalyakin.roleplaysystem.utils.file
 
 import android.content.Context
 import android.os.Environment
-import android.os.Environment.DIRECTORY_MUSIC
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
 import com.kbeanie.multipicker.utils.FileUtils
@@ -32,7 +31,7 @@ class FileInfoProviderImpl(
     }
 
     override fun getRecordsDir(): File {
-        return File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC), "Rpg assistant")
+        return File(Environment.getExternalStorageDirectory(), "Rpg assistant")
     }
 
 }

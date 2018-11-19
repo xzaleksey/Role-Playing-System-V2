@@ -168,5 +168,7 @@
     <string name="record_error">Произошла ошибка во время записи</string>
     <string name="confirm_record_name">Имя файла</string>
     <string name="input_file_name">Введите имя файла</string>
+    <string name="directory">Директория</string>
+    <string name="open_folder">Открыть папку</string>
 
 </resources>

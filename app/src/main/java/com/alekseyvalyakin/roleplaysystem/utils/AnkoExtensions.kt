@@ -7,6 +7,7 @@ import android.view.ViewManager
 import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.fabmenu.FabMenu
+import com.alekseyvalyakin.roleplaysystem.views.player.PlayerView
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.gms.common.SignInButton
 import org.jetbrains.anko.custom.ankoView
@@ -50,6 +51,13 @@ inline fun ViewManager.chip(theme: Int = 0) = chip({}, theme)
 inline fun ViewManager.chip(init: Chip.() -> Unit) = chip(init, 0)
 
 inline fun ViewManager.chip(init: Chip.() -> Unit, theme: Int = 0) = ankoView(::Chip, theme, init)
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun ViewManager.playerView(theme: Int = 0) = playerView({}, theme)
+
+inline fun ViewManager.playerView(init: PlayerView.() -> Unit) = playerView(init, 0)
+
+inline fun ViewManager.playerView(init: PlayerView.() -> Unit, theme: Int = 0) = ankoView(::PlayerView, theme, init)
 
 
 @Suppress("NOTHING_TO_INLINE")

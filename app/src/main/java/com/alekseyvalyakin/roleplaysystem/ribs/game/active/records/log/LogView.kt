@@ -58,7 +58,6 @@ class LogView constructor(
                 rightPadding = getCommonDimen()
 
                 sendBtn = imageView {
-                    increaseTouchArea()
                     padding = getCommonDimen()
                     backgroundResource = getSelectableItemBorderless()
                     tintImageRes(R.color.colorTextSecondary)
@@ -67,7 +66,6 @@ class LogView constructor(
                     gravity = Gravity.CENTER
                 }
                 micBtn = imageView {
-                    increaseTouchArea()
                     padding = getCommonDimen()
                     backgroundResource = getSelectableItemBorderless()
                     tintImageRes(R.color.colorTextSecondary)
@@ -116,6 +114,8 @@ class LogView constructor(
             sendBtn.visibility = if (it.toString().isBlank()) View.GONE else View.VISIBLE
             updateMicVisibility(it)
         }
+        sendBtn.increaseTouchArea()
+        micBtn.increaseTouchArea()
     }
 
     private fun updateMicVisibility(it: CharSequence) {

@@ -153,13 +153,15 @@ fun View.isOrientationLandscape(): Boolean {
 
 
 fun View.increaseTouchArea(size: Int = getIntDimen(R.dimen.dp_8)) {
-    this.post {
+    val parent = parent as View
+
+    parent.post {
         val rect = Rect()
         this.getHitRect(rect)
         rect.top -= size
         rect.left -= size
         rect.bottom += size
         rect.right += size
-        (parent as View).touchDelegate = TouchDelegate(rect, this)
+        parent.touchDelegate = TouchDelegate(rect, this)
     }
 }

@@ -65,16 +65,18 @@ class AudioItemView(context: Context) : _FrameLayout(context) {
         isSelected = selected
         setOnClickListener(onClickListener)
         ivIcon.imageResource = if (audioItemViewModel.isPlaying) R.drawable.ic_audio_selected else R.drawable.ic_play
-        if (audioItemViewModel.isPlaying) {
-            ivIcon.post {
-                yoYo = YoYo.with(PulseAnimatorX1_5())
-                        .duration(500L)
-                        .repeat(INFINITE)
-                        .playOn(ivIcon)
-            }
+        ivIcon.post {
+            if (audioItemViewModel.isPlaying) {
+                if (yoYo == null || !yoYo!!.isRunning) {
+                    yoYo = YoYo.with(PulseAnimatorX1_5())
+                            .duration(500L)
+                            .repeat(INFINITE)
+                            .playOn(ivIcon)
+                }
 
-        } else {
-            yoYo?.stop(true)
+            } else {
+                yoYo?.stop(true)
+            }
         }
     }
 
