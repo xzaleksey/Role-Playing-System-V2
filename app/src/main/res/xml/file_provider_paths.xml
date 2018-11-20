@@ -4,12 +4,8 @@
         name="external_files"
         path="." />
 
-    <external-path
-        name="music"
-        path="Rpg assistant" />
-
     <external-files-path
-        name="sdcard1"
+        name="external_files"
         path="." />
 
 </paths>

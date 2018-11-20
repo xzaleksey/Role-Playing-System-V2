@@ -89,7 +89,7 @@ class LogInteractor : BaseInteractor<LogPresenter, RecordsRouter>() {
             }
             is LogPresenter.UiEvent.StartRecording -> {
                 return Observable.fromCallable {
-                    soundRecordInteractor.startRecordFile()
+                    soundRecordInteractor.startRecordFile(game.id)
                 }
             }
 

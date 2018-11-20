@@ -12,10 +12,12 @@ import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.View.OnClickListener
+import com.afollestad.materialdialogs.DialogCallback
+import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioAdapter
-import com.alekseyvalyakin.roleplaysystem.utils.openFolder
 import com.alekseyvalyakin.roleplaysystem.utils.playerView
+import com.alekseyvalyakin.roleplaysystem.utils.shareFile
 import com.alekseyvalyakin.roleplaysystem.utils.updateWithAnimateToStartOnNewItem
 import com.alekseyvalyakin.roleplaysystem.views.player.PlayerView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -105,12 +107,27 @@ class AudioView constructor(
         menuHelper.setForceShowIcon(true)
         menuHelper.show()
         menu.setOnMenuItemClickListener {
-            latestViewModel?.run {
+            latestViewModel?.let { audioViewModel ->
                 when (it.itemId) {
-                    R.id.action_directory -> {
-                        context.openFolder(this.audioState.file.parentFile)
+                    R.id.action_share -> {
+                        context.shareFile(audioViewModel.audioState.file)
+                        true
+                    }
+                    R.id.action_delete -> {
+                        MaterialDialog(context)
+                                .title(R.string.delete)
+                                .message(R.string.delete_file)
+                                .positiveButton(android.R.string.ok, click = object : DialogCallback {
+                                    override fun invoke(p1: MaterialDialog) {
+                                        relay.accept(AudioPresenter.UiEvent.DeleteFile(audioViewModel.audioState))
+                                    }
+                                })
+                                .negativeButton(android.R.string.cancel)
+                                .show()
+                        true
                     }
 
+                    else -> false
                 }
             }
             false

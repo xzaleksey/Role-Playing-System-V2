@@ -53,7 +53,13 @@ class AudioInteractor : BaseInteractor<AudioPresenter, RecordsRouter>() {
             }
             is AudioPresenter.UiEvent.SeekTo -> {
                 return Observable.fromCallable {
-                  audioFileInteractor.seekTo(uiEvent.progress)
+                    audioFileInteractor.seekTo(uiEvent.progress)
+                }
+            }
+            is AudioPresenter.UiEvent.DeleteFile -> {
+                return Observable.fromCallable {
+                    audioFileInteractor.stop()
+                    uiEvent.audioState.file.delete()
                 }
             }
 

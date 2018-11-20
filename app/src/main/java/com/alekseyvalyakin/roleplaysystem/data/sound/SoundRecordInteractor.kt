@@ -5,6 +5,7 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Process
 import com.alekseyvalyakin.roleplaysystem.data.sound.Format3GP.FileEncoder
+import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -27,7 +28,7 @@ class SoundRecordInteractorImpl(
     private val sampleRate = RawSamples.SAMPLE_RATE
 
     @Synchronized
-    override fun startRecordFile() {
+    override fun startRecordFile(gameId: String) {
         if (!recordDisposable.isDisposed) {
             return
         }
@@ -36,21 +37,26 @@ class SoundRecordInteractorImpl(
         val recordsTempDir = fileInfoProvider.getRecordsTempDir()
         recordsTempDir.mkdirs()
 
-        val tempFile = if (!value.isFinalFileEmpty() || value.isTempFileEmpty()) {
-            File(recordsTempDir, DateTime().toString("yyyy-MM-dd-hh-mm-ss") + FormatWAV.FORMAT_NAME)
-        } else {
+
+        val fileNotSaved = value.isFinalFileEmpty() && !value.isTempFileEmpty()
+        val tempFile = if (fileNotSaved && gameId == value.gameId) {
             value.tempFile
+        } else {
+            if (fileNotSaved && value.gameId.isNotBlank()) {
+                stopRecordingFile()
+            }
+            File(recordsTempDir, DateTime().toString("yyyy-MM-dd-hh-mm-ss") + FormatWAV.FORMAT_NAME)
         }
-        recordDisposable = startWriting(tempFile)
+        recordDisposable = startWriting(tempFile, gameId)
                 .subscribeOn(Schedulers.newThread())
                 .subscribeWithErrorLogging { relay.accept(it) }
     }
 
     override fun observeRecordingState(): Observable<RecordInfo> {
-        return relay
+        return relay.distinctUntilChanged()
     }
 
-    private fun startWriting(tempFile: File): Observable<RecordInfo> {
+    private fun startWriting(tempFile: File, gameId: String): Observable<RecordInfo> {
         return Observable.create<RecordInfo> { emitter ->
             val bufferSize = AudioRecord.getMinBufferSize(
                     sampleRate,
@@ -74,7 +80,7 @@ class SoundRecordInteractorImpl(
                 if (min <= 0) {
                     val e = IllegalStateException("Unable to initialize AudioRecord: Bad audio values")
                     Timber.e(e)
-                    emitter.onNext(RecordInfo(e = e, inProgress = false))
+                    emitter.onNext(RecordInfo(e = e, inProgress = false, gameId = gameId))
                     return@create
                 }
 
@@ -86,7 +92,7 @@ class SoundRecordInteractorImpl(
                 if (recorder.state != AudioRecord.STATE_INITIALIZED) {
                     val e = IllegalStateException("audio state not initialized")
                     Timber.e(e)
-                    emitter.onNext(RecordInfo(e = e, inProgress = false))
+                    emitter.onNext(RecordInfo(e = e, inProgress = false, gameId = gameId))
                     return@create
                 }
                 val realStart = System.currentTimeMillis() - startTimeMillis
@@ -115,15 +121,15 @@ class SoundRecordInteractorImpl(
                     if (stableRefresh || diff >= s) {
                         stableRefresh = true
                         rs.write(buffer)
-                        emitter.onNext(RecordInfo(startTimeMillis, totalMillis, tempFile, inProgress = true))
+                        emitter.onNext(RecordInfo(startTimeMillis, totalMillis, tempFile, inProgress = true, gameId = gameId))
                     }
                 }
             } catch (e: Exception) {
-                emitter.onNext(relay.value.copy(e = e, inProgress = false))
+                emitter.onNext(relay.value.copy(e = e, inProgress = false, gameId = gameId))
             } finally {
                 recorder?.release()
                 rs?.close()
-                relay.accept(relay.value.copy(inProgress = false))
+                relay.accept(relay.value.copy(inProgress = false, gameId = gameId))
                 Timber.d("tempFile exists ${tempFile.exists()}")
             }
         }
@@ -155,6 +161,19 @@ class SoundRecordInteractorImpl(
     }
 
     @Synchronized
+    override fun resumeRecordingFile() {
+        if (!recordDisposable.isDisposed) {
+            return
+        }
+
+        recordDisposable.dispose()
+        val value = relay.value
+        if (value.gameId.isNotBlank()) {
+            startRecordFile(value.gameId)
+        }
+    }
+
+    @Synchronized
     override fun stopRecordingFile() {
         if (!saveRecordDisposable.isDisposed) {
             return
@@ -169,9 +188,9 @@ class SoundRecordInteractorImpl(
                 .flatMap { value ->
                     Single.fromCallable {
                         Timber.d("before encode ${value.tempFile.absolutePath}")
-                        if (!value.isTempFileEmpty()) {
+                        if (!value.isTempFileEmpty() && value.gameId.isNotBlank()) {
                             val tempFile = value.tempFile
-                            val recordsDir = fileInfoProvider.getRecordsDir()
+                            val recordsDir = fileInfoProvider.getRecordsDir(value.gameId)
                             recordsDir.mkdirs()
                             val finalFile = File(recordsDir, tempFile.name)
                             val encoder = FileEncoder(tempFile, FormatWAV(getInfo(), finalFile))
@@ -204,10 +223,11 @@ class SoundRecordInteractorImpl(
 }
 
 interface SoundRecordInteractor {
-    fun startRecordFile()
+    fun startRecordFile(gameId: String)
     fun stopRecordingFile()
     fun observeRecordingState(): Observable<RecordInfo>
     fun pauseRecordingFile()
+    fun resumeRecordingFile()
 }
 
 data class RecordInfo(
@@ -216,7 +236,8 @@ data class RecordInfo(
         val tempFile: File = File(""),
         val finalFile: File = File(""),
         val e: Exception? = null,
-        val inProgress: Boolean = false
+        val inProgress: Boolean = false,
+        val gameId: String = StringUtils.EMPTY_STRING
 ) {
     fun isTempFileEmpty(): Boolean {
         return !tempFile.exists()

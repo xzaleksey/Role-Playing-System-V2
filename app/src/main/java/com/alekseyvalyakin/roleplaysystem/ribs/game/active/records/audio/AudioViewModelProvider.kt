@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio
 
 import android.os.FileObserver
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.FormatWAV
@@ -22,12 +23,13 @@ class AudioViewModelProviderImpl(
         private val stringRepository: StringRepository,
         private val filterModelFlowable: Flowable<FilterModel>,
         private val fileInfoProvider: FileInfoProvider,
-        private val audioFileInteractor: AudioFileInteractor
+        private val audioFileInteractor: AudioFileInteractor,
+        private val game: Game
 ) : AudioViewModelProvider {
 
     private val filesRelay = BehaviorRelay.createDefault(getFiles())
 
-    private val fileObserver: FileObserver = object : FileObserver(fileInfoProvider.getRecordsDir().absolutePath) {
+    private val fileObserver: FileObserver = object : FileObserver(fileInfoProvider.getRecordsDir(game.id).absolutePath) {
         override fun onEvent(event: Int, path: String?) {
             if (event in setOf(FileObserver.CREATE, FileObserver.DELETE, FileObserver.MODIFY, FileObserver.MOVED_TO, FileObserver.MOVED_FROM)) {
                 filesRelay.accept(getFiles())
@@ -69,7 +71,7 @@ class AudioViewModelProviderImpl(
     }
 
     fun getFiles(): Array<out File> {
-        return fileInfoProvider.getRecordsDir().listFiles { file ->
+        return fileInfoProvider.getRecordsDir(game.id).listFiles { file ->
             file.absolutePath.endsWith(FormatWAV.FORMAT_NAME)
         }?.apply {
             sortByDescending { it.lastModified() }

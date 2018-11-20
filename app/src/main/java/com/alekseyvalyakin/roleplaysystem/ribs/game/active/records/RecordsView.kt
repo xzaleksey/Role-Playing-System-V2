@@ -36,8 +36,8 @@ class RecordsView constructor(
     private val rxPermissions = RxPermissions(context as FragmentActivity)
     private lateinit var tvRecordTime: TextView
     private var recordViewGroup: ViewGroup
-    lateinit var ivStopRecord: ImageView
-    lateinit var ivPauseRecord: ImageView
+    private lateinit var ivStopRecord: ImageView
+    private lateinit var ivPauseRecord: ImageView
     var container: ViewGroup
     private var latestRecordInfo: RecordState? = null
     private var buttonsView: ButtonsView

@@ -30,8 +30,8 @@ class FileInfoProviderImpl(
         return File(FileUtils.getExternalFilesDir(Environment.DIRECTORY_MUSIC, context))
     }
 
-    override fun getRecordsDir(): File {
-        return File(Environment.getExternalStorageDirectory(), "Rpg assistant")
+    override fun getRecordsDir(gameId:String): File {
+        return File(getRecordsTempDir(), gameId)
     }
 
 }
@@ -47,5 +47,5 @@ interface FileInfoProvider {
 
     fun getRecordsTempDir(): File
 
-    fun getRecordsDir(): File
+    fun getRecordsDir(gameId: String): File
 }

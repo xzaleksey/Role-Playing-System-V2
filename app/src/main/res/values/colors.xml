@@ -16,7 +16,7 @@
     <color name="colorTextSecondary">#5B5B5B</color>
     <color name="colorDivider">#DEDEDE</color>
     <color name="defaultGrayTintColor">#737373</color>
-    <color name="backgroundColor">#FAFAFA</color>
+    <color name="backgroundColor">#F2F2F2</color>
     <color name="logBackgroundColor">#C4C9D2</color>
     <color name="grey12Color">#0c000000</color>
     <color name="grey24Color">#4F4F4F</color>

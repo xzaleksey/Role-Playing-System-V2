@@ -2,18 +2,19 @@ package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.support.v4.content.FileProvider
-import com.alekseyvalyakin.roleplaysystem.R
 import java.io.File
 
 
-fun Context.openFolder(file: File) {
-    val intent = Intent(Intent.ACTION_GET_CONTENT)
+fun Context.shareFile(file: File) {
+    val intent = Intent(Intent.ACTION_SEND)
     val packageName = applicationContext.packageName
-    val uri = FileProvider.getUriForFile(this, "$packageName.provider", file)
-    intent.setDataAndType(uri, "*/*")
+    val uri = FileProvider.getUriForFile(this, packageName, file)
+    intent.type = "*/*"
+    grantUriPermission(packageName, uri, FLAG_GRANT_READ_URI_PERMISSION)
+    intent.putExtra(Intent.EXTRA_STREAM, uri)
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    startActivity(Intent.createChooser(intent, getString(R.string.open_folder)))
+    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+    startActivity(Intent.createChooser(intent, "Share File"))
 }

@@ -306,8 +306,9 @@
     <string name="record_error">Error during audio record</string>
     <string name="confirm_record_name">File name</string>
     <string name="input_file_name">Input file name</string>
-    <string name="directory">Directory</string>
+    <string name="share">Share</string>
     <string name="open_folder">Open folder</string>
+    <string name="delete_file">Delete file?</string>
 
 
 </resources>

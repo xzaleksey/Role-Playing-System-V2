@@ -3,7 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel.Companion.createFromFilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.log.LogRepository
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
@@ -25,8 +24,6 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
     lateinit var presenter: RecordsPresenter
     @Inject
     lateinit var activeGameEventRelay: Relay<ActiveGameEvent>
-    @Inject
-    lateinit var logRepository: LogRepository
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.IO)]
@@ -94,7 +91,7 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
                     if (uiEvent.recordState.isInProgress()) {
                         soundRecordInteractor.pauseRecordingFile()
                     } else {
-                        soundRecordInteractor.startRecordFile()
+                        soundRecordInteractor.startRecordFile(game.id)
                     }
                 }
             }

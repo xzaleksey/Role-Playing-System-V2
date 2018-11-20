@@ -28,7 +28,7 @@ class SoundService : Service() {
             if (intent != null) {
                 when (intent.action) {
                     STOP_SOUND_RECORD -> soundInteractor.stopRecordingFile()
-                    RESUME_SOUND_RECORD -> soundInteractor.startRecordFile()
+                    RESUME_SOUND_RECORD -> soundInteractor.resumeRecordingFile()
                     PAUSE_SOUND_RECORD -> soundInteractor.pauseRecordingFile()
                 }
             }
