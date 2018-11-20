@@ -52,12 +52,17 @@ class NotificationInteractorImpl(
     }
 
 
+    private fun getMediaStyle(): android.support.v4.media.app.NotificationCompat.MediaStyle {
+        return android.support.v4.media.app.NotificationCompat.MediaStyle()
+    }
+
     override fun getSoundRecordNotification(caption: String, inProgress: Boolean): Notification {
 
         val builder = commonBuilder()
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(caption)
+                .setStyle(getMediaStyle().setShowActionsInCompactView())
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(true)
@@ -72,20 +77,24 @@ class NotificationInteractorImpl(
         val actionStop = NotificationCompat.Action.Builder(
                 R.drawable.ic_stop,
                 context.getString(R.string.stop), getPendingIntentStopRecord())
+                .setShowsUserInterface(true)
                 .build()
 
         builder.addAction(actionStop)
         if (inProgress) {
             val actionPause = NotificationCompat.Action.Builder(
-                    R.drawable.ic_pause,
-                    context.getString(R.string.pause), getPendingIntentPauseRecord())
+                    R.drawable.ic_player_pause,
+                    context.getString(R.string.pause),
+                    getPendingIntentPauseRecord())
+                    .setShowsUserInterface(true)
                     .build()
 
             builder.addAction(actionPause)
-        } else{
+        } else {
             val actionResume = NotificationCompat.Action.Builder(
                     R.drawable.ic_play,
                     context.getString(R.string.continue_record), getPendingIntentResumeRecord())
+                    .setShowsUserInterface(true)
                     .build()
 
             builder.addAction(actionResume)
