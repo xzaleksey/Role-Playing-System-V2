@@ -16,10 +16,7 @@ import com.afollestad.materialdialogs.DialogCallback
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioAdapter
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.playerView
-import com.alekseyvalyakin.roleplaysystem.utils.shareFile
-import com.alekseyvalyakin.roleplaysystem.utils.updateWithAnimateToStartOnNewItem
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.player.PlayerView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
@@ -44,7 +41,9 @@ class AudioView constructor(
 
     init {
         layoutTransition = LayoutTransition()
-        clipChildren = false
+        clipToPadding = false
+        topPadding = getCommonDimen()
+
         playerView = playerView {
             id = R.id.player_view
             visibility = View.GONE

@@ -45,6 +45,8 @@ class LogView constructor(
 
     init {
         orientation = VERTICAL
+        topPadding = getCommonDimen()
+        clipToPadding = false
 
         relativeLayout {
             id = R.id.send_form

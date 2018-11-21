@@ -11,7 +11,6 @@ import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Function
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,9 +46,6 @@ class SoundPlayService : Service() {
         registerReceiver(receiver, intentFilter)
 
         compositeDisposable.add(audioFileInteractor.observe()
-                .distinctUntilChanged(Function<AudioState, Boolean> {
-                    return@Function it.isPlaying || it.isEmpty()
-                })
                 .subscribeWithErrorLogging {
                     Timber.d("got update")
                     if (it.isEmpty()) {

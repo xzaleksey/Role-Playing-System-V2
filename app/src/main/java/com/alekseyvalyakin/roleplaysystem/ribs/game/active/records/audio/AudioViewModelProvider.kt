@@ -43,19 +43,23 @@ class AudioViewModelProviderImpl(
                 audioFileInteractor.observe())
                 .map { triple ->
                     val items = mutableListOf<IFlexible<*>>()
+                    val filter = triple.first
                     val files = triple.second
                     val audioState = triple.third
 
                     files.forEach {
-                        val selected = audioState.file == it
-                        items.add(AudioItemViewModel(it,
-                                it.nameWithoutExtension,
-                                DateTime(RawSamples(it).duration)
-                                        .withZone(DateTimeZone.UTC)
-                                        .toString("HH:mm:ss"),
-                                selected,
-                                selected && audioState.isPlaying
-                        ))
+                        val nameWithoutExtension = it.nameWithoutExtension
+                        if (nameWithoutExtension.startsWith(filter.query)) {
+                            val selected = audioState.file == it
+                            items.add(AudioItemViewModel(it,
+                                    nameWithoutExtension,
+                                    DateTime(RawSamples(it).duration)
+                                            .withZone(DateTimeZone.UTC)
+                                            .toString("HH:mm:ss"),
+                                    selected,
+                                    selected && audioState.isPlaying
+                            ))
+                        }
                     }
                     if (items.isNotEmpty()) {
                         items.add(ShadowDividerViewModel(items.size))

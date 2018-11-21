@@ -92,7 +92,7 @@ class RecordsView constructor(
         }))).lparams(matchParent, wrapContent) {
             val horMargin = getDoubleCommonDimen()
             val vMargin = getCommonDimen()
-            setMargins(horMargin, vMargin, horMargin, vMargin)
+            setMargins(horMargin, vMargin, horMargin, 0)
         }
         container = frameLayout {
             clipChildren = false
