@@ -9,9 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
@@ -52,8 +50,8 @@ class SoundRecordInteractorImpl(
                 .subscribeWithErrorLogging { relay.accept(it) }
     }
 
-    override fun observeRecordingState(): Observable<RecordInfo> {
-        return relay.distinctUntilChanged()
+    override fun observeRecordingState(): Flowable<RecordInfo> {
+        return relay.distinctUntilChanged().toFlowable(BackpressureStrategy.LATEST)
     }
 
     private fun startWriting(tempFile: File, gameId: String): Observable<RecordInfo> {
@@ -225,7 +223,7 @@ class SoundRecordInteractorImpl(
 interface SoundRecordInteractor {
     fun startRecordFile(gameId: String)
     fun stopRecordingFile()
-    fun observeRecordingState(): Observable<RecordInfo>
+    fun observeRecordingState(): Flowable<RecordInfo>
     fun pauseRecordingFile()
     fun resumeRecordingFile()
 }

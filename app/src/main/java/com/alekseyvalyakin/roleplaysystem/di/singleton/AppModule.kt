@@ -195,8 +195,22 @@ class AppModule(private val mApp: RpsApp) {
 
     @Provides
     @Singleton
-    fun appSubscriptionManager(recordSoundObserver: RecordSoundObserver): AppSubscriptionManager {
-        return AppSubscriptionManager(recordSoundObserver)
+    fun soundPlayObserver(audioFileInteractor: AudioFileInteractor, context: Context): SoundPlayObserver {
+        return SoundPlayObserver(audioFileInteractor, context)
+    }
+
+    @Provides
+    @Singleton
+    fun soundObserver(audioFileInteractor: AudioFileInteractor, soundRecordInteractor: SoundRecordInteractor): SoundObserver {
+        return SoundObserver(audioFileInteractor, soundRecordInteractor)
+    }
+
+    @Provides
+    @Singleton
+    fun appSubscriptionManager(recordSoundObserver: RecordSoundObserver,
+                               soundPlayObserver: SoundPlayObserver,
+                               soundObserver: SoundObserver): AppSubscriptionManager {
+        return AppSubscriptionManager(recordSoundObserver, soundPlayObserver, soundObserver)
     }
 
     @Provides

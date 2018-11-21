@@ -171,5 +171,7 @@
     <string name="share">Отправить</string>
     <string name="open_folder">Открыть папку</string>
     <string name="delete_file">Удалить файл?</string>
-
+    <string name="playing_sound">Проигрывается…</string>
+    <string name="continue_play_sound">Возобновить</string>
+    <string name="sound_playing_paused">Проигрывание приостановлено</string>
 </resources>

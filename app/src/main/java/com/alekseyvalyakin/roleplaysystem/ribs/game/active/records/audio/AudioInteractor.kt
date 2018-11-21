@@ -9,6 +9,7 @@ import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,6 +30,7 @@ class AudioInteractor : BaseInteractor<AudioPresenter, RecordsRouter>() {
         super.didBecomeActive(savedInstanceState)
         analyticsReporter.setCurrentScreen(screenName)
         audioViewModelProvider.observeViewModel()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWithErrorLogging { presenter.update(it) }
                 .addToDisposables()
         presenter.observe()

@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundPlayService
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordService
 import com.alekseyvalyakin.roleplaysystem.data.workmanager.PhotoInGameUploadWorker
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
@@ -18,4 +19,6 @@ interface AppComponent : SingletonDependencyProvider {
     fun inject(photoInGameUploadWorker: PhotoInGameUploadWorker)
 
     fun inject(photoInGameUploadWorker: SoundRecordService)
+
+    fun inject(soundPlayService: SoundPlayService)
 }

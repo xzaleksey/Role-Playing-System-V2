@@ -300,6 +300,7 @@
     <string name="stop">Stop</string>
     <string name="record_sound_paused">Paused</string>
     <string name="recording_sound">Recording…</string>
+    <string name="playing_sound">Playing…</string>
     <string name="pause">Pause</string>
     <string name="continue_record">Continue</string>
     <string name="record_saved">Record saved</string>
@@ -309,6 +310,8 @@
     <string name="share">Share</string>
     <string name="open_folder">Open folder</string>
     <string name="delete_file">Delete file?</string>
+    <string name="continue_play_sound">Play</string>
+    <string name="sound_playing_paused">Paused playing</string>
 
 
 </resources>

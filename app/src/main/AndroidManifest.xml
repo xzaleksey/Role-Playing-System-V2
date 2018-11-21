@@ -43,6 +43,7 @@
         </service>
 
         <service android:name=".data.sound.SoundRecordService" />
+        <service android:name=".data.sound.SoundPlayService" />
 
         <activity
             android:name=".app.MainActivity"
