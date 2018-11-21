@@ -15,7 +15,7 @@ import io.reactivex.functions.Function
 import timber.log.Timber
 import javax.inject.Inject
 
-class SoundService : Service() {
+class SoundRecordService : Service() {
 
     @Inject
     lateinit var soundInteractor: SoundRecordInteractor
@@ -90,7 +90,7 @@ class SoundService : Service() {
         const val RESUME_SOUND_RECORD = "com.alekseyvalyakin.roleplaysystem.resume_sound_record"
 
         fun startService(context: Context) {
-            context.startService(Intent(context, SoundService::class.java))
+            context.startService(Intent(context, SoundRecordService::class.java))
         }
     }
 

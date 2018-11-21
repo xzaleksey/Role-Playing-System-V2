@@ -17,7 +17,7 @@ class RecordSoundObserver(
                 })
                 .subscribeWithErrorLogging {
                     if (it.inProgress) {
-                        SoundService.startService(context)
+                        SoundRecordService.startService(context)
                     }
                 }
     }

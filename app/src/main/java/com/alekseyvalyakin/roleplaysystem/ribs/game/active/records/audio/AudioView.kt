@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.DialogCallback
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioAdapter
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
 import com.alekseyvalyakin.roleplaysystem.utils.playerView
 import com.alekseyvalyakin.roleplaysystem.utils.shareFile
 import com.alekseyvalyakin.roleplaysystem.utils.updateWithAnimateToStartOnNewItem
@@ -34,6 +35,7 @@ class AudioView constructor(
     private val relay = PublishRelay.create<AudioPresenter.UiEvent>()
     private val flexibleAdapter = AudioAdapter(emptyList(), relay)
     private var latestViewModel: AudioViewModel? = null
+    private var topShadow: View
     private val smoothScroller = object : LinearSmoothScroller(getContext()) {
         override fun getVerticalSnapPreference(): Int {
             return LinearSmoothScroller.SNAP_TO_START
@@ -42,6 +44,7 @@ class AudioView constructor(
 
     init {
         layoutTransition = LayoutTransition()
+        clipChildren = false
         playerView = playerView {
             id = R.id.player_view
             visibility = View.GONE
@@ -73,6 +76,15 @@ class AudioView constructor(
         }.lparams(width = matchParent, height = matchParent) {
             above(R.id.player_view)
         }
+
+        val dividerHeight = getIntDimen(R.dimen.dp_3)
+        topShadow = view {
+            id = R.id.divider
+            backgroundResource = R.drawable.shadow_top_divider
+            visibility = View.GONE
+        }.lparams(width = matchParent, height = dividerHeight) {
+            topMargin = -dividerHeight
+        }
     }
 
     override fun update(viewModel: AudioViewModel) {
@@ -89,6 +101,7 @@ class AudioView constructor(
             playerView.update(viewModel.audioState)
             playerView.visibility = View.VISIBLE
         }
+        topShadow.visibility = if (viewModel.items.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun observe(): Observable<AudioPresenter.UiEvent> {

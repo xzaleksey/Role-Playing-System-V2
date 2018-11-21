@@ -10,7 +10,7 @@ import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.data.sound.SoundService
+import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordService
 
 
 class NotificationInteractorImpl(
@@ -103,15 +103,15 @@ class NotificationInteractorImpl(
     }
 
     private fun getPendingIntentStopRecord(): PendingIntent {
-        return PendingIntent.getBroadcast(context, 0, Intent(SoundService.STOP_SOUND_RECORD), 0)
+        return PendingIntent.getBroadcast(context, 0, Intent(SoundRecordService.STOP_SOUND_RECORD), 0)
     }
 
     private fun getPendingIntentResumeRecord(): PendingIntent {
-        return PendingIntent.getBroadcast(context, 0, Intent(SoundService.RESUME_SOUND_RECORD), 0)
+        return PendingIntent.getBroadcast(context, 0, Intent(SoundRecordService.RESUME_SOUND_RECORD), 0)
     }
 
     private fun getPendingIntentPauseRecord(): PendingIntent {
-        return PendingIntent.getBroadcast(context, 0, Intent(SoundService.PAUSE_SOUND_RECORD), 0)
+        return PendingIntent.getBroadcast(context, 0, Intent(SoundRecordService.PAUSE_SOUND_RECORD), 0)
     }
 
     override fun dismissNotification(notificationId: Int) {

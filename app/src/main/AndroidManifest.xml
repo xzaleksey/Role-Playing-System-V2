@@ -42,7 +42,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".data.sound.SoundService" />
+        <service android:name=".data.sound.SoundRecordService" />
 
         <activity
             android:name=".app.MainActivity"
