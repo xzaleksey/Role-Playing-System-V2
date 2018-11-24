@@ -14,7 +14,6 @@ interface AudioPresenter {
     sealed class UiEvent {
         class TogglePlay(val file: File, val isPlaying: Boolean) : UiEvent()
         class DeleteFile(val audioState: AudioState) : UiEvent()
-        class SeekTo(val file: File, val progress: Int) : UiEvent()
     }
 
     fun observe(): Observable<UiEvent>

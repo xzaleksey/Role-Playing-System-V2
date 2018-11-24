@@ -13,11 +13,35 @@ sealed class GameRecordsAnalyticsEvent(name: String, game: Game, bundle: Bundle 
             game: Game
     ) : GameRecordsAnalyticsEvent(OPEN_LOGS, game)
 
-    class StartRecord(
-            game: Game
-    ) : GameRecordsAnalyticsEvent(START_RECORD, game)
-
     class StopRecord(
             game: Game
     ) : GameRecordsAnalyticsEvent(STOP_RECORD, game)
+
+    class DeleteRecord(
+            game: Game
+    ) : GameRecordsAnalyticsEvent(DELETE_RECORD, game)
+
+    class PausePlayingFile(
+            game: Game
+    ) : GameRecordsAnalyticsEvent(PAUSE_PLAYING_FILE, game, Bundle().apply {
+        putString(VIEW_PARAM, PLAYER_VIEW)
+    })
+
+    class ResumePlayingFile(
+            game: Game
+    ) : GameRecordsAnalyticsEvent(RESUME_PLAYING_FILE, game, Bundle().apply {
+        putString(VIEW_PARAM, PLAYER_VIEW)
+    })
+
+    class SeekTo(
+            game: Game,
+            val progress: Int
+    ) : GameRecordsAnalyticsEvent(SEEK_FILE, game, Bundle().apply {
+        putString(PROGRESS_PARAM, progress.toString())
+        putString(VIEW_PARAM, PLAYER_VIEW)
+    })
+
+    companion object {
+        const val PLAYER_VIEW = "player_view"
+    }
 }

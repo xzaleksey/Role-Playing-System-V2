@@ -23,6 +23,10 @@ class AudioFileInteractorImpl(
     private var disposable = Disposables.disposed()
     private val maxProgress = 100
 
+    override fun currentState(): AudioState {
+        return relay.value!!
+    }
+
     override fun playFile(file: File): Boolean {
         if (relay.value.file == file) {
             resume()
@@ -109,6 +113,7 @@ interface AudioFileInteractor {
     fun resume()
     fun stop()
     fun seekTo(progress: Int)
+    fun currentState():AudioState
 }
 
 data class AudioState(

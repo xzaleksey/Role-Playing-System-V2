@@ -59,6 +59,7 @@ class RecordsView constructor(
         searchToolbar = searchToolbar({
             id = R.id.search_view
             setTitle(getString(R.string.records))
+            hideRightIcon()
         }, SearchToolbar.Mode.HIDDEN).lparams(width = matchParent, height = wrapContent) {}
 
         verticalLayout {

@@ -103,4 +103,5 @@
     <item name="player_view" type="id" />
     <item name="records_view" type="id" />
     <item name="buttons_view" type="id" />
+    <item name="right_container" type="id" />
 </resources>

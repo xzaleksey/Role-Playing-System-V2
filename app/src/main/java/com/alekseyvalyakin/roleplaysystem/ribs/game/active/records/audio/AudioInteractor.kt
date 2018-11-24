@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio
 
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsRouter
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
@@ -19,11 +20,14 @@ class AudioInteractor : BaseInteractor<AudioPresenter, RecordsRouter>() {
     @Inject
     lateinit var presenter: AudioPresenter
     @Inject
+    lateinit var game: Game
+    @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     @Inject
     lateinit var audioViewModelProvider: AudioViewModelProvider
     @Inject
     lateinit var audioFileInteractor: AudioFileInteractor
+
     private val screenName = "Records_audio"
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
@@ -47,15 +51,16 @@ class AudioInteractor : BaseInteractor<AudioPresenter, RecordsRouter>() {
             is AudioPresenter.UiEvent.TogglePlay -> {
                 return Observable.fromCallable {
                     if (!uiEvent.isPlaying) {
+                        analyticsReporter.logEvent(GameRecordAudioAnalyticsEvent.PausePlayingFile(game))
                         audioFileInteractor.pause()
                     } else {
+                        if (audioFileInteractor.currentState().file != uiEvent.file) {
+                            analyticsReporter.logEvent(GameRecordAudioAnalyticsEvent.StartPlayingFile(game))
+                        } else {
+                            analyticsReporter.logEvent(GameRecordAudioAnalyticsEvent.ResumePlayingFile(game))
+                        }
                         audioFileInteractor.playFile(uiEvent.file)
                     }
-                }
-            }
-            is AudioPresenter.UiEvent.SeekTo -> {
-                return Observable.fromCallable {
-                    audioFileInteractor.seekTo(uiEvent.progress)
                 }
             }
             is AudioPresenter.UiEvent.DeleteFile -> {

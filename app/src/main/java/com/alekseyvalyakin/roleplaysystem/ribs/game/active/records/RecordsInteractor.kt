@@ -124,19 +124,23 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
             is RecordsPresenter.UiEvent.TogglePlay -> {
                 return Observable.fromCallable {
                     if (!uiEvent.isPlaying) {
+                        analyticsReporter.logEvent(GameRecordsAnalyticsEvent.PausePlayingFile(game))
                         audioFileInteractor.pause()
                     } else {
+                        analyticsReporter.logEvent(GameRecordsAnalyticsEvent.ResumePlayingFile(game))
                         audioFileInteractor.playFile(uiEvent.file)
                     }
                 }
             }
             is RecordsPresenter.UiEvent.SeekTo -> {
                 return Observable.fromCallable {
+                    analyticsReporter.logEvent(GameRecordsAnalyticsEvent.SeekTo(game, uiEvent.progress))
                     audioFileInteractor.seekTo(uiEvent.progress)
                 }
             }
             is RecordsPresenter.UiEvent.DeleteFile -> {
                 return Observable.fromCallable {
+                    analyticsReporter.logEvent(GameRecordsAnalyticsEvent.DeleteRecord(game))
                     audioFileInteractor.stop()
                     uiEvent.audioState.file.delete()
                 }

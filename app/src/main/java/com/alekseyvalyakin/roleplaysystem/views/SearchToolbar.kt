@@ -7,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
@@ -61,16 +58,6 @@ class SearchToolbar constructor(
                     bottomPadding = getIntDimen(R.dimen.dp_4)
                     visibility = if (mode == Mode.CLASSIC) View.VISIBLE else View.INVISIBLE
 
-                    rightIcon = imageView {
-                        id = R.id.more
-                        padding = getIntDimen(R.dimen.dp_8)
-                        setBackgroundResource(getSelectableItemBorderless())
-                        tintImageRes(R.color.blackColor54)
-                        setImageDrawable(getCompatDrawable(R.drawable.ic_more_vertical))
-                    }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
-                        alignParentRight()
-                        centerVertically()
-                    }
 
                     leftIcon = imageView {
                         id = R.id.action_icon
@@ -83,18 +70,32 @@ class SearchToolbar constructor(
                         marginStart = getIntDimen(R.dimen.dp_8)
                     }
 
-                    clearIcon = imageView {
-                        id = R.id.clear_icon
-                        padding = getIntDimen(R.dimen.dp_8)
-                        setBackgroundResource(getSelectableItemBorderless())
-                        tintImageRes(R.color.grey24Color)
-                        visibility = View.GONE
-                        setImageDrawable(getCompatDrawable(R.drawable.ic_close))
-                    }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                    linearLayout {
+                        orientation = LinearLayout.HORIZONTAL
+                        id = R.id.right_container
+                        clearIcon = imageView {
+                            id = R.id.clear_icon
+                            padding = getIntDimen(R.dimen.dp_8)
+                            setBackgroundResource(getSelectableItemBorderless())
+                            tintImageRes(R.color.grey24Color)
+                            visibility = View.GONE
+                            setImageDrawable(getCompatDrawable(R.drawable.ic_close))
+                        }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                            leftMargin = getIntDimen(R.dimen.dp_8)
+                            marginStart = getIntDimen(R.dimen.dp_8)
+                        }
+
+                        rightIcon = imageView {
+                            id = R.id.more
+                            padding = getIntDimen(R.dimen.dp_8)
+                            setBackgroundResource(getSelectableItemBorderless())
+                            tintImageRes(R.color.blackColor54)
+                            setImageDrawable(getCompatDrawable(R.drawable.ic_more_vertical))
+                        }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                        }
+                    }.lparams(wrapContent, wrapContent) {
+                        alignParentEnd()
                         centerVertically()
-                        leftOf(R.id.more)
-                        leftMargin = getIntDimen(R.dimen.dp_8)
-                        marginStart = getIntDimen(R.dimen.dp_8)
                     }
 
                     tvTitle = textView {
@@ -106,7 +107,7 @@ class SearchToolbar constructor(
                         centerVertically()
                         leftMargin = getIntDimen(R.dimen.dp_16)
                         marginStart = getIntDimen(R.dimen.dp_16)
-                        leftOf(R.id.more)
+                        leftOf(R.id.right_container)
                         rightOf(R.id.action_icon)
                     }
 
@@ -131,7 +132,7 @@ class SearchToolbar constructor(
                         leftMargin = getIntDimen(R.dimen.dp_16)
                         marginStart = getIntDimen(R.dimen.dp_16)
                         rightOf(R.id.action_icon)
-                        leftOf(R.id.clear_icon)
+                        leftOf(R.id.right_container)
                     }
                 }.lparams(width = matchParent, height = wrapContent) {
                     val margin = getIntDimen(R.dimen.dp_8)
@@ -206,6 +207,14 @@ class SearchToolbar constructor(
                 clearIcon.visibility = View.VISIBLE
             }
         }
+    }
+
+    fun hideRightIcon() {
+        rightIcon.visibility = View.GONE
+    }
+
+    fun showRightIcon() {
+        rightIcon.visibility = View.VISIBLE
     }
 
     fun getPopupViewAnchor(): View {
