@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
@@ -60,13 +59,11 @@ class AudioBuilder(dependency: ParentComponent) : BaseViewBuilder<AudioView, Aud
             @AudioScope
             @Provides
             @JvmStatic
-            internal fun viewModelProvider(stringRepository: StringRepository,
-                                           filterModelFlowable: Flowable<FilterModel>,
+            internal fun viewModelProvider(filterModelFlowable: Flowable<FilterModel>,
                                            fileInfoProvider: FileInfoProvider,
                                            audioFileInteractor: AudioFileInteractor,
                                            game: Game): AudioViewModelProvider {
                 return AudioViewModelProviderImpl(
-                        stringRepository,
                         filterModelFlowable,
                         fileInfoProvider,
                         audioFileInteractor,

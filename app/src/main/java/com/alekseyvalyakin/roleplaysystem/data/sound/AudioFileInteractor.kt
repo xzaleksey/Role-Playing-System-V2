@@ -12,6 +12,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
 import java.io.File
+import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 class AudioFileInteractorImpl(
@@ -115,7 +116,7 @@ data class AudioState(
         val totalDuration: Long = 0L,
         val currentProgress: Int = 0,
         val isPlaying: Boolean = false
-) {
+) : Serializable {
     fun isEmpty(): Boolean {
         return !file.exists()
     }

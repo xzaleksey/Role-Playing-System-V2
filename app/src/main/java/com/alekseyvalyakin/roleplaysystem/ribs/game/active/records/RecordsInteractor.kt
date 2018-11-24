@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.records
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel.Companion.createFromFilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
@@ -33,6 +34,8 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
     @Inject
     lateinit var soundRecordInteractor: SoundRecordInteractor
     @Inject
+    lateinit var audioFileInteractor: AudioFileInteractor
+    @Inject
     lateinit var filterRelay: BehaviorRelay<FilterModel>
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
@@ -62,7 +65,13 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
                     presenter.updateRecordState(RecordState(it))
-                }
+                }.addToDisposables()
+
+        audioFileInteractor.observe()
+                .observeOn(uiScheduler)
+                .subscribeWithErrorLogging {
+                    presenter.updateAudioState(it)
+                }.addToDisposables()
 
         presenter.update(model)
     }
@@ -72,17 +81,20 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
             is RecordsPresenter.UiEvent.OpenAudio -> {
                 return Observable.fromCallable {
                     model = RecordsViewModel(RecordTab.AUDIO)
+                    analyticsReporter.logEvent(GameRecordsAnalyticsEvent.OpenAudio(game))
                     router.attachAudio()
                 }
             }
-            is RecordsPresenter.UiEvent.OpenTexts -> {
+            is RecordsPresenter.UiEvent.OpenLogs -> {
                 return Observable.fromCallable {
                     model = RecordsViewModel(RecordTab.LOG)
+                    analyticsReporter.logEvent(GameRecordsAnalyticsEvent.OpenLogs(game))
                     router.attachLog()
                 }
             }
             RecordsPresenter.UiEvent.StopRecording -> {
                 return Observable.fromCallable {
+                    analyticsReporter.logEvent(GameRecordsAnalyticsEvent.StopRecord(game))
                     soundRecordInteractor.stopRecordingFile()
                 }
             }
@@ -107,6 +119,26 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
             is RecordsPresenter.UiEvent.SearchInput -> {
                 return Observable.fromCallable {
                     filterRelay.accept(createFromFilterModel(filterRelay.value, uiEvent.text))
+                }
+            }
+            is RecordsPresenter.UiEvent.TogglePlay -> {
+                return Observable.fromCallable {
+                    if (!uiEvent.isPlaying) {
+                        audioFileInteractor.pause()
+                    } else {
+                        audioFileInteractor.playFile(uiEvent.file)
+                    }
+                }
+            }
+            is RecordsPresenter.UiEvent.SeekTo -> {
+                return Observable.fromCallable {
+                    audioFileInteractor.seekTo(uiEvent.progress)
+                }
+            }
+            is RecordsPresenter.UiEvent.DeleteFile -> {
+                return Observable.fromCallable {
+                    audioFileInteractor.stop()
+                    uiEvent.audioState.file.delete()
                 }
             }
         }

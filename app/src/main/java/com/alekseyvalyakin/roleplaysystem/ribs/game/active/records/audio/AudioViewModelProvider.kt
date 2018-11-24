@@ -20,7 +20,6 @@ import org.joda.time.DateTimeZone
 import java.io.File
 
 class AudioViewModelProviderImpl(
-        private val stringRepository: StringRepository,
         private val filterModelFlowable: Flowable<FilterModel>,
         private val fileInfoProvider: FileInfoProvider,
         private val audioFileInteractor: AudioFileInteractor,

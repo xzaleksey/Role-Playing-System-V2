@@ -9,9 +9,9 @@ sealed class GameRecordsAnalyticsEvent(name: String, game: Game, bundle: Bundle 
             game: Game
     ) : GameRecordsAnalyticsEvent(OPEN_AUDIO, game)
 
-    class OpenTexts(
+    class OpenLogs(
             game: Game
-    ) : GameRecordsAnalyticsEvent(OPEN_TEXTS, game)
+    ) : GameRecordsAnalyticsEvent(OPEN_LOGS, game)
 
     class StartRecord(
             game: Game

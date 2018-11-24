@@ -68,11 +68,11 @@ const val UNSELECT_CUSTOM_SPELL = "unselect_custom_spell"
 const val DELETE_CUSTOM_SPELL = "delete_custom_spell"
 const val UPDATE_SPELL = "update_spell"
 
-//GameLog
+//GameRecords
 const val OPEN_AUDIO = "open_audio"
-const val OPEN_TEXTS = "open_texts"
-const val START_RECORD = "start_record"
+const val OPEN_LOGS = "open_logs"
 const val STOP_RECORD = "stop_record"
+const val START_RECORD = "start_record"
 
 //Create game
 const val ACTIVATE_GAME = "activate_game"

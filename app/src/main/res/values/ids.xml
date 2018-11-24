@@ -101,4 +101,6 @@
     <item name="button_container" type="id" />
     <item name="iv_pause" type="id" />
     <item name="player_view" type="id" />
+    <item name="records_view" type="id" />
+    <item name="buttons_view" type="id" />
 </resources>
