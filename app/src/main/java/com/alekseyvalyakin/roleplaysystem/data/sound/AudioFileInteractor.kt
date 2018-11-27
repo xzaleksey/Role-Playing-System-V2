@@ -46,12 +46,16 @@ class AudioFileInteractorImpl(
     }
 
     override fun resume() {
-        if (relay.value.isPlaying) {
+        val audioState = relay.value
+        if (audioState.isPlaying) {
             return
+        }
+        if (audioState.isFinished()) {
+            seekTo(0)
         }
         Timber.d("audio: resume")
         subscribeUpdates()
-        relay.accept(relay.value.copy(isPlaying = true))
+        relay.accept(audioState.copy(isPlaying = true))
         exoPlayerInteractor.resume()
     }
 
@@ -91,11 +95,8 @@ class AudioFileInteractorImpl(
                     val value = relay.value
                     val ended = exoPlayerInteractor.isStateEnded()
                     if (value.currentProgress < maxProgress && ended) {
-                        relay.accept(value.copy(currentProgress = maxProgress))
-                        stop()
-                    } else if (ended) {
-                        stop()
-                    } else {
+                        relay.accept(value.copy(currentProgress = maxProgress, isPlaying = false))
+                    } else if (!ended) {
                         relay.accept(value.copy(currentProgress = currentProgress))
                     }
                 }
@@ -113,7 +114,7 @@ interface AudioFileInteractor {
     fun resume()
     fun stop()
     fun seekTo(progress: Int)
-    fun currentState():AudioState
+    fun currentState(): AudioState
 }
 
 data class AudioState(
@@ -125,6 +126,8 @@ data class AudioState(
     fun isEmpty(): Boolean {
         return !file.exists()
     }
+
+    fun isFinished(): Boolean = currentProgress == 100
 
     fun fileNameWithoutExtension(): String {
         return file.nameWithoutExtension

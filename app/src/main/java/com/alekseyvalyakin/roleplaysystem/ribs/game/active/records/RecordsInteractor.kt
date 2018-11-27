@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel.Companion.createFromFilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
+import com.alekseyvalyakin.roleplaysystem.data.sound.AudioState
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
@@ -12,11 +13,7 @@ import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
-import com.uber.rib.core.BaseInteractor
-import com.uber.rib.core.Bundle
-import com.uber.rib.core.RibInteractor
-import com.uber.rib.core.getSerializable
-import com.uber.rib.core.putSerializable
+import com.uber.rib.core.*
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -47,7 +44,7 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
     private val screenName = "Records"
-
+    private var latestAudioState: AudioState? = null
     private var model: RecordsViewModel = RecordsViewModel()
 
     override fun didBecomeActive(savedInstanceState: Bundle?) {
@@ -77,6 +74,7 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
         audioFileInteractor.observe()
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
+                    latestAudioState = it
                     presenter.updateAudioState(it)
                 }.addToDisposables()
 
@@ -100,6 +98,10 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
             }
             is RecordsPresenter.UiEvent.OpenLogs -> {
                 return Observable.fromCallable {
+                    val audioState = latestAudioState
+                    if (audioState != null && audioState.isFinished()) {
+                        audioFileInteractor.stop()
+                    }
                     model = RecordsViewModel(RecordTab.LOG)
                     analyticsReporter.logEvent(GameRecordsAnalyticsEvent.OpenLogs(game))
                     router.attachLog()

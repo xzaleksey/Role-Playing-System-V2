@@ -30,5 +30,6 @@ interface RecordsPresenter {
     fun updateRecordState(viewModel: RecordState)
 
     fun showSuccessSave()
+
     fun updateAudioState(audioState: AudioState)
 }

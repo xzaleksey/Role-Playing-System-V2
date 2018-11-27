@@ -48,7 +48,7 @@ class SoundPlayService : Service() {
         compositeDisposable.add(audioFileInteractor.observe()
                 .subscribeWithErrorLogging {
                     Timber.d("got update")
-                    if (it.isEmpty()) {
+                    if (it.isFinished() || it.isEmpty()) {
                         stopSelf()
                     } else {
                         val inProgress = it.isPlaying

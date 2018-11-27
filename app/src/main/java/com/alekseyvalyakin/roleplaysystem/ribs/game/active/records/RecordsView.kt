@@ -158,15 +158,15 @@ class RecordsView constructor(
 
     @SuppressLint("RestrictedApi")
     fun showMenu() {
-        val menu = PopupMenu(context, playerView)
+        val menu = PopupMenu(context, playerView.getAnchorView())
         menu.inflate(R.menu.audio_file_menu)
         menu.setOnMenuItemClickListener({
             return@setOnMenuItemClickListener true
         })
 
-        val menuHelper = MenuPopupHelper(context, menu.menu as MenuBuilder, playerView)
+        val menuHelper = MenuPopupHelper(context, menu.menu as MenuBuilder, playerView.getAnchorView())
         menuHelper.setForceShowIcon(true)
-        menuHelper.show()
+        menuHelper.show(getIntDimen(R.dimen.dp_4), getCommonDimen())
         menu.setOnMenuItemClickListener {
             latestAudioState?.let { audioState ->
                 when (it.itemId) {

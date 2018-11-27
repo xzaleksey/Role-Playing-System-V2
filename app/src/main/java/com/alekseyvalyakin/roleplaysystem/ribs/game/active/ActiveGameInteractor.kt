@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
 import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
+import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameInteractor.Model.Companion.KEY
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
@@ -26,11 +27,12 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     lateinit var viewModelProvider: ActiveGameViewModelProvider
     @Inject
     lateinit var activityListener: ActivityListener
-
     @Inject
     lateinit var gameRepository: GameRepository
     @Inject
     lateinit var activeGameEventObservable: Observable<ActiveGameEvent>
+    @Inject
+    lateinit var audioFileInteractor: AudioFileInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 
@@ -48,7 +50,6 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     override fun didBecomeActive(savedInstanceState: Bundle?) {
         super.didBecomeActive(savedInstanceState)
         analyticsReporter.setCurrentScreen(screenName)
-
         model = savedInstanceState?.run {
             getSerializable<Model>(KEY)
         } ?: getDefaultModel().apply {
@@ -101,6 +102,14 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
             }
         }.addToDisposables()
 
+    }
+
+    override fun willResignActive() {
+        val currentState = audioFileInteractor.currentState()
+        if (!currentState.isEmpty()) {
+            audioFileInteractor.stop()
+        }
+        super.willResignActive()
     }
 
     private fun handleNavigation(navigationId: NavigationId) {

@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.views.player
 
 import android.content.Context
 import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -129,6 +130,10 @@ class PlayerView(context: Context) : _FrameLayout(context) {
         } else {
             ivIconRight.imageResource = R.drawable.ic_player_view_play
         }
+    }
+
+    fun getAnchorView(): View {
+        return ivIconLeft
     }
 
     private fun updateDurationUntilEnd(audioState: AudioState) {

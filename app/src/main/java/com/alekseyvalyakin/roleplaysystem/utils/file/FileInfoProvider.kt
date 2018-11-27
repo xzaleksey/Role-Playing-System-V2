@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel
+import com.alekseyvalyakin.roleplaysystem.data.sound.FormatWAV
 import com.kbeanie.multipicker.utils.FileUtils
 import java.io.File
 
@@ -34,6 +35,14 @@ class FileInfoProviderImpl(
         return File(getRecordsTempDir(), gameId)
     }
 
+    override fun getRecordsFiles(gameId: String): Array<out File> {
+        return getRecordsDir(gameId).listFiles { file ->
+            file.absolutePath.endsWith(FormatWAV.FORMAT_NAME)
+        }?.apply {
+            sortByDescending { it.lastModified() }
+        } ?: return emptyArray()
+    }
+
 }
 
 interface FileInfoProvider {
@@ -48,4 +57,5 @@ interface FileInfoProvider {
     fun getRecordsTempDir(): File
 
     fun getRecordsDir(gameId: String): File
+    fun getRecordsFiles(gameId: String): Array<out File>
 }
