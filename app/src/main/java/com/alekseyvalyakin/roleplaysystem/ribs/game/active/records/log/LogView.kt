@@ -13,15 +13,41 @@ import android.widget.EditText
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordState
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.adapter.LogAdapter
-import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
+import com.alekseyvalyakin.roleplaysystem.utils.increaseTouchArea
+import com.alekseyvalyakin.roleplaysystem.utils.requestPermissionsExternalReadWriteAndAudioRecord
+import com.alekseyvalyakin.roleplaysystem.utils.setBackgroundElevation4
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
+import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
+import com.alekseyvalyakin.roleplaysystem.utils.updateWithAnimateToStartOnNewItem
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import org.jetbrains.anko.*
+import org.jetbrains.anko._LinearLayout
+import org.jetbrains.anko.alignParentRight
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.centerVertically
+import org.jetbrains.anko.dimen
+import org.jetbrains.anko.editText
+import org.jetbrains.anko.hintResource
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.imageView
+import org.jetbrains.anko.leftOf
+import org.jetbrains.anko.leftPadding
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.padding
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.relativeLayout
+import org.jetbrains.anko.rightPadding
+import org.jetbrains.anko.topPadding
+import org.jetbrains.anko.wrapContent
 
 class LogView constructor(
         context: Context
@@ -51,7 +77,7 @@ class LogView constructor(
         relativeLayout {
             id = R.id.send_form
             backgroundResource = R.drawable.white_cornered_background
-            elevation = getFloatDimen(R.dimen.dp_16)
+            setBackgroundElevation4()
             minimumHeight = getIntDimen(R.dimen.dp_48)
             inputActions = linearLayout {
                 orientation = HORIZONTAL

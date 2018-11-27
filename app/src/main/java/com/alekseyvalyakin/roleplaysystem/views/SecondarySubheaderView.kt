@@ -5,10 +5,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.utils.captionStyle
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
-import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko._FrameLayout
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.singleLine
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.view
+import org.jetbrains.anko.wrapContent
 
 class SecondarySubheaderView(context: Context) : _FrameLayout(context) {
     init {
@@ -26,8 +33,7 @@ class SecondarySubheaderView(context: Context) : _FrameLayout(context) {
                 id = R.id.text
                 maxLines = 1
                 gravity = Gravity.START
-                setTextSizeFromRes(R.dimen.dp_14)
-                setSanserifMediumTypeface()
+                captionStyle()
                 singleLine = true
             }.lparams {
                 bottomMargin = getIntDimen(R.dimen.dp_4)

@@ -5,6 +5,8 @@ import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProviderImpl
+import com.alekseyvalyakin.roleplaysystem.utils.keyboard.KeyboardStateProvider
+import com.alekseyvalyakin.roleplaysystem.utils.keyboard.KeyboardStateProviderImpl
 import dagger.Module
 import dagger.Provides
 
@@ -36,5 +38,11 @@ class ActivityModule(private val activity: MainActivity) {
     @ActivityScope
     fun provideActivity(): MainActivity {
         return activity
+    }
+
+    @Provides
+    @ActivityScope
+    fun provideKeyboardStateProvider(): KeyboardStateProvider {
+        return KeyboardStateProviderImpl(activity)
     }
 }

@@ -7,11 +7,16 @@ import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordInteractor
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
+import com.alekseyvalyakin.roleplaysystem.utils.keyboard.KeyboardStateProvider
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.getSerializable
+import com.uber.rib.core.putSerializable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -25,6 +30,8 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
     lateinit var presenter: RecordsPresenter
     @Inject
     lateinit var activeGameEventRelay: Relay<ActiveGameEvent>
+    @Inject
+    lateinit var keyboardStateProvider: KeyboardStateProvider
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.UI)]
     lateinit var uiScheduler: Scheduler
     @field:[Inject ThreadConfig(ThreadConfig.TYPE.IO)]
@@ -71,6 +78,12 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging {
                     presenter.updateAudioState(it)
+                }.addToDisposables()
+
+        keyboardStateProvider.observeKeyboardState()
+                .observeOn(uiScheduler)
+                .subscribeWithErrorLogging {
+                    activeGameEventRelay.accept(if (it) ActiveGameEvent.HideBottomBar else ActiveGameEvent.ShowBottomBar)
                 }.addToDisposables()
 
         presenter.update(model)

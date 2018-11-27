@@ -7,8 +7,15 @@ import com.alekseyvalyakin.roleplaysystem.utils.getCommonDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getFloatDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import org.jetbrains.anko.*
+import org.jetbrains.anko._FrameLayout
+import org.jetbrains.anko.bottomPadding
 import org.jetbrains.anko.cardview.v7.cardView
+import org.jetbrains.anko.leftPadding
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.rightPadding
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.topPadding
 
 class LogTextItemView(context: Context) : _FrameLayout(context) {
 
@@ -21,7 +28,7 @@ class LogTextItemView(context: Context) : _FrameLayout(context) {
 
         cardView {
             radius = getFloatDimen(R.dimen.dp_2)
-            cardElevation = getFloatDimen(R.dimen.dp_4)
+            cardElevation = getFloatDimen(R.dimen.dp_2)
             tvText = textView {
                 leftPadding = getDoubleCommonDimen()
                 rightPadding = getDoubleCommonDimen()

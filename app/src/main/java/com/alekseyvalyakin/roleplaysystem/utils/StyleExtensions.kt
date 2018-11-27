@@ -73,7 +73,7 @@ fun TextView.buttonStyle() {
 
 fun TextView.captionStyle() {
     setSanserifRegularTypeface()
-    textSizeDimen = R.dimen.dp_14
+    textSizeDimen = R.dimen.dp_12
 }
 
 fun TextView.overlineStyle() {
