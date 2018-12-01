@@ -6,13 +6,13 @@ import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 
-data class ShadowDividerViewModel(
+data class BottomShadowDividerViewModel(
         val id: Int
 ) : AbstractFlexibleItem<DividerViewHolder>() {
 
     override fun createViewHolder(adapter: FlexibleAdapter<*>?, inflater: LayoutInflater?,
                                   parent: ViewGroup): DividerViewHolder {
-        return DividerViewHolder(FlexibleShadowView(parent.context))
+        return DividerViewHolder(BottomFlexibleShadowView(parent.context))
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<*>?, holder: DividerViewHolder?, position: Int,
@@ -20,7 +20,7 @@ data class ShadowDividerViewModel(
     }
 
     override fun getLayoutRes(): Int {
-        return FlexibleLayoutTypes.SHADOW_DIVIDER
+        return FlexibleLayoutTypes.BOTTOM_SHADOW_DIVIDER
     }
 }
       

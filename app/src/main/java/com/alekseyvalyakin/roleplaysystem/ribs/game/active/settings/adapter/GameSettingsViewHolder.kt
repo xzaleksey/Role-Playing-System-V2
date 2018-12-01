@@ -6,11 +6,11 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettings
 import com.jakewharton.rxrelay2.Relay
 
 class GameSettingsViewHolder(
-        private val gameSettingsView: GameSettingsView
-) : RecyclerView.ViewHolder(gameSettingsView) {
+        private val gameSettingsItemView: GameSettingsItemView
+) : RecyclerView.ViewHolder(gameSettingsItemView) {
 
     fun update(gameSettingsViewModel: GameSettingsListViewModel, relay: Relay<GameSettingsPresenter.UiEvent>) {
-        gameSettingsView.update(
+        gameSettingsItemView.update(
                 gameSettingsViewModel.title,
                 gameSettingsViewModel.icon,
                 View.OnClickListener { relay.accept(GameSettingsPresenter.UiEvent.GameSettingsClick(gameSettingsViewModel)) }

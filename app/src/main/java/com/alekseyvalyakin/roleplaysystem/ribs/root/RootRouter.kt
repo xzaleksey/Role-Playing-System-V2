@@ -7,6 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.features.FeaturesBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.features.FeaturesRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameParams
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.ActiveGameAttachTransition
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
@@ -84,9 +85,9 @@ class RootRouter(
                 profileDetachTransition)
     }
 
-    fun attachOpenActiveGame(game: Game) {
+    fun attachOpenActiveGame(game: Game, isFirstOpen: Boolean = false) {
         router.pushRetainedState(RootState.ACTIVE_GAME,
-                ActiveGameAttachTransition<RootState>(activeGameBuilder, view, game),
+                ActiveGameAttachTransition<RootState>(activeGameBuilder, view, game, ActiveGameParams(isFirstOpen)),
                 activeGameDetachTransition)
     }
 

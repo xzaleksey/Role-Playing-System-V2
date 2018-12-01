@@ -12,7 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
-import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.BottomShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
@@ -41,7 +41,7 @@ class MainViewModelProviderImpl(
                     val result = mutableListOf<IFlexible<*>>()
                     result.addAll(userModels)
                     result.addAll(allGames)
-                    result.add(ShadowDividerViewModel(result.size))
+                    result.add(BottomShadowDividerViewModel(result.size))
                     val mainViewModel = MainViewModel(result,
                             createGameModel is CreateEmptyGameObservableProvider.CreateGameModel.InProgress,
                             false)

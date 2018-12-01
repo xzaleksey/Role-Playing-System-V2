@@ -11,7 +11,6 @@ interface GameSettingsPresenter {
 
     sealed class UiEvent {
         class GameSettingsClick(val gameSettingsListViewModel: GameSettingsListViewModel) : UiEvent()
-        object GameSettingsSkip : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>

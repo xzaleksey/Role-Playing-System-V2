@@ -3,13 +3,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.adapter.GameSettingsAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.interfaces.HasContainerView
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*
@@ -25,10 +23,10 @@ class GameSettingsView constructor(
 
     private val relay = PublishRelay.create<GameSettingsPresenter.UiEvent>()
     private val flexibleAdapter = GameSettingsAdapter(emptyList(), relay)
-    private var buttonSkip: Button
     private var container: ViewGroup
 
     init {
+
         cardView {
             id = R.id.top_container
             radius = 0f
@@ -74,20 +72,7 @@ class GameSettingsView constructor(
             }
         }.lparams(width = matchParent, height = wrapContent)
 
-
-        buttonSkip = button {
-            id = R.id.skip_game_setting
-            backgroundResource = getSelectableItemBackGround()
-            textColorResource = R.color.colorAccent
-            textResource = R.string.skip_game_setting
-            leftPadding = getCommonDimen()
-            rightPadding = getCommonDimen()
-        }.lparams {
-            alignParentBottom()
-            centerHorizontally()
-        }
         recyclerView {
-            topPadding = getCommonDimen()
             layoutManager = LinearLayoutManager(context)
             adapter = flexibleAdapter
         }.lparams(width = matchParent, height = matchParent) {
@@ -97,7 +82,6 @@ class GameSettingsView constructor(
 
         container = frameLayout {
             z = getDoubleCommonDimen().toFloat()
-
         }.lparams(matchParent, matchParent)
     }
 
@@ -106,10 +90,7 @@ class GameSettingsView constructor(
     }
 
     override fun observeUiEvents(): Observable<GameSettingsPresenter.UiEvent> {
-        return Observable.merge(
-                RxView.clicks(buttonSkip).map { GameSettingsPresenter.UiEvent.GameSettingsSkip },
-                relay
-        )
+        return relay
     }
 
     override fun getContainerView(): ViewGroup {

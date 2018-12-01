@@ -23,7 +23,7 @@ data class GameSettingsListViewModel(
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>?, inflater: LayoutInflater?, parent: ViewGroup): GameSettingsViewHolder {
-        val gameSettingsView = GameSettingsView(parent.context)
+        val gameSettingsView = GameSettingsItemView(parent.context)
         gameSettingsView.layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
         return GameSettingsViewHolder(gameSettingsView)
     }

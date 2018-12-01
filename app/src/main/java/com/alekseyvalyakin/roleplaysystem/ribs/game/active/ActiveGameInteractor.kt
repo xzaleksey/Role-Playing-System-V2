@@ -34,6 +34,8 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
     @Inject
     lateinit var audioFileInteractor: AudioFileInteractor
     @Inject
+    lateinit var activeGameParams: ActiveGameParams
+    @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 
     private val screenName = "ActiveGame"
@@ -41,7 +43,7 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
 
     private fun getDefaultModel(): Model {
         return if (viewModelProvider.isMaster()) {
-            Model(NavigationId.RECORDS)
+            if (activeGameParams.firstOpen) Model(NavigationId.SETTINGS) else Model(NavigationId.RECORDS)
         } else {
             Model(NavigationId.CHARACTERS)
         }

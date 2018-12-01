@@ -9,12 +9,12 @@ import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters.GameCharactersBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceBuilder
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModelProviderImpl
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.PhotoBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.fullsizephoto.FullSizePhotoBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.GameSettingsBuilder
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
@@ -40,7 +40,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
      * @param parentViewGroup parent view group that this router's view will be added to.
      * @return a new [ActiveGameRouter].
      */
-    fun build(parentViewGroup: ViewGroup, game: Game): ActiveGameRouter {
+    fun build(parentViewGroup: ViewGroup, game: Game, activeGameParams: ActiveGameParams): ActiveGameRouter {
         val view = createView(parentViewGroup)
         val interactor = ActiveGameInteractor()
         val component = DaggerActiveGameBuilder_Component.builder()
@@ -48,6 +48,7 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
                 .view(view)
                 .game(game)
                 .interactor(interactor)
+                .activeGameParams(activeGameParams)
                 .build()
         return component.activeGameRouter()
     }
@@ -140,6 +141,9 @@ class ActiveGameBuilder(dependency: ParentComponent) : ViewBuilder<ActiveGameVie
 
             @BindsInstance
             fun game(game: Game): Builder
+
+            @BindsInstance
+            fun activeGameParams(activeGameParams: ActiveGameParams): Builder
 
             fun parentComponent(component: ParentComponent): Builder
 

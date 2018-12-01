@@ -3,7 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.BottomShadowDividerViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.TopShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.adapter.GameSettingsListViewModel
+import eu.davidea.flexibleadapter.items.IFlexible
 
 class GameSettingsViewModelProviderImpl(
         private val stringRepository: StringRepository,
@@ -12,7 +15,8 @@ class GameSettingsViewModelProviderImpl(
 
     override fun getSettingsViewModel(): GameSettingsViewModel {
         return GameSettingsViewModel(
-                listOf(
+                mutableListOf<IFlexible<*>>(
+                        TopShadowDividerViewModel(0),
                         GameSettingsListViewModel(
                                 stringRepository.mainStats(),
                                 GameSettingsViewModel.GameSettingsItemType.STATS,
@@ -48,9 +52,7 @@ class GameSettingsViewModelProviderImpl(
                                 GameSettingsViewModel.GameSettingsItemType.DICES,
                                 resourcesProvider.getDrawable(R.drawable.ic_dices)
                         )
-
-
-                )
+                ).apply { this.add(BottomShadowDividerViewModel(this.size)) }
         )
     }
 }

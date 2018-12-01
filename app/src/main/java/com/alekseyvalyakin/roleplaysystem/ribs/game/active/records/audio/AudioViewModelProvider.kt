@@ -5,7 +5,7 @@ import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.sound.AudioFileInteractor
 import com.alekseyvalyakin.roleplaysystem.data.sound.RawSamples
-import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.BottomShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.adapter.AudioItemViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -58,7 +58,7 @@ class AudioViewModelProviderImpl(
                         }
                     }
                     if (items.isNotEmpty()) {
-                        items.add(ShadowDividerViewModel(items.size))
+                        items.add(BottomShadowDividerViewModel(items.size))
                     }
                     val viewModel = AudioViewModel(items, audioState)
 

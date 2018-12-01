@@ -12,12 +12,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileListener
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileRouter
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
-import com.uber.rib.core.BaseInteractor
-import com.uber.rib.core.Bundle
-import com.uber.rib.core.Interactor
-import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.RibInteractor
-import com.uber.rib.core.Router
+import com.uber.rib.core.*
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -85,7 +80,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                     when (event) {
                         is CreateGameListener.CreateGameEvent.CompleteCreate -> {
                             router.detachCreateGame()
-                            router.attachOpenActiveGame(event.game)
+                            router.attachOpenActiveGame(event.game, true)
                         }
                     }
                 }.addToDisposables()

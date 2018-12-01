@@ -9,46 +9,50 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import org.jetbrains.anko.*
 
-open class CustomToolbarView(context: Context) : _RelativeLayout(context) {
+open class CustomToolbarView(context: Context) : _LinearLayout(context) {
 
-    private var leftIcon: ImageView
-    private var rightIcon: ImageView
-    private var tvTitle: TextView
+    private lateinit var leftIcon: ImageView
+    private lateinit var rightIcon: ImageView
+    private lateinit var tvTitle: TextView
 
     init {
+        orientation = VERTICAL
         leftPadding = getCommonDimen()
-        rightPadding = getDoubleCommonDimen()
-        bottom = getDoubleCommonDimen()
-        topPadding = getStatusBarHeight()
+        rightPadding = getCommonDimen()
+        view {
 
-        leftIcon = imageView {
-            id = R.id.left_icon
-            padding = getCommonDimen()
-            tintImageRes(R.color.colorWhite)
-            backgroundResource = getSelectableItemBorderless()
-        }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
-            centerVertically()
+        }.lparams(matchParent, getStatusBarHeight())
+
+        relativeLayout {
+            leftIcon = imageView {
+                id = R.id.left_icon
+                tintImageRes(R.color.colorWhite)
+                backgroundResource = getSelectableItemBorderless()
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+            }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                centerVertically()
+            }
+
+            rightIcon = imageView {
+                id = R.id.right_icon
+                tintImageRes(R.color.colorWhite)
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+                backgroundResource = getSelectableItemBorderless()
+            }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
+                alignParentRight()
+                centerVertically()
+            }
+
+            tvTitle = textView {
+                id = R.id.tv_title
+                textColorResource = R.color.colorWhite
+                textSizeDimen = R.dimen.dp_20
+            }.lparams(width = matchParent, height = wrapContent) {
+                centerVertically()
+                leftMargin = getIntDimen(R.dimen.dp_72)
+            }
+        }.lparams(matchParent, matchParent) {
         }
-
-        rightIcon = imageView {
-            id = R.id.right_icon
-            tintImageRes(R.color.colorWhite)
-            backgroundResource = getSelectableItemBorderless()
-            padding = getCommonDimen()
-        }.lparams(width = getIntDimen(R.dimen.dp_40), height = getIntDimen(R.dimen.dp_40)) {
-            alignParentRight()
-            centerVertically()
-        }
-
-        tvTitle = textView {
-            id = R.id.tv_title
-            textColorResource = R.color.colorWhite
-            textSizeDimen = R.dimen.dp_20
-        }.lparams(width = matchParent, height = wrapContent) {
-            centerVertically()
-            leftMargin = getIntDimen(R.dimen.dp_72)
-        }
-
         backgroundColorResource = R.color.colorPrimary
     }
 

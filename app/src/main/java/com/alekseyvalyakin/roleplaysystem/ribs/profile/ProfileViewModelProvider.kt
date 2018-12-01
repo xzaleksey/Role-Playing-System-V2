@@ -7,7 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.data.useravatar.UserAvatarRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
-import com.alekseyvalyakin.roleplaysystem.flexible.divider.ShadowDividerViewModel
+import com.alekseyvalyakin.roleplaysystem.flexible.divider.BottomShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
@@ -85,7 +85,7 @@ class ProfileViewModelProviderImpl(
                                 SubHeaderViewModel("${stringRepository.getLastGames()} (${gamesInUserList.size})",
                                         isDrawBottomDivider = true,
                                         isDrawTopDivider = false))
-                        gamesInUserList.add(ShadowDividerViewModel(gamesInUserList.size))
+                        gamesInUserList.add(BottomShadowDividerViewModel(gamesInUserList.size))
                     }
                     gamesInUserList
                 }

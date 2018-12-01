@@ -11,14 +11,7 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.checkFabShow
-import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
-import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getString
-import com.alekseyvalyakin.roleplaysystem.utils.requestPermissionsExternalReadWrite
-import com.alekseyvalyakin.roleplaysystem.utils.searchToolbar
-import com.alekseyvalyakin.roleplaysystem.utils.showSnack
-import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
+import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.HideFablListener
 import com.jakewharton.rxbinding2.view.RxView
@@ -28,15 +21,10 @@ import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.*
 import org.jetbrains.anko.design._CoordinatorLayout
 import org.jetbrains.anko.design.floatingActionButton
-import org.jetbrains.anko.linearLayout
-import org.jetbrains.anko.margin
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.progressBar
 import org.jetbrains.anko.recyclerview.v7.recyclerView
-import org.jetbrains.anko.wrapContent
 import java.util.concurrent.TimeUnit
 
 /**
@@ -47,10 +35,10 @@ class MainView constructor(
 ) : _CoordinatorLayout(context), MainInteractor.MainPresenter, FabEnabledProvider {
 
     private lateinit var searchToolbar: SearchToolbar
-    private lateinit var fab: FloatingActionButton
+    private var fab: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBarBottom: ProgressBar
-    private lateinit var progressBarCenter: ProgressBar
+    private var progressBarBottom: ProgressBar
+    private var progressBarCenter: ProgressBar
     private val relay = PublishRelay.create<MainInteractor.UiEvents>()
     private val flexibleAdapter: FlexibleAdapter<IFlexible<*>> = FlexibleAdapter(emptyList())
     private lateinit var mainViewModel: MainViewModel
