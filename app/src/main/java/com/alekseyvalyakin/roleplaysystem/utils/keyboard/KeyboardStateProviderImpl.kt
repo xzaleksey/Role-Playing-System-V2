@@ -3,13 +3,17 @@ package com.alekseyvalyakin.roleplaysystem.utils.keyboard
 import android.app.Activity
 import android.graphics.Rect
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST
 import com.alekseyvalyakin.roleplaysystem.utils.dip
+import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import org.jetbrains.anko.contentView
+import java.util.concurrent.TimeUnit
 
 class KeyboardStateProviderImpl(private val activity: Activity) : KeyboardStateProvider {
     private val rootViewRect = Rect()
@@ -21,13 +25,31 @@ class KeyboardStateProviderImpl(private val activity: Activity) : KeyboardStateP
             return softInputMethod == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE || softInputMethod == WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED
         }
 
-    private val observable = Observable.create<Boolean>(ObservableOnSubscribe { emitter ->
-        if (!isSoftInputMethodSupported) {
-            emitter.onError(IllegalStateException("Activity window SoftInputMethod must be ADJUST_RESIZE"))
-            return@ObservableOnSubscribe
-        }
+    private val observable by lazy {
+        Observable.create<Boolean>(ObservableOnSubscribe { emitter ->
+            if (!isSoftInputMethodSupported) {
+                emitter.onError(IllegalStateException("Activity window SoftInputMethod must be ADJUST_RESIZE"))
+                return@ObservableOnSubscribe
+            }
+            val activityRoot = getActivityRoot(activity)
+            if (activityRoot == null) {
+                Observable.timer(50L, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWithErrorLogging {
+                            if (!activity.isFinishing) {
+                                start(getActivityRoot(activity)!!, emitter)
+                            } else {
+                                emitter.onComplete()
+                            }
+                        }
+                return@ObservableOnSubscribe
+            } else {
+                start(activityRoot, emitter)
+            }
+        }).share()
+    }
 
-        val activityRoot = getActivityRoot(activity)
+    private fun start(activityRoot: View, emitter: ObservableEmitter<Boolean>) {
         val keyboardLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
 
             private var wasShown = false
@@ -44,14 +66,14 @@ class KeyboardStateProviderImpl(private val activity: Activity) : KeyboardStateP
 
         emitter.setCancellable { activityRoot.viewTreeObserver.removeOnGlobalLayoutListener(keyboardLayoutListener) }
         activityRoot.viewTreeObserver.addOnGlobalLayoutListener(keyboardLayoutListener)
-    }).share()
+    }
 
     override fun observeKeyboardState(): Observable<Boolean> {
         return observable
     }
 
-    private fun getActivityRoot(activity: Activity): View {
-        return (activity.findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0)
+    private fun getActivityRoot(activity: Activity): View? {
+        return activity.contentView
     }
 
     private fun isKeyboardShown(activityRoot: View): Boolean {
