@@ -3,7 +3,6 @@ package com.uber.rib.core
 import android.annotation.SuppressLint
 import android.support.annotation.IntRange
 import android.view.View
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.RecordsRouter
 import timber.log.Timber
 import java.io.Serializable
 import java.util.*
@@ -24,7 +23,9 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         super.saveInstanceState(outState)
         val bundle = outState.getBundleExtra(KEY_CHILD_ROUTERS)!!
         for (router in routersToSave) {
-            bundle.putBundleExtra(router.tag, tempBundle.getBundleExtra(router.tag))
+            val routerTag = getRouterTag(router)
+            Timber.d("saved $routerTag")
+            bundle.putBundleExtra(routerTag, tempBundle.getBundleExtra(routerTag))
         }
         outState.putSerializable(myTag, SavedState(
                 navigationStack.toList().map { AttachInfo<StateT>(it.state, false) },
@@ -33,7 +34,6 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
     }
 
     override fun dispatchAttach(savedInstanceState: Bundle?, tag: String?) {
-        Timber.d("dispatch attach")
         super.dispatchAttach(savedInstanceState, tag)
         if (savedInstanceState != null) {
             restoreState(savedInstanceState)
@@ -41,10 +41,12 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
     }
 
     public override fun detachChild(childRouter: Router<out Interactor<*, *>, out InteractorBaseComponent<*>>) {
-        if (getRoutersToSave().contains(childRouter)) {
+        if (navigationStack.indexOfFirst { it.router == childRouter } >= 0) {
             val bundle = Bundle()
             childRouter.saveInstanceState(bundle)
-            tempBundle.putBundleExtra(childRouter.tag, bundle)
+            val routerTag = getRouterTag(childRouter)
+            Timber.d("saved  $routerTag")
+            tempBundle.putBundleExtra(routerTag, bundle)
         }
         super.detachChild(childRouter)
     }
@@ -219,7 +221,17 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
                 isPush)
         log(String.format(
                 Locale.getDefault(), "Attaching %s as a child of %s", toRouterName, hostRouterName))
-        attachChild(toRouterState.router)
+        val routerTag = getRouterTag(toRouterState.router)
+        Timber.d("attached $routerTag")
+        attachChild(toRouterState.router, routerTag)
+    }
+
+    private fun getRouterTag(router: Router<*, *>): String {
+        val index = navigationStack.indexOfFirst { it.router == router }
+        if (index >= 0) {
+            return router::class.java.name + (navigationStack.size - 1 - index)
+        }
+        return router::class.java.name
     }
 
     private fun peekCurrentState(): StateT? {
@@ -264,7 +276,9 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
             }
             log(String.format(
                     Locale.getDefault(), "Attaching %s as a child of %s", newRouterName, hostRouterName))
-            attachChild(newRouter)
+            val routerTag = getRouterTag(newRouter)
+            Timber.d("attached $routerTag")
+            attachChild(newRouter, routerTag)
         }
     }
 
