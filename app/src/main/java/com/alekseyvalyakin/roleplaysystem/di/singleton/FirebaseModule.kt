@@ -30,6 +30,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.DefaultSettingRaceRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepositoryImpl
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.DefaultSettingSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.DefaultSettingSkillsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
@@ -142,6 +144,12 @@ class FirebaseModule {
     @Singleton
     fun defaultGameRacesRepo(): DefaultSettingRaceRepository {
         return DefaultSettingRaceRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun defaultGameSkillsRepo(): DefaultSettingSkillsRepository {
+        return DefaultSettingSkillsRepositoryImpl()
     }
 
     @Provides

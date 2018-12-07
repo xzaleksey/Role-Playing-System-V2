@@ -18,6 +18,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classe
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.DefaultSettingRaceRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRaceRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.DefaultSettingSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
@@ -109,6 +110,8 @@ interface SingletonDependencyProvider {
     fun gameRacesRepo(): GameRaceRepository
 
     fun defaultGameRacesRepo(): DefaultSettingRaceRepository
+
+    fun defaultGameSkills(): DefaultSettingSkillsRepository
 
     fun logsRepo(): LogRepository
 

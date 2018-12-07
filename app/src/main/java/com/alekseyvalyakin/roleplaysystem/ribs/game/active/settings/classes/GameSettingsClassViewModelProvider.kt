@@ -2,18 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultGameClass
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.DefaultSettingClassRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClass
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClassRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.UserGameClass
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.*
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.adapter.GameSettingsClassListViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats.GameSettingsStatViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -191,7 +186,7 @@ class GameSettingsClassViewModelProviderImpl(
                 DefaultFrontView.Model(
                         DefaultFrontView.HeaderModel(
                                 stringRepository.getNewClass(),
-                                resourcesProvider.getDrawable(R.drawable.ic_add),
+                                getAddDrawable(),
                                 {
                                     presenter.collapseFront()
                                     updateNewItemModel()
@@ -223,6 +218,10 @@ class GameSettingsClassViewModelProviderImpl(
         )
     }
 
+    private fun getAddDrawable() = resourcesProvider.getDrawable(R.drawable.ic_add)
+
+    private fun getCloseDrawable() = resourcesProvider.getDrawable(R.drawable.ic_close_backdrop)
+
     private fun getShowClassToolbarModel(): CustomToolbarView.Model {
         return CustomToolbarView.Model(
                 resourcesProvider.getDrawable(R.drawable.ic_arrow_back),
@@ -234,8 +233,10 @@ class GameSettingsClassViewModelProviderImpl(
     }
 
     private fun updateShowItemsModel() {
-        classViewModel.accept(classViewModel.value.copy(toolBarModel = getShowClassToolbarModel(),
+        val value = classViewModel.value
+        classViewModel.accept(value.copy(toolBarModel = getShowClassToolbarModel(),
                 step = GameSettingsClassViewModel.Step.EXPANDED,
+                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getAddDrawable())),
                 selectedModel = null))
     }
 
@@ -285,12 +286,14 @@ class GameSettingsClassViewModelProviderImpl(
                         iconVisible = customClass
                 ),
                 step = GameSettingsClassViewModel.Step.COLLAPSED,
+                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = userGameClass))
     }
 
 
     private fun updateNewItemModel() {
-        classViewModel.accept(classViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
+        val initialValue = classViewModel.value
+        classViewModel.accept(initialValue.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     expandFront()
@@ -334,6 +337,7 @@ class GameSettingsClassViewModelProviderImpl(
                         )
                 ),
                 step = GameSettingsClassViewModel.Step.COLLAPSED,
+                frontModel = initialValue.frontModel.copy(headerModel = initialValue.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = null))
     }
 

@@ -174,4 +174,5 @@
     <string name="playing_sound">Проигрывается…</string>
     <string name="continue_play_sound">Возобновить</string>
     <string name="sound_playing_paused">Проигрывание приостановлено</string>
+    <string name="add_tag">Добавить тег</string>
 </resources>

@@ -1,40 +1,71 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import android.content.Context
-import android.content.res.ColorStateList
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
-import org.jetbrains.anko.*
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.adapter.GameSettingsSkillsAdapter
+import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
+import com.alekseyvalyakin.roleplaysystem.utils.getToolbarHeight
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.BaseViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.toolbar.CustomToolbarView
+import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.Observable
+import org.jetbrains.anko.backgroundColorResource
 
 /**
  * Top level view for {@link GameSettingsSpellsBuilder.GameSettingsSkillsScope}.
  */
-class GameSettingsSkillsView constructor(context: Context) : _LinearLayout(context), GameSettingsSkillsPresenter {
+class GameSettingsSkillsView constructor(
+        context: Context
+) : BackDropView<CustomToolbarView, SkillBackView, DefaultFrontView>(context,
+        BaseViewContainer(
+                CustomToolbarView(context),
+                height = context.getToolbarHeight() + context.getStatusBarHeight()
+        ),
+        BackViewContainer(SkillBackView(context)),
+        FrontViewContainer(DefaultFrontView(context))
+), GameSettingsSkillsPresenter {
+
+    private val relay = PublishRelay.create<GameSettingsSkillsPresenter.UiEvent>()
+    private val adapter = GameSettingsSkillsAdapter(relay)
 
     init {
-        orientation = VERTICAL
-        backgroundColorResource = R.color.backgroundColor
         isClickable = true
-
-        view {
-            backgroundColorResource = R.color.colorPrimaryDark
-        }.lparams(width = matchParent, height = getStatusBarHeight())
-
-        chipGroup {
-            chip {
-                id = 1
-                setChipBackgroundColorResource(R.color.backgroundColor)
-                setChipStrokeColorResource(R.color.colorAccent)
-                textColorResource = R.color.colorAccent
-                rippleColor = ColorStateList.valueOf(getCompatColor(R.color.colorAccent))
-                highlightColor = getCompatColor(R.color.colorAccent)
-                chipStrokeWidth = getFloatDimen(R.dimen.dp_1)
-                text = "Test"
-            }
-        }.lparams(matchParent, wrapContent) {
-            topMargin = getDoubleCommonDimen()
-            leftMargin = getDoubleCommonDimen()
-            rightMargin = getDoubleCommonDimen()
-        }
+        backgroundColorResource = R.color.colorPrimary
+        setOnClickListener { }
+        frontViewContainer.view.setAdapter(adapter)
     }
+
+    override fun observeUiEvents(): Observable<GameSettingsSkillsPresenter.UiEvent> {
+        return Observable.merge(relay,
+                backViewContainer.view.getEtTitleObservable().map { GameSettingsSkillsPresenter.UiEvent.TitleInput(it) },
+                backViewContainer.view.getEtSubtitleObservable().map { GameSettingsSkillsPresenter.UiEvent.SubtitleInput(it) }
+        )
+    }
+
+    override fun update(viewModel: GameSettingsSkillViewModel) {
+        topViewContainer.view.update(viewModel.toolBarModel)
+        frontViewContainer.view.update(viewModel.frontModel)
+        backViewContainer.view.update(viewModel.backModel)
+    }
+
+    override fun updateStartEndScrollPositions(adapterPosition: Int) {
+        frontViewContainer.view.updateStartEndPositions(adapterPosition)
+    }
+
+    override fun scrollToPosition(position: Int) {
+        frontViewContainer.view.scrollToAdapterPosition(position)
+    }
+
+    override fun onExpanded() {
+        relay.accept(GameSettingsSkillsPresenter.UiEvent.ExpandFront)
+    }
+
+    override fun onCollapsed() {
+        relay.accept(GameSettingsSkillsPresenter.UiEvent.CollapseFront)
+    }
+
 }

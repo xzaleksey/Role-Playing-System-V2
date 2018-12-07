@@ -312,6 +312,7 @@
     <string name="delete_file">Delete file?</string>
     <string name="continue_play_sound">Play</string>
     <string name="sound_playing_paused">Paused playing</string>
+    <string name="add_tag">Add tag</string>
 
 
 </resources>

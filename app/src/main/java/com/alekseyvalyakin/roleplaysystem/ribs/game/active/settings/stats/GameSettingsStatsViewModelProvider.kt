@@ -2,11 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultGameStat
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.UserGameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.*
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -190,7 +186,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 DefaultFrontView.Model(
                         DefaultFrontView.HeaderModel(
                                 stringRepository.getNewStat(),
-                                resourcesProvider.getDrawable(R.drawable.ic_add),
+                                getAddDrawable(),
                                 {
                                     presenter.collapseFront()
                                     updateNewStatModel()
@@ -222,6 +218,10 @@ class GameSettingsStatsViewModelProviderImpl(
         )
     }
 
+    private fun getAddDrawable() = resourcesProvider.getDrawable(R.drawable.ic_add)
+
+    private fun getCloseDrawable() = resourcesProvider.getDrawable(R.drawable.ic_close_backdrop)
+
     private fun getShowStatToolbarModel(): CustomToolbarView.Model {
         return CustomToolbarView.Model(
                 resourcesProvider.getDrawable(R.drawable.ic_arrow_back),
@@ -233,8 +233,10 @@ class GameSettingsStatsViewModelProviderImpl(
     }
 
     private fun updateShowStatsModel() {
-        statViewModel.accept(statViewModel.value.copy(toolBarModel = getShowStatToolbarModel(),
+        val value = statViewModel.value
+        statViewModel.accept(value.copy(toolBarModel = getShowStatToolbarModel(),
                 step = GameSettingsStatViewModel.Step.EXPANDED,
+                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getAddDrawable())),
                 selectedModel = null))
     }
 
@@ -284,12 +286,14 @@ class GameSettingsStatsViewModelProviderImpl(
                         iconVisible = customStat
                 ),
                 step = GameSettingsStatViewModel.Step.COLLAPSED,
+                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = userGameStat))
     }
 
 
     private fun updateNewStatModel() {
-        statViewModel.accept(statViewModel.value.copy(toolBarModel = CustomToolbarView.Model(
+        val initialValue = statViewModel.value
+        statViewModel.accept(initialValue.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     expandFront()
@@ -333,6 +337,7 @@ class GameSettingsStatsViewModelProviderImpl(
                         )
                 ),
                 step = GameSettingsStatViewModel.Step.COLLAPSED,
+                frontModel = initialValue.frontModel.copy(headerModel = initialValue.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = null))
     }
 
