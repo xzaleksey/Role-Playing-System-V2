@@ -9,16 +9,12 @@ import com.google.firebase.firestore.Exclude
 data class DefaultGameSkill(
         var name: TrasnlatableField = TrasnlatableField(),
         var description: TrasnlatableField = TrasnlatableField(),
-
-        @Exclude
-        @set:Exclude
-        @get:Exclude
         override var selected: Boolean = false,
-        override var tags: List<String>,
-        override var successFormula: String,
-        override var resultFormula: String,
-        override var dependencies: List<Dependency>,
-        override var restrictions: List<Restriction>,
+        override var tags: List<String> = emptyList(),
+        override var successFormula: String = StringUtils.EMPTY_STRING,
+        override var resultFormula: String = StringUtils.EMPTY_STRING,
+        override var dependencies: List<Dependency> = emptyList(),
+        override var restrictions: List<Restriction> = emptyList(),
 
         @Exclude
         @set:Exclude
