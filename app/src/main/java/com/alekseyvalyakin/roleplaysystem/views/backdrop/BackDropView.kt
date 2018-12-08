@@ -88,7 +88,7 @@ open class BackDropView<T : View, B, F : View> constructor(
     }
 
     open fun collapseFront() {
-        frontViewWrapper.foreground = ColorDrawable(getCompatColor(R.color.white20))
+        frontViewWrapper.foreground = ColorDrawable(getCompatColor(R.color.white54))
         userLockBottomSheetBehavior.peekHeight = frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         backViewContainer.view.requestFocus()
