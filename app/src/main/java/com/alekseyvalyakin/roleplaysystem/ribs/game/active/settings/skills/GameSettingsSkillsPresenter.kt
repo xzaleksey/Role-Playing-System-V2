@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.adapter.GameSettingsRaceListViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.adapter.GameSettingsSkillsListViewModel
 import io.reactivex.Observable
 
 /**
@@ -12,19 +12,22 @@ interface GameSettingsSkillsPresenter {
         object CollapseFront : UiEvent()
         object ExpandFront : UiEvent()
 
+        object AddSuccessCheck : UiEvent()
+        object AddResultCheck : UiEvent()
+        class TagInput(val text: String) : UiEvent()
         class TitleInput(val text: String) : UiEvent()
         class SubtitleInput(val text: String) : UiEvent()
         class SelectSkill(
-                val listViewModel: GameSettingsRaceListViewModel,
+                val listViewModel: GameSettingsSkillsListViewModel,
                 val adapterPosition: Int
         ) : UiEvent()
 
 
-        class ChangeRace(
-                val listViewModel: GameSettingsRaceListViewModel
+        class ChangeSkill(
+                val listViewModel: GameSettingsSkillsListViewModel
         ) : UiEvent()
 
-        class DeleteSkill(val listViewModel: GameSettingsRaceListViewModel) : UiEvent()
+        class DeleteSkill(val listViewModel: GameSettingsSkillsListViewModel) : UiEvent()
     }
 
     fun observeUiEvents(): Observable<UiEvent>

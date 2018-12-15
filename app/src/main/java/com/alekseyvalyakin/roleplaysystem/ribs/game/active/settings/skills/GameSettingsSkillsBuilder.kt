@@ -2,7 +2,17 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.DefaultSettingSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.SettingsDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
+import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
@@ -58,6 +68,32 @@ class GameSettingsSkillsBuilder(dependency: ParentComponent) : BaseViewBuilder<G
                     view: GameSettingsSkillsView,
                     interactor: GameSettingsSkillsInteractor): GameSettingsSkillsRouter {
                 return GameSettingsSkillsRouter(view, interactor, component)
+            }
+
+            @GameSettingsSkillsScope
+            @Provides
+            @JvmStatic
+            internal fun viewModelProvider(defaultGameSkillRepository: DefaultSettingSkillsRepository,
+                                           gameSkillsRepository: GameSkillsRepository,
+                                           gameTagsRepository: GameTagsRepository,
+                                           game: Game,
+                                           stringRepository: StringRepository,
+                                           resourcesProvider: ResourcesProvider,
+                                           gameSkillPresenter: GameSettingsSkillsPresenter,
+                                           activityListener: ActivityListener,
+                                           activeGameEventRelay: Relay<ActiveGameEvent>,
+                                           analyticsReporter: AnalyticsReporter): GameSettingsSkillViewModelProvider {
+                return GameSettingsSkillViewModelProviderImpl(
+                        defaultGameSkillRepository,
+                        gameSkillsRepository,
+                        gameTagsRepository,
+                        game,
+                        stringRepository,
+                        resourcesProvider,
+                        gameSkillPresenter,
+                        activityListener,
+                        activeGameEventRelay,
+                        analyticsReporter)
             }
         }
 

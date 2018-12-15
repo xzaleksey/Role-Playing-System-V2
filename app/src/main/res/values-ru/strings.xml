@@ -175,4 +175,8 @@
     <string name="continue_play_sound">Возобновить</string>
     <string name="sound_playing_paused">Проигрывание приостановлено</string>
     <string name="add_tag">Добавить тег</string>
+    <string name="success_check">Проверка успеха</string>
+    <string name="result_check">Проверка результата</string>
+    <string name="new_skill">Новый навык</string>
+    <string name="my_skill">Мой навык</string>
 </resources>

@@ -313,6 +313,10 @@
     <string name="continue_play_sound">Play</string>
     <string name="sound_playing_paused">Paused playing</string>
     <string name="add_tag">Add tag</string>
+    <string name="success_check">Success check</string>
+    <string name="result_check">Result check</string>
+    <string name="new_skill">New skill</string>
+    <string name="my_skill">My skill</string>
 
 
 </resources>

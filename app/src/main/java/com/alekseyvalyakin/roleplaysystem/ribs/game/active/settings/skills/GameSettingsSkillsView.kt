@@ -40,9 +40,15 @@ class GameSettingsSkillsView constructor(
     }
 
     override fun observeUiEvents(): Observable<GameSettingsSkillsPresenter.UiEvent> {
-        return Observable.merge(relay,
-                backViewContainer.view.getEtTitleObservable().map { GameSettingsSkillsPresenter.UiEvent.TitleInput(it) },
-                backViewContainer.view.getEtSubtitleObservable().map { GameSettingsSkillsPresenter.UiEvent.SubtitleInput(it) }
+        return Observable.merge(
+                listOf(
+                        relay,
+                        backViewContainer.view.getEtTitleObservable(),
+                        backViewContainer.view.getEtSubtitleObservable(),
+                        backViewContainer.view.getClickAddSuccessCheckObservable(),
+                        backViewContainer.view.getClickAddResultCheckObservable(),
+                        backViewContainer.view.getTagObservable()
+                )
         )
     }
 

@@ -3,194 +3,209 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun getMySkill(): String {
+        return getString(R.string.my_skill)
+    }
+
+    override fun getNewSkill(): String {
+        return getString(R.string.new_skill)
+    }
+
     override fun getYesterday(): String {
-        return resourcesProvider.getString(R.string.yesterday)
+        return getString(R.string.yesterday)
     }
 
     override fun getToday(): String {
-        return resourcesProvider.getString(R.string.today)
+        return getString(R.string.today)
     }
 
     override fun getSettings(): String {
-        return resourcesProvider.getString(R.string.settings)
+        return getString(R.string.settings)
     }
 
     override fun getRecords(): String {
-        return resourcesProvider.getString(R.string.records)
+        return getString(R.string.records)
     }
 
     override fun getNewRace(): String {
-        return resourcesProvider.getString(R.string.new_race)
+        return getString(R.string.new_race)
     }
 
     override fun getMyRace(): String {
-        return resourcesProvider.getString(R.string.my_race)
+        return getString(R.string.my_race)
     }
 
     override fun getRaces(): String {
-        return resourcesProvider.getString(R.string.races)
+        return getString(R.string.races)
     }
 
     override fun getMyClass(): String {
-        return resourcesProvider.getString(R.string.my_class)
+        return getString(R.string.my_class)
     }
 
     override fun getClasses(): String {
-        return resourcesProvider.getString(R.string.classes)
+        return getString(R.string.classes)
     }
 
     override fun getNewClass(): String {
-        return resourcesProvider.getString(R.string.new_class)
+        return getString(R.string.new_class)
     }
 
     override fun getDicesChecks(): String {
-        return resourcesProvider.getString(R.string.dices_checks)
+        return getString(R.string.dices_checks)
     }
 
     override fun getEquipment(): String {
-        return resourcesProvider.getString(R.string.equipment)
+        return getString(R.string.equipment)
     }
 
     override fun getSpells(): String {
-        return resourcesProvider.getString(R.string.spells)
+        return getString(R.string.spells)
     }
 
     override fun getSkills(): String {
-        return resourcesProvider.getString(R.string.skills)
+        return getString(R.string.skills)
     }
 
     override fun getCharacterRaces(): String {
-        return resourcesProvider.getString(R.string.character_races)
+        return getString(R.string.character_races)
     }
 
     override fun getMyStat(): String {
-        return resourcesProvider.getString(R.string.my_stat)
+        return getString(R.string.my_stat)
     }
 
     override fun getNewStat(): String {
-        return resourcesProvider.getString(R.string.new_stat)
+        return getString(R.string.new_stat)
     }
 
     override fun getStats(): String {
-        return resourcesProvider.getString(R.string.stats)
+        return getString(R.string.stats)
     }
 
     override fun getMenu(): String {
-        return resourcesProvider.getString(R.string.menu)
+        return getString(R.string.menu)
     }
 
     override fun getPictures(): String {
-        return resourcesProvider.getString(R.string.pictures)
+        return getString(R.string.pictures)
     }
 
     override fun getDices(): String {
-        return resourcesProvider.getString(R.string.dices)
+        return getString(R.string.dices)
     }
 
     override fun createGamePasswordTitle(): String {
-        return resourcesProvider.getString(R.string.create_game_description_password)
+        return getString(R.string.create_game_description_password)
     }
 
     override fun createGameDescriptionExample(): String {
-        return resourcesProvider.getString(R.string.create_game_description_example)
+        return getString(R.string.create_game_description_example)
     }
 
     override fun createGameDescriptionTitle(): String {
-        return resourcesProvider.getString(R.string.create_game_description_title)
+        return getString(R.string.create_game_description_title)
     }
 
     override fun getDescription(): String {
-        return resourcesProvider.getString(R.string.description)
+        return getString(R.string.description)
     }
 
     override fun getCharacters(): String {
-        return resourcesProvider.getString(R.string.characters)
+        return getString(R.string.characters)
     }
 
     override fun getGames(): String {
-        return resourcesProvider.getString(R.string.games)
+        return getString(R.string.games)
     }
 
     override fun getErrorNetwork(): String {
-        return resourcesProvider.getString(R.string.error_network_connection)
+        return getString(R.string.error_network_connection)
     }
 
     override fun getProfile(): String {
-        return resourcesProvider.getString(R.string.profile)
+        return getString(R.string.profile)
     }
 
     override fun getInputPassword(): String {
-        return resourcesProvider.getString(R.string.input_password)
+        return getString(R.string.input_password)
     }
 
     override fun getErrorIncorrectPassword(): String {
-        return resourcesProvider.getString(R.string.error_incorrect_password)
+        return getString(R.string.error_incorrect_password)
     }
 
     override fun getCreateGame(): String {
-        return resourcesProvider.getString(R.string.create_game)
+        return getString(R.string.create_game)
     }
 
     override fun getMaster(): String {
-        return resourcesProvider.getString(R.string.master)
+        return getString(R.string.master)
     }
 
-    override fun getMyLastGames(): String = resourcesProvider.getString(R.string.my_last_games)
+    override fun getMyLastGames(): String = getString(R.string.my_last_games)
 
-    override fun getLastGames(): String = resourcesProvider.getString(R.string.last_games)
+    override fun getLastGames(): String = getString(R.string.last_games)
 
     override fun getAllGames(): String {
-        return resourcesProvider.getString(R.string.all_games)
+        return getString(R.string.all_games)
     }
 
     override fun getMyProfile(): String {
-        return resourcesProvider.getString(R.string.my_profile)
+        return getString(R.string.my_profile)
     }
 
     override fun getMax(): String {
-        return resourcesProvider.getString(R.string.max)
+        return getString(R.string.max)
     }
 
     override fun getDetails(): String {
-        return resourcesProvider.getString(R.string.details)
+        return getString(R.string.details)
     }
 
     override fun getError(): String {
-        return resourcesProvider.getString(R.string.error)
+        return getString(R.string.error)
     }
 
     override fun createGameNameTitle(): String {
-        return resourcesProvider.getString(R.string.create_game_name_title)
+        return getString(R.string.create_game_name_title)
     }
 
     override fun createGameStepText(currentStep: Int, maxSteps: Int): String {
-        return resourcesProvider.getString(R.string.steps_format, currentStep, maxSteps)
+        return getString(R.string.steps_format, currentStep, maxSteps)
     }
 
     override fun name(): String {
-        return resourcesProvider.getString(R.string.name)
+        return getString(R.string.name)
     }
 
     override fun createGameNameExample(): String {
-        return resourcesProvider.getString(R.string.create_game_name_example)
+        return getString(R.string.create_game_name_example)
     }
 
     override fun noName(): String {
-        return resourcesProvider.getString(R.string.no_name)
+        return getString(R.string.no_name)
     }
 
     override fun noDescription(): String {
-        return resourcesProvider.getString(R.string.no_description)
+        return getString(R.string.no_description)
     }
 
     override fun mainStats(): String {
-        return resourcesProvider.getString(R.string.main_stats)
+        return getString(R.string.main_stats)
     }
 
     override fun characterClasses(): String {
-        return resourcesProvider.getString(R.string.character_classes)
+        return getString(R.string.character_classes)
     }
 
+    fun getString(id: Int): String {
+        return resourcesProvider.getString(id)
+    }
+
+    fun getString(id: Int, param1: Int, param2: Int): String {
+        return resourcesProvider.getString(id, param1, param2)
+    }
 }
 
 interface StringRepository {
@@ -242,4 +257,6 @@ interface StringRepository {
     fun getSettings(): String
     fun getYesterday(): String
     fun getToday(): String
+    fun getNewSkill(): String
+    fun getMySkill(): String
 }

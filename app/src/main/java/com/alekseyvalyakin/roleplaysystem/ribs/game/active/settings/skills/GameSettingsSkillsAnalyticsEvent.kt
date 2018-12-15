@@ -2,59 +2,59 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import com.alekseyvalyakin.roleplaysystem.data.analytics.*
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.GameRace
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkill
 import com.uber.rib.core.Bundle
 
 sealed class GameSettingsSkillsAnalyticsEvent(name: String, game: Game, bundle: Bundle = Bundle()) : GameAnalyticsEvent(name, game, bundle) {
 
     class CreateSkill(
             game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(CREATE_CUSTOM_RACE, game, Bundle().apply {
         putString(NAME_PARAM, gameClass.getDisplayedName())
     })
 
-    class SelectDefaultRace(
+    class SelectDefaultSkill(
             val game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(SELECT_DEFAULT_RACE, game, Bundle().apply {
         putString(RACE_ID_PARAM, gameClass.id)
     })
 
-    class SelectCustomRace(
+    class SelectCustomSkill(
             val game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(SELECT_DEFAULT_RACE, game, Bundle().apply {
         putString(RACE_ID_PARAM, gameClass.id)
     })
 
-    class UnselectDefaultRace(
+    class UnselectDefaultSkill(
             val game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(UNSELECT_DEFAULT_RACE, game, Bundle().apply {
         putString(RACE_ID_PARAM, gameClass.id)
     })
 
-    class DeleteCustomRace(
+    class DeleteCustomSkill(
             val game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(DELETE_CUSTOM_RACE, game, Bundle().apply {
         putString(RACE_ID_PARAM, gameClass.id)
     })
 
-    class UnselectCustomRace(
+    class UnselectCustomSkill(
             val game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(UNSELECT_CUSTOM_RACE, game, Bundle().apply {
         putString(RACE_ID_PARAM, gameClass.id)
     })
 
-    class UpdateRace(
+    class UpdateSkill(
             val game: Game,
-            gameClass: GameRace
+            gameClass: GameSkill
     ) : GameSettingsSkillsAnalyticsEvent(UPDATE_RACE, game, Bundle().apply {
         putString(RACE_ID_PARAM, gameClass.id)
-        putString(DEFAULT_PARAM, GameRace.INFO.isSupported(gameClass).toString())
+        putString(DEFAULT_PARAM, GameSkill.INFO.isSupported(gameClass).toString())
     })
 
 }

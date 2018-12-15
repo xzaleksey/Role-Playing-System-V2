@@ -2,15 +2,14 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.races.*
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.*
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.races.adapter.GameSettingsRaceListViewModel
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.adapter.GameSettingsSkillsListViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
@@ -29,8 +28,8 @@ import io.reactivex.rxkotlin.addTo
 
 @Suppress("MoveLambdaOutsideParentheses")
 class GameSettingsSkillViewModelProviderImpl(
-        private val defaultSettingsRaceRepository: DefaultSettingRaceRepository,
-        private val defaultGameSkillsRepository: GameSkillsRepository,
+        private val defaultGameSkillRepository: DefaultSettingSkillsRepository,
+        private val gameSkillsRepository: GameSkillsRepository,
         private val gameTagsRepository: GameTagsRepository,
         private val game: Game,
         private val stringRepository: StringRepository,
@@ -38,7 +37,6 @@ class GameSettingsSkillViewModelProviderImpl(
         private val presenter: GameSettingsSkillsPresenter,
         private val activityListener: ActivityListener,
         private val activeGameEventRelay: Relay<ActiveGameEvent>,
-        private val gameGameRaceRepository: GameRaceRepository,
         private val analyticsReporter: AnalyticsReporter
 ) : GameSettingsSkillViewModelProvider {
 
@@ -93,14 +91,14 @@ class GameSettingsSkillViewModelProviderImpl(
                             return@flatMap handleSelectItem(event)
                         }
 
-                        is GameSettingsSkillsPresenter.UiEvent.ChangeRace -> {
-                            val gameSettingsRaceListViewModel = event.listViewModel
-                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.UpdateRace(game, gameSettingsRaceListViewModel.gameRace))
-                            if (gameSettingsRaceListViewModel.custom) {
-                                updateSelectedItemModel(gameSettingsRaceListViewModel.gameRace as UserGameRace)
+                        is GameSettingsSkillsPresenter.UiEvent.ChangeSkill -> {
+                            val gameSettingsSkillsListViewModel = event.listViewModel
+                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.UpdateSkill(game, gameSettingsSkillsListViewModel.gameSkill))
+                            if (gameSettingsSkillsListViewModel.custom) {
+                                updateSelectedItemModel(gameSettingsSkillsListViewModel.gameSkill as UserGameSkill)
                             } else {
                                 updateSelectedItemModel(
-                                        (gameSettingsRaceListViewModel.gameRace as DefaultGameRace).toUserGameRace()
+                                        (gameSettingsSkillsListViewModel.gameSkill as DefaultGameSkill).toUserGameSkill()
                                 )
                             }
 
@@ -109,7 +107,7 @@ class GameSettingsSkillViewModelProviderImpl(
 
                         is GameSettingsSkillsPresenter.UiEvent.DeleteSkill -> {
                             val gameSettingsListViewModel = event.listViewModel
-                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.DeleteCustomRace(game, gameSettingsListViewModel.gameRace))
+                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.DeleteCustomSkill(game, gameSettingsListViewModel.gameSkill))
                             return@flatMap deleteObservable(gameSettingsListViewModel.id)
                         }
                     }
@@ -120,25 +118,25 @@ class GameSettingsSkillViewModelProviderImpl(
 
 
     private fun handleSelectItem(event: GameSettingsSkillsPresenter.UiEvent.SelectSkill): Observable<out Any> {
-        val gameRace = event.listViewModel.gameRace
+        val gameSkill = event.listViewModel.gameSkill
         if (!event.listViewModel.selected) {
-            return if (gameRace is DefaultGameRace) {
-                analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.SelectDefaultRace(game, gameRace))
-                gameGameRaceRepository.setDocumentWithId(game.id, gameRace.toUserGameRace())
+            return if (gameSkill is DefaultGameSkill) {
+                analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.SelectDefaultSkill(game, gameSkill))
+                gameSkillsRepository.setDocumentWithId(game.id, gameSkill.toUserGameSkill())
                         .toObservable()
             } else {
-                analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.SelectCustomRace(game, gameRace))
-                gameGameRaceRepository.setSelected(game.id, gameRace.id, true)
+                analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.SelectCustomSkill(game, gameSkill))
+                gameSkillsRepository.setSelected(game.id, gameSkill.id, true)
                         .toObservable<Any>()
             }
         } else {
-            if (gameRace is UserGameRace) {
-                return if (GameRace.INFO.isSupported(gameRace)) {
-                    analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.UnselectDefaultRace(game, gameRace))
-                    deleteObservable(gameRace.id)
+            if (gameSkill is UserGameSkill) {
+                return if (GameSkill.INFO.isSupported(gameSkill)) {
+                    analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.UnselectDefaultSkill(game, gameSkill))
+                    deleteObservable(gameSkill.id)
                 } else {
-                    analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.UnselectCustomRace(game, gameRace))
-                    gameGameRaceRepository.setSelected(game.id, gameRace.id, false).toObservable<Any>()
+                    analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.UnselectCustomSkill(game, gameSkill))
+                    gameSkillsRepository.setSelected(game.id, gameSkill.id, false).toObservable<Any>()
                 }.doOnNext {
                     presenter.updateStartEndScrollPositions(event.adapterPosition)
                 }
@@ -148,27 +146,27 @@ class GameSettingsSkillViewModelProviderImpl(
     }
 
     private fun deleteObservable(id: String): Observable<Any> {
-        return gameGameRaceRepository.deleteDocumentOffline(game.id, id)
+        return gameSkillsRepository.deleteDocumentOffline(game.id, id)
                 .toObservable<Any>()!!
                 .startWith(Unit)
     }
 
     private fun getDefaultGamesDisposable(): Disposable {
         return Flowable.combineLatest(
-                gameGameRaceRepository.observeCollectionsOrdered(game.id),
-                defaultSettingsRaceRepository.observeCollection()
-                        .map { list -> list.filter { GameRace.INFO.isSupported(it) } },
-                BiFunction { gameRaces: List<GameRace>, defaultClasses: List<GameRace> ->
-                    val result = mutableListOf<GameSettingsRaceListViewModel>()
-                    val keySelector: (GameRace) -> String = { it.id }
+                gameSkillsRepository.observeCollectionsOrdered(game.id),
+                defaultGameSkillRepository.observeCollection()
+                        .map { list -> list.filter { GameSkill.INFO.isSupported(it) } },
+                BiFunction { gameRaces: List<GameSkill>, defaultClasses: List<GameSkill> ->
+                    val result = mutableListOf<GameSettingsSkillsListViewModel>()
+                    val keySelector: (GameSkill) -> String = { it.id }
                     val gameracesMap = gameRaces.associateBy(keySelector)
                     val defaultClassesMap = defaultClasses.associateBy { it.id }
-                    gameRaces.forEach { gameRace -> result.add(gameSettingsRaceListViewModel(gameRace)) }
+                    gameRaces.forEach { gameRace -> result.add(gameSettingsSkillListViewModel(gameRace)) }
 
                     defaultClassesMap.minus(gameracesMap.keys).values.forEach {
                         result.add(
-                                GameSettingsRaceListViewModel(it,
-                                        leftIcon = IconViewModel(resourcesProvider.getDrawable(GameRace.INFO.getIconId(it.getIconId())), it.getIconId()))
+                                GameSettingsSkillsListViewModel(it,
+                                        leftIcon = IconViewModel(resourcesProvider.getDrawable(GameSkill.INFO.getIconId(it.getIconId())), it.getIconId()))
                         )
                     }
                     result.sort()
@@ -177,9 +175,9 @@ class GameSettingsSkillViewModelProviderImpl(
 
     }
 
-    private fun gameSettingsRaceListViewModel(gameRace: GameRace): GameSettingsRaceListViewModel {
-        return GameSettingsRaceListViewModel(gameRace,
-                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameRace.INFO.getIconId(gameRace.getIconId())), gameRace.getIconId()))
+    private fun gameSettingsSkillListViewModel(gameRace: GameSkill): GameSettingsSkillsListViewModel {
+        return GameSettingsSkillsListViewModel(gameRace,
+                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameSkill.INFO.getIconId(gameRace.getIconId())), gameRace.getIconId()))
 
     }
 
@@ -188,7 +186,7 @@ class GameSettingsSkillViewModelProviderImpl(
                 getShowRaceToolbarModel(),
                 DefaultFrontView.Model(
                         DefaultFrontView.HeaderModel(
-                                stringRepository.getNewRace(),
+                                stringRepository.getNewSkill(),
                                 resourcesProvider.getDrawable(R.drawable.ic_add),
                                 {
                                     presenter.collapseFront()
@@ -209,7 +207,7 @@ class GameSettingsSkillViewModelProviderImpl(
                 { activityListener.backPress() },
                 null,
                 {},
-                stringRepository.getRaces()
+                stringRepository.getSkills()
         )
     }
 
@@ -219,8 +217,8 @@ class GameSettingsSkillViewModelProviderImpl(
                 selectedModel = null))
     }
 
-    private fun updateSelectedItemModel(userGameRace: UserGameRace) {
-        val customRace = !GameRace.INFO.isSupported(userGameRace)
+    private fun updateSelectedItemModel(userGameSkill: UserGameSkill) {
+        val customRace = !GameSkill.INFO.isSupported(userGameSkill)
 
         val value = viewModel.value
         viewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
@@ -234,16 +232,16 @@ class GameSettingsSkillViewModelProviderImpl(
                     val backModel = viewModel.value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
-                        disposable.add(gameGameRaceRepository.setDocumentWithId(
+                        disposable.add(gameSkillsRepository.setDocumentWithId(
                                 game.id,
-                                userGameRace.copy(
+                                userGameSkill.copy(
                                         name = backModel.titleText,
                                         description = backModel.subtitleText)
                         ).subscribeWithErrorLogging { gameRace ->
                             viewModel.value.frontModel.items.asSequence().map {
-                                it as GameSettingsRaceListViewModel
+                                it as GameSettingsSkillsListViewModel
                             }.toMutableList().apply {
-                                val element = gameSettingsRaceListViewModel(gameRace)
+                                val element = gameSettingsSkillListViewModel(gameRace)
                                 add(element)
                                 sort()
                                 presenter.scrollToPosition(indexOf(element))
@@ -252,15 +250,15 @@ class GameSettingsSkillViewModelProviderImpl(
                         })
                     }
                 },
-                title = if (customRace) stringRepository.getMyRace() else userGameRace.name
+                title = if (customRace) stringRepository.getMySkill() else userGameSkill.name
         ),
                 backModel = value.backModel.copy(
-                        titleText = userGameRace.name,
-                        subtitleText = userGameRace.description,
+                        titleText = userGameSkill.name,
+                        subtitleText = userGameSkill.description,
                         titleVisible = customRace
                 ),
                 step = GameSettingsSkillViewModel.Step.COLLAPSED,
-                selectedModel = userGameRace))
+                selectedModel = userGameSkill))
     }
 
 
@@ -277,17 +275,17 @@ class GameSettingsSkillViewModelProviderImpl(
                     val backModel = value.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
-                        val userGameRace = UserGameRace(backModel.titleText,
+                        val userGameSkill = UserGameSkill(backModel.titleText,
                                 backModel.subtitleText)
-                        analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, userGameRace))
-                        disposable.add(gameGameRaceRepository.createDocument(
+                        analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, userGameSkill))
+                        disposable.add(gameSkillsRepository.createDocument(
                                 game.id,
-                                userGameRace
-                        ).subscribeWithErrorLogging { gameRace ->
+                                userGameSkill
+                        ).subscribeWithErrorLogging { gameSkill ->
                             value.frontModel.items.asSequence().map {
-                                it as GameSettingsRaceListViewModel
+                                it as GameSettingsSkillsListViewModel
                             }.toMutableList().apply {
-                                val element = gameSettingsRaceListViewModel(gameRace)
+                                val element = gameSettingsSkillListViewModel(gameSkill)
                                 add(element)
                                 sort()
                                 presenter.scrollToPosition(indexOf(element))
@@ -296,7 +294,7 @@ class GameSettingsSkillViewModelProviderImpl(
                         })
                     }
                 },
-                title = stringRepository.getMyRace()
+                title = stringRepository.getMySkill()
         ),
                 backModel = viewModel.value.backModel.copy(
                         titleText = StringUtils.EMPTY_STRING,

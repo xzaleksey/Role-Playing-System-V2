@@ -3,11 +3,13 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 import android.content.Context
 import android.text.InputType
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import org.jetbrains.anko.*
@@ -17,6 +19,8 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     private var etTitle: EditText
     private var etSubtitle: EditText
     private var etTags: EditText
+    private var successCheck: ViewGroup
+    private var resultCheck: ViewGroup
 
     init {
         orientation = VERTICAL
@@ -41,21 +45,104 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
         etTags = themedEditText(R.style.AppTheme_TextWhite) {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
+            compoundDrawablePadding = getCommonDimen()
             hintResource = R.string.add_tag
         }.lparams(matchParent) {
         }
+
+        successCheck = relativeLayout {
+            backgroundResource = getSelectableItemBackGround()
+            imageView {
+                id = R.id.right_icon
+                imageResource = R.drawable.ic_add
+                tintImageRes(R.color.colorWhite)
+            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                alignParentEnd()
+                centerVertically()
+            }
+
+            imageView {
+                id = R.id.left_icon
+                imageResource = R.drawable.dice_d6
+                tintImageRes(R.color.colorDisabled)
+            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                alignParentStart()
+                centerVertically()
+            }
+
+            themedTextView(R.style.AppTheme_TextWhite) {
+                textResource = R.string.success_check
+                body1Style()
+            }.lparams(matchParent) {
+                endOf(R.id.left_icon)
+                startOf(R.id.right_icon)
+                centerVertically()
+                marginStart = getDoubleCommonDimen()
+                marginEnd = getDoubleCommonDimen()
+            }
+        }.lparams(matchParent, getIntDimen(R.dimen.dp_48)) {
+            bottomMargin = getCommonDimen()
+        }
+
+        resultCheck = relativeLayout {
+            backgroundResource = getSelectableItemBackGround()
+            imageView {
+                id = R.id.right_icon
+                imageResource = R.drawable.ic_add
+                tintImageRes(R.color.colorWhite)
+            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                alignParentEnd()
+                centerVertically()
+            }
+
+            imageView {
+                id = R.id.left_icon
+                imageResource = R.drawable.dice_d6
+                tintImageRes(R.color.colorDisabled)
+            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                alignParentStart()
+                centerVertically()
+            }
+
+            themedTextView(R.style.AppTheme_TextWhite) {
+                textResource = R.string.result_check
+                body1Style()
+            }.lparams(matchParent) {
+                endOf(R.id.left_icon)
+                startOf(R.id.right_icon)
+                centerVertically()
+                marginStart = getDoubleCommonDimen()
+                marginEnd = getDoubleCommonDimen()
+            }
+        }.lparams(matchParent, getIntDimen(R.dimen.dp_48)) {
+            bottomMargin = dimen(R.dimen.dp_14)
+        }
     }
 
-    fun getEtTitleObservable(): Observable<String> {
-        return RxTextView.afterTextChangeEvents(etTitle).skipInitialValue().map { it.editable().toString() }
+    fun getEtTitleObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.TitleInput> {
+        return RxTextView.afterTextChangeEvents(etTitle).skipInitialValue()
+                .map {
+                    GameSettingsSkillsPresenter.UiEvent.TitleInput(it.editable().toString())
+                }
     }
 
-    fun getEtSubtitleObservable(): Observable<String> {
-        return RxTextView.afterTextChangeEvents(etSubtitle).skipInitialValue().map { it.editable().toString() }
+    fun getEtSubtitleObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.SubtitleInput> {
+        return RxTextView.afterTextChangeEvents(etSubtitle).skipInitialValue().map {
+            GameSettingsSkillsPresenter.UiEvent.SubtitleInput(it.editable().toString())
+        }
     }
 
-    fun getTagObservable(): Observable<String> {
-        return RxTextView.afterTextChangeEvents(etTags).skipInitialValue().map { it.editable().toString() }
+    fun getTagObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.TagInput> {
+        return RxTextView.afterTextChangeEvents(etTags).skipInitialValue()
+                .map { GameSettingsSkillsPresenter.UiEvent.TagInput(it.editable().toString()) }
+    }
+
+    fun getClickAddSuccessCheckObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.AddSuccessCheck> {
+        return RxView.clicks(successCheck).map { GameSettingsSkillsPresenter.UiEvent.AddSuccessCheck }
+    }
+
+    fun getClickAddResultCheckObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.AddResultCheck> {
+        return RxView.clicks(resultCheck).map { GameSettingsSkillsPresenter.UiEvent.AddResultCheck }
     }
 
     fun update(model: Model) {
