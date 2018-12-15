@@ -95,6 +95,7 @@ class AudioFileInteractorImpl(
                     val value = relay.value
                     val ended = exoPlayerInteractor.isStateEnded()
                     if (value.currentProgress < maxProgress && ended) {
+                        exoPlayerInteractor.pause()
                         relay.accept(value.copy(currentProgress = maxProgress, isPlaying = false))
                     } else if (!ended) {
                         relay.accept(value.copy(currentProgress = currentProgress))
