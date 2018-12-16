@@ -5,6 +5,8 @@ import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -13,12 +15,13 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import org.jetbrains.anko.*
+import timber.log.Timber
 
 open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
 
     private var etTitle: EditText
     private var etSubtitle: EditText
-    private var etTags: EditText
+    private var etTags: AutoCompleteTextView
     private var successCheck: ViewGroup
     private var resultCheck: ViewGroup
 
@@ -42,11 +45,26 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
         }.lparams(matchParent) {
         }
 
-        etTags = themedEditText(R.style.AppTheme_TextWhite) {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        etTags = themedAutoCompleteTextView(R.style.AppTheme_TextWhite) {
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            imeOptions = EditorInfo.IME_ACTION_DONE
             setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
             compoundDrawablePadding = getCommonDimen()
             hintResource = R.string.add_tag
+            val arrayAdapter = ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, arrayOf("test", "mest"))
+            setAdapter(arrayAdapter)
+            this.setOnItemClickListener { parent, view, position, id ->
+                Timber.d(arrayAdapter.getItem(position))
+            }
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    Timber.d("Action done")
+                    return@setOnEditorActionListener true
+                }
+
+                return@setOnEditorActionListener false
+            }
+
         }.lparams(matchParent) {
         }
 
