@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
 import com.jakewharton.rxbinding2.view.RxView
@@ -164,14 +165,16 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     }
 
     fun update(model: Model) {
-        if (etTitle.text.toString() != model.titleText) {
-            etTitle.setText(model.titleText)
+        val userGameSkill = model.userGameSkill
+        if (etTitle.text.toString() != userGameSkill.name) {
+            etTitle.setText(userGameSkill.name)
         }
-        if (etSubtitle.text.toString() != model.subtitleText) {
-            etSubtitle.setText(model.subtitleText)
+        if (etSubtitle.text.toString() != userGameSkill.description) {
+            etSubtitle.setText(userGameSkill.description)
         }
-        etTitle.visibility = if (model.titleVisible) View.VISIBLE else View.GONE
-        if (model.titleVisible && etTitle.hasFocus()) {
+        val isVisible = !userGameSkill.isDefaultSkill()
+        etTitle.visibility = if (isVisible) View.VISIBLE else View.GONE
+        if (isVisible && etTitle.hasFocus()) {
             etTitle.setSelection(etTitle.length())
         } else {
             etSubtitle.setSelection(etSubtitle.length())
@@ -187,8 +190,6 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     }
 
     data class Model(
-            val titleText: String = StringUtils.EMPTY_STRING,
-            val subtitleText: String = StringUtils.EMPTY_STRING,
-            val titleVisible: Boolean = true
+            val userGameSkill: UserGameSkill
     )
 }

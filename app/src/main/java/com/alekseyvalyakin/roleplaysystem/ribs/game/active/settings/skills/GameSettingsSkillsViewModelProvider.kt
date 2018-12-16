@@ -10,7 +10,6 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.adapter.GameSettingsSkillsListViewModel
-import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
@@ -71,19 +70,17 @@ class GameSettingsSkillViewModelProviderImpl(
 
                         is GameSettingsSkillsPresenter.UiEvent.TitleInput -> {
                             val value = viewModel.value
-                            if (value.backModel.titleText != event.text) {
-                                viewModel.accept(value.copy(backModel = value.backModel.copy(
-                                        titleText = event.text
-                                )))
+                            val skill = value.backModel.userGameSkill
+                            if (skill.name != event.text) {
+                                skill.name = event.text
                             }
                         }
 
                         is GameSettingsSkillsPresenter.UiEvent.SubtitleInput -> {
                             val value = viewModel.value
-                            if (value.backModel.subtitleText != event.text) {
-                                viewModel.accept(value.copy(backModel = value.backModel.copy(
-                                        subtitleText = event.text
-                                )))
+                            val skill = value.backModel.userGameSkill
+                            if (skill.description != event.text) {
+                                skill.description = event.text
                             }
                         }
 
@@ -195,7 +192,7 @@ class GameSettingsSkillViewModelProviderImpl(
                         ),
                         emptyList()
                 ),
-                SkillBackView.Model(),
+                SkillBackView.Model(UserGameSkill()),
                 GameSettingsSkillViewModel.Step.EXPANDED,
                 selectedModel = null
         )
@@ -230,32 +227,27 @@ class GameSettingsSkillViewModelProviderImpl(
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
                     val backModel = viewModel.value.backModel
-                    if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
+                    val gameSkill = backModel.userGameSkill
+                    if (gameSkill.name.isNotBlank() && gameSkill.description.isNotBlank()) {
                         expandFront()
-                        disposable.add(gameSkillsRepository.setDocumentWithId(
-                                game.id,
-                                userGameSkill.copy(
-                                        name = backModel.titleText,
-                                        description = backModel.subtitleText)
-                        ).subscribeWithErrorLogging { gameRace ->
-                            viewModel.value.frontModel.items.asSequence().map {
-                                it as GameSettingsSkillsListViewModel
-                            }.toMutableList().apply {
-                                val element = gameSettingsSkillListViewModel(gameRace)
-                                add(element)
-                                sort()
-                                presenter.scrollToPosition(indexOf(element))
-                            }
+                        disposable.add(gameSkillsRepository.setDocumentWithId(game.id, userGameSkill)
+                                .subscribeWithErrorLogging { gameSkill ->
+                                    viewModel.value.frontModel.items.asSequence().map {
+                                        it as GameSettingsSkillsListViewModel
+                                    }.toMutableList().apply {
+                                        val element = gameSettingsSkillListViewModel(gameSkill)
+                                        add(element)
+                                        sort()
+                                        presenter.scrollToPosition(indexOf(element))
+                                    }
 
-                        })
+                                })
                     }
                 },
                 title = if (customRace) stringRepository.getMySkill() else userGameSkill.name
         ),
                 backModel = value.backModel.copy(
-                        titleText = userGameSkill.name,
-                        subtitleText = userGameSkill.description,
-                        titleVisible = customRace
+                        userGameSkill = userGameSkill
                 ),
                 step = GameSettingsSkillViewModel.Step.COLLAPSED,
                 selectedModel = userGameSkill))
@@ -273,14 +265,13 @@ class GameSettingsSkillViewModelProviderImpl(
                 rightIconClickListener = {
                     val value = viewModel.value
                     val backModel = value.backModel
-                    if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
+                    val skill = backModel.userGameSkill
+                    if (skill.name.isNotBlank() && skill.description.isNotBlank()) {
                         expandFront()
-                        val userGameSkill = UserGameSkill(backModel.titleText,
-                                backModel.subtitleText)
-                        analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, userGameSkill))
+                        analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, skill))
                         disposable.add(gameSkillsRepository.createDocument(
                                 game.id,
-                                userGameSkill
+                                skill
                         ).subscribeWithErrorLogging { gameSkill ->
                             value.frontModel.items.asSequence().map {
                                 it as GameSettingsSkillsListViewModel
@@ -297,9 +288,7 @@ class GameSettingsSkillViewModelProviderImpl(
                 title = stringRepository.getMySkill()
         ),
                 backModel = viewModel.value.backModel.copy(
-                        titleText = StringUtils.EMPTY_STRING,
-                        subtitleText = StringUtils.EMPTY_STRING,
-                        titleVisible = true
+                        userGameSkill = UserGameSkill()
                 ),
                 step = GameSettingsSkillViewModel.Step.COLLAPSED,
                 selectedModel = null))

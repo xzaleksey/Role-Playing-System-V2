@@ -44,6 +44,8 @@ data class UserGameSkill(
         return icon
     }
 
+    fun isDefaultSkill() = GameSkill.INFO.isSupported(this)
+
     @Exclude
     fun toDependencyInfo(resourcesProvider: ResourcesProvider): DependencyInfo {
         return DependencyInfo(Dependency(DependencyType.SKILL.value, id),
