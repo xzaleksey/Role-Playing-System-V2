@@ -6,16 +6,22 @@ admin.initializeApp(functions.config().firebase);
 
 
 getDatabase().settings = {timestampsInSnapshots: true};
-// exports.gameWritten = functions.firestore.document("games/{gameId}").onWrite((change, context) => {
-//     const document = change.after.data();
-//     if (document === undefined) {
-//         console.log('gameWriteDeleted', context.params.gameId, document);
-//         return null;
-//     }
-//
-//     console.log('gameWrite', context.params.gameId, document);
-//     return context.params.gameId
-// });
+exports.tagWritten = functions.firestore.document("games/{gameId}/tags/{tagId}")
+    .onWrite((change, context) => {
+        const document = change.after.data();
+        if (document === undefined) {
+            return null;
+        }
+
+        console.log('tagWrite', context.params.gameId, document);
+        let skills = document["skillIds"];
+        if (Array.isArray(skills) && skills.length === 0) {
+            let path = "games/" + context.params.gameId + "/tags/" + context.params.tagId;
+            console.log(path);
+            getDatabase().doc(path).delete();
+        }
+        return context.params.gameId
+    });
 
 exports.DeleteGameFunction = functions.firestore
     .document("games/{gameId}")
@@ -32,6 +38,7 @@ exports.DeleteGameFunction = functions.firestore
         const classesInGame = getGameCollection().doc(gameId).collection("classes");
         const racesInGame = getGameCollection().doc(gameId).collection("races");
         const tagsInGame = getGameCollection().doc(gameId).collection("tags");
+        const skillsInGame = getGameCollection().doc(gameId).collection("skills");
         const photosInGame = getGameCollection().doc(gameId).collection("photos");
 
         const deleteGameInUser =
@@ -72,11 +79,12 @@ exports.DeleteGameFunction = functions.firestore
         const deleteClassesInGame = deleteCollection(database, classesInGame, BATCH_SIZE);
         const deleteRacesInGame = deleteCollection(database, racesInGame, BATCH_SIZE);
         const deleteTagsInGame = deleteCollection(database, tagsInGame, BATCH_SIZE);
+        const deleteSkillsInGame = deleteCollection(database, skillsInGame, BATCH_SIZE);
 
         return Promise.all([deletePhotos, deleteGameInUser,
             deleteUsersInGame, deleteStatsInGame,
             deleteClassesInGame, deleteRacesInGame,
-            deleteTagsInGame
+            deleteTagsInGame, deleteSkillsInGame
         ]);
     });
 

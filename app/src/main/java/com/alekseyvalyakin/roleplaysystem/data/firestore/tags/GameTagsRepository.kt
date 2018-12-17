@@ -51,17 +51,7 @@ class GameTagsRepositoryImpl : BaseGameFireStoreRepository<Tag>(Tag::class.java)
                 Timber.d("Document exists")
                 transaction.update(tagReference, Tag.SKILL_IDS_FIELD, FieldValue.arrayRemove(skillId))
             }
-        }).andThen(RxFirestore.runTransaction(instance, Transaction.Function { transaction ->
-            val documentSnapshot = transaction.get(tagReference)
-            if (!documentSnapshot.exists()) {
-                Timber.d("no document $tag")
-            } else {
-                Timber.d("Document exists")
-                if (documentSnapshot.toObject(Tag::class.java)!!.isEmpty()){
-                    transaction.delete(tagReference)
-                }
-            }
-        }))
+        })
     }
 
 }
