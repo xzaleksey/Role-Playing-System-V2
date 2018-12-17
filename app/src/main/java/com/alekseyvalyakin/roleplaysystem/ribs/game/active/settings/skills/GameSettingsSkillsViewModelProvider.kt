@@ -121,7 +121,7 @@ class GameSettingsSkillViewModelProviderImpl(
                                         .andThen(gameSkillsRepository.removeTag(tag, userGameSkill.id, game.id))
                                         .toObservable<Any>()
                             }
-                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.AddTag(game))
+                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.RemoveTag(game))
                             return@flatMap Observable.empty<Any>()
                         }
                     }
