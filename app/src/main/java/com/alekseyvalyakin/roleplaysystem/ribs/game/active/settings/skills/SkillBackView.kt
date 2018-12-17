@@ -50,6 +50,7 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             imeOptions = EditorInfo.IME_ACTION_NEXT
             hintResource = R.string.name
+            backgroundResource = R.drawable.edittext_white_bg
         }.lparams(matchParent) {
             bottomMargin = getCommonDimen()
         }
@@ -57,12 +58,14 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
         etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             hintResource = R.string.description
+            backgroundResource = R.drawable.edittext_white_bg
         }.lparams(matchParent) {
         }
 
         etTags = themedAutoCompleteTextView(R.style.AppTheme_TextWhite) {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             imeOptions = EditorInfo.IME_ACTION_DONE
+            backgroundResource = R.drawable.edittext_white_bg_with_left_icon
             setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
             compoundDrawablePadding = getCommonDimen()
             hintResource = R.string.add_tag
@@ -82,6 +85,7 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
 
         }.lparams(matchParent) {
             topMargin = getCommonDimen()
+            bottomMargin = getCommonDimen()
         }
         horizontalScrollView {
             tagsContainer = linearLayout {

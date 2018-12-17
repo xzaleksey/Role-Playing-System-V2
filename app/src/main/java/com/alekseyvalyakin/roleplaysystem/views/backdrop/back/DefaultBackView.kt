@@ -33,12 +33,14 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
             singleLine = true
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             imeOptions = EditorInfo.IME_ACTION_NEXT
+            backgroundResource = R.drawable.edittext_white_bg
         }.lparams(matchParent) {
             bottomMargin = getCommonDimen()
         }
 
         etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            backgroundResource = R.drawable.edittext_white_bg
         }.lparams(matchParent) {
         }
 
