@@ -25,7 +25,7 @@ class GameSettingsSkillsViewHolder(
             if (viewModel.gameSkill is UserGameSkill) {
                 MaterialDialog(gsView.context)
                         .title(R.string.delete)
-                        .message(R.string.delete_race)
+                        .message(R.string.delete_skill)
                         .positiveButton(android.R.string.ok, click = {
                             relay.accept(GameSettingsSkillsPresenter.UiEvent.DeleteSkill(viewModel))
                         })
