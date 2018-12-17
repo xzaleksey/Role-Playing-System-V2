@@ -170,7 +170,7 @@ class GameSettingsRaceViewModelProviderImpl(
                     }
                     result.sort()
                     defaultGameRaces.accept(result)
-                }).subscribeWithErrorLogging { _ -> updateItemsInList() }
+                }).subscribeWithErrorLogging { updateItemsInList() }
 
     }
 
@@ -219,8 +219,6 @@ class GameSettingsRaceViewModelProviderImpl(
     }
 
     private fun getAddDrawable() = resourcesProvider.getDrawable(R.drawable.ic_add)
-
-    private fun getCloseDrawable() = resourcesProvider.getDrawable(R.drawable.ic_close_backdrop)
 
     private fun getShowRaceToolbarModel(): CustomToolbarView.Model {
         return CustomToolbarView.Model(
@@ -285,7 +283,6 @@ class GameSettingsRaceViewModelProviderImpl(
                         titleVisible = customRace,
                         iconVisible = customRace
                 ),
-                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 step = GameSettingsRaceViewModel.Step.COLLAPSED,
                 selectedModel = userGameRace))
     }
@@ -337,7 +334,6 @@ class GameSettingsRaceViewModelProviderImpl(
                         )
                 ),
                 step = GameSettingsRaceViewModel.Step.COLLAPSED,
-                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = null))
     }
 

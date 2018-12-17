@@ -4,6 +4,7 @@ object StringUtils {
     const val EMPTY_STRING = ""
     const val UNDEFINED = "UNDEFINED"
     const val DEFAULT = "default"
+    const val BULLET = "•"
     val FORMAT_SLASHES = "/%s/"
 
     fun formatWithCount(s: String, count: Int): String {

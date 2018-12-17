@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkill
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemView
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.GameSettingsDefaultItemViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def.IconViewModel
 import eu.davidea.flexibleadapter.FlexibleAdapter
@@ -27,11 +26,15 @@ class GameSettingsSkillsListViewModel(
 ) {
 
     override fun getLayoutRes(): Int {
-        return FlexibleLayoutTypes.GAME_SETTINGS_ITEM
+        return FlexibleLayoutTypes.GAME_SETTINGS_SKILL_ITEM
+    }
+
+    fun getTags(): List<String> {
+        return gameSkill.tags
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>?, inflater: LayoutInflater?, parent: ViewGroup): GameSettingsSkillsViewHolder {
-        val gameSettingsView = GameSettingsDefaultItemView(parent.context)
+        val gameSettingsView = GameSettingsSkillItemView(parent.context)
         gameSettingsView.layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
         return GameSettingsSkillsViewHolder(gameSettingsView)
     }

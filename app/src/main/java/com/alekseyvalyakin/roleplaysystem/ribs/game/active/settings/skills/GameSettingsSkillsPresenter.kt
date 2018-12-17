@@ -14,9 +14,8 @@ interface GameSettingsSkillsPresenter {
 
         object AddSuccessCheck : UiEvent()
         object AddResultCheck : UiEvent()
-        class TagInput(val text: String) : UiEvent()
-        class TitleInput(val text: String) : UiEvent()
-        class SubtitleInput(val text: String) : UiEvent()
+        class TagAdd(val text: String) : UiEvent()
+        class TagRemove(val text: String) : UiEvent()
         class SelectSkill(
                 val listViewModel: GameSettingsSkillsListViewModel,
                 val adapterPosition: Int

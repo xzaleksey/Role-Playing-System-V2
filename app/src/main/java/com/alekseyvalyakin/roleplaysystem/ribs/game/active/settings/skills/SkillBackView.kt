@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
@@ -8,28 +9,41 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.LinearLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
+import io.reactivex.rxkotlin.addTo
 import org.jetbrains.anko.*
-import timber.log.Timber
 
 open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
 
     private var etTitle: EditText
     private var etSubtitle: EditText
     private var etTags: AutoCompleteTextView
+    private lateinit var tagsContainer: LinearLayout
     private var successCheck: ViewGroup
     private var resultCheck: ViewGroup
+    private val compositeDisposable = CompositeDisposable()
+    private var tagDisposable = Disposables.disposed()
+    private var latestModel: Model? = null
+    private var tagsAdapter: ArrayAdapter<String>
+    private var relay = PublishRelay.create<GameSettingsSkillsPresenter.UiEvent>()
 
     init {
         orientation = VERTICAL
         leftPadding = getDoubleCommonDimen()
         rightPadding = getDoubleCommonDimen()
+        tagsAdapter = getTagsAdapter(emptyList())
 
         etTitle = themedEditText(R.style.AppTheme_TextWhite) {
             singleLine = true
@@ -52,21 +66,28 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
             setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
             compoundDrawablePadding = getCommonDimen()
             hintResource = R.string.add_tag
-            val arrayAdapter = ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, arrayOf("test", "mest"))
-            setAdapter(arrayAdapter)
-            this.setOnItemClickListener { parent, view, position, id ->
-                Timber.d(arrayAdapter.getItem(position))
+            setOnItemClickListener { _, _, position, _ ->
+                addTag(tagsAdapter.getItem(position)!!)
             }
+
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    Timber.d("Action done")
-                    return@setOnEditorActionListener true
+                    if (addTag(text.toString())) {
+                        return@setOnEditorActionListener true
+                    }
                 }
 
                 return@setOnEditorActionListener false
             }
 
         }.lparams(matchParent) {
+            topMargin = getCommonDimen()
+        }
+        horizontalScrollView {
+            tagsContainer = linearLayout {
+
+            }.lparams(wrapContent, wrapContent)
+        }.lparams(matchParent, wrapContent) {
         }
 
         successCheck = relativeLayout {
@@ -138,22 +159,48 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
         }
     }
 
-    fun getEtTitleObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.TitleInput> {
-        return RxTextView.afterTextChangeEvents(etTitle).skipInitialValue()
-                .map {
-                    GameSettingsSkillsPresenter.UiEvent.TitleInput(it.editable().toString())
-                }
+    private fun addTag(item: String): Boolean {
+        latestModel?.run {
+            if (this.userGameSkill.tags.addIfNotContainsAndNotBlank(item)) {
+                addTagView(item)
+                relay.accept(GameSettingsSkillsPresenter.UiEvent.TagAdd(item))
+                etTags.setText(StringUtils.EMPTY_STRING)
+            }
+        }
+        return false
     }
 
-    fun getEtSubtitleObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.SubtitleInput> {
-        return RxTextView.afterTextChangeEvents(etSubtitle).skipInitialValue().map {
-            GameSettingsSkillsPresenter.UiEvent.SubtitleInput(it.editable().toString())
+    private fun removeTag(item: String) {
+        latestModel?.run {
+            this.userGameSkill.tags.remove(item)
+            relay.accept(GameSettingsSkillsPresenter.UiEvent.TagRemove(item))
         }
     }
 
-    fun getTagObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.TagInput> {
-        return RxTextView.afterTextChangeEvents(etTags).skipInitialValue()
-                .map { GameSettingsSkillsPresenter.UiEvent.TagInput(it.editable().toString()) }
+    private fun getTagsAdapter(items: List<String>): ArrayAdapter<String> {
+        val tags = items.toMutableList()
+        latestModel?.run {
+            tags - this.userGameSkill.tags
+        }
+        return ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, tags)
+    }
+
+    private fun subscribeTitle() {
+        RxTextView.textChanges(etTitle).skipInitialValue()
+                .subscribeWithErrorLogging {
+                    latestModel?.run {
+                        this.userGameSkill.name = it.toString()
+                    }
+                }.addTo(compositeDisposable)
+    }
+
+    private fun subscribeSubtitle() {
+        RxTextView.textChanges(etSubtitle).skipInitialValue()
+                .subscribeWithErrorLogging {
+                    latestModel?.run {
+                        this.userGameSkill.description = it.toString()
+                    }
+                }.addTo(compositeDisposable)
     }
 
     fun getClickAddSuccessCheckObservable(): Observable<GameSettingsSkillsPresenter.UiEvent.AddSuccessCheck> {
@@ -165,6 +212,7 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     }
 
     fun update(model: Model) {
+        latestModel = model
         val userGameSkill = model.userGameSkill
         if (etTitle.text.toString() != userGameSkill.name) {
             etTitle.setText(userGameSkill.name)
@@ -179,6 +227,64 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
         } else {
             etSubtitle.setSelection(etSubtitle.length())
         }
+
+        if (tagDisposable.isDisposed) {
+            tagDisposable = subscribeTags(model.tagsObservable)
+        }
+
+        updateTags(model.userGameSkill.tags)
+    }
+
+    private fun updateTags(tags: MutableList<String>) {
+        tagsContainer.removeAllViews()
+        for (tag in tags) {
+            addTagView(tag)
+        }
+    }
+
+    private fun addTagView(tag: String) {
+        tagsContainer.run {
+            chip {
+                setChipBackgroundColorResource(R.color.colorPrimary)
+                setChipStrokeColorResource(R.color.colorWhite)
+                textColorResource = R.color.colorWhite
+                val closeDrawable = getCompatDrawable(R.drawable.ic_close_backdrop)
+                isCloseIconVisible = true
+                closeIcon = closeDrawable
+                closeIconTint = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
+                rippleColor = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
+                highlightColor = getCompatColor(R.color.colorWhite)
+                chipStrokeWidth = getFloatDimen(R.dimen.dp_1)
+                text = tag
+                setOnCloseIconClickListener {
+                    removeTag(tag)
+                    (parent as ViewGroup).removeView(this)
+                }
+            }.lparams(wrapContent, wrapContent) {
+                marginEnd = getCommonDimen()
+                bottomMargin = getDoubleCommonDimen()
+            }
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        subscribeTitle()
+        subscribeSubtitle()
+        super.onAttachedToWindow()
+    }
+
+    private fun subscribeTags(tagsObservable: Observable<List<Tag>>): Disposable {
+        return tagsObservable
+                .subscribeWithErrorLogging { list ->
+                    tagsAdapter = getTagsAdapter(list.map { it -> it.id })
+                    etTags.setAdapter(tagsAdapter)
+                }
+    }
+
+    override fun onDetachedFromWindow() {
+        compositeDisposable.clear()
+        tagDisposable.dispose()
+        super.onDetachedFromWindow()
     }
 
     override fun onShown() {
@@ -190,6 +296,7 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     }
 
     data class Model(
-            val userGameSkill: UserGameSkill
+            val userGameSkill: UserGameSkill,
+            val tagsObservable: Observable<List<Tag>>
     )
 }

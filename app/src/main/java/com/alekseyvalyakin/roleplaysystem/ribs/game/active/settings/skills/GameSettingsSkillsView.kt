@@ -43,11 +43,8 @@ class GameSettingsSkillsView constructor(
         return Observable.merge(
                 listOf(
                         relay,
-                        backViewContainer.view.getEtTitleObservable(),
-                        backViewContainer.view.getEtSubtitleObservable(),
                         backViewContainer.view.getClickAddSuccessCheckObservable(),
-                        backViewContainer.view.getClickAddResultCheckObservable(),
-                        backViewContainer.view.getTagObservable()
+                        backViewContainer.view.getClickAddResultCheckObservable()
                 )
         )
     }

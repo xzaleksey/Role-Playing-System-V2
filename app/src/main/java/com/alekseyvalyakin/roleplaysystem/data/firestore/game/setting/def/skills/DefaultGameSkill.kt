@@ -10,7 +10,7 @@ data class DefaultGameSkill(
         var name: TrasnlatableField = TrasnlatableField(),
         var description: TrasnlatableField = TrasnlatableField(),
         override var selected: Boolean = false,
-        override var tags: List<String> = emptyList(),
+        override var tags: MutableList<String> = mutableListOf(),
         override var successFormula: String = StringUtils.EMPTY_STRING,
         override var resultFormula: String = StringUtils.EMPTY_STRING,
         override var dependencies: List<Dependency> = emptyList(),

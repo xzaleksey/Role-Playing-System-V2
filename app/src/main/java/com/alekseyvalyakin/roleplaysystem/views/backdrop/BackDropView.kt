@@ -49,22 +49,9 @@ open class BackDropView<T : View, B, F : View> constructor(
             this.addView(frontViewWrapper, LayoutParams(wrapContent, wrapContent))
             (frontViewWrapper.layoutParams as CoordinatorLayout.LayoutParams).behavior = userLockBottomSheetBehavior
             expandFrontInternal()
-            frontViewWrapper.setOnClickListener(getDefaultFrontViewWrapperClickListener())
         }
 
         topViewContainer.view.setOnClickListener(getDefaultTopViewClickListener())
-    }
-
-    open fun getDefaultFrontViewWrapperClickListener(): (View) -> Unit {
-        return {
-            when {
-                userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED -> {
-                    collapseFront()
-                }
-                userLockBottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED -> expandFront()
-                else -> expandFront()
-            }
-        }
     }
 
     open fun getDefaultTopViewClickListener(): (View) -> Unit {
@@ -81,7 +68,7 @@ open class BackDropView<T : View, B, F : View> constructor(
         onExpanded()
     }
 
-    private fun expandFrontInternal() {
+    protected fun expandFrontInternal() {
         frontViewWrapper.foreground = null
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         backViewContainer.onHidden()

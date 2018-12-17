@@ -1,14 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.data.firestore.tags
 
 import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
-import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasDateCreate
+import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasId
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.BaseGameFireStoreRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.game.GameFireStoreRepository
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.Transaction
+import com.google.firebase.firestore.*
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -19,10 +15,9 @@ class GameTagsRepositoryImpl : BaseGameFireStoreRepository<Tag>(Tag::class.java)
 
     override fun observeTagsOrdered(gameId: String): Flowable<List<Tag>> {
         val query = getCollection(gameId)
-                .orderBy(HasDateCreate.FIELD_DATE_CREATE, Query.Direction.DESCENDING)
+                .orderBy(HasId.ID_FIELD, Query.Direction.ASCENDING)
         return observeQueryCollection(query, gameId)
     }
-
 
     override fun getCollection(gameId: String): CollectionReference {
         return FirestoreCollection.TagsInGame(gameId).getDbCollection()

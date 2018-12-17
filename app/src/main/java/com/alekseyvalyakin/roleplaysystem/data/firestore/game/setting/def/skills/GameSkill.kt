@@ -19,7 +19,7 @@ interface GameSkill : FireStoreIdModel, Selectable, HasTags {
     @Exclude
     fun getIconId(): String
 
-    override var tags: List<String>
+    override var tags: MutableList<String>
 
     var successFormula: String
 

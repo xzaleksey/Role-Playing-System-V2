@@ -9,6 +9,7 @@ import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.fabmenu.FabMenu
 import com.alekseyvalyakin.roleplaysystem.views.player.PlayerView
 import com.github.chrisbanes.photoview.PhotoView
+import com.google.android.flexbox.FlexboxLayout
 import com.google.android.gms.common.SignInButton
 import org.jetbrains.anko.custom.ankoView
 
@@ -72,4 +73,10 @@ inline fun ViewManager.buttonsView(theme: Int = 0, btnInfoList: List<ButtonsView
 
 inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit = {}, btnInfoList: List<ButtonsView.ButtonInfo>) = buttonsView(init, 0, btnInfoList)
 
-inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit, theme: Int = 0, btnInfoList: List<ButtonsView.ButtonInfo>) = ankoView({ ButtonsView(it, btnInfoList) }, theme, init)
+inline fun ViewManager.buttonsView(init: ButtonsView.() -> Unit, theme: Int = 0, btnInfoList: List<ButtonsView.ButtonInfo>) = ankoView({ ButtonsView(it, btnInfoList) }, theme, init)@Suppress("NOTHING_TO_INLINE")
+
+inline fun ViewManager.flexboxLayout(theme: Int = 0) = flexboxLayout({}, theme)
+
+inline fun ViewManager.flexboxLayout(init: FlexboxLayout.() -> Unit = {}) = flexboxLayout(init, 0)
+
+inline fun ViewManager.flexboxLayout(init: FlexboxLayout.() -> Unit, theme: Int = 0) = ankoView(::FlexboxLayout, theme, init)

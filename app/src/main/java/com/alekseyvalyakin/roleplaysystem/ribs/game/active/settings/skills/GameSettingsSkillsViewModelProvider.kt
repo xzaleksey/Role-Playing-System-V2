@@ -4,6 +4,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.*
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -40,6 +41,7 @@ class GameSettingsSkillViewModelProviderImpl(
 ) : GameSettingsSkillViewModelProvider {
 
     private val defaultModels = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
+    private val allTags = BehaviorRelay.createDefault(emptyList<Tag>())
     private val viewModel = BehaviorRelay.createDefault<GameSettingsSkillViewModel>(getDefaultModel())
     private val disposable = CompositeDisposable()
 
@@ -48,8 +50,14 @@ class GameSettingsSkillViewModelProviderImpl(
                 .doOnSubscribe {
                     getDefaultGamesDisposable().addTo(disposable)
                     getPresenterEvents().addTo(disposable)
+                    subscribeTagUpdates().addTo(disposable)
                 }
                 .doOnTerminate { disposable.clear() }
+    }
+
+    private fun subscribeTagUpdates(): Disposable {
+        return gameTagsRepository.observeCollection(game.id)
+                .subscribeWithErrorLogging { allTags.accept(it) }
     }
 
     private fun getPresenterEvents(): Disposable {
@@ -66,22 +74,6 @@ class GameSettingsSkillViewModelProviderImpl(
                         is GameSettingsSkillsPresenter.UiEvent.ExpandFront -> {
                             updateShowItemsModel()
                             activeGameEventRelay.accept(ActiveGameEvent.ShowBottomBar)
-                        }
-
-                        is GameSettingsSkillsPresenter.UiEvent.TitleInput -> {
-                            val value = viewModel.value
-                            val skill = value.backModel.userGameSkill
-                            if (skill.name != event.text) {
-                                skill.name = event.text
-                            }
-                        }
-
-                        is GameSettingsSkillsPresenter.UiEvent.SubtitleInput -> {
-                            val value = viewModel.value
-                            val skill = value.backModel.userGameSkill
-                            if (skill.description != event.text) {
-                                skill.description = event.text
-                            }
                         }
 
                         is GameSettingsSkillsPresenter.UiEvent.SelectSkill -> {
@@ -192,7 +184,7 @@ class GameSettingsSkillViewModelProviderImpl(
                         ),
                         emptyList()
                 ),
-                SkillBackView.Model(UserGameSkill()),
+                SkillBackView.Model(UserGameSkill(), allTags),
                 GameSettingsSkillViewModel.Step.EXPANDED,
                 selectedModel = null
         )

@@ -10,9 +10,9 @@ import java.util.*
 data class FireStoreItem(
         @ServerTimestamp
         override var dateCreate: Date? = null,
-        override var name: String,
-        override var description: String,
-        override var tags: List<String>,
+        override var name: String =StringUtils.EMPTY_STRING,
+        override var description: String =StringUtils.EMPTY_STRING,
+        override var tags: MutableList<String> = mutableListOf(),
 
         var price: Double = 0.0,
         var weight: Int = 1,

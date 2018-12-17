@@ -220,8 +220,6 @@ class GameSettingsClassViewModelProviderImpl(
 
     private fun getAddDrawable() = resourcesProvider.getDrawable(R.drawable.ic_add)
 
-    private fun getCloseDrawable() = resourcesProvider.getDrawable(R.drawable.ic_close_backdrop)
-
     private fun getShowClassToolbarModel(): CustomToolbarView.Model {
         return CustomToolbarView.Model(
                 resourcesProvider.getDrawable(R.drawable.ic_arrow_back),
@@ -286,7 +284,6 @@ class GameSettingsClassViewModelProviderImpl(
                         iconVisible = customClass
                 ),
                 step = GameSettingsClassViewModel.Step.COLLAPSED,
-                frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = userGameClass))
     }
 
@@ -337,7 +334,6 @@ class GameSettingsClassViewModelProviderImpl(
                         )
                 ),
                 step = GameSettingsClassViewModel.Step.COLLAPSED,
-                frontModel = initialValue.frontModel.copy(headerModel = initialValue.frontModel.headerModel?.copy(icon = getCloseDrawable())),
                 selectedModel = null))
     }
 
