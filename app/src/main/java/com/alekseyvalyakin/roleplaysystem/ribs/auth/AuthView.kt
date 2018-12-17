@@ -40,7 +40,7 @@ class AuthView @JvmOverloads constructor(
     private lateinit var loginBtn: Button
     private lateinit var signUpBtn: Button
     private lateinit var passwordInputLayout: TextInputLayout
-    private lateinit var scrollView: ScrollView
+    private var scrollView: ScrollView
 
     private lateinit var emailInputLayout: TextInputLayout
 

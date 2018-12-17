@@ -1,7 +1,6 @@
 package com.rxfirebase2
 
 import android.net.Uri
-import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.*
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -189,7 +188,7 @@ object RxFirebaseStorage {
                     emitter.onError(e)
             }
 
-            val urlTask: Task<Uri> = taskSnapshotStorageTask.onSuccessTask {
+            taskSnapshotStorageTask.onSuccessTask {
                 storageRef.downloadUrl
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {

@@ -51,7 +51,7 @@ fun TextView.isAllTextVisible(): Boolean {
 }
 
 fun getFileNameInputFilter(): InputFilter {
-    return InputFilter { source, start, end, dest, dstart, dend ->
+    return InputFilter { source, _, _, _, _, _ ->
         if (source.isEmpty()) return@InputFilter null
         val last = source[source.length - 1]
 

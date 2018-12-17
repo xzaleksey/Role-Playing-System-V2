@@ -17,8 +17,6 @@ import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy.CLASS
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -122,10 +120,10 @@ class GameSettingsStatBuilder(dependency: ParentComponent) : BaseViewBuilder<Gam
     }
 
     @Scope
-    @Retention(CLASS)
+    @kotlin.annotation.Retention(AnnotationRetention.BINARY)
     internal annotation class GameSettingsStatScope
 
     @Qualifier
-    @Retention(CLASS)
+    @kotlin.annotation.Retention(AnnotationRetention.BINARY)
     internal annotation class GameSettingsStatInternal
 }

@@ -166,8 +166,8 @@ class FirebaseModule {
 
     @Provides
     @Singleton
-    fun firestoreCharactersRepo(userRepository: UserRepository): FirestoreCharactersRepository {
-        return FirestoreCharactersRepositoryImpl(userRepository)
+    fun firestoreCharactersRepo(): FirestoreCharactersRepository {
+        return FirestoreCharactersRepositoryImpl()
     }
 
     @Provides

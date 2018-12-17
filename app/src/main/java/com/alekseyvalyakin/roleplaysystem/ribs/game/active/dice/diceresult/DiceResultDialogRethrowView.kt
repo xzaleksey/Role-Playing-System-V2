@@ -16,7 +16,7 @@ class DiceResultDialogRethrowView(context: Context) : _LinearLayout(context) {
 
     lateinit var tvDiceCount: TextView
     lateinit var checkBox: CheckBox
-    lateinit var diceContainer: LinearLayout
+    var diceContainer: LinearLayout
     var allContainer: RelativeLayout
 
     init {
