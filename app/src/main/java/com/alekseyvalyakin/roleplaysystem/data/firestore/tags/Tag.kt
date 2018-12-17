@@ -18,6 +18,10 @@ data class Tag(
         override var id: String = StringUtils.EMPTY_STRING
 ) : FireStoreIdModel, HasDateCreate {
 
+    fun isEmpty(): Boolean {
+        return skillIds.isEmpty()
+    }
+
     companion object {
         const val SKILL_IDS_FIELD = "skillIds"
     }

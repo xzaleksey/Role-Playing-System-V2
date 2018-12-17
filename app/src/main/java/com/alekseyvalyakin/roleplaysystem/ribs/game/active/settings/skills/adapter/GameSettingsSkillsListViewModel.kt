@@ -43,4 +43,8 @@ class GameSettingsSkillsListViewModel(
         holderRaces.update(this, (adapter as GameSettingsSkillsAdapter).relay)
     }
 
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other) && (other is GameSettingsSkillsListViewModel && getTags() == other.getTags())
+    }
+
 }

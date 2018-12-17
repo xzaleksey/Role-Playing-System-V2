@@ -44,6 +44,7 @@ data class UserGameSkill(
         return icon
     }
 
+    @Exclude
     fun isDefaultSkill() = GameSkill.INFO.isSupported(this)
 
     @Exclude

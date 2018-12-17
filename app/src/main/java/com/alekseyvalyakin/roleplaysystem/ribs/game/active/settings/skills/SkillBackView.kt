@@ -163,7 +163,7 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
         latestModel?.run {
             if (this.userGameSkill.tags.addIfNotContainsAndNotBlank(item)) {
                 addTagView(item)
-                relay.accept(GameSettingsSkillsPresenter.UiEvent.TagAdd(item))
+                relay.accept(GameSettingsSkillsPresenter.UiEvent.TagAdd(item, this.userGameSkill))
                 etTags.setText(StringUtils.EMPTY_STRING)
             }
         }
@@ -173,14 +173,14 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     private fun removeTag(item: String) {
         latestModel?.run {
             this.userGameSkill.tags.remove(item)
-            relay.accept(GameSettingsSkillsPresenter.UiEvent.TagRemove(item))
+            relay.accept(GameSettingsSkillsPresenter.UiEvent.TagRemove(item, this.userGameSkill))
         }
     }
 
     private fun getTagsAdapter(items: List<String>): ArrayAdapter<String> {
         val tags = items.toMutableList()
         latestModel?.run {
-            tags - this.userGameSkill.tags
+            tags.removeAll(this.userGameSkill.tags)
         }
         return ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, tags)
     }
@@ -212,24 +212,29 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
     }
 
     fun update(model: Model) {
-        latestModel = model
+        if (latestModel != model) {
+            latestModel = model
+            etTags.text = null
+            tagDisposable.dispose()
+            tagDisposable = subscribeTags(model.tagsObservable)
+        }
+
         val userGameSkill = model.userGameSkill
         if (etTitle.text.toString() != userGameSkill.name) {
             etTitle.setText(userGameSkill.name)
         }
+
         if (etSubtitle.text.toString() != userGameSkill.description) {
             etSubtitle.setText(userGameSkill.description)
         }
+
         val isVisible = !userGameSkill.isDefaultSkill()
         etTitle.visibility = if (isVisible) View.VISIBLE else View.GONE
+
         if (isVisible && etTitle.hasFocus()) {
             etTitle.setSelection(etTitle.length())
         } else {
             etSubtitle.setSelection(etSubtitle.length())
-        }
-
-        if (tagDisposable.isDisposed) {
-            tagDisposable = subscribeTags(model.tagsObservable)
         }
 
         updateTags(model.userGameSkill.tags)
@@ -280,6 +285,8 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
                     etTags.setAdapter(tagsAdapter)
                 }
     }
+
+    fun getRelay() = relay.hide()
 
     override fun onDetachedFromWindow() {
         compositeDisposable.clear()

@@ -170,7 +170,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     }
                     result.sort()
                     defaultGameStats.accept(result)
-                }).subscribeWithErrorLogging { _ -> updateItemsInList() }
+                }).subscribeWithErrorLogging { updateItemsInList() }
 
     }
 

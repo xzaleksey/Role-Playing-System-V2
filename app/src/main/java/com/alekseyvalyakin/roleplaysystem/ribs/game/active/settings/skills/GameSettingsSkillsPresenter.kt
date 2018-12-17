@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.adapter.GameSettingsSkillsListViewModel
 import io.reactivex.Observable
 
@@ -14,8 +15,8 @@ interface GameSettingsSkillsPresenter {
 
         object AddSuccessCheck : UiEvent()
         object AddResultCheck : UiEvent()
-        class TagAdd(val text: String) : UiEvent()
-        class TagRemove(val text: String) : UiEvent()
+        class TagAdd(val text: String, val userGameSkill: UserGameSkill) : UiEvent()
+        class TagRemove(val text: String, val userGameSkill: UserGameSkill) : UiEvent()
         class SelectSkill(
                 val listViewModel: GameSettingsSkillsListViewModel,
                 val adapterPosition: Int

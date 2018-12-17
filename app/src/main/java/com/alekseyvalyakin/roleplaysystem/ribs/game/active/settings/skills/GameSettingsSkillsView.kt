@@ -44,7 +44,8 @@ class GameSettingsSkillsView constructor(
                 listOf(
                         relay,
                         backViewContainer.view.getClickAddSuccessCheckObservable(),
-                        backViewContainer.view.getClickAddResultCheckObservable()
+                        backViewContainer.view.getClickAddResultCheckObservable(),
+                        backViewContainer.view.getRelay()
                 )
         )
     }

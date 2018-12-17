@@ -90,6 +90,8 @@ const val NAVIGATE = "navigate"
 const val SKIP = "skip"
 const val CLICK_NEXT = "click_next"
 const val CLICK_BACK = "click_back"
+const val ADD_TAG = "add_tag"
+const val REMOVE_TAG = "remove_tag"
 
 //PARAMS
 const val PHOTO_ID = "photo_id"

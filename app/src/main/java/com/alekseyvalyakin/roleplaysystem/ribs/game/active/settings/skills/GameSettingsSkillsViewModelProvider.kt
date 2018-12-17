@@ -19,6 +19,7 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -98,6 +99,30 @@ class GameSettingsSkillViewModelProviderImpl(
                             val gameSettingsListViewModel = event.listViewModel
                             analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.DeleteCustomSkill(game, gameSettingsListViewModel.gameSkill))
                             return@flatMap deleteObservable(gameSettingsListViewModel.id)
+                        }
+
+                        is GameSettingsSkillsPresenter.UiEvent.TagAdd -> {
+                            val userGameSkill = event.userGameSkill
+                            if (userGameSkill.id.isNotBlank()) {
+                                val tag = event.text
+                                return@flatMap gameTagsRepository.addSkill(tag, userGameSkill.id, game.id)
+                                        .andThen(gameSkillsRepository.addTag(tag, userGameSkill.id, game.id))
+                                        .toObservable<Any>()
+                            }
+                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.AddTag(game))
+                            return@flatMap Observable.empty<Any>()
+                        }
+
+                        is GameSettingsSkillsPresenter.UiEvent.TagRemove -> {
+                            val userGameSkill = event.userGameSkill
+                            if (userGameSkill.id.isNotBlank()) {
+                                val tag = event.text
+                                return@flatMap gameTagsRepository.removeSkill(tag, userGameSkill.id, game.id)
+                                        .andThen(gameSkillsRepository.removeTag(tag, userGameSkill.id, game.id))
+                                        .toObservable<Any>()
+                            }
+                            analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.AddTag(game))
+                            return@flatMap Observable.empty<Any>()
                         }
                     }
                     return@flatMap Observable.empty<Any>()
@@ -264,7 +289,11 @@ class GameSettingsSkillViewModelProviderImpl(
                         disposable.add(gameSkillsRepository.createDocument(
                                 game.id,
                                 skill
-                        ).subscribeWithErrorLogging { gameSkill ->
+                        ).flatMap { skill ->
+                            return@flatMap Completable.concat(skill.tags.map {
+                                gameTagsRepository.addSkill(it, skill.id, game.id)
+                            }).toSingleDefault(skill)
+                        }.subscribeWithErrorLogging { gameSkill ->
                             value.frontModel.items.asSequence().map {
                                 it as GameSettingsSkillsListViewModel
                             }.toMutableList().apply {

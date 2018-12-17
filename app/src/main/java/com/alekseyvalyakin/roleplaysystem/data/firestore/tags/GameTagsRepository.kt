@@ -11,6 +11,7 @@ import io.reactivex.Flowable
 import timber.log.Timber
 
 class GameTagsRepositoryImpl : BaseGameFireStoreRepository<Tag>(Tag::class.java), GameTagsRepository {
+
     private val instance = FirebaseFirestore.getInstance()
 
     override fun observeTagsOrdered(gameId: String): Flowable<List<Tag>> {
@@ -37,10 +38,38 @@ class GameTagsRepositoryImpl : BaseGameFireStoreRepository<Tag>(Tag::class.java)
             }
         })
     }
+
+    override fun removeSkill(id: String, skillId: String, gameId: String): Completable {
+        val tag = Tag(id = id, skillIds = listOf(skillId))
+        val tagReference = getDocumentReference(id, gameId)
+
+        return RxFirestore.runTransaction(instance, Transaction.Function { transaction ->
+            val documentSnapshot = transaction.get(tagReference)
+            if (!documentSnapshot.exists()) {
+                Timber.d("no document $tag")
+            } else {
+                Timber.d("Document exists")
+                transaction.update(tagReference, Tag.SKILL_IDS_FIELD, FieldValue.arrayRemove(skillId))
+            }
+        }).andThen(RxFirestore.runTransaction(instance, Transaction.Function { transaction ->
+            val documentSnapshot = transaction.get(tagReference)
+            if (!documentSnapshot.exists()) {
+                Timber.d("no document $tag")
+            } else {
+                Timber.d("Document exists")
+                if (documentSnapshot.toObject(Tag::class.java)!!.isEmpty()){
+                    transaction.delete(tagReference)
+                }
+            }
+        }))
+    }
+
 }
 
 interface GameTagsRepository : GameFireStoreRepository<Tag> {
     fun observeTagsOrdered(gameId: String): Flowable<List<Tag>>
 
     fun addSkill(id: String, skillId: String, gameId: String): Completable
+
+    fun removeSkill(id: String, skillId: String, gameId: String): Completable
 }
