@@ -15,7 +15,8 @@ import org.jetbrains.anko.wrapContent
 
 class GameSettingsSkillsListViewModel(
         val gameSkill: GameSkill,
-        leftIcon: IconViewModel
+        leftIcon: IconViewModel,
+        val skillTags: List<String> = ArrayList(gameSkill.tags)
 ) : GameSettingsDefaultItemViewModel<GameSettingsSkillsViewHolder>(
         gameSkill.id,
         gameSkill.selected,
@@ -30,7 +31,7 @@ class GameSettingsSkillsListViewModel(
     }
 
     fun getTags(): List<String> {
-        return gameSkill.tags
+        return skillTags
     }
 
     override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>?, inflater: LayoutInflater?, parent: ViewGroup): GameSettingsSkillsViewHolder {
@@ -46,5 +47,4 @@ class GameSettingsSkillsListViewModel(
     override fun equals(other: Any?): Boolean {
         return super.equals(other) && (other is GameSettingsSkillsListViewModel && getTags() == other.getTags())
     }
-
 }

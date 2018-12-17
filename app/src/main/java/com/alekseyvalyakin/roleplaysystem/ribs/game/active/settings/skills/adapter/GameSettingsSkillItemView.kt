@@ -165,6 +165,7 @@ class GameSettingsSkillItemView(context: Context) : _LinearLayout(context) {
         if (tags.isEmpty()) {
             tagsView.visibility = View.GONE
         } else {
+            tagsView.visibility = View.VISIBLE
             tagsView.run {
                 for ((index, tag) in tags.withIndex()) {
                     if (index > 0) {

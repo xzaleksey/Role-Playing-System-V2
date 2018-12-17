@@ -170,14 +170,14 @@ class GameSettingsSkillViewModelProviderImpl(
                 gameSkillsRepository.observeCollectionsOrdered(game.id),
                 defaultGameSkillRepository.observeCollection()
                         .map { list -> list.filter { GameSkill.INFO.isSupported(it) } },
-                BiFunction { gameRaces: List<GameSkill>, defaultClasses: List<GameSkill> ->
+                BiFunction { gameSkills: List<GameSkill>, defaultSkills: List<GameSkill> ->
                     val result = mutableListOf<GameSettingsSkillsListViewModel>()
                     val keySelector: (GameSkill) -> String = { it.id }
-                    val gameracesMap = gameRaces.associateBy(keySelector)
-                    val defaultClassesMap = defaultClasses.associateBy { it.id }
-                    gameRaces.forEach { gameRace -> result.add(gameSettingsSkillListViewModel(gameRace)) }
+                    val gameSkillsMap = gameSkills.associateBy(keySelector)
+                    val defaultClassesMap = defaultSkills.associateBy { it.id }
+                    gameSkills.forEach { gameSkill -> result.add(gameSettingsSkillListViewModel(gameSkill)) }
 
-                    defaultClassesMap.minus(gameracesMap.keys).values.forEach {
+                    defaultClassesMap.minus(gameSkillsMap.keys).values.forEach {
                         result.add(
                                 GameSettingsSkillsListViewModel(it,
                                         leftIcon = IconViewModel(resourcesProvider.getDrawable(GameSkill.INFO.getIconId(it.getIconId())), it.getIconId()))
@@ -189,10 +189,9 @@ class GameSettingsSkillViewModelProviderImpl(
 
     }
 
-    private fun gameSettingsSkillListViewModel(gameRace: GameSkill): GameSettingsSkillsListViewModel {
-        return GameSettingsSkillsListViewModel(gameRace,
-                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameSkill.INFO.getIconId(gameRace.getIconId())), gameRace.getIconId()))
-
+    private fun gameSettingsSkillListViewModel(gameSkill: GameSkill): GameSettingsSkillsListViewModel {
+        return GameSettingsSkillsListViewModel(gameSkill,
+                leftIcon = IconViewModel(resourcesProvider.getDrawable(GameSkill.INFO.getIconId(gameSkill.getIconId())), gameSkill.getIconId()))
     }
 
     private fun getDefaultModel(): GameSettingsSkillViewModel {

@@ -179,4 +179,5 @@
     <string name="result_check">Проверка результата</string>
     <string name="new_skill">Новый навык</string>
     <string name="my_skill">Мой навык</string>
+    <string name="skills_view_toggle_view_text">Добавить ограничения по расам/классам, проверки навыка</string>
 </resources>

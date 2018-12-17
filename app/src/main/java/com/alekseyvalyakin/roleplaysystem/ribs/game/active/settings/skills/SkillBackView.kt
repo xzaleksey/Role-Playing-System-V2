@@ -2,6 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.support.design.chip.Chip
 import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
@@ -25,142 +26,179 @@ import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.addTo
 import org.jetbrains.anko.*
 
-open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
+open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
-    private var etTitle: EditText
-    private var etSubtitle: EditText
-    private var etTags: AutoCompleteTextView
+    private lateinit var etTitle: EditText
+    private lateinit var etSubtitle: EditText
+    private lateinit var etTags: AutoCompleteTextView
     private lateinit var tagsContainer: LinearLayout
-    private var successCheck: ViewGroup
-    private var resultCheck: ViewGroup
+    private lateinit var successCheck: ViewGroup
+    private lateinit var resultCheck: ViewGroup
     private val compositeDisposable = CompositeDisposable()
     private var tagDisposable = Disposables.disposed()
     private var latestModel: Model? = null
     private var tagsAdapter: ArrayAdapter<String>
     private var relay = PublishRelay.create<GameSettingsSkillsPresenter.UiEvent>()
+    private val hiddenViews: MutableList<View> = mutableListOf()
+    private lateinit var toggleStateView: View
 
     init {
-        orientation = VERTICAL
         leftPadding = getDoubleCommonDimen()
         rightPadding = getDoubleCommonDimen()
         tagsAdapter = getTagsAdapter(emptyList())
+        bottomPadding = dimen(R.dimen.dp_14)
 
-        etTitle = themedEditText(R.style.AppTheme_TextWhite) {
-            singleLine = true
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            imeOptions = EditorInfo.IME_ACTION_NEXT
-            hintResource = R.string.name
-            backgroundResource = R.drawable.edittext_white_bg
-        }.lparams(matchParent) {
-            bottomMargin = getCommonDimen()
-        }
-
-        etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-            hintResource = R.string.description
-            backgroundResource = R.drawable.edittext_white_bg
-        }.lparams(matchParent) {
-        }
-
-        etTags = themedAutoCompleteTextView(R.style.AppTheme_TextWhite) {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            imeOptions = EditorInfo.IME_ACTION_DONE
-            backgroundResource = R.drawable.edittext_white_bg_with_left_icon
-            setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
-            compoundDrawablePadding = getCommonDimen()
-            hintResource = R.string.add_tag
-            setOnItemClickListener { _, _, position, _ ->
-                addTag(tagsAdapter.getItem(position)!!)
+        verticalLayout {
+            etTitle = themedEditText(R.style.AppTheme_TextWhite) {
+                singleLine = true
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                imeOptions = EditorInfo.IME_ACTION_NEXT
+                hintResource = R.string.name
+                backgroundResource = R.drawable.edittext_white_bg
+            }.lparams(matchParent) {
+                bottomMargin = getCommonDimen()
             }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if (addTag(text.toString())) {
-                        return@setOnEditorActionListener true
-                    }
+            etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                hintResource = R.string.description
+                backgroundResource = R.drawable.edittext_white_bg
+            }.lparams(matchParent) {
+            }
+
+            etTags = themedAutoCompleteTextView(R.style.AppTheme_TextWhite) {
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                imeOptions = EditorInfo.IME_ACTION_DONE
+                backgroundResource = R.drawable.edittext_white_bg_with_left_icon
+                setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
+                compoundDrawablePadding = getCommonDimen()
+                hintResource = R.string.add_tag
+                setOnItemClickListener { _, _, position, _ ->
+                    addTag(tagsAdapter.getItem(position)!!)
                 }
 
-                return@setOnEditorActionListener false
+                setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        if (addTag(text.toString())) {
+                            return@setOnEditorActionListener true
+                        }
+                    }
+
+                    return@setOnEditorActionListener false
+                }
+
+            }.lparams(matchParent) {
+                topMargin = getCommonDimen()
+                bottomMargin = getCommonDimen()
             }
 
-        }.lparams(matchParent) {
-            topMargin = getCommonDimen()
-            bottomMargin = getCommonDimen()
-        }
-        horizontalScrollView {
-            tagsContainer = linearLayout {
+            horizontalScrollView {
+                tagsContainer = linearLayout {
 
-            }.lparams(wrapContent, wrapContent)
+                }.lparams(wrapContent, wrapContent)
+            }.lparams(matchParent, wrapContent) {
+            }
+
+            toggleStateView = relativeLayout {
+                backgroundResource = getSelectableItemBackGround()
+                imageView {
+                    id = R.id.left_icon
+                    imageResource = R.drawable.ic_add
+                    tintImageRes(R.color.colorWhite)
+                }.lparams(dimen(R.dimen.dp_24), dimen(R.dimen.dp_24)) {
+                    marginStart = getCommonDimen()
+                    marginEnd = getDoubleCommonDimen()
+                    centerVertically()
+                }
+
+                themedTextView(R.style.AppTheme_TextWhite) {
+                    textResource = R.string.skills_view_toggle_view_text
+                }.lparams(matchParent) {
+                    endOf(R.id.left_icon)
+                    centerVertically()
+                }
+
+                this.setOnClickListener { handleToggleState(true) }
+
+            }.lparams(matchParent, getIntDimen(R.dimen.dp_48))
+
+            successCheck = relativeLayout {
+                backgroundResource = getSelectableItemBackGround()
+                imageView {
+                    id = R.id.right_icon
+                    imageResource = R.drawable.ic_add
+                    tintImageRes(R.color.colorWhite)
+                }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                    alignParentEnd()
+                    centerVertically()
+                }
+
+                imageView {
+                    id = R.id.left_icon
+                    imageResource = R.drawable.dice_d6
+                    tintImageRes(R.color.colorDisabled)
+                }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                    alignParentStart()
+                    centerVertically()
+                }
+
+                themedTextView(R.style.AppTheme_TextWhite) {
+                    textResource = R.string.success_check
+                    body1Style()
+                }.lparams(matchParent) {
+                    endOf(R.id.left_icon)
+                    startOf(R.id.right_icon)
+                    centerVertically()
+                    marginStart = getDoubleCommonDimen()
+                    marginEnd = getDoubleCommonDimen()
+                }
+            }.lparams(matchParent, getIntDimen(R.dimen.dp_48)) {
+                bottomMargin = getCommonDimen()
+            }
+
+            resultCheck = relativeLayout {
+                backgroundResource = getSelectableItemBackGround()
+                imageView {
+                    id = R.id.right_icon
+                    imageResource = R.drawable.ic_add
+                    tintImageRes(R.color.colorWhite)
+                }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                    alignParentEnd()
+                    centerVertically()
+                }
+
+                imageView {
+                    id = R.id.left_icon
+                    imageResource = R.drawable.dice_d6
+                    tintImageRes(R.color.colorDisabled)
+                }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
+                    alignParentStart()
+                    centerVertically()
+                }
+
+                themedTextView(R.style.AppTheme_TextWhite) {
+                    textResource = R.string.result_check
+                    body1Style()
+                }.lparams(matchParent) {
+                    endOf(R.id.left_icon)
+                    startOf(R.id.right_icon)
+                    centerVertically()
+                    marginStart = getDoubleCommonDimen()
+                    marginEnd = getDoubleCommonDimen()
+                }
+            }.lparams(matchParent, getIntDimen(R.dimen.dp_48)) {
+            }
         }.lparams(matchParent, wrapContent) {
         }
 
-        successCheck = relativeLayout {
-            backgroundResource = getSelectableItemBackGround()
-            imageView {
-                id = R.id.right_icon
-                imageResource = R.drawable.ic_add
-                tintImageRes(R.color.colorWhite)
-            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
-                alignParentEnd()
-                centerVertically()
-            }
+        hiddenViews.add(resultCheck)
+        hiddenViews.add(successCheck)
+        handleToggleState(false)
+    }
 
-            imageView {
-                id = R.id.left_icon
-                imageResource = R.drawable.dice_d6
-                tintImageRes(R.color.colorDisabled)
-            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
-                alignParentStart()
-                centerVertically()
-            }
-
-            themedTextView(R.style.AppTheme_TextWhite) {
-                textResource = R.string.success_check
-                body1Style()
-            }.lparams(matchParent) {
-                endOf(R.id.left_icon)
-                startOf(R.id.right_icon)
-                centerVertically()
-                marginStart = getDoubleCommonDimen()
-                marginEnd = getDoubleCommonDimen()
-            }
-        }.lparams(matchParent, getIntDimen(R.dimen.dp_48)) {
-            bottomMargin = getCommonDimen()
-        }
-
-        resultCheck = relativeLayout {
-            backgroundResource = getSelectableItemBackGround()
-            imageView {
-                id = R.id.right_icon
-                imageResource = R.drawable.ic_add
-                tintImageRes(R.color.colorWhite)
-            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
-                alignParentEnd()
-                centerVertically()
-            }
-
-            imageView {
-                id = R.id.left_icon
-                imageResource = R.drawable.dice_d6
-                tintImageRes(R.color.colorDisabled)
-            }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
-                alignParentStart()
-                centerVertically()
-            }
-
-            themedTextView(R.style.AppTheme_TextWhite) {
-                textResource = R.string.result_check
-                body1Style()
-            }.lparams(matchParent) {
-                endOf(R.id.left_icon)
-                startOf(R.id.right_icon)
-                centerVertically()
-                marginStart = getDoubleCommonDimen()
-                marginEnd = getDoubleCommonDimen()
-            }
-        }.lparams(matchParent, getIntDimen(R.dimen.dp_48)) {
-            bottomMargin = dimen(R.dimen.dp_14)
-        }
+    private fun handleToggleState(full: Boolean) {
+        hiddenViews.forEach { it.visibility = if (full) View.VISIBLE else View.GONE }
+        toggleStateView.visibility = if (full) View.GONE else View.VISIBLE
     }
 
     private fun addTag(item: String): Boolean {
@@ -221,6 +259,7 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
             etTags.text = null
             tagDisposable.dispose()
             tagDisposable = subscribeTags(model.tagsObservable)
+            handleToggleState(false)
         }
 
         val userGameSkill = model.userGameSkill
@@ -253,26 +292,28 @@ open class SkillBackView(context: Context) : _LinearLayout(context), BackView {
 
     private fun addTagView(tag: String) {
         tagsContainer.run {
-            chip {
-                setChipBackgroundColorResource(R.color.colorPrimary)
-                setChipStrokeColorResource(R.color.colorWhite)
-                textColorResource = R.color.colorWhite
-                val closeDrawable = getCompatDrawable(R.drawable.ic_close_backdrop)
-                isCloseIconVisible = true
-                closeIcon = closeDrawable
-                closeIconTint = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
-                rippleColor = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
-                highlightColor = getCompatColor(R.color.colorWhite)
-                chipStrokeWidth = getFloatDimen(R.dimen.dp_1)
-                text = tag
-                setOnCloseIconClickListener {
-                    removeTag(tag)
-                    (parent as ViewGroup).removeView(this)
-                }
-            }.lparams(wrapContent, wrapContent) {
-                marginEnd = getCommonDimen()
-                bottomMargin = getDoubleCommonDimen()
-            }
+            addView(Chip(context)
+                    .apply {
+                        setChipBackgroundColorResource(R.color.colorPrimary)
+                        setChipStrokeColorResource(R.color.colorWhite)
+                        textColorResource = R.color.colorWhite
+                        val closeDrawable = getCompatDrawable(R.drawable.ic_close_backdrop)
+                        isCloseIconVisible = true
+                        closeIcon = closeDrawable
+                        closeIconTint = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
+                        rippleColor = ColorStateList.valueOf(getCompatColor(R.color.colorWhite))
+                        highlightColor = getCompatColor(R.color.colorWhite)
+                        chipStrokeWidth = getFloatDimen(R.dimen.dp_1)
+                        text = tag
+                        setOnCloseIconClickListener {
+                            removeTag(tag)
+                            (parent as ViewGroup).removeView(this)
+                        }
+                    }, LinearLayout.LayoutParams(wrapContent, wrapContent)
+                    .apply {
+                        marginEnd = getCommonDimen()
+                        bottomMargin = getDoubleCommonDimen()
+                    })
         }
     }
 

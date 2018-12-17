@@ -317,6 +317,7 @@
     <string name="result_check">Result check</string>
     <string name="new_skill">New skill</string>
     <string name="my_skill">My skill</string>
+    <string name="skills_view_toggle_view_text">Add races/classes restrictions, skill checks</string>
 
 
 </resources>

@@ -31,7 +31,7 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
 
         etTitle = themedEditText(R.style.AppTheme_TextWhite) {
             singleLine = true
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             imeOptions = EditorInfo.IME_ACTION_NEXT
             backgroundResource = R.drawable.edittext_white_bg
         }.lparams(matchParent) {
@@ -39,7 +39,7 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
         }
 
         etSubtitle = themedEditText(R.style.AppTheme_TextWhite) {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             backgroundResource = R.drawable.edittext_white_bg
         }.lparams(matchParent) {
         }
