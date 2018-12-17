@@ -34,13 +34,14 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
     private lateinit var tagsContainer: LinearLayout
     private lateinit var successCheck: ViewGroup
     private lateinit var resultCheck: ViewGroup
+    private lateinit var toggleStateView: View
+
     private val compositeDisposable = CompositeDisposable()
     private var tagDisposable = Disposables.disposed()
     private var latestModel: Model? = null
     private var tagsAdapter: ArrayAdapter<String>
     private var relay = PublishRelay.create<GameSettingsSkillsPresenter.UiEvent>()
     private val hiddenViews: MutableList<View> = mutableListOf()
-    private lateinit var toggleStateView: View
 
     init {
         leftPadding = getDoubleCommonDimen()
@@ -331,7 +332,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 }
     }
 
-    fun getRelay() = relay.hide()
+    fun getRelay() = relay.hide()!!
 
     override fun onDetachedFromWindow() {
         compositeDisposable.clear()
