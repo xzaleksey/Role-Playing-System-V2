@@ -2,18 +2,20 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.characters
 
 import android.content.Context
 import android.view.View
-import android.widget.RelativeLayout
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.views.backdrop.*
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.BackDropView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.BaseViewContainer
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackViewContainer
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.DefaultBackView
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.DefaultFrontView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewContainer
-import org.jetbrains.anko.*
+import org.jetbrains.anko.backgroundColorResource
+import org.jetbrains.anko.matchParent
 
 /**
  * Top level view for {@link GameSettingsBuilder.GameSettingsScope}.
  */
-class GameCharactersView constructor(context: Context) : BackDropView<View, DefaultBackView, RelativeLayout>(context,
+class GameCharactersView constructor(context: Context) : BackDropView<View, DefaultBackView, DefaultFrontView>(context,
         BaseViewContainer(
                 View(context).apply { backgroundColorResource = R.color.colorPrimary },
                 matchParent,
@@ -25,19 +27,8 @@ class GameCharactersView constructor(context: Context) : BackDropView<View, Defa
                 200
         ),
         FrontViewContainer(
-                _RelativeLayout(context).apply {
+                DefaultFrontView(context).apply {
                     backgroundColorResource = R.color.colorBlack
-
-                    view {
-                        backgroundColorResource = R.color.material_yellow_400
-                    }.lparams(width = matchParent, height = 100) {
-                    }
-
-                    view {
-                        backgroundColorResource = R.color.colorAccent
-                    }.lparams(width = matchParent, height = 100) {
-                        alignParentBottom()
-                    }
                 }
         )
 ), GameCharactersInteractor.GameCharactersPresenter {

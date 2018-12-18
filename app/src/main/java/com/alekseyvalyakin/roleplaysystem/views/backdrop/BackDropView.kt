@@ -11,6 +11,7 @@ import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackViewContainer
+import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontView
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewContainer
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.front.FrontViewWrapper
 import com.alekseyvalyakin.roleplaysystem.views.bottomsheet.BottomSheetBehavior
@@ -19,12 +20,12 @@ import org.jetbrains.anko.design.coordinatorLayout
 import org.jetbrains.anko.wrapContent
 
 @SuppressLint("ViewConstructor")
-open class BackDropView<T : View, B, F : View> constructor(
+open class BackDropView<T : View, B, F> constructor(
         context: Context,
         protected val topViewContainer: BaseViewContainer<T>,
         protected val backViewContainer: BackViewContainer<B>,
         protected val frontViewContainer: FrontViewContainer<F>
-) : _LinearLayout(context) where B : View, B : BackView {
+) : _LinearLayout(context) where F : View, B : View, B : BackView, F : FrontView {
 
     protected val userLockBottomSheetBehavior = BottomSheetBehavior<View>()
     private lateinit var frontViewWrapper: FrameLayout
@@ -60,7 +61,14 @@ open class BackDropView<T : View, B, F : View> constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
-        userLockBottomSheetBehavior.peekHeight = frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
+        userLockBottomSheetBehavior.peekHeight = getPeekHeight()
+    }
+
+    private fun getPeekHeight(): Int {
+        return when (getCollapseMode()) {
+            CollapseMode.PARTIAL -> frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
+            CollapseMode.FULL -> Math.min(frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif(), frontViewContainer.getHeaderHeight())
+        }
     }
 
     open fun expandFront() {
@@ -76,12 +84,14 @@ open class BackDropView<T : View, B, F : View> constructor(
 
     open fun collapseFront() {
         frontViewWrapper.foreground = ColorDrawable(getCompatColor(R.color.white54))
-        userLockBottomSheetBehavior.peekHeight = frontViewWrapper.measuredHeight - backViewContainer.getPeekHeightDif()
+        userLockBottomSheetBehavior.peekHeight = getPeekHeight()
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         backViewContainer.view.requestFocus()
         backViewContainer.onShown()
         onCollapsed()
     }
+
+    open fun getCollapseMode() = CollapseMode.FULL
 
     protected open fun onCollapsed() {
 
@@ -89,6 +99,11 @@ open class BackDropView<T : View, B, F : View> constructor(
 
     protected open fun onExpanded() {
 
+    }
+
+    enum class CollapseMode {
+        FULL,
+        PARTIAL
     }
 
 }

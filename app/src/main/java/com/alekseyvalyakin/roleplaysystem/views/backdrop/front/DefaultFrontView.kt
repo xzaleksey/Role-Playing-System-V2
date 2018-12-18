@@ -16,7 +16,7 @@ import eu.davidea.flexibleadapter.items.IFlexible
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
-open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
+open class DefaultFrontView(context: Context) : _RelativeLayout(context), FrontView {
 
     protected lateinit var rightIcon: ImageView
     protected var recyclerView: RecyclerView
@@ -27,10 +27,10 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
 
     init {
         backgroundColorResource = R.color.colorWhite
-        topPadding = getDoubleCommonDimen()
 
         topContainer = relativeLayout {
             id = R.id.top_container
+            topPadding = getDoubleCommonDimen()
 
             rightIcon = imageView {
                 id = R.id.right_icon
@@ -92,6 +92,10 @@ open class DefaultFrontView(context: Context) : _RelativeLayout(context) {
         } else {
             progressBar.visibility = View.GONE
         }
+    }
+
+    override fun getHeaderHeight(): Int {
+        return topContainer.measuredHeight
     }
 
     fun setAdapter(adapter: FlexibleAdapter<IFlexible<*>>) {

@@ -281,13 +281,13 @@ class GameSettingsSkillViewModelProviderImpl(
                 rightIconClickListener = {
                     val value = viewModel.value
                     val backModel = value.backModel
-                    val skill = backModel.userGameSkill
-                    if (skill.name.isNotBlank() && skill.description.isNotBlank()) {
+                    val userGameSkill = backModel.userGameSkill
+                    if (userGameSkill.name.isNotBlank() && userGameSkill.description.isNotBlank()) {
                         expandFront()
-                        analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, skill))
+                        analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, userGameSkill))
                         disposable.add(gameSkillsRepository.createDocument(
                                 game.id,
-                                skill
+                                userGameSkill
                         ).flatMap { skill ->
                             return@flatMap Completable.concat(skill.tags.map {
                                 gameTagsRepository.addSkill(it, skill.id, game.id)

@@ -13,10 +13,10 @@ import org.jetbrains.anko._FrameLayout
 import org.jetbrains.anko.backgroundResource
 
 @SuppressLint("ViewConstructor")
-class FrontViewWrapper<T : View>(context: Context,
-                                 frontViewContainer: FrontViewContainer<T>,
-                                 private val backDropDelegate: BackDropDelegate
-) : _FrameLayout(context) {
+class FrontViewWrapper<T>(context: Context,
+                          frontViewContainer: FrontViewContainer<T>,
+                          private val backDropDelegate: BackDropDelegate
+) : _FrameLayout(context) where T : View, T : FrontView {
 
     init {
         backgroundResource = R.drawable.top_corners

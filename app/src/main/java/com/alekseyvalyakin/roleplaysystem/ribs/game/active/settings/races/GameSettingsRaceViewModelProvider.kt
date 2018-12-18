@@ -289,8 +289,8 @@ class GameSettingsRaceViewModelProviderImpl(
 
 
     private fun updateNewItemModel() {
-        val value = raceViewModel.value
-        raceViewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
+        val viewModel = raceViewModel.value
+        raceViewModel.accept(viewModel.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     expandFront()
@@ -324,7 +324,7 @@ class GameSettingsRaceViewModelProviderImpl(
                 },
                 title = stringRepository.getMyRace()
         ),
-                backModel = value.backModel.copy(
+                backModel = viewModel.backModel.copy(
                         titleText = StringUtils.EMPTY_STRING,
                         subtitleText = StringUtils.EMPTY_STRING,
                         titleVisible = true,

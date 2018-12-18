@@ -48,6 +48,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
         rightPadding = getDoubleCommonDimen()
         tagsAdapter = getTagsAdapter(emptyList())
         bottomPadding = dimen(R.dimen.dp_14)
+        isVerticalScrollBarEnabled = false
 
         verticalLayout {
             etTitle = themedEditText(R.style.AppTheme_TextWhite) {

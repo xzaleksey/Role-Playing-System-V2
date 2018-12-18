@@ -109,6 +109,9 @@ class ActiveGameRouter(
             NavigationId.RECORDS -> {
                 attachRib(AttachInfo(State.RECORDS(), false))
             }
+            else -> {
+
+            }
         }
     }
 

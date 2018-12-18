@@ -42,7 +42,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String) {
-
+        Timber.d("send registration token $token")
     }
 
     private fun sendNotification(title: String, messageBody: String) {
