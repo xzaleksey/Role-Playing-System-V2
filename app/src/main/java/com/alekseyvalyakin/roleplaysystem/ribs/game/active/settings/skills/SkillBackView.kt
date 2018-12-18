@@ -140,7 +140,6 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                     Timber.d("Races clicked")
                 }
             }.lparams(matchParent) {
-                topMargin = getCommonDimen()
                 bottomMargin = getCommonDimen()
             }
 
@@ -157,7 +156,6 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                     Timber.d("Classes clicked")
                 }
             }.lparams(matchParent) {
-                topMargin = getCommonDimen()
                 bottomMargin = getCommonDimen()
             }
 
@@ -180,6 +178,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
                     alignParentStart()
                     centerVertically()
+                    marginStart = getCommonDimen()
                 }
 
                 themedTextView(R.style.AppTheme_TextWhite) {
@@ -214,6 +213,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
                     alignParentStart()
                     centerVertically()
+                    marginStart = getCommonDimen()
                 }
 
                 themedTextView(R.style.AppTheme_TextWhite) {
