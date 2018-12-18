@@ -2,6 +2,8 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.AllRestrictions
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.GameSettingsRestrictionProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.*
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
@@ -31,6 +33,7 @@ import io.reactivex.rxkotlin.addTo
 class GameSettingsSkillViewModelProviderImpl(
         private val defaultGameSkillRepository: DefaultSettingSkillsRepository,
         private val gameSkillsRepository: GameSkillsRepository,
+        private val gameSettingsRestrictionProvider: GameSettingsRestrictionProvider,
         private val gameTagsRepository: GameTagsRepository,
         private val game: Game,
         private val stringRepository: StringRepository,
@@ -43,6 +46,7 @@ class GameSettingsSkillViewModelProviderImpl(
 
     private val defaultModels = BehaviorRelay.createDefault(emptyList<IFlexible<*>>())
     private val allTags = BehaviorRelay.createDefault(emptyList<Tag>())
+    private val allRestrictions = BehaviorRelay.createDefault<AllRestrictions>(AllRestrictions())
     private val viewModel = BehaviorRelay.createDefault<GameSettingsSkillViewModel>(getDefaultModel())
     private val disposable = CompositeDisposable()
 
@@ -52,6 +56,7 @@ class GameSettingsSkillViewModelProviderImpl(
                     getDefaultGamesDisposable().addTo(disposable)
                     getPresenterEvents().addTo(disposable)
                     subscribeTagUpdates().addTo(disposable)
+                    subscribeRestrictionsUpdates().addTo(disposable)
                 }
                 .doOnTerminate { disposable.clear() }
     }
@@ -59,6 +64,11 @@ class GameSettingsSkillViewModelProviderImpl(
     private fun subscribeTagUpdates(): Disposable {
         return gameTagsRepository.observeCollection(game.id)
                 .subscribeWithErrorLogging { allTags.accept(it) }
+    }
+
+    private fun subscribeRestrictionsUpdates(): Disposable {
+        return gameSettingsRestrictionProvider.getAllRestrictions(game.id)
+                .subscribeWithErrorLogging { allRestrictions.accept(it) }
     }
 
     private fun getPresenterEvents(): Disposable {
@@ -208,7 +218,7 @@ class GameSettingsSkillViewModelProviderImpl(
                         ),
                         emptyList()
                 ),
-                SkillBackView.Model(UserGameSkill(), allTags),
+                SkillBackView.Model(UserGameSkill(), allTags, allRestrictions),
                 GameSettingsSkillViewModel.Step.EXPANDED,
                 selectedModel = null
         )

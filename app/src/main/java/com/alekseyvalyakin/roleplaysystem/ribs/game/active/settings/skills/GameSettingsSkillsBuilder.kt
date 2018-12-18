@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.GameSettingsRestrictionProvider
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.DefaultSettingSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkillsRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.GameTagsRepository
@@ -82,10 +83,12 @@ class GameSettingsSkillsBuilder(dependency: ParentComponent) : BaseViewBuilder<G
                                            gameSkillPresenter: GameSettingsSkillsPresenter,
                                            activityListener: ActivityListener,
                                            activeGameEventRelay: Relay<ActiveGameEvent>,
-                                           analyticsReporter: AnalyticsReporter): GameSettingsSkillViewModelProvider {
+                                           analyticsReporter: AnalyticsReporter,
+                                           gameSettingsRestrictionProvider: GameSettingsRestrictionProvider): GameSettingsSkillViewModelProvider {
                 return GameSettingsSkillViewModelProviderImpl(
                         defaultGameSkillRepository,
                         gameSkillsRepository,
+                        gameSettingsRestrictionProvider,
                         gameTagsRepository,
                         game,
                         stringRepository,

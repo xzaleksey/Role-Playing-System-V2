@@ -12,6 +12,9 @@ import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.LinearLayout
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.AllRestrictions
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.Restriction
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.RestrictionInfo
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
 import com.alekseyvalyakin.roleplaysystem.utils.*
@@ -41,7 +44,9 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
     private val compositeDisposable = CompositeDisposable()
     private var tagDisposable = Disposables.disposed()
+    private var restrictionsDisposable = Disposables.disposed()
     private var latestModel: Model? = null
+    private var allRestrictions: AllRestrictions = AllRestrictions()
     private var tagsAdapter: ArrayAdapter<String>
     private var relay = PublishRelay.create<GameSettingsSkillsPresenter.UiEvent>()
     private val hiddenViews: MutableList<View> = mutableListOf()
@@ -301,6 +306,8 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
             etTags.text = null
             tagDisposable.dispose()
             tagDisposable = subscribeTags(model.tagsObservable)
+            restrictionsDisposable.dispose()
+            restrictionsDisposable = subscribeRestrictions(model)
             handleToggleState(false)
         }
 
@@ -323,6 +330,26 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
         }
 
         updateTags(model.userGameSkill.tags)
+    }
+
+    private fun subscribeRestrictions(model: Model): Disposable {
+        return model.allRestrictionsObservable
+                .subscribeWithErrorLogging {
+                    this.allRestrictions = it
+                    updateRestrictions(model.userGameSkill.restrictions)
+                }
+    }
+
+    private fun updateRestrictions(restrictions: MutableList<Restriction>) {
+        etClasses.setText(allRestrictions.getClassesRestrictions(restrictions)
+                .foldIndexed("") { index: Int, acc: String, restrictionInfo: RestrictionInfo ->
+                    (if (index != 0) ", " else "") + acc + restrictionInfo.name
+                })
+
+        etRaces.setText(allRestrictions.getRacesRestrictions(restrictions)
+                .foldIndexed("") { index: Int, acc: String, restrictionInfo: RestrictionInfo ->
+                    (if (index != 0) ", " else "") + acc + restrictionInfo.name
+                })
     }
 
     private fun updateTags(tags: MutableList<String>) {
@@ -378,6 +405,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
     override fun onDetachedFromWindow() {
         compositeDisposable.clear()
         tagDisposable.dispose()
+        restrictionsDisposable.dispose()
         super.onDetachedFromWindow()
     }
 
@@ -390,6 +418,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
     data class Model(
             val userGameSkill: UserGameSkill,
-            val tagsObservable: Observable<List<Tag>>
+            val tagsObservable: Observable<List<Tag>>,
+            val allRestrictionsObservable: Observable<AllRestrictions>
     )
 }

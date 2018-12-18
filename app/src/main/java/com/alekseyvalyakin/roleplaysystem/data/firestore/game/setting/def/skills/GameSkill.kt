@@ -27,7 +27,7 @@ interface GameSkill : FireStoreIdModel, Selectable, HasTags {
 
     var dependencies: List<Dependency>
 
-    var restrictions: List<Restriction>
+    var restrictions: MutableList<Restriction>
 
     enum class INFO(val id: String) {
         STRIKE("strike") {

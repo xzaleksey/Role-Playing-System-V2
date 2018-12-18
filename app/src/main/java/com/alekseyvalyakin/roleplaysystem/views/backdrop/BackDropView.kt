@@ -93,7 +93,6 @@ open class BackDropView<T : View, B, F> constructor(
 
     private fun updatePeekHeight() {
         userLockBottomSheetBehavior.peekHeight = getPeekHeight()
-        frontViewWrapper.requestLayout()
     }
 
     open fun getCollapseMode() = CollapseMode.FULL

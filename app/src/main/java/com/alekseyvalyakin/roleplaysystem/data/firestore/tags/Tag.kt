@@ -18,6 +18,7 @@ data class Tag(
         override var id: String = StringUtils.EMPTY_STRING
 ) : FireStoreIdModel, HasDateCreate {
 
+    @Exclude
     fun isEmpty(): Boolean {
         return skillIds.isEmpty()
     }

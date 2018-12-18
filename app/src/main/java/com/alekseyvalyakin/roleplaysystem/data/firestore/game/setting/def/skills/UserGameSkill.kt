@@ -20,7 +20,7 @@ data class UserGameSkill(
         override var successFormula: String = StringUtils.EMPTY_STRING,
         override var resultFormula: String = StringUtils.EMPTY_STRING,
         override var dependencies: List<Dependency> = emptyList(),
-        override var restrictions: List<Restriction> = emptyList(),
+        override var restrictions: MutableList<Restriction> = mutableListOf(),
         override var tags: MutableList<String> = mutableListOf(),
 
         @Exclude

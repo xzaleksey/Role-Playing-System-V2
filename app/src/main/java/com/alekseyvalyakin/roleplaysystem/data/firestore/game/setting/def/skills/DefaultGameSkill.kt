@@ -14,7 +14,7 @@ data class DefaultGameSkill(
         override var successFormula: String = StringUtils.EMPTY_STRING,
         override var resultFormula: String = StringUtils.EMPTY_STRING,
         override var dependencies: List<Dependency> = emptyList(),
-        override var restrictions: List<Restriction> = emptyList(),
+        override var restrictions: MutableList<Restriction> = mutableListOf(),
 
         @Exclude
         @set:Exclude
