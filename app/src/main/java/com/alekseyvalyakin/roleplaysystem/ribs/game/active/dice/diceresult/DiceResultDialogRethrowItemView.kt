@@ -36,7 +36,7 @@ class DiceResultDialogRethrowItemView(context: Context) : _RelativeLayout(contex
                 marginStart = getIntDimen(R.dimen.dp_2)
             }
             tvDiceCount = textView {
-                id = R.id.tv_dice_count
+                id = R.id.tv_choose_all
                 gravity = Gravity.CENTER
                 textColorResource = R.color.colorTextPrimary
                 textSizeDimen = R.dimen.dp_16
@@ -61,7 +61,7 @@ class DiceResultDialogRethrowItemView(context: Context) : _RelativeLayout(contex
             }.lparams {
                 centerVertically()
                 leftOf(R.id.checkbox)
-                rightOf(R.id.tv_dice_count)
+                rightOf(R.id.tv_choose_all)
             }
         }
 

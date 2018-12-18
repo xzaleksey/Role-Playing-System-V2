@@ -60,7 +60,7 @@
     <item name="iv_plus" type="id" />
     <item name="iv_minus" type="id" />
     <item name="iv_main_dice" type="id" />
-    <item name="tv_dice_count" type="id" />
+    <item name="tv_choose_all" type="id" />
     <item name="content_container" type="id" />
     <item name="top_container" type="id" />
     <item name="status_bar" type="id" />

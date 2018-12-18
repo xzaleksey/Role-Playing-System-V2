@@ -31,7 +31,7 @@ class DiceResultDialogRethrowView(context: Context) : _LinearLayout(context) {
             topPadding = getIntDimen(R.dimen.dp_12)
 
             tvDiceCount = textView {
-                id = R.id.tv_dice_count
+                id = R.id.tv_choose_all
                 text = getString(R.string.all)
                 textColorResource = R.color.colorTextPrimary
                 textSizeDimen = R.dimen.dp_16

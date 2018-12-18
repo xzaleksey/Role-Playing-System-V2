@@ -58,7 +58,7 @@ class SingleDiceTypeResultViewHolder(
 
             val materialDialog = MaterialDialog(itemView.context)
                     .title(R.string.rethrow)
-                    .customView(view = dialogView,scrollable = true)
+                    .customView(view = dialogView, scrollable = true)
                     .negativeButton(android.R.string.cancel)
                     .positiveButton(R.string.throw_dice, click = {
                         relay.accept(DiceResultPresenter.UiEvent.RethrowDices(selectedDiceResults))

@@ -66,7 +66,7 @@ class SingleDiceView(context: Context) : SquareFrameLayout(context) {
                 topToBottom = R.id.guideline_left_horizontal
             }
             tvDiceCount = textView {
-                id = R.id.tv_dice_count
+                id = R.id.tv_choose_all
                 setRufinaRegularTypeface()
                 gravity = Gravity.CENTER
                 maxLines = 1

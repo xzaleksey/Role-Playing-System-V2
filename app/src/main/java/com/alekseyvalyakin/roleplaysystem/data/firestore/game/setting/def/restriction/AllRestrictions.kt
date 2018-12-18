@@ -5,16 +5,20 @@ class AllRestrictions(
         val races: List<RestrictionInfo> = emptyList()
 ) {
 
-    fun getClassesRestrictions(restrictions: List<Restriction>): List<RestrictionInfo> {
+    fun getClassesRestrictions(restrictions: List<Restriction>): MutableList<RestrictionInfo> {
         return classes.filter { rinfo ->
             restrictions.contains(rinfo.restriction)
-        }
+        }.toMutableList()
     }
 
-    fun getRacesRestrictions(restrictions: List<Restriction>): List<RestrictionInfo> {
+    fun getAllRestrictions(restrictions: List<Restriction>): MutableList<RestrictionInfo> {
+        return (getClassesRestrictions(restrictions) + getRacesRestrictions(restrictions)).toMutableList()
+    }
+
+    fun getRacesRestrictions(restrictions: List<Restriction>): MutableList<RestrictionInfo> {
         return races.filter { rinfo ->
             restrictions.contains(rinfo.restriction)
-        }
+        }.toMutableList()
     }
 
 }

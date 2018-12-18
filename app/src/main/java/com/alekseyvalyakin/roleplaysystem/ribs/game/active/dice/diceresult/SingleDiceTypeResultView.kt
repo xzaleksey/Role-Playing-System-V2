@@ -32,7 +32,7 @@ class SingleDiceTypeResultView(context: Context) : _CardView(context) {
                     centerVertically()
                 }
                 tvDiceCount = textView {
-                    id = R.id.tv_dice_count
+                    id = R.id.tv_choose_all
                     gravity = Gravity.CENTER
                     textColorResource = R.color.colorTextPrimary
                     textSizeDimen = R.dimen.dp_16

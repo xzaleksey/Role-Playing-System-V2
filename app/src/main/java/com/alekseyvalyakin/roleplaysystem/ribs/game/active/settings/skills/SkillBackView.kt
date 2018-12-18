@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.AllRestrictions
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.Restriction
@@ -19,6 +21,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills
 import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
+import com.alekseyvalyakin.roleplaysystem.views.dialog.RestrictionInfoDialogView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -28,7 +31,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.addTo
 import org.jetbrains.anko.*
-import timber.log.Timber
 
 open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
@@ -133,7 +135,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
             }.lparams(matchParent, getIntDimen(R.dimen.dp_48))
 
             etRaces = themedEditText(R.style.AppTheme_TextWhite) {
-                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 backgroundResource = R.drawable.edittext_white_bg_with_left_icon
                 setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_races)
                         .tint(getCompatColor(R.color.colorDisabled)), null, null, null)
@@ -142,14 +144,17 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 isFocusable = false
                 isFocusableInTouchMode = false
                 setOnClickListener {
-                    Timber.d("Races clicked")
+                    latestModel?.run {
+                        showRestrictionRaces(this.userGameSkill)
+                    }
                 }
+
             }.lparams(matchParent) {
                 bottomMargin = getCommonDimen()
             }
 
             etClasses = themedEditText(R.style.AppTheme_TextWhite) {
-                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 backgroundResource = R.drawable.edittext_white_bg_with_left_icon
                 setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_classes)
                         .tint(getCompatColor(R.color.colorDisabled)), null, null, null)
@@ -158,12 +163,13 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 isFocusable = false
                 isFocusableInTouchMode = false
                 setOnClickListener {
-                    Timber.d("Classes clicked")
+                    latestModel?.run {
+                        showRestrictionClasses(this.userGameSkill)
+                    }
                 }
             }.lparams(matchParent) {
                 bottomMargin = getCommonDimen()
             }
-
 
             successCheck = relativeLayout {
                 backgroundResource = getSelectableItemBackGround()
@@ -343,12 +349,12 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
     private fun updateRestrictions(restrictions: MutableList<Restriction>) {
         etClasses.setText(allRestrictions.getClassesRestrictions(restrictions)
                 .foldIndexed("") { index: Int, acc: String, restrictionInfo: RestrictionInfo ->
-                    (if (index != 0) ", " else "") + acc + restrictionInfo.name
+                    acc + (if (index != 0) ", " else "") + restrictionInfo.name
                 })
 
         etRaces.setText(allRestrictions.getRacesRestrictions(restrictions)
                 .foldIndexed("") { index: Int, acc: String, restrictionInfo: RestrictionInfo ->
-                    (if (index != 0) ", " else "") + acc + restrictionInfo.name
+                    acc + (if (index != 0) ", " else "") + restrictionInfo.name
                 })
     }
 
@@ -398,6 +404,30 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                     tagsAdapter = getTagsAdapter(list.map { it -> it.id })
                     etTags.setAdapter(tagsAdapter)
                 }
+    }
+
+    private fun showRestrictionClasses(gameSkill: UserGameSkill) {
+        val chosenRestrictions = gameSkill.restrictions.toMutableList()
+        MaterialDialog(context)
+                .title(R.string.class_restriction)
+                .customView(view = RestrictionInfoDialogView(context, allRestrictions.classes, chosenRestrictions), scrollable = true)
+                .negativeButton(android.R.string.cancel)
+                .positiveButton(android.R.string.ok, click = {
+                    gameSkill.restrictions = chosenRestrictions
+                    updateRestrictions(chosenRestrictions)
+                }).show()
+    }
+
+    private fun showRestrictionRaces(gameSkill: UserGameSkill) {
+        val chosenRestrictions = gameSkill.restrictions.toMutableList()
+        MaterialDialog(context)
+                .title(R.string.race_restriction)
+                .customView(view = RestrictionInfoDialogView(context, allRestrictions.races, chosenRestrictions), scrollable = true)
+                .negativeButton(android.R.string.cancel)
+                .positiveButton(android.R.string.ok, click = {
+                    gameSkill.restrictions = chosenRestrictions
+                    updateRestrictions(chosenRestrictions)
+                }).show()
     }
 
     fun getRelay() = relay.hide()!!
