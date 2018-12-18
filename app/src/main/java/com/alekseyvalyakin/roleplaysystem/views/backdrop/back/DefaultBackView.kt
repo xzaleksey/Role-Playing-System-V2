@@ -99,7 +99,6 @@ open class DefaultBackView(context: Context) : _LinearLayout(context), BackView 
     }
 
     override fun onShown() {
-        etTitle.showSoftKeyboard(100L)
     }
 
     override fun onHidden() {

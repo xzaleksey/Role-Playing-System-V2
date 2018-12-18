@@ -61,7 +61,7 @@ open class BackDropView<T : View, B, F> constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
-        userLockBottomSheetBehavior.peekHeight = getPeekHeight()
+        updatePeekHeight()
     }
 
     private fun getPeekHeight(): Int {
@@ -84,11 +84,16 @@ open class BackDropView<T : View, B, F> constructor(
 
     open fun collapseFront() {
         frontViewWrapper.foreground = ColorDrawable(getCompatColor(R.color.white54))
-        userLockBottomSheetBehavior.peekHeight = getPeekHeight()
+        updatePeekHeight()
         userLockBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         backViewContainer.view.requestFocus()
         backViewContainer.onShown()
         onCollapsed()
+    }
+
+    private fun updatePeekHeight() {
+        userLockBottomSheetBehavior.peekHeight = getPeekHeight()
+        frontViewWrapper.requestLayout()
     }
 
     open fun getCollapseMode() = CollapseMode.FULL

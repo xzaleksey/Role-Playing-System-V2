@@ -25,12 +25,15 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.addTo
 import org.jetbrains.anko.*
+import timber.log.Timber
 
 open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
     private lateinit var etTitle: EditText
     private lateinit var etSubtitle: EditText
     private lateinit var etTags: AutoCompleteTextView
+    private lateinit var etRaces: EditText
+    private lateinit var etClasses: EditText
     private lateinit var tagsContainer: LinearLayout
     private lateinit var successCheck: ViewGroup
     private lateinit var resultCheck: ViewGroup
@@ -124,6 +127,41 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
             }.lparams(matchParent, getIntDimen(R.dimen.dp_48))
 
+            etRaces = themedEditText(R.style.AppTheme_TextWhite) {
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                backgroundResource = R.drawable.edittext_white_bg_with_left_icon
+                setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_races)
+                        .tint(getCompatColor(R.color.colorDisabled)), null, null, null)
+                compoundDrawablePadding = dimen(R.dimen.dp_3)
+                hintResource = R.string.race_restriction
+                isFocusable = false
+                isFocusableInTouchMode = false
+                setOnClickListener {
+                    Timber.d("Races clicked")
+                }
+            }.lparams(matchParent) {
+                topMargin = getCommonDimen()
+                bottomMargin = getCommonDimen()
+            }
+
+            etClasses = themedEditText(R.style.AppTheme_TextWhite) {
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                backgroundResource = R.drawable.edittext_white_bg_with_left_icon
+                setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_classes)
+                        .tint(getCompatColor(R.color.colorDisabled)), null, null, null)
+                compoundDrawablePadding = dimen(R.dimen.dp_3)
+                hintResource = R.string.class_restriction
+                isFocusable = false
+                isFocusableInTouchMode = false
+                setOnClickListener {
+                    Timber.d("Classes clicked")
+                }
+            }.lparams(matchParent) {
+                topMargin = getCommonDimen()
+                bottomMargin = getCommonDimen()
+            }
+
+
             successCheck = relativeLayout {
                 backgroundResource = getSelectableItemBackGround()
                 imageView {
@@ -138,7 +176,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 imageView {
                     id = R.id.left_icon
                     imageResource = R.drawable.dice_d6
-                    tintImageRes(R.color.colorDisabled)
+                    tintImageRes(R.color.colorWhite)
                 }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
                     alignParentStart()
                     centerVertically()
@@ -172,7 +210,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 imageView {
                     id = R.id.left_icon
                     imageResource = R.drawable.dice_d6
-                    tintImageRes(R.color.colorDisabled)
+                    tintImageRes(R.color.colorWhite)
                 }.lparams(dimen(R.dimen.dp_18), dimen(R.dimen.dp_18)) {
                     alignParentStart()
                     centerVertically()
@@ -195,6 +233,8 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
 
         hiddenViews.add(resultCheck)
         hiddenViews.add(successCheck)
+        hiddenViews.add(etRaces)
+        hiddenViews.add(etClasses)
         handleToggleState(false)
     }
 
@@ -342,7 +382,6 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
     }
 
     override fun onShown() {
-        etTitle.showSoftKeyboard(100L)
     }
 
     override fun onHidden() {

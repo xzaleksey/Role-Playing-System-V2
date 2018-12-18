@@ -319,6 +319,8 @@
     <string name="my_skill">My skill</string>
     <string name="skills_view_toggle_view_text">Add races/classes restrictions, skill checks</string>
     <string name="delete_skill">Delete skill</string>
+    <string name="race_restriction">Race affiliation</string>
+    <string name="class_restriction">Class affiliation</string>
 
 
 </resources>
