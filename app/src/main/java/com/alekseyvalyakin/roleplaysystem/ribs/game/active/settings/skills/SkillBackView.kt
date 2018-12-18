@@ -82,7 +82,8 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                 imeOptions = EditorInfo.IME_ACTION_DONE
                 backgroundResource = R.drawable.edittext_white_bg_with_left_icon
-                setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_tag), null, null, null)
+                setCompoundDrawablesWithIntrinsicBounds(
+                        getCompatDrawable(R.drawable.ic_tag).tintColorState(getCompatColorStateList(R.color.et_left_icon_color)), null, null, null)
                 compoundDrawablePadding = getCommonDimen()
                 hintResource = R.string.add_tag
                 setOnItemClickListener { _, _, position, _ ->
@@ -138,7 +139,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 backgroundResource = R.drawable.edittext_white_bg_with_left_icon
                 setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_races)
-                        .tint(getCompatColor(R.color.colorDisabled)), null, null, null)
+                        .tint(getCompatColor(R.color.colorWhite)), null, null, null)
                 compoundDrawablePadding = dimen(R.dimen.dp_3)
                 hintResource = R.string.race_restriction
                 isFocusable = false
@@ -157,7 +158,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 backgroundResource = R.drawable.edittext_white_bg_with_left_icon
                 setCompoundDrawablesWithIntrinsicBounds(getCompatDrawable(R.drawable.ic_classes)
-                        .tint(getCompatColor(R.color.colorDisabled)), null, null, null)
+                        .tint(getCompatColor(R.color.colorWhite)), null, null, null)
                 compoundDrawablePadding = dimen(R.dimen.dp_3)
                 hintResource = R.string.class_restriction
                 isFocusable = false
