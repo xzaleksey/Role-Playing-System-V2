@@ -307,7 +307,7 @@ open class SkillBackView(context: Context) : _ScrollView(context), BackView {
     }
 
     fun update(model: Model) {
-        if (latestModel != model) {
+        if (latestModel !== model) {
             latestModel = model
             etTags.text = null
             tagDisposable.dispose()

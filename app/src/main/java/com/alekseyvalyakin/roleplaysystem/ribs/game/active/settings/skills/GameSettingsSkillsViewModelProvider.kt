@@ -77,7 +77,7 @@ class GameSettingsSkillViewModelProviderImpl(
                     when (event) {
                         is GameSettingsSkillsPresenter.UiEvent.CollapseFront -> {
                             activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
-                            if (viewModel.value.selectedModel == null) {
+                            if (viewModel.value.backModel.userGameSkill.isEmpty()) {
                                 updateNewItemModel()
                             }
                         }
@@ -205,6 +205,7 @@ class GameSettingsSkillViewModelProviderImpl(
     }
 
     private fun getDefaultModel(): GameSettingsSkillViewModel {
+        val userGameSkill = UserGameSkill()
         return GameSettingsSkillViewModel(
                 getShowRaceToolbarModel(),
                 DefaultFrontView.Model(
@@ -218,9 +219,8 @@ class GameSettingsSkillViewModelProviderImpl(
                         ),
                         emptyList()
                 ),
-                SkillBackView.Model(UserGameSkill(), allTags, allRestrictions),
-                GameSettingsSkillViewModel.Step.EXPANDED,
-                selectedModel = null
+                SkillBackView.Model(userGameSkill, allTags, allRestrictions),
+                GameSettingsSkillViewModel.Step.EXPANDED
         )
     }
 
@@ -235,9 +235,12 @@ class GameSettingsSkillViewModelProviderImpl(
     }
 
     private fun updateShowItemsModel() {
-        viewModel.accept(viewModel.value.copy(toolBarModel = getShowRaceToolbarModel(),
+        val userGameSkill = UserGameSkill()
+        val value = viewModel.value
+
+        viewModel.accept(value.copy(toolBarModel = getShowRaceToolbarModel(),
                 step = GameSettingsSkillViewModel.Step.EXPANDED,
-                selectedModel = null))
+                backModel = value.backModel.copy(userGameSkill = userGameSkill)))
     }
 
     private fun updateSelectedItemModel(userGameSkill: UserGameSkill) {
@@ -275,12 +278,12 @@ class GameSettingsSkillViewModelProviderImpl(
                 backModel = value.backModel.copy(
                         userGameSkill = userGameSkill
                 ),
-                step = GameSettingsSkillViewModel.Step.COLLAPSED,
-                selectedModel = userGameSkill))
+                step = GameSettingsSkillViewModel.Step.COLLAPSED))
     }
 
 
     private fun updateNewItemModel() {
+        val skill = UserGameSkill()
         viewModel.accept(viewModel.value.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
@@ -292,6 +295,7 @@ class GameSettingsSkillViewModelProviderImpl(
                     val value = viewModel.value
                     val backModel = value.backModel
                     val userGameSkill = backModel.userGameSkill
+
                     if (userGameSkill.name.isNotBlank() && userGameSkill.description.isNotBlank()) {
                         expandFront()
                         analyticsReporter.logEvent(GameSettingsSkillsAnalyticsEvent.CreateSkill(game, userGameSkill))
@@ -318,10 +322,9 @@ class GameSettingsSkillViewModelProviderImpl(
                 title = stringRepository.getMySkill()
         ),
                 backModel = viewModel.value.backModel.copy(
-                        userGameSkill = UserGameSkill()
+                        userGameSkill = skill
                 ),
-                step = GameSettingsSkillViewModel.Step.COLLAPSED,
-                selectedModel = null))
+                step = GameSettingsSkillViewModel.Step.COLLAPSED))
     }
 
     override fun handleBackPress(): Boolean {

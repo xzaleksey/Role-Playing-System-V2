@@ -55,4 +55,9 @@ data class UserGameSkill(
                 ResourceImageHolderImpl(GameSkill.INFO.getIconId(id), resourcesProvider)
         )
     }
+
+    @Exclude
+    fun isEmpty(): Boolean {
+        return id.isBlank()
+    }
 }
