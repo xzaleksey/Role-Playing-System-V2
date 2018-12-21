@@ -59,6 +59,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.config
         }
+        debug{
+            ext.alwaysUpdateBuildId = false
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
