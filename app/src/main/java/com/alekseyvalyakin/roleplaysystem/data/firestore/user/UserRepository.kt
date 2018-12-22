@@ -4,12 +4,15 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.FirestoreCollection
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.CurrentUserInfo
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.currentUser.NoUserException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.DocumentReference
+import com.rxfirebase2.RxFirebaseUser
 import com.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import java.util.concurrent.ConcurrentHashMap
+
 
 class UserRepositoryImpl : UserRepository {
     private val userCache: MutableMap<String, User> = ConcurrentHashMap()
@@ -43,9 +46,14 @@ class UserRepositoryImpl : UserRepository {
     }
 
     override fun onDisplayNameChanged(name: String): Completable {
-        return getCurrentUserId().flatMapCompletable {
-            updateField(it, name, User.FIELD_DISPLAY_NAME)
-        }
+        return getCurrentFirebaseUser()?.run {
+            return updateField(this.uid, name, User.FIELD_DISPLAY_NAME)
+                    .andThen(RxFirebaseUser.updateProfile(this,
+                            UserProfileChangeRequest.Builder()
+                                    .setDisplayName(name)
+                                    .build())
+                    )
+        } ?: Completable.error(RuntimeException("no current user"))
     }
 
     override fun observeCurrentUser(): Flowable<User> {
@@ -63,11 +71,13 @@ class UserRepositoryImpl : UserRepository {
     }
 
     override fun getCurrentUserInfo(): CurrentUserInfo? {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = getCurrentFirebaseUser()
                 ?: return null
 
         return CurrentUserInfo(currentUser)
     }
+
+    private fun getCurrentFirebaseUser() = FirebaseAuth.getInstance().currentUser
 
     override fun getCurrentUserId(): Single<String> {
         return Single.fromCallable {

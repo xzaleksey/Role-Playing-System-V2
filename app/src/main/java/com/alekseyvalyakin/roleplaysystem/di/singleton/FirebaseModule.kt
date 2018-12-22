@@ -1,5 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
+import com.alekseyvalyakin.roleplaysystem.data.auth.AuthProvider
 import com.alekseyvalyakin.roleplaysystem.data.character.GameCharacterRepository
 import com.alekseyvalyakin.roleplaysystem.data.character.GameCharacterRepositoryImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
@@ -198,8 +199,8 @@ class FirebaseModule {
 
     @Provides
     @Singleton
-    fun firestoreFunctionsApi(): FirebaseApi {
-        return FirebaseApiImpl()
+    fun firestoreFunctionsApi(authProvider: AuthProvider): FirebaseApi {
+        return FirebaseApiImpl(authProvider)
     }
 
     @Provides

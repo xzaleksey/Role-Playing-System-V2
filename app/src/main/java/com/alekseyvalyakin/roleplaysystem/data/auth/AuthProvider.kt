@@ -14,12 +14,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.rxfirebase2.RxFirebaseAuth
 import com.rxfirebase2.RxFirebaseUser
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
@@ -80,11 +75,16 @@ class AuthProviderImpl @Inject constructor(
 
                                     return@flatMap userRepository.createUser(userResult)
                                             .onErrorComplete()
+                                            .andThen(onDisplayNameChanged(userResult.displayName))
                                             .andThen(Single.just(userResult))
                                 }
                     })
                     .flatMap { it.toFlowable() }
                     .subscribeWithErrorLogging()
+
+    override fun onDisplayNameChanged(name: String): Completable {
+        return userRepository.onDisplayNameChanged(name)
+    }
 
     override fun getCurrentUser(): CurrentUserInfo? {
         return userRepository.getCurrentUserInfo()
@@ -146,6 +146,8 @@ interface AuthProvider {
     fun observeLoggedInState(): Observable<Boolean>
 
     fun signOut(): Completable
+
+    fun onDisplayNameChanged(name: String): Completable
 
     fun loginWithGoogleAccount(googleSignInAccount: GoogleSignInAccount): Maybe<AuthResult>
 }

@@ -151,6 +151,7 @@ class MainView constructor(
     override fun showSearchContextMenu() {
         val popupMenu = PopupMenu(context, searchToolbar.getPopupViewAnchor())
         popupMenu.menu.add(0, NEW_FEATURES, 0, getString(R.string.new_features))
+        popupMenu.menu.add(0, COPY_GAME, 0, "copy game")
         popupMenu.menu.add(0, DONATE, 0, getString(R.string.donate))
         popupMenu.menu.add(0, LICENSE, 0, getString(R.string.license))
         popupMenu.menu.add(0, LOGOUT, 0, getString(R.string.logout))
@@ -160,6 +161,7 @@ class MainView constructor(
                 item.itemId == DONATE -> relay.accept(MainInteractor.UiEvents.NavigateToDonate)
                 item.itemId == NEW_FEATURES -> relay.accept(MainInteractor.UiEvents.NavigateToFeatures)
                 item.itemId == LICENSE -> relay.accept(MainInteractor.UiEvents.NavigateToLicense)
+                item.itemId == COPY_GAME -> relay.accept(MainInteractor.UiEvents.CopyGame)
             }
             return@setOnMenuItemClickListener true
         }
@@ -182,5 +184,6 @@ class MainView constructor(
         private const val DONATE = 2
         private const val NEW_FEATURES = 3
         private const val LICENSE = 4
+        private const val COPY_GAME = 5
     }
 }
