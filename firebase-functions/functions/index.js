@@ -4,7 +4,7 @@ const admin = require('firebase-admin');
 const classes = require('./classes');
 const FieldValue = admin.firestore.FieldValue;
 admin.initializeApp(functions.config().firebase);
-getDatabase().settings = {timestampsInSnapshots: true};
+getDatabase().settings({timestampsInSnapshots: true});
 
 function getDatabase() {
     return admin.firestore();
