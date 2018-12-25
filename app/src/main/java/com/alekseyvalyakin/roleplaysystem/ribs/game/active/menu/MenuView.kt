@@ -1,9 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu
 
 import android.content.Context
-import com.alekseyvalyakin.roleplaysystem.R
 import org.jetbrains.anko._LinearLayout
-import org.jetbrains.anko.backgroundColorResource
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.wrapContent
 
 class MenuView constructor(
         context: Context
@@ -11,6 +12,9 @@ class MenuView constructor(
 
     init {
         orientation = VERTICAL
-        backgroundColorResource = R.color.blackColor54
+
+        recyclerView {
+
+        }.lparams(matchParent, wrapContent)
     }
 }

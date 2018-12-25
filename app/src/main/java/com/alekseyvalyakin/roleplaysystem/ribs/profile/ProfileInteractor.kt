@@ -116,9 +116,4 @@ class ProfileInteractor : BaseInteractor<ProfilePresenter, ProfileRouter>() {
             }
         }
     }
-
-    override fun getRestorableInfo(): Serializable? {
-        return profileViewModelProvider.getCurrentUser()
-    }
-
 }

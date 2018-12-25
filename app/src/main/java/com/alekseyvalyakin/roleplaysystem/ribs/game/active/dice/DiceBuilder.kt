@@ -63,11 +63,10 @@ class DiceBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceView, DiceR
             fun router(
                     component: Component,
                     view: DiceView,
-                    interactor: DiceInteractor,
-                    routerNavigatorFactory: RouterNavigatorFactory): DiceRouter {
+                    interactor: DiceInteractor
+            ): DiceRouter {
                 return DiceRouter(view, interactor, component,
-                        DiceResultBuilder(component),
-                        routerNavigatorFactory)
+                        DiceResultBuilder(component))
             }
 
             @DiceScope

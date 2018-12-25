@@ -1,6 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.uber.rib.core.ViewRouter
 
 /**
@@ -10,8 +9,5 @@ import com.uber.rib.core.ViewRouter
 class DiceResultRouter(
         view: DiceResultView,
         interactor: DiceResultInteractor,
-        component: DiceResultBuilder.Component,
-        private val diceCollectionResult: DiceCollectionResult
-) : ViewRouter<DiceResultView, DiceResultInteractor, DiceResultBuilder.Component>(view, interactor, component) {
-
-}
+        component: DiceResultBuilder.Component
+) : ViewRouter<DiceResultView, DiceResultInteractor, DiceResultBuilder.Component>(view, interactor, component)

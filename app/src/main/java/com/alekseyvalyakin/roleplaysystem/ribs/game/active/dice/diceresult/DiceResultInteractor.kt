@@ -68,9 +68,4 @@ class DiceResultInteractor : BaseInteractor<DiceResultPresenter, DiceResultRoute
         presenter.update(diceResultViewModelProvider.mapDiceResult(diceCollectionResult))
     }
 
-    override fun getRestorableInfo(): Serializable? {
-        return diceCollectionResult
-    }
-
-
 }

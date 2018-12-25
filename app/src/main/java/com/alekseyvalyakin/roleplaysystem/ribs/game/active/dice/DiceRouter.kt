@@ -4,10 +4,11 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceR
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.transition.DiceResultAttachTransition
+import com.uber.rib.core.AttachInfo
+import com.uber.rib.core.BaseRouter
 import com.uber.rib.core.DefaultDetachTransition
-import com.uber.rib.core.RouterNavigatorFactory
-import com.uber.rib.core.RouterNavigatorState
-import com.uber.rib.core.ViewRouter
+import com.uber.rib.core.SerializableRouterNavigatorState
+import java.io.Serializable
 
 /**
  * Adds and removes children of {@link DiceBuilder.DiceScope}.
@@ -17,35 +18,40 @@ class DiceRouter(
         view: DiceView,
         interactor: DiceInteractor,
         component: DiceBuilder.Component,
-        private val diceResultBuilder: DiceResultBuilder,
-        routerNavigatorFactory: RouterNavigatorFactory) : ViewRouter<DiceView, DiceInteractor, DiceBuilder.Component>(view, interactor, component) {
+        private val diceResultBuilder: DiceResultBuilder
+) : BaseRouter<DiceView, DiceInteractor, DiceRouter.State, DiceBuilder.Component>(view, interactor, component) {
 
-    private val router = routerNavigatorFactory.create<State>(this)!!
     private val resultDetachTransition = DefaultDetachTransition<DiceResultRouter, State>(view)
 
     fun attachDiceResult(diceCollectionResult: DiceCollectionResult) {
-        router.pushTransientState(State.RESULT,
-                DiceResultAttachTransition(diceResultBuilder, view, diceCollectionResult),
+        attachRib(AttachInfo(DiceRouter.State.RESULT(diceCollectionResult)))
+    }
+
+    override fun attachRib(attachInfo: AttachInfo<State>) {
+        pushTransientState(attachInfo.state,
+                DiceResultAttachTransition(diceResultBuilder, view, attachInfo.state.getRestorableInfo() as DiceCollectionResult),
                 resultDetachTransition)
     }
 
     fun backPress(): Boolean {
-        if (router.peekState() == null) {
+        if (peekState() == null) {
             return false
         }
 
-        router.popState()
+        popState()
         return true
     }
 
-    data class State(val name: String) : RouterNavigatorState {
+    sealed class State(val name: String) : SerializableRouterNavigatorState {
 
         override fun name(): String {
             return name
         }
 
-        companion object {
-            val RESULT = State("Result")
+        class RESULT(val diceCollectionResult: DiceCollectionResult) : State("Result") {
+            override fun getRestorableInfo(): Serializable? {
+                return diceCollectionResult
+            }
         }
     }
 }

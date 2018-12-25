@@ -6,5 +6,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu
 interface MenuPresenter {
 
     sealed class UiEvent {
+        class Navigate(val menuNavigationEvent: MenuNavigationEvent) : UiEvent()
     }
 }

@@ -1,21 +1,17 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import com.alekseyvalyakin.roleplaysystem.base.filter.FilterModel
-import com.alekseyvalyakin.roleplaysystem.base.image.CompositeImageProviderImpl
-import com.alekseyvalyakin.roleplaysystem.base.image.MaterialDrawableProviderImpl
-import com.alekseyvalyakin.roleplaysystem.base.image.UrlRoundDrawableProviderImpl
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameStatus
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesInUserRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
-import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.divider.BottomShadowDividerViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
-import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.subheader.SubHeaderViewModel
+import com.alekseyvalyakin.roleplaysystem.viewmodel.profile.ProfileListViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
 import eu.davidea.flexibleadapter.items.IFlexible
 import io.reactivex.BackpressureStrategy
@@ -25,17 +21,17 @@ import java.util.*
 
 class MainViewModelProviderImpl(
         private val userRepository: UserRepository,
-        private val resourceProvider: ResourcesProvider,
         private val stringRepository: StringRepository,
         private val gameRepository: GameRepository,
         private val gamesInUserRepository: GamesInUserRepository,
-        private val gameObservableProvider: CreateEmptyGameObservableProvider
+        private val gameObservableProvider: CreateEmptyGameObservableProvider,
+        private val profileViewModelProvider: ProfileListViewModelProvider
 ) : MainViewModelProvider {
 
     private val relay = BehaviorRelay.createDefault(MainViewModel(emptyList(), true, true))
 
     override fun observeViewModel(filterFlowable: Flowable<FilterModel>): Flowable<MainViewModel> {
-        val flowable = Flowable.combineLatest<List<IFlexible<*>>, List<IFlexible<*>>, CreateEmptyGameObservableProvider.CreateGameModel, MainViewModel>(getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable),
+        val flowable = Flowable.combineLatest<List<IFlexible<*>>, List<IFlexible<*>>, CreateEmptyGameObservableProvider.CreateGameModel, MainViewModel>(profileViewModelProvider.getUserViewModelFlowable(), getAllGamesFlowable(filterFlowable),
                 gameObservableProvider.observeCreateGameModel(),
                 Function3 { userModels: List<IFlexible<*>>, allGames: List<IFlexible<*>>, createGameModel ->
                     val result = mutableListOf<IFlexible<*>>()
@@ -108,36 +104,6 @@ class MainViewModelProviderImpl(
                     return@Function3 gamesInUserList + allGames
                 }
         )
-    }
-
-    private fun getUserViewModelFlowable(): Flowable<List<IFlexible<*>>> {
-        return userRepository.observeCurrentUser().map { user ->
-            val userId = user.id
-            val imageProvider = if (user.photoUrl.isBlank()) {
-                MaterialDrawableProviderImpl(user.displayName, userId)
-            } else {
-                val url = user.photoUrl
-                CompositeImageProviderImpl(
-                        MaterialDrawableProviderImpl(user.displayName, userId),
-                        UrlRoundDrawableProviderImpl(url, resourceProvider),
-                        url
-                )
-            }
-            return@map listOf(
-                    SubHeaderViewModel(
-                            stringRepository.getMyProfile(),
-                            isDrawBottomDivider = true,
-                            isDrawTopDivider = true),
-
-                    UserProfileViewModel(
-                            user.displayName,
-                            user.email,
-                            imageProvider,
-                            userId,
-                            true,
-                            user
-                    ))
-        }
     }
 
     companion object {

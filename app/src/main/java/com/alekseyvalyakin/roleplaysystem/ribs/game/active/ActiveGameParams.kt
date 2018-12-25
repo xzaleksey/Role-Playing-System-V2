@@ -1,3 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 
-data class ActiveGameParams(val firstOpen: Boolean)
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import java.io.Serializable
+
+data class ActiveGameParams(
+        val game: Game,
+        val firstOpen: Boolean) : Serializable

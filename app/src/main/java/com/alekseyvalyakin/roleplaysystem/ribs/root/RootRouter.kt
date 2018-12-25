@@ -20,10 +20,10 @@ import com.alekseyvalyakin.roleplaysystem.ribs.main.MainRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.transition.ProfileAttachTransition
+import com.uber.rib.core.AttachInfo
+import com.uber.rib.core.BaseRouter
 import com.uber.rib.core.DefaultAttachTransition
 import com.uber.rib.core.DefaultDetachTransition
-import com.uber.rib.core.RouterNavigatorFactory
-import com.uber.rib.core.ViewRouter
 import timber.log.Timber
 
 /**
@@ -35,7 +35,6 @@ class RootRouter(
         view: RootView,
         interactor: RootInteractor,
         component: RootBuilder.Component,
-        routerNavigatorFactory: RouterNavigatorFactory,
         private val authBuilder: AuthBuilder,
         private val mainBuilder: MainBuilder,
         private val createGameBuilder: CreateGameBuilder,
@@ -43,9 +42,8 @@ class RootRouter(
         private val activeGameBuilder: ActiveGameBuilder,
         private val featuresBuilder: FeaturesBuilder,
         private val licenseBuilder: LicenseBuilder
-) : ViewRouter<RootView, RootInteractor, RootBuilder.Component>(view, interactor, component) {
+) : BaseRouter<RootView, RootInteractor, RootState, RootBuilder.Component>(view, interactor, component) {
 
-    private val router = routerNavigatorFactory.create<RootState>(this)!!
     private val authAttachTransition = object : DefaultAttachTransition<AuthRouter, RootState, AuthBuilder>(authBuilder, view) {}
     private val authDetachTransition = DefaultDetachTransition<AuthRouter, RootState>(view)
 
@@ -62,58 +60,84 @@ class RootRouter(
     private val licenseAttachTransition = object : DefaultAttachTransition<LicenseRouter, RootState, LicenseBuilder>(licenseBuilder, view) {}
     private val licenseDetachTransition = DefaultDetachTransition<LicenseRouter, RootState>(view)
 
+    private val navigator = mutableMapOf<NavigationId, (AttachInfo<RootState>) -> Unit>()
+
+    init {
+        navigator[NavigationId.PROFILE] = {
+            pushRetainedState(it.state, ProfileAttachTransition(profileBuilder, view, it.state.getRestorableInfo() as User), profileDetachTransition)
+        }
+        navigator[NavigationId.CREATE_GAME] = {
+            pushRetainedState(it.state, CreateGameAttachTransition(createGameBuilder, view, it.state.getRestorableInfo() as Game),
+                    createGameDetachTransition)
+        }
+        navigator[NavigationId.AUTH] = {
+            pushTransientState(it.state, authAttachTransition, authDetachTransition)
+        }
+        navigator[NavigationId.MAIN] = {
+            pushRetainedState(it.state, mainAttachTransition, mainDetachTransition)
+        }
+        navigator[NavigationId.ACTIVE_GAME] = {
+            pushRetainedState(it.state, ActiveGameAttachTransition(activeGameBuilder, view, it.state.getRestorableInfo() as ActiveGameParams), activeGameDetachTransition)
+        }
+        navigator[NavigationId.LICENSE] = {
+            pushRetainedState(it.state, licenseAttachTransition, licenseDetachTransition)
+        }
+        navigator[NavigationId.FEATURES] = {
+            pushRetainedState(it.state, featuresAttachTransition, featuresDetachTransition)
+        }
+    }
+
     fun attachAuth() {
-        router.pushTransientState(RootState.AUTH, authAttachTransition, authDetachTransition)
+        attachRib(AttachInfo(RootState.AUTH(), false))
     }
 
     fun attachMain() {
-        val peekState = router.peekState()
-        if (peekState == null || peekState == RootState.AUTH) {
+        val peekState = peekState()
+        if (peekState == null || peekState.navigationId == NavigationId.AUTH) {
             Timber.d("Attach main")
-            router.pushRetainedState(RootState.MAIN, mainAttachTransition, mainDetachTransition)
+            attachRib(AttachInfo(RootState.MAIN(), false))
         }
     }
 
     fun attachCreateGame(game: Game) {
-        router.pushRetainedState(RootState.CREATE_GAME,
-                CreateGameAttachTransition<RootState>(createGameBuilder, view, game),
-                createGameDetachTransition)
+        attachRib(AttachInfo(RootState.CreateGame(game), false))
     }
 
     fun attachMyProfile(user: User) {
-        router.pushRetainedState(RootState.PROFILE, ProfileAttachTransition(profileBuilder, view, user),
-                profileDetachTransition)
+        attachRib(AttachInfo(RootState.PROFILE(user), false))
     }
 
     fun attachOpenActiveGame(game: Game, isFirstOpen: Boolean = false) {
-        router.pushRetainedState(RootState.ACTIVE_GAME,
-                ActiveGameAttachTransition<RootState>(activeGameBuilder, view, game, ActiveGameParams(isFirstOpen)),
-                activeGameDetachTransition)
+        attachRib(AttachInfo(RootState.ActiveGame(ActiveGameParams(game, isFirstOpen)), false))
     }
 
     fun onBackPressed(): Boolean {
-        val currentRouter = router.peekRouter()
+        val currentRouter = peekRouter()
         if (currentRouter != null && currentRouter.handleBackPress()) {
             return true
         }
 
-        router.popState()
-        return router.peekState() != null
+        popState()
+        return peekState() != null
     }
 
     fun detachCreateGame() {
-        val peekState = router.peekState()
-        if (peekState == RootState.CREATE_GAME) {
-            router.popState()
+        val peekState = peekState()
+        if (peekState?.navigationId == NavigationId.CREATE_GAME) {
+            popState()
         }
     }
 
     fun attachMyFeatures() {
-        router.pushRetainedState(RootState.FEATURES, featuresAttachTransition, featuresDetachTransition)
+        attachRib(AttachInfo(RootState.FEATURES(), false))
     }
 
     fun attachLicense() {
-        router.pushRetainedState(RootState.LICENSE, licenseAttachTransition, licenseDetachTransition)
+        attachRib(AttachInfo(RootState.LICENSE(), false))
+    }
+
+    override fun attachRib(attachInfo: AttachInfo<RootState>) {
+        navigator[attachInfo.state.navigationId]?.invoke(attachInfo)
     }
 
 }

@@ -20,5 +20,6 @@ object FlexibleLayoutTypes {
     const val AUDIO_ITEM = 17
     const val TOP_SHADOW_DIVIDER = 18
     const val GAME_SETTINGS_SKILL_ITEM = 19
+    const val GAME_MENU_ITEM = 20
 
 }

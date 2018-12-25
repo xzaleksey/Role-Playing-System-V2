@@ -37,5 +37,16 @@ module.exports = {
         static get masterName() {
             return "masterName"
         }
+    },
+
+    gameInUser: class GameInUser {
+        constructor() {
+
+        }
+
+        static get dateUpdate() {
+            return "dateUpdate"
+        }
     }
+
 };

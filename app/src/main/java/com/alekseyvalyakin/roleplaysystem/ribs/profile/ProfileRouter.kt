@@ -1,9 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.profile
 
-import com.alekseyvalyakin.roleplaysystem.ribs.profile.provider.ProfileUserProvider
-import com.uber.rib.core.RestorableInteractor
 import com.uber.rib.core.ViewRouter
-import java.io.Serializable
 
 /**
  * Adds and removes children of {@link ProfileBuilder.ProfileScope}.
@@ -12,11 +9,5 @@ import java.io.Serializable
 class ProfileRouter(
         view: ProfileView,
         interactor: ProfileInteractor,
-        component: ProfileBuilder.Component,
-        private val profileUserProvider: ProfileUserProvider) : ViewRouter<ProfileView, ProfileInteractor, ProfileBuilder.Component>(view, interactor, component),
-        RestorableInteractor {
-
-    override fun getRestorableInfo(): Serializable? {
-        return profileUserProvider.getCurrentUser()
-    }
-}
+        component: ProfileBuilder.Component
+) : ViewRouter<ProfileView, ProfileInteractor, ProfileBuilder.Component>(view, interactor, component)

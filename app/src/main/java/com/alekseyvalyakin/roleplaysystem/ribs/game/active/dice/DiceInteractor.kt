@@ -4,7 +4,6 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.DicesRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.dice.FirestoreDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.DiceInteractor.DicesInteractorModel.Companion.KEY
-import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.SingleDiceCollection
@@ -128,13 +127,6 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
 
     override fun handleBackPress(): Boolean {
         return router.backPress()
-    }
-
-    override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>, childInfo: Serializable?) {
-        if (clazz == DiceResultRouter::class.java) {
-            Timber.d("Restored dice result Router")
-            router.attachDiceResult(childInfo as DiceCollectionResult)
-        }
     }
 
     private fun getEmptyModel() = DicesInteractorModel(SingleDiceCollection.createSingleDiceCollectionList())

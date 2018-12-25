@@ -11,6 +11,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.viewmodel.profile.ProfileListViewModelProviderImpl
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
@@ -81,8 +82,9 @@ class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainR
                     gameRepository: GameRepository,
                     gamesInUserRepository: GamesInUserRepository,
                     gameObservableProvider: CreateEmptyGameObservableProvider): MainViewModelProvider {
-                return MainViewModelProviderImpl(userRepository, resourceProvider, stringRepo,
-                        gameRepository, gamesInUserRepository, gameObservableProvider)
+                return MainViewModelProviderImpl(userRepository, stringRepo,
+                        gameRepository, gamesInUserRepository, gameObservableProvider,
+                        ProfileListViewModelProviderImpl(userRepository, resourceProvider, stringRepo))
             }
 
             @MainScope

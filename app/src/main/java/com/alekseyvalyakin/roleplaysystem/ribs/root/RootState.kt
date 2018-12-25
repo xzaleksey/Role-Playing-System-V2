@@ -1,20 +1,37 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.root
 
-import com.uber.rib.core.RouterNavigatorState
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.User
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameParams
+import com.uber.rib.core.SerializableRouterNavigatorState
+import java.io.Serializable
 
-data class RootState(val name: String) : RouterNavigatorState {
+sealed class RootState(val name: String, val navigationId: NavigationId) : SerializableRouterNavigatorState {
 
     override fun name(): String {
         return name
     }
 
-    companion object {
-        val AUTH = RootState("Auth")
-        val MAIN = RootState("Main")
-        val CREATE_GAME = RootState("Create game")
-        val ACTIVE_GAME = RootState("Active game")
-        val FEATURES = RootState("features")
-        val LICENSE = RootState("license")
-        val PROFILE = RootState("Profile")
+    class AUTH : RootState("Auth", NavigationId.AUTH)
+    class MAIN : RootState("Main", NavigationId.MAIN)
+    class FEATURES : RootState("Features", NavigationId.FEATURES)
+    class LICENSE : RootState("License", NavigationId.LICENSE)
+
+    class ActiveGame(val activeGameParams: ActiveGameParams) : RootState("Active game", NavigationId.ACTIVE_GAME) {
+        override fun getRestorableInfo(): Serializable? {
+            return activeGameParams
+        }
+    }
+
+    class CreateGame(val game: Game) : RootState("Create game", NavigationId.CREATE_GAME) {
+        override fun getRestorableInfo(): Serializable? {
+            return game
+        }
+    }
+
+    class PROFILE(val user: User) : RootState("Profile", NavigationId.PROFILE) {
+        override fun getRestorableInfo(): Serializable? {
+            return user
+        }
     }
 }

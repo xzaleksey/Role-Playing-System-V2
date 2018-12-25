@@ -132,13 +132,6 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
         outState.putSerializable(KEY, model)
     }
 
-    override fun <T : Router<out Interactor<*, *>, out InteractorBaseComponent<*>>> restoreRouter(clazz: Class<T>, childInfo: Serializable?) {
-    }
-
-    override fun getRestorableInfo(): Serializable? {
-        return viewModelProvider.getCurrentGame()
-    }
-
     data class Model(
             val navigationId: NavigationId
     ) : Serializable {

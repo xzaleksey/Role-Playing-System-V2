@@ -50,6 +50,10 @@ function getTagsInGameCollection(gameId) {
     return getGameCollection().doc(gameId).collection("tags");
 }
 
+function getLogsInGameCollection(gameId) {
+    return getGameCollection().doc(gameId).collection("logs");
+}
+
 function getSkillsInGameCollection(gameId) {
     return getGameCollection().doc(gameId).collection("skills");
 }
@@ -116,6 +120,7 @@ exports.DeleteGameFunction = functions.firestore
         const tagsInGame = getTagsInGameCollection(gameId);
         const skillsInGame = getSkillsInGameCollection(gameId);
         const photosInGame = getPhotosInGameCollection(gameId);
+        const logsInGame = getLogsInGameCollection(gameId);
 
         const deleteGameInUser = new Promise(((resolve, reject) => {
             console.log("delete game in user");
@@ -145,17 +150,21 @@ exports.DeleteGameFunction = functions.firestore
         const deleteRacesInGame = deleteCollection(database, racesInGame, BATCH_SIZE);
         const deleteTagsInGame = deleteCollection(database, tagsInGame, BATCH_SIZE);
         const deleteSkillsInGame = deleteCollection(database, skillsInGame, BATCH_SIZE);
+        const deleteLogsInGame = deleteCollection(database, logsInGame, BATCH_SIZE);
 
         return Promise.all([deletePhotos, deleteGameInUser,
             deleteUsersInGame, deleteStatsInGame,
             deleteClassesInGame, deleteRacesInGame,
-            deleteTagsInGame, deleteSkillsInGame
+            deleteTagsInGame, deleteSkillsInGame,
+            deleteLogsInGame
         ]);
     });
 
 exports.copyGame = functions.https.onCall((data, context) => {
     let gameId = data["game_id"];
     let masterName = data["user_name"];
+    let userId = context.auth.uid;
+
     return new Promise(((resolve, reject) => {
         getDatabase().collection("games").doc(gameId).get().then((value) => {
             let data = value.data();
@@ -166,7 +175,7 @@ exports.copyGame = functions.https.onCall((data, context) => {
                 let copiedGame = {};
                 Object.assign(copiedGame, data);
                 copiedGame[classes.game.dateCreate] = FieldValue.serverTimestamp();
-                copiedGame[classes.game.masterId] = context.auth.uid;
+                copiedGame[classes.game.masterId] = userId;
                 copiedGame[classes.game.masterName] = masterName;
                 console.log("before resolve");
                 resolve(copiedGame);
@@ -177,16 +186,42 @@ exports.copyGame = functions.https.onCall((data, context) => {
         });
     })).then((copiedGame) => {
         return new Promise((resolve, reject) => {
-            getDatabase().collection("games").add(copiedGame).then((docRef) => {
-                console.log("Game copied with ID: ", docRef.id);
-                resolve(docRef.id);
-            }).catch((error) => {
-                console.error("Error adding document: ", error);
-                reject(new functions.https.HttpsError('internal', "Game was not created"))
-            });
+            let batch = getDatabase().batch();
+            let gameRef = getGameCollection().doc();
+            batch.set(gameRef, copiedGame);
+            let newGameId = gameRef.id;
+            let usersInGameCollection = getUsersInGameCollection(newGameId);
+            let gamesInUserCollection = getGamesInUsersCollection(userId);
+            let user = {};
+            user[classes.gameInUser.dateUpdate] = FieldValue.serverTimestamp();
+            batch.set(usersInGameCollection.doc(userId), user);
+            batch.set(gamesInUserCollection.doc(newGameId), user);
+            batch.commit()
+                .then(copyCollection(getRacesInGameCollection(gameId), getRacesInGameCollection(newGameId)))
+                .then(copyCollection(getClassesInGameCollection(gameId), getClassesInGameCollection(newGameId)))
+                .then(copyCollection(getTagsInGameCollection(gameId), getTagsInGameCollection(newGameId)))
+                .then(copyCollection(getStatsInGameCollection(gameId), getStatsInGameCollection(newGameId)))
+                .then(copyCollection(getSkillsInGameCollection(gameId), getSkillsInGameCollection(newGameId)))
+                .then(resolve)
+                .catch(reject);
         })
     });
 });
+
+function copyCollection(sourceCol, targetCol) {
+    return new Promise(((resolve, reject) => {
+        let batch = getDatabase().batch();
+        console.log("copy " + sourceCol.path + " " + targetCol.path);
+        sourceCol.get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                batch.set(targetCol.doc(doc.id), doc.data());
+            });
+            batch.commit()
+                .then(resolve)
+                .catch(reject);
+        }).catch(reject);
+    }));
+}
 
 /**
  * Delete a collection, in batches of batchSize. Note that this does

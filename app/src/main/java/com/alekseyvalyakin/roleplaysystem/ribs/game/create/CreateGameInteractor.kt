@@ -134,10 +134,6 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
         outState.putSerializable(CreateGameViewModel.KEY, model.value)
     }
 
-    override fun getRestorableInfo(): Serializable? {
-        return createGameProvider.getGame()
-    }
-
     /**
      * Presenter interface implemented by this RIB's view.
      */

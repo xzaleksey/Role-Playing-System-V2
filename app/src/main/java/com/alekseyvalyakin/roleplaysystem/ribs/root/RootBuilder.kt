@@ -69,9 +69,9 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             fun router(
                     component: Component,
                     view: RootView,
-                    interactor: RootInteractor,
-                    routerNavigatorFactory: RouterNavigatorFactory): RootRouter {
-                return RootRouter(view, interactor, component, routerNavigatorFactory,
+                    interactor: RootInteractor
+            ): RootRouter {
+                return RootRouter(view, interactor, component,
                         AuthBuilder(component),
                         MainBuilder(component),
                         CreateGameBuilder(component),

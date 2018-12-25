@@ -67,9 +67,9 @@ class ProfileBuilder(dependency: ParentComponent) : ViewBuilder<ProfileView, Pro
             internal fun router(
                     component: Component,
                     view: ProfileView,
-                    interactor: ProfileInteractor,
-                    profileUserProvider: ProfileUserProvider): ProfileRouter {
-                return ProfileRouter(view, interactor, component, profileUserProvider)
+                    interactor: ProfileInteractor
+            ): ProfileRouter {
+                return ProfileRouter(view, interactor, component)
             }
 
             @ProfileScope
