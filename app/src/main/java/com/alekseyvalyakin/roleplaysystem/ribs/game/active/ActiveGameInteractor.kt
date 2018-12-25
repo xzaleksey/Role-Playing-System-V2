@@ -67,7 +67,7 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
         gameRepository.observeDocumentDelete(viewModelProvider.getCurrentGame().id)
                 .subscribeWithErrorLogging {
                     Timber.d("Game deleted")
-                    router.onDelete()
+                    router.setCanBeClosed()
                     activityListener.backPress()
                 }
                 .addToDisposables()
@@ -100,6 +100,13 @@ class ActiveGameInteractor : BaseInteractor<ActiveGamePresenter, ActiveGameRoute
                 }
                 is ActiveGameEvent.ShowBottomBar -> {
                     presenter.showBottomBar()
+                }
+                is ActiveGameEvent.CloseActiveGame -> {
+                    router.setCanBeClosed()
+                    activityListener.backPress()
+                }
+                is ActiveGameEvent.NavigateToPhotos -> {
+                    router.attachView(NavigationId.PHOTOS)
                 }
             }
         }.addToDisposables()

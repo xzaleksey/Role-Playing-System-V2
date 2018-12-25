@@ -32,7 +32,7 @@ class MenuView constructor(
                         return@OnItemClickListener true
                     }
 
-                    return@OnItemClickListener false
+                    return@OnItemClickListener true
                 }
             }.lparams(matchParent, wrapContent)
         }.lparams(matchParent)

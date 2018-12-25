@@ -7,4 +7,6 @@ sealed class ActiveGameEvent {
 
      object HideBottomBar : ActiveGameEvent()
      object ShowBottomBar : ActiveGameEvent()
+     object CloseActiveGame : ActiveGameEvent()
+     object NavigateToPhotos : ActiveGameEvent()
 }

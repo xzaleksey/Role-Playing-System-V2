@@ -10,7 +10,7 @@ import com.uber.rib.core.RouterNavigatorState
 class ActiveGameAttachTransition<S : RouterNavigatorState>(
         val builder: ActiveGameBuilder,
         val view: ViewGroup,
-        val activeGameParams: ActiveGameParams
+        private val activeGameParams: ActiveGameParams
 ) : RouterNavigator.AttachTransition<ActiveGameRouter, S> {
 
     override fun buildRouter(): ActiveGameRouter {

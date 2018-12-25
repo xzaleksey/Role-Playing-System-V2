@@ -7,7 +7,7 @@ import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBackGround
+import com.alekseyvalyakin.roleplaysystem.utils.setForegroundSelectableItemBackGround
 import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
 import org.jetbrains.anko.*
 
@@ -17,7 +17,7 @@ class GameSettingsItemView(context: Context) : _FrameLayout(context) {
     private lateinit var ivLeft: ImageView
 
     init {
-        backgroundResource = getSelectableItemBackGround()
+        setForegroundSelectableItemBackGround()
         relativeLayout {
             backgroundColorResource = R.color.colorWhite
             topPadding = getIntDimen(R.dimen.dp_12)

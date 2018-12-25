@@ -158,7 +158,7 @@ class ActiveGameRouter(
         return peekState() != null
     }
 
-    fun onDelete() {
+    fun setCanBeClosed() {
         canBeClosed = true
     }
 

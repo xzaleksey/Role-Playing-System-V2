@@ -88,7 +88,8 @@ class MenuBuilder(dependency: ParentComponent) : BaseViewBuilder<MenuView, MenuR
             internal fun menuViewModelProvider(userRepository: UserRepository,
                                                resourcesProvider: ResourcesProvider,
                                                stringRepository: StringRepository): MenuViewModelProvider {
-                return MenuViewModelProviderImpl(ProfileListViewModelProviderImpl(userRepository, resourcesProvider, stringRepository))
+                return MenuViewModelProviderImpl(ProfileListViewModelProviderImpl(userRepository, resourcesProvider, stringRepository),
+                        resourcesProvider)
             }
         }
     }
