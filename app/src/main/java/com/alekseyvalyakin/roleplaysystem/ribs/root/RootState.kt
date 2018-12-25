@@ -17,7 +17,7 @@ sealed class RootState(val name: String, val navigationId: NavigationId) : Seria
     class FEATURES : RootState("Features", NavigationId.FEATURES)
     class LICENSE : RootState("License", NavigationId.LICENSE)
 
-    class ActiveGame(val activeGameParams: ActiveGameParams) : RootState("Active game", NavigationId.ACTIVE_GAME) {
+    class ActiveGame(private val activeGameParams: ActiveGameParams) : RootState("Active game", NavigationId.ACTIVE_GAME) {
         override fun getRestorableInfo(): Serializable? {
             return activeGameParams
         }

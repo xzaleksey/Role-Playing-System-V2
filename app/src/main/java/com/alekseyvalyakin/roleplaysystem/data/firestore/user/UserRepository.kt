@@ -59,8 +59,12 @@ class UserRepositoryImpl : UserRepository {
     override fun observeCurrentUser(): Flowable<User> {
         val currentUser = getCurrentUserInfo()
                 ?: return Flowable.error(NoUserException)
-
-        return observeUser(currentUser.uid)
+        val currentUserCache = userCache[currentUser.uid]
+        val flowable = observeUser(currentUser.uid)
+        if (currentUserCache != null) {
+            return flowable.startWith(currentUserCache)
+        }
+        return flowable
     }
 
     override fun observeUser(userId: String): Flowable<User> {

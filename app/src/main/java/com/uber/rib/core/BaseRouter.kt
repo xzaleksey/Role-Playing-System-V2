@@ -316,6 +316,20 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         }
     }
 
+    fun isEmptyStack() = navigationStack.isEmpty()
+
+    open fun onBackPressed(): Boolean {
+        val currentRouter = peekRouter()
+        if (currentRouter != null && currentRouter.handleBackPress()) {
+            return true
+        }
+
+        val handled = peekState() != null
+        popState()
+        return handled
+    }
+
+
     /** Writes out to the debug log.  */
     private fun log(text: String) {
         Rib.getConfiguration().handleDebugMessage("%s: $text", "RouterNavigator")

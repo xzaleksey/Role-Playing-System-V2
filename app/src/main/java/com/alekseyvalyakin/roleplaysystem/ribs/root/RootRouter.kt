@@ -99,19 +99,19 @@ class RootRouter(
         }
     }
 
-    fun attachCreateGame(game: Game) {
-        attachRib(AttachInfo(RootState.CreateGame(game), false))
+    fun attachGame(game: Game, isFirstOpen: Boolean = false) {
+        if (game.isDraft()) {
+            attachRib(AttachInfo(RootState.CreateGame(game), false))
+        } else {
+            attachRib(AttachInfo(RootState.ActiveGame(ActiveGameParams(game, isFirstOpen)), false))
+        }
     }
 
     fun attachMyProfile(user: User) {
         attachRib(AttachInfo(RootState.PROFILE(user), false))
     }
 
-    fun attachOpenActiveGame(game: Game, isFirstOpen: Boolean = false) {
-        attachRib(AttachInfo(RootState.ActiveGame(ActiveGameParams(game, isFirstOpen)), false))
-    }
-
-    fun onBackPressed(): Boolean {
+    override fun onBackPressed(): Boolean {
         val currentRouter = peekRouter()
         if (currentRouter != null && currentRouter.handleBackPress()) {
             return true

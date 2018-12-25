@@ -80,7 +80,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 .subscribeWithErrorLogging { createGameModel ->
                     when (createGameModel) {
                         is CreateEmptyGameObservableProvider.CreateGameModel.GameCreateSuccess -> {
-                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(createGameModel.game))
+                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenGame(createGameModel.game))
                         }
 
                         is CreateEmptyGameObservableProvider.CreateGameModel.GameCreateFail -> {
@@ -148,13 +148,9 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 (item as GameListViewModel).game.let {
                     analyticsReporter.logEvent(MainAnalyticsEvent.GameClick(it))
                     if (userRepository.isCurrentUser(it.masterId)) {
-                        if (it.isDraft()) {
-                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.CreateGame(it))
-                        } else if (it.isActive()) {
-                            mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenActiveGame(it))
-                        }
+                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenGame(it))
                     } else if (!it.hasPassword()) {
-                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenActiveGame(it))
+                        mainRibListener.onMainRibEvent(MainRibListener.MainRibEvent.OpenGame(it))
                     } else {
                         //TODO refactor
                     }

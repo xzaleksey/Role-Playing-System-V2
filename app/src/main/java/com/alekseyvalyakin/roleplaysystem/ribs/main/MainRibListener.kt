@@ -7,9 +7,7 @@ interface MainRibListener {
     fun onMainRibEvent(mainRibEvent: MainRibEvent)
 
     sealed class MainRibEvent {
-        class CreateGame(val game: Game) : MainRibEvent()
-
-        class OpenActiveGame(val game: Game) : MainRibEvent()
+        class OpenGame(val game: Game) : MainRibEvent()
 
         class MyProfile(val user: User) : MainRibEvent()
 

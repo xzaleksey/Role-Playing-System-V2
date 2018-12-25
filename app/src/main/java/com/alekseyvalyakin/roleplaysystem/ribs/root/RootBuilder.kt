@@ -17,7 +17,6 @@ import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileListener
 import com.jakewharton.rxrelay2.PublishRelay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
-import com.uber.rib.core.RouterNavigatorFactory
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Provides
@@ -152,7 +151,8 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
             CreateGameBuilder.ParentComponent,
             ProfileBuilder.ParentComponent,
             ActiveGameBuilder.ParentComponent,
-            FeaturesBuilder.ParentComponent, LicenseBuilder.ParentComponent {
+            FeaturesBuilder.ParentComponent,
+            LicenseBuilder.ParentComponent {
 
         @dagger.Subcomponent.Builder
         interface Builder {

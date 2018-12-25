@@ -23,13 +23,13 @@ data class GameMenuListViewModel(
         return FlexibleLayoutTypes.GAME_MENU_ITEM
     }
 
-    override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>?, inflater: LayoutInflater?, parent: ViewGroup): GameMenuViewHolder {
+    override fun createViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, inflater: LayoutInflater?, parent: ViewGroup): GameMenuViewHolder {
         val gameSettingsView = GameSettingsItemView(parent.context)
         gameSettingsView.layoutParams = RecyclerView.LayoutParams(matchParent, wrapContent)
-        return GameMenuViewHolder(gameSettingsView)
+        return GameMenuViewHolder(gameSettingsView, adapter as GameMenuAdapter)
     }
 
     override fun bindViewHolder(adapter: FlexibleAdapter<out IFlexible<*>>, holder: GameMenuViewHolder, position: Int, payloads: MutableList<Any?>?) {
-        holder.update(this, (adapter as GameMenuAdapter).relay)
+        holder.update(this)
     }
 }

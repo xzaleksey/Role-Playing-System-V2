@@ -52,11 +52,8 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                 .observeOn(uiScheduler)
                 .subscribeWithErrorLogging { event ->
                     when (event) {
-                        is MainRibListener.MainRibEvent.CreateGame -> {
-                            router.attachCreateGame(event.game)
-                        }
-                        is MainRibListener.MainRibEvent.OpenActiveGame -> {
-                            router.attachOpenActiveGame(event.game)
+                        is MainRibListener.MainRibEvent.OpenGame -> {
+                            router.attachGame(event.game)
                         }
                         is MainRibListener.MainRibEvent.MyProfile -> {
                             router.attachMyProfile(event.user)
@@ -76,7 +73,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
                     when (event) {
                         is CreateGameListener.CreateGameEvent.CompleteCreate -> {
                             router.detachCreateGame()
-                            router.attachOpenActiveGame(event.game, true)
+                            router.attachGame(event.game, true)
                         }
                     }
                 }.addToDisposables()
@@ -85,7 +82,7 @@ class RootInteractor : BaseInteractor<RootInteractor.RootPresenter, RootRouter>(
     }
 
     override fun openGame(game: Game) {
-        router.attachOpenActiveGame(game)
+        router.attachGame(game)
     }
 
     override fun handleBackPress(): Boolean {

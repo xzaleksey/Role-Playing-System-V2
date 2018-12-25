@@ -2,8 +2,19 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
+import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
+import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameDependencyProvider
+import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameEvent
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameListener
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
+import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileListener
+import com.alekseyvalyakin.roleplaysystem.viewmodel.profile.ProfileListViewModelProviderImpl
+import com.jakewharton.rxrelay2.Relay
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.InteractorBaseComponent
 import dagger.Binds
@@ -47,8 +58,37 @@ class MenuBuilder(dependency: ParentComponent) : BaseViewBuilder<MenuView, MenuR
             internal fun router(
                     component: Component,
                     view: MenuView,
-                    interactor: MenuInteractor): MenuRouter {
-                return MenuRouter(view, interactor, component)
+                    interactor: MenuInteractor,
+                    relay: Relay<ActiveGameEvent>): MenuRouter {
+                return MenuRouter(view, interactor, component,
+                        ProfileBuilder(component),
+                        CreateGameBuilder(component),
+                        ActiveGameBuilder(component),
+                        relay)
+            }
+
+
+            @MenuScope
+            @Provides
+            @JvmStatic
+            internal fun profileListener(menuRouter: MenuRouter): ProfileListener {
+                return menuRouter
+            }
+
+            @MenuScope
+            @Provides
+            @JvmStatic
+            internal fun createGameListener(menuRouter: MenuRouter): CreateGameListener {
+                return menuRouter
+            }
+
+            @MenuScope
+            @Provides
+            @JvmStatic
+            internal fun menuViewModelProvider(userRepository: UserRepository,
+                                               resourcesProvider: ResourcesProvider,
+                                               stringRepository: StringRepository): MenuViewModelProvider {
+                return MenuViewModelProviderImpl(ProfileListViewModelProviderImpl(userRepository, resourcesProvider, stringRepository))
             }
         }
     }
@@ -56,7 +96,7 @@ class MenuBuilder(dependency: ParentComponent) : BaseViewBuilder<MenuView, MenuR
     @MenuScope
     @dagger.Component(modules = [Module::class], dependencies = [ParentComponent::class])
     interface Component : InteractorBaseComponent<MenuInteractor>, BuilderComponent,
-            RibDependencyProvider {
+            RibDependencyProvider, ProfileBuilder.ParentComponent, CreateGameBuilder.ParentComponent, ActiveGameBuilder.ParentComponent {
 
         @dagger.Component.Builder
         interface Builder {
