@@ -38,6 +38,14 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         if (savedInstanceState != null) {
             restoreState(savedInstanceState)
         }
+
+        if (savedInstanceState == null) {
+            currentTransientRouterAndState?.router?.run {
+                this.dispatchAttach(savedInstanceState, getRouterTag(this))
+            } ?:navigationStack.peek()?.router?.run {
+                this.dispatchAttach(savedInstanceState, getRouterTag(this))
+            }
+        }
     }
 
     public override fun detachChild(childRouter: Router<out Interactor<*, *>, out InteractorBaseComponent<*>>) {
