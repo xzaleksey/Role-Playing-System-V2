@@ -41,9 +41,14 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
 
         if (savedInstanceState == null) {
             currentTransientRouterAndState?.router?.run {
-                this.dispatchAttach(savedInstanceState, getRouterTag(this))
-            } ?:navigationStack.peek()?.router?.run {
-                this.dispatchAttach(savedInstanceState, getRouterTag(this))
+                if (!this.interactor.isAttached) {
+                    this.dispatchAttach(savedInstanceState, getRouterTag(this))
+                }
+
+            } ?: navigationStack.peek()?.router?.run {
+                if (!this.interactor.isAttached) {
+                    this.dispatchAttach(savedInstanceState, getRouterTag(this))
+                }
             }
         }
     }
