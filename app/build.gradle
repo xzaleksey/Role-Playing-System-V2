@@ -145,7 +145,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.9.0'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.0'
 
-    annotationProcessor 'com.uber.rib:rib-compiler-test:0.9.1'
+    kapt 'com.uber.rib:rib-compiler-test:0.9.1'
     implementation 'com.uber.rib:rib-android:0.9.1'
     implementation 'com.uber.rib:rib-workflow:0.9.1'
     implementation 'com.uber.rib:rib-router-navigator:0.9.1'
