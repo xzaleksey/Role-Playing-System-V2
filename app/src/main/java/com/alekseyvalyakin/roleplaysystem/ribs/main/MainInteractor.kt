@@ -11,6 +11,7 @@ import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
 import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
+import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -54,6 +55,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var donateInteractor: DonateInteractor
     @Inject
     lateinit var firebaseApi: FirebaseApi
+    @Inject
+    lateinit var notificationInteractor: NotificationInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
 

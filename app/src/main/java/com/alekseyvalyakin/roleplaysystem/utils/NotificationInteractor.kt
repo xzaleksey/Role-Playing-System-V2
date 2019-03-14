@@ -10,8 +10,10 @@ import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
+import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundPlayService
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundRecordService
+import com.alekseyvalyakin.roleplaysystem.utils.NotificationInteractor.Companion.TEST_NOTIF_ID
 
 
 class NotificationInteractorImpl(
@@ -42,12 +44,7 @@ class NotificationInteractorImpl(
                 .setOngoing(true)
                 .setAutoCancel(false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
-                    channelId,
-                    NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(channel)
-        }
+        createChannel()
 
         manager.notify(notifId, builder.build())
     }
@@ -69,12 +66,7 @@ class NotificationInteractorImpl(
                 .setOngoing(true)
                 .setAutoCancel(false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
-                    channelId,
-                    NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(channel)
-        }
+        createChannel()
         val actionStop = NotificationCompat.Action.Builder(
                 R.drawable.ic_stop,
                 context.getString(R.string.stop), getPendingIntentStopRecord())
@@ -103,7 +95,6 @@ class NotificationInteractorImpl(
         return builder.build()
     }
 
-
     override fun getSoundPlayNotification(caption: String, inProgress: Boolean, content: String): Notification {
         val builder = commonBuilder()
                 .setSmallIcon(R.drawable.ic_notification_icon)
@@ -115,12 +106,7 @@ class NotificationInteractorImpl(
                 .setOngoing(true)
                 .setAutoCancel(false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
-                    channelId,
-                    NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(channel)
-        }
+        createChannel()
         val actionStop = NotificationCompat.Action.Builder(
                 R.drawable.ic_stop,
                 context.getString(R.string.stop), getPendingIntentStopPlaying())
@@ -149,6 +135,38 @@ class NotificationInteractorImpl(
         return builder.build()
     }
 
+    override fun showTestNotification() {
+        createChannel()
+
+        val inboxStyle = NotificationCompat.InboxStyle()
+        val builder = commonBuilder()
+                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentTitle(context.getString(R.string.app_name))
+                .setContentText("Test")
+                .setContentIntent(getPendingIntentOpenApp())
+                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setStyle(inboxStyle)
+                .setVibrate(longArrayOf(0, 1000))
+                .setShowWhen(true)
+                .setGroup("test")
+                .setAutoCancel(true)
+        manager.notify(TEST_NOTIF_ID, builder.build())
+    }
+
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId,
+                    channelId,
+                    NotificationManager.IMPORTANCE_DEFAULT)
+            channel.enableVibration(true)
+            channel.enableLights(true)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
     private fun getPendingIntentStopRecord(): PendingIntent {
         return PendingIntent.getBroadcast(context, 0, Intent(SoundRecordService.STOP_SOUND_RECORD), 0)
     }
@@ -173,6 +191,10 @@ class NotificationInteractorImpl(
         return PendingIntent.getBroadcast(context, 0, Intent(SoundPlayService.PAUSE), 0)
     }
 
+    private fun getPendingIntentOpenApp(): PendingIntent {
+        return PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+    }
+
     override fun dismissNotification(notificationId: Int) {
         manager.cancel(notificationId)
     }
@@ -183,7 +205,9 @@ interface NotificationInteractor {
     companion object {
         const val SOUND_RECORD_NOTIF_ID = 1
         const val SOUND_PLAY_NOTIF_ID = 2
+        const val TEST_NOTIF_ID = 3
     }
+
     fun showProgressNotification(notifId: Int, caption: String, completedUnits: Long, totalUnits: Long)
 
     fun dismissNotification(notificationId: Int)
@@ -191,4 +215,5 @@ interface NotificationInteractor {
     fun getSoundRecordNotification(caption: String, inProgress: Boolean): Notification
 
     fun getSoundPlayNotification(caption: String, inProgress: Boolean, content: String): Notification
+    fun showTestNotification()
 }
