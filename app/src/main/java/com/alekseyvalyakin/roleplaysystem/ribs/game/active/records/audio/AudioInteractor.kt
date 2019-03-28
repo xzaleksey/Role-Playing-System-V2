@@ -44,6 +44,7 @@ class AudioInteractor : BaseInteractor<AudioPresenter, RecordsRouter>() {
                     }
                 }
                 .subscribeWithErrorLogging { }
+                .addToDisposables()
     }
 
     private fun handleUiEvent(uiEvent: AudioPresenter.UiEvent): Observable<Any> {
