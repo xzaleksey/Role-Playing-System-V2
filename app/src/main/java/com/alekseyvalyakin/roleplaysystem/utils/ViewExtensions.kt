@@ -3,7 +3,11 @@ package com.alekseyvalyakin.roleplaysystem.utils
 import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.support.annotation.*
+import android.support.annotation.ColorInt
+import android.support.annotation.ColorRes
+import android.support.annotation.DimenRes
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -12,6 +16,7 @@ import android.util.TypedValue
 import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -164,4 +169,17 @@ fun View.increaseTouchArea(size: Int = getIntDimen(R.dimen.dp_8)) {
         rect.right += size
         parent.touchDelegate = TouchDelegate(rect, this)
     }
+}
+
+
+fun View.doOnPreDraw(action: () -> Unit): ViewTreeObserver.OnPreDrawListener {
+    val listener = object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+            viewTreeObserver.removeOnPreDrawListener(this)
+            action()
+            return true
+        }
+    }
+    viewTreeObserver.addOnPreDrawListener(listener)
+    return listener
 }
