@@ -1,0 +1,37 @@
+object Versions {
+    const val rx_version = "2.1.10"
+    const val rx_android_version = "2.1.0"
+    const val firebase_core_version = "16.0.9"
+    const val firebase_auth_version = "17.0.0"
+    const val firebase_database_version = "16.0.1"
+    const val firebase_storage_version = "17.0.0"
+    const val firebase_firestore_version = "19.0.0"
+    const val firebase_messaging_version = "18.0.0"
+    const val firebase_config_version = "17.0.0"
+    const val firebase_ml_version = "20.0.0"
+    const val firebase_functions_version = "17.0.0"
+    const val autodispose_version = "0.2.0"
+    const val anko_version = "0.10.8"
+    const val support_version = "28.0.0"
+    const val room_version = "1.1.1"
+    const val kotlin_version = "1.3.31"
+
+}
+
+object Libs {
+    val support_annotations = "com.android.support:support-annotations:${Versions.support_version}"
+    val support_design = "com.android.support:support-annotations:${Versions.support_version}"
+    val support_appcompat_v7 = "com.android.support:appcompat-v7:${Versions.support_version}"
+    val firebase_core = "com.google.firebase:firebase-core:${Versions.firebase_core_version}"
+    val kotlin_std = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$${Versions.kotlin_version}"
+    val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
+    val firebase_auth = "com.google.firebase:firebase-auth:${Versions.firebase_auth_version}"
+    val firebase_storage = "com.google.firebase:firebase-storage:${Versions.firebase_storage_version}"
+    val firebase_store = "com.google.firebase:firebase-firestore:${Versions.firebase_firestore_version}"
+    val firebase_messaging = "com.google.firebase:firebase-messaging:${Versions.firebase_messaging_version}"
+    val firebase_config = "com.google.firebase:firebase-config:${Versions.firebase_config_version}"
+    val firebase_ml = "com.google.firebase:firebase-ml-vision:${Versions.firebase_ml_version}"
+    val firebase_functions = "com.google.firebase:firebase-functions:${Versions.firebase_functions_version}"
+    val rx_java2 = "io.reactivex.rxjava2:rxjava:${Versions.rx_version}"
+    val rx_android = "io.reactivex.rxjava2:rxandroid:${Versions.rx_android_version}"
+}
