@@ -50,6 +50,7 @@ android {
 //            signingConfig = signingConfigs.getByName("release")
         }
         get("debug").apply {
+            ext["alwaysUpdateBuildId"] = false
         }
     }
 
