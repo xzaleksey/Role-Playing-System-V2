@@ -101,7 +101,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                 presenter.showSearchContextMenu()
             }
             is UiEvents.SearchInput -> {
-                val value = filterRelay.value
+                val value = filterRelay.value!!
                 filterRelay.accept(value.copy(previousQuery = value.query, query = uiEvents.text))
             }
             is UiEvents.FabClick -> {

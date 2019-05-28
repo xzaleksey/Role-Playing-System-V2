@@ -6,6 +6,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameStep
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
+import com.alekseyvalyakin.roleplaysystem.utils.getNonNullValue
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
@@ -19,7 +20,7 @@ class CreateGameProviderImpl(
 ) : CreateGameProvider {
 
     private val relay = BehaviorRelay.createDefault<Game>(defaultGame)
-    private val gameFlowable = gameRepository.observeDocument(relay.value.id).share()
+    private val gameFlowable = gameRepository.observeDocument(getGame().id).share()
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     override fun observeGame(viewModelFlowable: Flowable<CreateGameViewModel>): Flowable<Game> {
@@ -36,21 +37,21 @@ class CreateGameProviderImpl(
     }
 
     override fun getGame(): Game {
-        return relay.value
+        return relay.getNonNullValue()
     }
 
     @Suppress("NON_EXHAUSTIVE_WHEN")
     override fun onChangeInfo(step: CreateGameStep, text: String): Completable {
         when (step) {
             CreateGameStep.TITLE -> {
-                return gameRepository.saveName(relay.value.id, text).doOnComplete {
-                    relay.accept(relay.value.copy(name = text))
+                return gameRepository.saveName(getGame().id, text).doOnComplete {
+                    relay.accept(getGame().copy(name = text))
                 }
             }
 
             CreateGameStep.DESCRIPTION -> {
-                return gameRepository.saveDescription(relay.value.id, text).doOnComplete {
-                    relay.accept(relay.value.copy(description = text))
+                return gameRepository.saveDescription(getGame().id, text).doOnComplete {
+                    relay.accept(getGame().copy(description = text))
                 }
             }
 
@@ -58,12 +59,12 @@ class CreateGameProviderImpl(
                 val password = if (text.isBlank()){
                     StringUtils.EMPTY_STRING
                 } else{
-                    simpleCryptoProvider.getSimpleCrypto(relay.value.id).encrypt(text)
+                    simpleCryptoProvider.getSimpleCrypto(getGame().id).encrypt(text)
                 }
 
-                return gameRepository.savePassword(relay.value.id, password).doOnComplete {
-                    relay.accept(relay.value.copy(password = password))
-                }.andThen(gameRepository.activateGame(relay.value.id))
+                return gameRepository.savePassword(getGame().id, password).doOnComplete {
+                    relay.accept(getGame().copy(password = password))
+                }.andThen(gameRepository.activateGame(getGame().id))
             }
 
         }

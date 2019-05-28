@@ -114,7 +114,7 @@
     <string name="details">Details</string>
     <string name="rethrow">Rethrow</string>
     <string name="create_game_name_title">Think up the name for you game</string>
-    <string name="steps_format">Step %d of %d</string>
+    <string name="steps_format" formatted="false" >Step %d of %d</string>
     <string name="create_game_name_example">Example: Dragon\'s beach</string>
     <string name="create_game_description_title">Think up game description</string>
     <string name="create_game_description_example">Example: it is nice world with unicorns…</string>
@@ -237,7 +237,7 @@
         <P>6.Notice of License Copyright: You must update the COPYRIGHT NOTICE portion
             of this License to include the exact text of the COPYRIGHT NOTICE of any
             Open Game Content You are copying, modifying or distributing, and You must
-            add the title, the copyright date, and the copyright holder's name to the
+            add the title, the copyright date, and the copyright holder\'s name to the
             COPYRIGHT NOTICE of any original Open Game Content you Distribute.
         </P>
 

@@ -6,17 +6,18 @@ apply from: 'master_password.gradle'
 
 ext {
     rx_version = "2.1.10"
-    rx_android_version = "2.0.2"
-    firebase_core_version = '16.0.6'
-    firebase_auth_version = '16.1.0'
+    rx_android_version = "2.1.0"
+    firebase_core_version = '16.0.9'
+    firebase_auth_version = '17.0.0'
     firebase_database_version = '16.0.1'
-    firebase_storage_version = '16.0.5'
-    firebase_firestore_version = '17.1.4'
-    firebase_messaging_version = '17.3.4'
-    firebase_config_version = '16.1.2'
-    firebase_ml_version = '18.0.2'
-    firebase_functions_version = '16.1.3'
-    anko_version = '0.10.7'
+    firebase_storage_version = '17.0.0'
+    firebase_firestore_version = '19.0.0'
+    firebase_messaging_version = '18.0.0'
+    firebase_config_version = '17.0.0'
+    firebase_ml_version = '20.0.0'
+    firebase_functions_version = '17.0.0'
+    autodispose_version = '0.2.0'
+    anko_version = '0.10.8'
     support_version = '28.0.0'
     room_version = '1.1.1'
 }
@@ -59,7 +60,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.config
         }
-        debug{
+        debug {
             ext.alwaysUpdateBuildId = false
         }
     }
@@ -80,7 +81,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation "com.google.firebase:firebase-core:$firebase_core_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation "com.google.firebase:firebase-auth:$firebase_auth_version"
     implementation "com.google.firebase:firebase-storage:$firebase_storage_version"
     implementation "com.google.firebase:firebase-firestore:$firebase_firestore_version"
@@ -93,8 +94,8 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:$rx_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-    implementation 'com.google.dagger:dagger:2.17'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    implementation 'com.google.dagger:dagger:2.19'
 
     kapt 'com.google.dagger:dagger-android-processor:2.17'
     kapt 'com.google.dagger:dagger-compiler:2.17'
@@ -103,9 +104,8 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding-design:2.1.1'
     implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.1.1'
     implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'net.danlew:android.joda:2.9.9'
-    implementation "org.jetbrains.anko:anko-commons:$anko_version"
-    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+    implementation 'net.danlew:android.joda:2.10.1.1'
+
     implementation "android.arch.work:work-runtime:1.0.0-alpha08"
 // if you want some benefits from Kotlin then try this
     implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha08"
@@ -116,14 +116,17 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:$room_version"
 
     // sdk15, sdk19, sdk21, sdk23 are also available
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
-    implementation "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
-    implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-cardview-v7:$anko_version"
     implementation "org.jetbrains.anko:anko-design:$anko_version"
-    implementation "org.jetbrains.anko:anko-design-coroutines:$anko_version"
     implementation "org.jetbrains.anko:anko-recyclerview-v7:$anko_version"
     implementation "org.jetbrains.anko:anko-constraint-layout:$anko_version"
+
+    implementation "org.jetbrains.anko:anko-appcompat-v7-coroutines:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
+    implementation "org.jetbrains.anko:anko-design-coroutines:$anko_version"
     implementation 'com.google.android:flexbox:1.0.0'
 
     implementation 'com.nineoldandroids:library:2.4.0'
@@ -138,6 +141,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:input:2.0.0-alpha07'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation "com.jakewharton.rxrelay2:rxrelay:2.1.0"
     implementation 'eu.davidea:flexible-adapter:5.0.0-rc1'
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
@@ -146,10 +150,8 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.0'
 
     kapt 'com.uber.rib:rib-compiler-test:0.9.1'
-    implementation 'com.uber.rib:rib-android:0.9.1'
-    implementation 'com.uber.rib:rib-workflow:0.9.1'
-    implementation 'com.uber.rib:rib-router-navigator:0.9.1'
-    implementation 'com.uber.rib:rib-screen-stack-base:0.9.1'
+
+    implementation "com.uber.autodispose:autodispose-android:$autodispose_version@aar"
     testImplementation 'com.uber.rib:rib-test-utils:0.9.1'
 
     testImplementation 'junit:junit:4.12'
@@ -163,7 +165,9 @@ configurations {
 
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 apply plugin: 'com.google.gms.google-services'

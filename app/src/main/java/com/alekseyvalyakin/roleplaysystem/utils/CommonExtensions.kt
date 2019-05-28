@@ -7,3 +7,15 @@ fun MutableList<String>.addIfNotContainsAndNotBlank(item: String): Boolean {
 
     return false
 }
+
+fun <E> MutableCollection<E>.removeIfFiltered(filter: (element: E) -> Boolean): Boolean {
+    var removed = false
+    val each = iterator()
+    while (each.hasNext()) {
+        if (filter(each.next())) {
+            each.remove()
+            removed = true
+        }
+    }
+    return removed
+}
