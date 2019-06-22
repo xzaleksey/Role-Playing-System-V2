@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.jakewharton.rxbinding2.view.RxView

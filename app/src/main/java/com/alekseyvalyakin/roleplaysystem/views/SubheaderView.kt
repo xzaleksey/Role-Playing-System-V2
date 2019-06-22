@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
 import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface

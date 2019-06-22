@@ -1,12 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceSingleCollectionViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.*

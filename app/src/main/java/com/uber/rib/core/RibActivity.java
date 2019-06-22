@@ -16,10 +16,12 @@
 package com.uber.rib.core;
 
 import android.content.Intent;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.jakewharton.rxrelay2.PublishRelay;
 import com.jakewharton.rxrelay2.Relay;
@@ -27,6 +29,7 @@ import com.uber.autodispose.LifecycleEndedException;
 import com.uber.autodispose.LifecycleScopeProvider;
 import com.uber.rib.core.lifecycle.ActivityCallbackEvent;
 import com.uber.rib.core.lifecycle.ActivityLifecycleEvent;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;

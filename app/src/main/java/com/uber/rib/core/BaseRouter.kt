@@ -1,7 +1,6 @@
 package com.uber.rib.core
 
 import android.annotation.SuppressLint
-import android.support.annotation.IntRange
 import android.view.View
 import com.alekseyvalyakin.roleplaysystem.utils.removeIfFiltered
 import timber.log.Timber
@@ -187,7 +186,6 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>,
         return top.state
     }
 
-    @IntRange(from = 0)
     override fun size(): Int {
         val stackSize = if (currentTransientRouterAndState == null) 0 else 1
         return navigationStack.size + stackSize

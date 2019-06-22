@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.adapter
 
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.MenuNavigationEvent
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.adapter.GameSettingsItemView

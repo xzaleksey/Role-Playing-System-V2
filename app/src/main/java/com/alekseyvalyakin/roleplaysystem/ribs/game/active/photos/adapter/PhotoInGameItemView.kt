@@ -1,12 +1,12 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter
 
 import android.content.Context
-import android.support.v7.widget.SwitchCompat
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.base.image.ImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.*

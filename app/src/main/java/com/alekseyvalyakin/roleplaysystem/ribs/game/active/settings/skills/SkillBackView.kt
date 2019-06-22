@@ -2,7 +2,6 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.support.design.chip.Chip
 import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.tags.Tag
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView
 import com.alekseyvalyakin.roleplaysystem.views.dialog.RestrictionInfoDialogView
+import com.google.android.material.chip.Chip
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay

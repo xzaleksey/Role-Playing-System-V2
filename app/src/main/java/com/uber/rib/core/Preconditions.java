@@ -5,7 +5,8 @@
 
 package com.uber.rib.core;
 
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 public final class Preconditions {
     private Preconditions() {

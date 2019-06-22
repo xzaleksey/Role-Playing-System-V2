@@ -1,7 +1,7 @@
 package com.rxfirebase2.exceptions;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class RxFirebaseNullDataException extends NullPointerException {
 

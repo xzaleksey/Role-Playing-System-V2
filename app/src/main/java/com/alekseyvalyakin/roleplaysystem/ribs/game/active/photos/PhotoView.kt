@@ -1,15 +1,14 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos
 
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.ProgressBar
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
 import com.afollestad.materialdialogs.actions.setActionButtonEnabled
@@ -24,6 +23,7 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.photos.adapter.PhotoV
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.fabmenu.FabMenu
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.decor.ItemOffsetDecoration
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.BackpressureStrategy

@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.adapter.GameSettingsAdapter
 import com.alekseyvalyakin.roleplaysystem.utils.*

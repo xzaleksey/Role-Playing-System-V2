@@ -3,15 +3,6 @@ package com.alekseyvalyakin.roleplaysystem.utils
 import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
-import android.support.annotation.ColorRes
-import android.support.annotation.DimenRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.widget.ImageViewCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.TouchDelegate
 import android.view.View
@@ -20,8 +11,13 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.*
+import androidx.core.widget.ImageViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.main.FabEnabledProvider
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import eu.davidea.flexibleadapter.FlexibleAdapter
 import eu.davidea.flexibleadapter.items.IFlexible
 

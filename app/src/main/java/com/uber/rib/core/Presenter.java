@@ -15,11 +15,13 @@
  */
 package com.uber.rib.core;
 
-import android.support.annotation.CallSuper;
+import androidx.annotation.CallSuper;
+
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.jakewharton.rxrelay2.Relay;
 import com.uber.autodispose.ScopeProvider;
 import com.uber.rib.core.lifecycle.PresenterEvent;
+
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 

@@ -16,16 +16,11 @@
 package com.uber.rib.core;
 
 import android.os.Looper;
-import android.support.annotation.CallSuper;
-import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import com.uber.rib.core.Bundle;
-import com.uber.rib.core.Initializer;
-import com.uber.rib.core.Interactor;
-import com.uber.rib.core.InteractorBaseComponent;
-import com.uber.rib.core.Rib;
-import com.uber.rib.core.RouterNavigator;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import java.util.List;
 import java.util.Locale;

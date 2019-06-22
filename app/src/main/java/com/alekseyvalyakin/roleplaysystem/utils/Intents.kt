@@ -3,7 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import java.io.File
 
 

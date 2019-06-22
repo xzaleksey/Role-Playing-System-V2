@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.di.singleton
 
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.room.Room
 import com.alekseyvalyakin.roleplaysystem.BuildConfig
 import com.alekseyvalyakin.roleplaysystem.app.AppSubscriptionManager
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp

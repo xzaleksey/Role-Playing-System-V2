@@ -1,8 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.auth
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.TextInputLayout
 import android.text.InputType
 import android.text.TextUtils
 import android.util.AttributeSet
@@ -12,10 +10,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.google.android.gms.common.SignInButton
+import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay

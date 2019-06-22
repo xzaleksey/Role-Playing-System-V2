@@ -15,11 +15,7 @@
  */
 package com.uber.rib.core;
 
-import android.support.annotation.Nullable;
-import com.uber.rib.core.ModernRouterNavigator;
-import com.uber.rib.core.Router;
-import com.uber.rib.core.RouterNavigator;
-import com.uber.rib.core.RouterNavigatorState;
+import androidx.annotation.Nullable;
 
 /**
  * Factory for the creation of {@link RouterNavigator}s.

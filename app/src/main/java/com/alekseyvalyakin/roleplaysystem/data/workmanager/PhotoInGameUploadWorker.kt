@@ -1,9 +1,11 @@
 package com.alekseyvalyakin.roleplaysystem.data.workmanager
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.RpsApp
 import com.alekseyvalyakin.roleplaysystem.data.firestorage.FirebaseStorageRepository
@@ -25,7 +27,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class PhotoInGameUploadWorker : Worker() {
+class PhotoInGameUploadWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     @Inject
     lateinit var photoInGameDao: PhotoInGameDao
@@ -59,11 +61,11 @@ class PhotoInGameUploadWorker : Worker() {
             if (t is DocumentNotExistsException) {
                 localFile.delete()
                 photoInGameDao.deleteById(dbId)
-                return Result.SUCCESS
+                return Result.success()
             }
         }
 
-        var result = Result.SUCCESS
+        var result = Result.success()
         val notificationId = "$gameId/$photoId".hashCode()
 
         try {
@@ -94,9 +96,9 @@ class PhotoInGameUploadWorker : Worker() {
                                 || cause.errorCode == StorageException.ERROR_RETRY_LIMIT_EXCEEDED)) {
                     photoInGameDao.deleteById(dbId)
                     localFile.delete()
-                    Result.FAILURE
+                    Result.failure()
                 } else {
-                    Result.RETRY
+                    Result.retry()
                 }
                 Timber.e(t)
             }
@@ -104,7 +106,7 @@ class PhotoInGameUploadWorker : Worker() {
         } catch (t: Throwable) {
             Timber.e(t)
             photoInGameDao.deleteById(dbId)
-            result = Result.FAILURE
+            result = Result.failure()
         }
 
         notificationInteractor.dismissNotification(notificationId)

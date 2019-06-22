@@ -156,6 +156,10 @@ class ActiveGameRouter(
         return peekState() != null
     }
 
+    override fun onBackPressed(): Boolean {
+        return false
+    }
+
     fun setCanBeClosed() {
         canBeClosed = true
     }

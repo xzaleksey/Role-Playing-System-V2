@@ -1,8 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.flexible.divider
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
 import org.jetbrains.anko.*

@@ -110,14 +110,8 @@ class RootRouter(
         attachRib(AttachInfo(RootState.PROFILE(user), false))
     }
 
-    override fun onBackPressed(): Boolean {
-        val currentRouter = peekRouter()
-        if (currentRouter != null && currentRouter.handleBackPress()) {
-            return true
-        }
-
-        popState()
-        return peekState() != null
+    override fun hasOwnContent(): Boolean {
+        return false
     }
 
     fun detachCreateGame() {

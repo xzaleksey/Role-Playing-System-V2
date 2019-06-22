@@ -12,16 +12,17 @@ object Versions {
     const val firebase_functions_version = "17.0.0"
     const val autodispose_version = "0.2.0"
     const val anko_version = "0.10.8"
-    const val support_version = "28.0.0"
-    const val room_version = "1.1.1"
+    const val support_version = "1.0.0"
+    const val support_design_version = "1.0.0-rc01"
+    const val room_version = "2.1.0"
     const val kotlin_version = "1.3.31"
 
 }
 
 object Libs {
-    val support_annotations = "com.android.support:support-annotations:${Versions.support_version}"
-    val support_design = "com.android.support:support-annotations:${Versions.support_version}"
-    val support_appcompat_v7 = "com.android.support:appcompat-v7:${Versions.support_version}"
+    val support_annotations = "androidx.annotation:annotation:${Versions.support_version}"
+    val support_design = "com.google.android.material:material:${Versions.support_design_version}"
+    val support_appcompat_v7 = "androidx.appcompat:appcompat:${Versions.support_version}"
     val firebase_core = "com.google.firebase:firebase-core:${Versions.firebase_core_version}"
     val kotlin_std = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$${Versions.kotlin_version}"
     val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"

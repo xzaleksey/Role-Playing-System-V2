@@ -15,21 +15,20 @@
  */
 package com.uber.rib.core;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.jakewharton.rxrelay2.Relay;
 import com.uber.autodispose.LifecycleEndedException;
 import com.uber.autodispose.LifecycleScopeProvider;
-import com.uber.rib.core.Bundle;
-import com.uber.rib.core.Presenter;
-import com.uber.rib.core.Router;
 import com.uber.rib.core.lifecycle.InteractorEvent;
-import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 import static com.uber.rib.core.lifecycle.InteractorEvent.ACTIVE;
 import static com.uber.rib.core.lifecycle.InteractorEvent.INACTIVE;

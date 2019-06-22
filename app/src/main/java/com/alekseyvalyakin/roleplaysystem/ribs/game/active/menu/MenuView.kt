@@ -1,7 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alekseyvalyakin.roleplaysystem.flexible.profile.UserProfileViewModel
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.menu.adapter.GameMenuAdapter
 import com.jakewharton.rxrelay2.PublishRelay

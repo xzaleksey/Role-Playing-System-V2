@@ -1,19 +1,19 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.main
 
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
 import com.alekseyvalyakin.roleplaysystem.views.recyclerview.HideFablListener
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.tbruyelle.rxpermissions2.RxPermissions

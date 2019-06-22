@@ -2,13 +2,13 @@ package com.alekseyvalyakin.roleplaysystem.views.backdrop.front
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
 import eu.davidea.flexibleadapter.FlexibleAdapter

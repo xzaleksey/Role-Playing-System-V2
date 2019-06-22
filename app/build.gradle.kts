@@ -76,8 +76,8 @@ dependencies {
     implementation(Libs.support_annotations)
     implementation(Libs.support_appcompat_v7)
     implementation(Libs.support_design)
-    implementation("com.android.support:cardview-v7:${Versions.support_version}")
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
+    implementation("androidx.cardview:cardview:${Versions.support_version}")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation(Libs.firebase_core)
     implementation(Libs.kotlin_std)
     implementation(Libs.crashlytics)
@@ -101,9 +101,9 @@ dependencies {
     implementation("com.jakewharton.timber:timber:4.7.1")
     implementation("net.danlew:android.joda:2.10.1.1")
 
-    implementation("android.arch.work:work-runtime:1.0.0-alpha08")
+    implementation("android.arch.work:work-runtime:1.0.1")
 //// if you want some benefits from Kotlin then try this
-    implementation ("android.arch.work:work-runtime-ktx:1.0.0-alpha08")
+    implementation ("android.arch.work:work-runtime-ktx:1.0.1")
 
 //    //Room
     implementation ("android.arch.persistence.room:runtime:$room_version")

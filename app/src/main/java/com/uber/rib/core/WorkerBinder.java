@@ -15,20 +15,18 @@
  */
 package com.uber.rib.core;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
+
 import com.jakewharton.rxrelay2.PublishRelay;
-import com.uber.rib.core.Interactor;
-import com.uber.rib.core.Worker;
-import com.uber.rib.core.WorkerScopeProvider;
-import com.uber.rib.core.WorkerUnbinder;
 import com.uber.rib.core.lifecycle.InteractorEvent;
 import com.uber.rib.core.lifecycle.WorkerEvent;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-
-import java.util.List;
 
 /**
  * Helper class to bind to an interactor's lifecycle to translate it to a {@link Worker} lifecycle.
