@@ -41,8 +41,8 @@ public class Router<I extends com.uber.rib.core.Interactor, C extends Interactor
     @VisibleForTesting
     static final String KEY_INTERACTOR = "Router.interactor";
 
-    private final List<com.uber.rib.core.Router> children = new CopyOnWriteArrayList<>();
-    private final I interactor;
+    protected final List<com.uber.rib.core.Router> children = new CopyOnWriteArrayList<>();
+    protected final I interactor;
     private final Thread mainThread;
     private final com.uber.rib.core.RibRefWatcher ribRefWatcher;
 
