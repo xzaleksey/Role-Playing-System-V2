@@ -276,7 +276,7 @@ class SearchToolbar constructor(
         searchEditText.setText("")
         tvTitle.visibility = View.VISIBLE
         searchEditText.visibility = View.INVISIBLE
-        leftIcon.hideKeyboard()
+        leftIcon.hideKeyboard(0L)
         leftIcon.setImageDrawable(getCompatDrawable(R.drawable.ic_search))
         if (mode == Mode.HIDDEN) {
             searchContainer.visibility = View.INVISIBLE
