@@ -88,7 +88,7 @@ dependencies {
     implementation(Libs.firebase_config)
 //    implementation(Libs.firebase_ml)
     implementation(Libs.firebase_functions)
-    implementation("com.google.android.gms:play-services-auth:16.0.1")
+    implementation("com.google.android.gms:play-services-auth:17.0.0")
     implementation(Libs.rx_java2)
     implementation(Libs.rx_android)
     implementation("io.reactivex.rxjava2:rxkotlin:2.3.0")
@@ -100,7 +100,7 @@ dependencies {
     implementation("com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.1.1")
     implementation("com.jakewharton.timber:timber:4.7.1")
     implementation("net.danlew:android.joda:2.10.1.1")
-
+    implementation ("com.google.android.play:core:1.6.3")
     implementation("android.arch.work:work-runtime:1.0.1")
 //// if you want some benefits from Kotlin then try this
     implementation ("android.arch.work:work-runtime-ktx:1.0.1")

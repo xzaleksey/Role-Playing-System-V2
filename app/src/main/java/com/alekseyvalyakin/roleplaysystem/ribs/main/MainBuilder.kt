@@ -10,6 +10,8 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.gamesinuser.GamesI
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.data.update.AppUpdatesProvider
+import com.alekseyvalyakin.roleplaysystem.data.update.AppUpdatesProviderImpl
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.viewmodel.profile.ProfileListViewModelProviderImpl
 import com.uber.rib.core.BaseViewBuilder
@@ -23,7 +25,6 @@ import javax.inject.Scope
 /**
  * Builder for the {@link MainScope}.
  *
- * TODO describe this scope's responsibility as a whole.
  */
 class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainRouter, MainBuilder.ParentComponent>(dependency) {
 

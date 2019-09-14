@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.data.auth
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.utils.RequestCodes.RC_SIGN_IN
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -70,10 +71,6 @@ class GoogleSignInProvider constructor(
             val authorizeIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
             activity.startActivityForResult(authorizeIntent, RC_SIGN_IN)
         }.andThen(relay.take(1))
-    }
-
-    companion object {
-        private const val RC_SIGN_IN = 9001
     }
 
     class GoogleSignInResult(

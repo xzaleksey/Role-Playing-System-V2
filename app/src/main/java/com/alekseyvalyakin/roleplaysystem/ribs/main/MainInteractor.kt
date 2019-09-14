@@ -7,6 +7,7 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.GameRepository
 import com.alekseyvalyakin.roleplaysystem.data.firestore.user.UserRepository
 import com.alekseyvalyakin.roleplaysystem.data.functions.FirebaseApi
+import com.alekseyvalyakin.roleplaysystem.data.update.AppUpdatesProvider
 import com.alekseyvalyakin.roleplaysystem.di.activity.ThreadConfig
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes
 import com.alekseyvalyakin.roleplaysystem.flexible.game.GameListViewModel
@@ -23,6 +24,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,7 +61,6 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
     lateinit var notificationInteractor: NotificationInteractor
     @Inject
     lateinit var analyticsReporter: AnalyticsReporter
-
     private val screenName = "Main"
     private val filterRelay = BehaviorRelay.createDefault<FilterModel>(FilterModel())
 
@@ -91,6 +92,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
                         }
                     }
                 }.addToDisposables()
+
     }
 
     private fun handleEvent(uiEvents: UiEvents): Observable<*> {
@@ -175,6 +177,8 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         fun updateModel(model: MainViewModel)
 
         fun showError(message: String)
+
+        fun showSnackBar(text: String, actionText: String, action: () -> Unit)
     }
 
     sealed class UiEvents {
@@ -195,6 +199,7 @@ class MainInteractor : BaseInteractor<MainInteractor.MainPresenter, MainRouter>(
         class SearchInput(val text: String) : UiEvents()
 
         class RecyclerItemClick(val item: IFlexible<*>) : UiEvents()
+
         object NavigateToLicense : UiEvents()
     }
 }

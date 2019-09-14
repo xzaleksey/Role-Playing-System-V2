@@ -12,3 +12,13 @@ fun View.showSnack(text: CharSequence, durationMillis: Int = Snackbar.LENGTH_LON
     snackBar.view.setBackgroundColor(ContextCompat.getColor(snackBar.context, R.color.colorAccentLight))
     snackBar.show()
 }
+
+@JvmName("internalIndefiniteSnackbar")
+inline fun View.indefiniteSnackbar(message: CharSequence, actionText: CharSequence, noinline action: (View) -> Unit) = Snackbar
+        .make(this, message, Snackbar.LENGTH_INDEFINITE)
+        .setAction(actionText, action)
+        .apply {
+            setActionTextColor(Color.WHITE)
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccentLight))
+            show()
+        }

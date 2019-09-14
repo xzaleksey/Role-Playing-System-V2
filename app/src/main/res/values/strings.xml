@@ -321,6 +321,10 @@
     <string name="delete_skill">Delete skill</string>
     <string name="race_restriction">Race affiliation</string>
     <string name="class_restriction">Class affiliation</string>
+    <string name="app_update_failed">App update failed</string>
+    <string name="app_update_downloaded">App update downloaded</string>
+    <string name="app_update_restart_question">Restart application?</string>
+    <string name="restart">Restart</string>
 
 
 </resources>

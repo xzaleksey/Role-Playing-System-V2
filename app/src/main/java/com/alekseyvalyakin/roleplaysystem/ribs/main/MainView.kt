@@ -148,6 +148,10 @@ class MainView constructor(
         }
     }
 
+    override fun showSnackBar(text: String, actionText: String, action: () -> Unit) {
+        indefiniteSnackbar(text, actionText, { action() })
+    }
+
     override fun showSearchContextMenu() {
         val popupMenu = PopupMenu(context, searchToolbar.getPopupViewAnchor())
         popupMenu.menu.add(0, NEW_FEATURES, 0, getString(R.string.new_features))
@@ -171,7 +175,6 @@ class MainView constructor(
     override fun isFabEnabled(): Boolean {
         return !mainViewModel.showFabLoading
     }
-
 
     private fun observeSearchRightIconClick(): Observable<MainInteractor.UiEvents.SearchRightIconClick> = searchToolbar.observeRightImageClick()
             .map { MainInteractor.UiEvents.SearchRightIconClick }

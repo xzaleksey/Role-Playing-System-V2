@@ -183,4 +183,9 @@
     <string name="delete_skill">Удалить навык</string>
     <string name="race_restriction">Принадлежность к расе</string>
     <string name="class_restriction">Принадлежность к классу</string>
+    <string name="app_update_failed">Ошибка при обновлении приложения</string>
+    <string name="app_update_downloaded">Обновление скачано</string>
+    <string name="app_update_restart_question">Перезагрузить приложение?</string>
+    <string name="restart">Перезагрузить</string>
+
 </resources>
