@@ -11,7 +11,7 @@ import dagger.Provides
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class GameSettingsSpellsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsSpellsView, GameSettingsSpellsRouter, GameSettingsSpellsBuilder.ParentComponent>(dependency) {
+class GameSettingsSpellsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsSpellsView, GameSettingsSpellsBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [GameSettingsSpellsRouter].

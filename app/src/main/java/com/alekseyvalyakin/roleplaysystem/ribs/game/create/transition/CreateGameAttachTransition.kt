@@ -6,18 +6,19 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.CreateGameRouter
 import com.uber.rib.core.RouterNavigator
 import com.uber.rib.core.RouterNavigatorState
+import com.uber.rib.core.ViewRouter
 
 class CreateGameAttachTransition<S : RouterNavigatorState>(
         val builder: CreateGameBuilder,
         val view: ViewGroup,
         val game: Game
-) : RouterNavigator.AttachTransition<CreateGameRouter, S> {
+) : RouterNavigator.AttachTransition<ViewRouter<*, *, *>, S> {
 
-    override fun buildRouter(): CreateGameRouter {
+    override fun buildRouter(): ViewRouter<*,*,*> {
         return builder.build(view, game)
     }
 
-    override fun willAttachToHost(router: CreateGameRouter, previousState: S?, newState: S, isPush: Boolean) {
+    override fun willAttachToHost(router: ViewRouter<*,*,*>, previousState: S?, newState: S, isPush: Boolean) {
         view.addView(router.view)
     }
 

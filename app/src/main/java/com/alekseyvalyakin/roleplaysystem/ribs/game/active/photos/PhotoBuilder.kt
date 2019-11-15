@@ -22,7 +22,7 @@ import javax.inject.Scope
 /**
  * Builder for the {@link PhotoScope}.
  */
-class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, PhotoRouter, PhotoBuilder.ParentComponent>(dependency) {
+class PhotoBuilder(dependency: ParentComponent) : BaseViewBuilder<PhotoView, PhotoBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [PhotoRouter].

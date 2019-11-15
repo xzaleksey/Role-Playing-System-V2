@@ -21,7 +21,7 @@ class DiceRouter(
         private val diceResultBuilder: DiceResultBuilder
 ) : BaseRouter<DiceView, DiceInteractor, DiceRouter.State, DiceBuilder.Component>(view, interactor, component) {
 
-    private val resultDetachTransition = DefaultDetachTransition<DiceResultRouter, State>(view)
+    private val resultDetachTransition = DefaultDetachTransition<State>(view)
 
     fun attachDiceResult(diceCollectionResult: DiceCollectionResult) {
         attachRib(AttachInfo(State.RESULT(diceCollectionResult)))

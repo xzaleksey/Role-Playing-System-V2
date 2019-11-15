@@ -26,7 +26,7 @@ import javax.inject.Scope
  * Builder for the {@link MainScope}.
  *
  */
-class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainRouter, MainBuilder.ParentComponent>(dependency) {
+class MainBuilder(dependency: ParentComponent) : BaseViewBuilder<MainView, MainBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [MainRouter].

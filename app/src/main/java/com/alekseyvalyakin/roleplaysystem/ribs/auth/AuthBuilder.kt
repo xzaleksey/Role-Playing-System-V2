@@ -16,7 +16,7 @@ import javax.inject.Scope
  *
  * TODO describe this scope's responsibility as a whole.
  */
-class AuthBuilder(dependency: ParentComponent) : BaseViewBuilder<AuthView, AuthRouter, AuthBuilder.ParentComponent>(dependency) {
+class AuthBuilder(dependency: ParentComponent) : BaseViewBuilder<AuthView, AuthBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [AuthRouter].

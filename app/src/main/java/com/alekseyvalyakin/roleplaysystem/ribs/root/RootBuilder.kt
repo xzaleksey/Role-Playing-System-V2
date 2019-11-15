@@ -31,7 +31,7 @@ import javax.inject.Scope
  * Builder for the {@link RootScope}.
  *
  */
-class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, RootRouter, ActivityComponent>(dependency) {
+class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, ActivityComponent>(dependency) {
 
     /**
      * Builds a new [RootRouter].

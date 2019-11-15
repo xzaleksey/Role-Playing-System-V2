@@ -13,7 +13,7 @@ import dagger.Provides
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class FeaturesBuilder(dependency: ParentComponent) : BaseViewBuilder<FeaturesView, FeaturesRouter, FeaturesBuilder.ParentComponent>(dependency) {
+class FeaturesBuilder(dependency: ParentComponent) : BaseViewBuilder<FeaturesView, FeaturesBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): FeaturesRouter {
         val view = createView(parentViewGroup)

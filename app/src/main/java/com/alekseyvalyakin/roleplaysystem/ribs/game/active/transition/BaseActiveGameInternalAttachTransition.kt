@@ -5,14 +5,13 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.ActiveGameView
 import com.uber.rib.core.BaseViewBuilder
 import com.uber.rib.core.ViewRouter
 
-@Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
-class BaseActiveGameInternalAttachTransition<R : ViewRouter<*, *, *>,
-        B : BaseViewBuilder<*, R, *>>(
+class BaseActiveGameInternalAttachTransition<
+        B : BaseViewBuilder<*, *>>(
         val builder: B,
         view: ActiveGameView
-) : ActiveGameInternalAttachTransition<R>(
-        object : RouterCreator<R> {
-            override fun createRouter(view: ViewGroup): R {
+) : ActiveGameInternalAttachTransition(
+        object : RouterCreator<ViewRouter<*, *, *>> {
+            override fun createRouter(view: ViewGroup): ViewRouter<*, *, *> {
                 return builder.build(view)
             }
         }, view)

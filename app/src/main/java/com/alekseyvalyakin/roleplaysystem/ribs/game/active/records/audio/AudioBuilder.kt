@@ -17,7 +17,7 @@ import io.reactivex.Flowable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class AudioBuilder(dependency: ParentComponent) : BaseViewBuilder<AudioView, AudioRouter, AudioBuilder.ParentComponent>(dependency) {
+class AudioBuilder(dependency: ParentComponent) : BaseViewBuilder<AudioView, AudioBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): AudioRouter {
         val view = createView(parentViewGroup)

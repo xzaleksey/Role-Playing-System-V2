@@ -10,7 +10,6 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.depend
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.Restriction
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
-import com.google.firebase.firestore.Exclude
 
 data class UserGameSkill(
         override var name: String = StringUtils.EMPTY_STRING,
@@ -23,31 +22,23 @@ data class UserGameSkill(
         override var restrictions: MutableList<Restriction> = mutableListOf(),
         override var tags: MutableList<String> = mutableListOf(),
 
-        @Exclude
-        @set:Exclude
-        @get:Exclude
         override var id: String = StringUtils.EMPTY_STRING
 ) : GameSkill, HasName, HasDescription, HasIcon {
 
-    @Exclude
     override fun getDisplayedName(): String {
         return name
     }
 
-    @Exclude
     override fun getDisplayedDescription(): String {
         return description
     }
 
-    @Exclude
     override fun getIconId(): String {
         return icon
     }
 
-    @Exclude
     fun isDefaultSkill() = GameSkill.INFO.isSupported(this)
 
-    @Exclude
     fun toDependencyInfo(resourcesProvider: ResourcesProvider): DependencyInfo {
         return DependencyInfo(Dependency(DependencyType.SKILL.value, id),
                 name,
@@ -56,7 +47,6 @@ data class UserGameSkill(
         )
     }
 
-    @Exclude
     fun isEmpty(): Boolean {
         return id.isBlank()
     }

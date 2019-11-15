@@ -2,15 +2,13 @@ package com.uber.rib.core
 
 import com.alekseyvalyakin.roleplaysystem.views.interfaces.HasContainerView
 
-@Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
-open class DefaultContainerDetachTransition<R : ViewRouter<*, out Interactor<*, *>,
-        out InteractorBaseComponent<*>>,
+open class DefaultContainerDetachTransition<
         S : RouterNavigatorState,
         V : HasContainerView>(
         private val view: V
-) : RouterNavigator.DetachTransition<R, S> {
+) : RouterNavigator.DetachTransition<ViewRouter<*,*,*>, S> {
 
-    override fun willDetachFromHost(router: R, previousState: S, newState: S?, isPush: Boolean) {
+    override fun willDetachFromHost(router: ViewRouter<*,*,*>, previousState: S, newState: S?, isPush: Boolean) {
         view.getContainerView().removeView(router.view)
     }
 }

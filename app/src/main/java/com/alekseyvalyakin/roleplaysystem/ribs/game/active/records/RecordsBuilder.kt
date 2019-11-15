@@ -17,7 +17,7 @@ import io.reactivex.Flowable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class RecordsBuilder(dependency: ParentComponent) : BaseViewBuilder<RecordsView, RecordsRouter, RecordsBuilder.ParentComponent>(dependency) {
+class RecordsBuilder(dependency: ParentComponent) : BaseViewBuilder<RecordsView, RecordsBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): RecordsRouter {
         val view = createView(parentViewGroup)

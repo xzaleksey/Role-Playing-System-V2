@@ -6,17 +6,13 @@ import com.alekseyvalyakin.roleplaysystem.data.firestore.core.HasTags
 import com.alekseyvalyakin.roleplaysystem.data.firestore.core.Selectable
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.dependency.Dependency
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.restriction.Restriction
-import com.google.firebase.firestore.Exclude
 
 
 interface GameSkill : FireStoreIdModel, Selectable, HasTags {
-    @Exclude
     fun getDisplayedName(): String
 
-    @Exclude
     fun getDisplayedDescription(): String
 
-    @Exclude
     fun getIconId(): String
 
     override var tags: MutableList<String>

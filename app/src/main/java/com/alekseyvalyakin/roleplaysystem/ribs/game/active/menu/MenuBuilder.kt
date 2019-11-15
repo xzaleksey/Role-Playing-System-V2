@@ -23,7 +23,7 @@ import dagger.Provides
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class MenuBuilder(dependency: ParentComponent) : BaseViewBuilder<MenuView, MenuRouter, MenuBuilder.ParentComponent>(dependency) {
+class MenuBuilder(dependency: ParentComponent) : BaseViewBuilder<MenuView, MenuBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): MenuRouter {
         val view = createView(parentViewGroup)

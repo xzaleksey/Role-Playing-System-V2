@@ -17,7 +17,7 @@ import io.reactivex.Flowable
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class LogBuilder(dependency: ParentComponent) : BaseViewBuilder<LogView, LogRouter, LogBuilder.ParentComponent>(dependency) {
+class LogBuilder(dependency: ParentComponent) : BaseViewBuilder<LogView, LogBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): LogRouter {
         val view = createView(parentViewGroup)

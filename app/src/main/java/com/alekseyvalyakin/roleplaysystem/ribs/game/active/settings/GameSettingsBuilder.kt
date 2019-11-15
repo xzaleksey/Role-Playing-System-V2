@@ -33,7 +33,7 @@ import javax.inject.Scope
  * Builder for the {@link GameSettingsScope}.
  *
  */
-class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsView, GameSettingsRouter, GameSettingsBuilder.ParentComponent>(dependency) {
+class GameSettingsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsView, GameSettingsBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [GameSettingsRouter].

@@ -36,7 +36,6 @@ class GameSettingsRouter(
 
     private val router = routerNavigatorFactory.create<State>(this)!!
     private val statsAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsStatRouter,
             State,
             GameSettingsStatBuilder,
             GameSettingsView
@@ -45,7 +44,6 @@ class GameSettingsRouter(
     ) {}
 
     private val classesAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsClassRouter,
             State,
             GameSettingsClassBuilder,
             GameSettingsView
@@ -54,7 +52,6 @@ class GameSettingsRouter(
     ) {}
 
     private val skillsAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsSkillsRouter,
             State,
             GameSettingsSkillsBuilder,
             GameSettingsView
@@ -63,7 +60,6 @@ class GameSettingsRouter(
     ) {}
 
     private val racesAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsRaceRouter,
             State,
             GameSettingsRaceBuilder,
             GameSettingsView
@@ -72,7 +68,6 @@ class GameSettingsRouter(
     ) {}
 
     private val spellsAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsSpellsRouter,
             State,
             GameSettingsSpellsBuilder,
             GameSettingsView
@@ -81,7 +76,6 @@ class GameSettingsRouter(
     ) {}
 
     private val equipAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsEquipRouter,
             State,
             GameSettingsEquipBuilder,
             GameSettingsView
@@ -89,7 +83,6 @@ class GameSettingsRouter(
             gameSettingsEquipBuilder, view
     ) {}
     private val dicesAttachTransition = object : DefaultContainerAttachTransition<
-            GameSettingsDicesRouter,
             State,
             GameSettingsDicesBuilder,
             GameSettingsView
@@ -97,26 +90,26 @@ class GameSettingsRouter(
             gameSettingsDicesBuilder, view
     ) {}
 
-    private val statsDetachTransition = DefaultContainerDetachTransition<GameSettingsStatRouter, State, GameSettingsView>(
+    private val statsDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
-    private val classesDetachTransition = DefaultContainerDetachTransition<GameSettingsClassRouter, State, GameSettingsView>(
+    private val classesDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
 
-    private val skillsDetachTransition = DefaultContainerDetachTransition<GameSettingsSkillsRouter, State, GameSettingsView>(
+    private val skillsDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
-    private val racesDetachTransition = DefaultContainerDetachTransition<GameSettingsRaceRouter, State, GameSettingsView>(
+    private val racesDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
-    private val spellsDetachTransition = DefaultContainerDetachTransition<GameSettingsSpellsRouter, State, GameSettingsView>(
+    private val spellsDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
-    private val equipDetachTransition = DefaultContainerDetachTransition<GameSettingsEquipRouter, State, GameSettingsView>(
+    private val equipDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
-    private val dicesDetachTransition = DefaultContainerDetachTransition<GameSettingsDicesRouter, State, GameSettingsView>(
+    private val dicesDetachTransition = DefaultContainerDetachTransition<State, GameSettingsView>(
             view
     )
 

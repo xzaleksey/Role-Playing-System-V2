@@ -42,22 +42,22 @@ class ActiveGameRouter(
 ) : BaseRouter<ActiveGameView, ActiveGameInteractor, ActiveGameRouter.State, ActiveGameBuilder.Component>(view, interactor, component) {
 
     private val dicesAttachTransition = BaseActiveGameInternalAttachTransition(diceBuilder, view)
-    private val dicesDetachTransition = object : DefaultActiveGameInternalDetachTransition<DiceRouter, State>(view) {}
+    private val dicesDetachTransition = object : DefaultActiveGameInternalDetachTransition<State>(view) {}
 
     private val photoAttachTransition = BaseActiveGameInternalAttachTransition(photoBuilder, view)
-    private val photoDetachTransition = object : DefaultActiveGameInternalDetachTransition<PhotoRouter, State>(view) {}
+    private val photoDetachTransition = object : DefaultActiveGameInternalDetachTransition<State>(view) {}
 
     private val gameSettingsAttachTransition = BaseActiveGameInternalAttachTransition(gameSettingsBuilder, view)
-    private val gameSettingsDetachTransition = object : DefaultActiveGameInternalDetachTransition<GameSettingsRouter, State>(view) {}
+    private val gameSettingsDetachTransition = object : DefaultActiveGameInternalDetachTransition<State>(view) {}
 
     private val gameCharactersAttachTransition = BaseActiveGameInternalAttachTransition(gameCharactersBuilder, view)
-    private val gameCharacterssDetachTransition = object : DefaultActiveGameInternalDetachTransition<GameCharactersRouter, State>(view) {}
+    private val gameCharacterssDetachTransition = object : DefaultActiveGameInternalDetachTransition<State>(view) {}
 
     private val gameLogAttachTransition = BaseActiveGameInternalAttachTransition(recordsBuilder, view)
-    private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<RecordsRouter, State>(view) {}
+    private val gameLogsDetachTransition = object : DefaultActiveGameInternalDetachTransition<State>(view) {}
 
     private val gameMenuAttachTransition = BaseActiveGameInternalAttachTransition(menuBuilder, view)
-    private val gameMenuDetachTransition = object : DefaultActiveGameInternalDetachTransition<MenuRouter, State>(view) {}
+    private val gameMenuDetachTransition = object : DefaultActiveGameInternalDetachTransition<State>(view) {}
 
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null

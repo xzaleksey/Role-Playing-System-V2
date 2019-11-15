@@ -6,19 +6,20 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceR
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.diceresult.DiceResultRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.uber.rib.core.RouterNavigator
+import com.uber.rib.core.ViewRouter
 import org.jetbrains.anko.matchParent
 
 class DiceResultAttachTransition(
         private val diceResultBuilder: DiceResultBuilder,
         private val viewGroup: ViewGroup,
         private val diceCollectionResult: DiceCollectionResult
-) : RouterNavigator.AttachTransition<DiceResultRouter, DiceRouter.State> {
+) : RouterNavigator.AttachTransition<ViewRouter<*, *, *>, DiceRouter.State> {
 
-    override fun buildRouter(): DiceResultRouter {
+    override fun buildRouter(): ViewRouter<*, *, *> {
         return diceResultBuilder.build(viewGroup, diceCollectionResult)
     }
 
-    override fun willAttachToHost(router: DiceResultRouter, previousState: DiceRouter.State?, newState: DiceRouter.State, isPush: Boolean) {
+    override fun willAttachToHost(router: ViewRouter<*, *, *>, previousState: DiceRouter.State?, newState: DiceRouter.State, isPush: Boolean) {
         viewGroup.addView(router.view, matchParent, matchParent)
         router.view.z = 10f
     }

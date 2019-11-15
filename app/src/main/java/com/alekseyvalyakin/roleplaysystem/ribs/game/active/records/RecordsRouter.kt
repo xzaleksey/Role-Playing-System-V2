@@ -23,10 +23,10 @@ class RecordsRouter(
         audioBuilder: AudioBuilder
 ) : BaseRouter<RecordsView, RecordsInteractor, RecordsRouter.State, RecordsBuilder.Component>(view, interactor, component) {
 
-    private val logAttachTransition = object : DefaultAttachTransition<LogRouter, State, LogBuilder>(logBuilder, view.container) {}
-    private val logDetachTransition = DefaultDetachTransition<LogRouter, State>(view.container)
-    private val audioAttachTransition = object : DefaultAttachTransition<AudioRouter, State, AudioBuilder>(audioBuilder, view.container) {}
-    private val audioDetachTransition = DefaultDetachTransition<AudioRouter, State>(view.container)
+    private val logAttachTransition = object : DefaultAttachTransition<State, LogBuilder>(logBuilder, view.container) {}
+    private val logDetachTransition = DefaultDetachTransition<State>(view.container)
+    private val audioAttachTransition = object : DefaultAttachTransition<State, AudioBuilder>(audioBuilder, view.container) {}
+    private val audioDetachTransition = DefaultDetachTransition<State>(view.container)
 
     fun attachLog() {
         attachRib(AttachInfo(State.LOG))

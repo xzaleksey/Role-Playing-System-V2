@@ -24,7 +24,7 @@ import javax.inject.Scope
  * Builder for the {@link GameSettingsClassScope}.
  *
  */
-class GameSettingsRaceBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsRaceView, GameSettingsRaceRouter, GameSettingsRaceBuilder.ParentComponent>(dependency) {
+class GameSettingsRaceBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsRaceView, GameSettingsRaceBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [GameSettingsRaceRouter].

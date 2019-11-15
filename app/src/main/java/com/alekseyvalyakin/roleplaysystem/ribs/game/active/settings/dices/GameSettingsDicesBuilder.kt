@@ -11,7 +11,7 @@ import dagger.Provides
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class GameSettingsDicesBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsDicesView, GameSettingsDicesRouter, GameSettingsDicesBuilder.ParentComponent>(dependency) {
+class GameSettingsDicesBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsDicesView, GameSettingsDicesBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): GameSettingsDicesRouter {
         val view = createView(parentViewGroup)

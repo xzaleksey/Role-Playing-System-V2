@@ -36,9 +36,9 @@ class MenuRouter(
         private val relay: Relay<ActiveGameEvent>
 ) : BaseRouter<MenuView, MenuInteractor, MenuRouter.State, MenuBuilder.Component>(view, interactor, component), ProfileListener, CreateGameListener {
 
-    private val profileDetachTransition = DefaultDetachTransition<ProfileRouter, State>(view)
-    private val createGameDetachTransition = DefaultDetachTransition<CreateGameRouter, State>(view)
-    private val activeGameDetachTransition = DefaultDetachTransition<ActiveGameRouter, State>(view)
+    private val profileDetachTransition = DefaultDetachTransition<State>(view)
+    private val createGameDetachTransition = DefaultDetachTransition<State>(view)
+    private val activeGameDetachTransition = DefaultDetachTransition<State>(view)
 
     override fun initNavigator(navigator: MutableMap<String, (AttachInfo<State>) -> Boolean>) {
         navigator[PROFILE] = {

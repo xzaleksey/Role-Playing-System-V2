@@ -44,21 +44,21 @@ class RootRouter(
         private val licenseBuilder: LicenseBuilder
 ) : BaseRouter<RootView, RootInteractor, RootState, RootBuilder.Component>(view, interactor, component) {
 
-    private val authAttachTransition = object : DefaultAttachTransition<AuthRouter, RootState, AuthBuilder>(authBuilder, view) {}
-    private val authDetachTransition = DefaultDetachTransition<AuthRouter, RootState>(view)
+    private val authAttachTransition = object : DefaultAttachTransition<RootState, AuthBuilder>(authBuilder, view) {}
+    private val authDetachTransition = DefaultDetachTransition<RootState>(view)
 
-    private val mainAttachTransition = object : DefaultAttachTransition<MainRouter, RootState, MainBuilder>(mainBuilder, view) {}
-    private val mainDetachTransition = DefaultDetachTransition<MainRouter, RootState>(view)
+    private val mainAttachTransition = object : DefaultAttachTransition<RootState, MainBuilder>(mainBuilder, view) {}
+    private val mainDetachTransition = DefaultDetachTransition<RootState>(view)
 
-    private val createGameDetachTransition = DefaultDetachTransition<CreateGameRouter, RootState>(view)
-    private val profileDetachTransition = DefaultDetachTransition<ProfileRouter, RootState>(view)
-    private val activeGameDetachTransition = DefaultDetachTransition<ActiveGameRouter, RootState>(view)
+    private val createGameDetachTransition = DefaultDetachTransition<RootState>(view)
+    private val profileDetachTransition = DefaultDetachTransition<RootState>(view)
+    private val activeGameDetachTransition = DefaultDetachTransition<RootState>(view)
 
-    private val featuresAttachTransition = object : DefaultAttachTransition<FeaturesRouter, RootState, FeaturesBuilder>(featuresBuilder, view) {}
-    private val featuresDetachTransition = DefaultDetachTransition<FeaturesRouter, RootState>(view)
+    private val featuresAttachTransition = object : DefaultAttachTransition<RootState, FeaturesBuilder>(featuresBuilder, view) {}
+    private val featuresDetachTransition = DefaultDetachTransition<RootState>(view)
 
-    private val licenseAttachTransition = object : DefaultAttachTransition<LicenseRouter, RootState, LicenseBuilder>(licenseBuilder, view) {}
-    private val licenseDetachTransition = DefaultDetachTransition<LicenseRouter, RootState>(view)
+    private val licenseAttachTransition = object : DefaultAttachTransition<RootState, LicenseBuilder>(licenseBuilder, view) {}
+    private val licenseDetachTransition = DefaultDetachTransition<RootState>(view)
 
 
     override fun initNavigator(navigator: MutableMap<String, (AttachInfo<RootState>) -> Boolean>) {

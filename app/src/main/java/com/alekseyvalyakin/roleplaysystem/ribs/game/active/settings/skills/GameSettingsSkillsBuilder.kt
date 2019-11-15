@@ -26,7 +26,7 @@ import javax.inject.Scope
  * Builder for the {@link GameSettingsSkillsScope}.
  *
  */
-class GameSettingsSkillsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsSkillsView, GameSettingsSkillsRouter, GameSettingsSkillsBuilder.ParentComponent>(dependency) {
+class GameSettingsSkillsBuilder(dependency: ParentComponent) : BaseViewBuilder<GameSettingsSkillsView, GameSettingsSkillsBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [GameSettingsSkillsRouter].

@@ -6,18 +6,19 @@ import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.profile.ProfileRouter
 import com.uber.rib.core.RouterNavigator
 import com.uber.rib.core.RouterNavigatorState
+import com.uber.rib.core.ViewRouter
 
 class ProfileAttachTransition<S : RouterNavigatorState>(
         val builder: ProfileBuilder,
         val view: ViewGroup,
         val user: User
-) : RouterNavigator.AttachTransition<ProfileRouter, S> {
+) : RouterNavigator.AttachTransition<ViewRouter<*,*,*>, S> {
 
-    override fun buildRouter(): ProfileRouter {
+    override fun buildRouter(): ViewRouter<*,*,*> {
         return builder.build(view, user)
     }
 
-    override fun willAttachToHost(router: ProfileRouter, previousState: S?, newState: S, isPush: Boolean) {
+    override fun willAttachToHost(router: ViewRouter<*,*,*>, previousState: S?, newState: S, isPush: Boolean) {
         view.addView(router.view)
     }
 

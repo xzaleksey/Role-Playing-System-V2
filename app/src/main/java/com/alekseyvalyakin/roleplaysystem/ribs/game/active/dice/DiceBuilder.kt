@@ -22,7 +22,7 @@ import javax.inject.Scope
  *
  * TODO describe this scope's responsibility as a whole.
  */
-class DiceBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceView, DiceRouter, DiceBuilder.ParentComponent>(dependency) {
+class DiceBuilder(dependency: ParentComponent) : BaseViewBuilder<DiceView, DiceBuilder.ParentComponent>(dependency) {
 
     /**
      * Builds a new [DiceRouter].

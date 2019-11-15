@@ -11,7 +11,7 @@ import dagger.Provides
 import javax.inject.Qualifier
 import javax.inject.Scope
 
-class LicenseBuilder(dependency: ParentComponent) : BaseViewBuilder<LicenseView, LicenseRouter, LicenseBuilder.ParentComponent>(dependency) {
+class LicenseBuilder(dependency: ParentComponent) : BaseViewBuilder<LicenseView, LicenseBuilder.ParentComponent>(dependency) {
 
     override fun build(parentViewGroup: ViewGroup): LicenseRouter {
         val view = createView(parentViewGroup)
