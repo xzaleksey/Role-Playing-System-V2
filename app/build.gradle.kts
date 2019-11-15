@@ -8,7 +8,6 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-android-extensions")
-    id("io.fabric")
     id("kotlin-kapt")
 }
 
@@ -16,12 +15,6 @@ apply {
     plugin("kotlin-android")
     plugin("kotlin-android-extensions")
 }
-
-apply(from = "master_password.gradle")
-
-val keystorePropertiesFile = rootProject.file("keystore.properties")
-val keystoreProperties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 
 android {
@@ -44,23 +37,12 @@ android {
     }
 
 
-    signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties.getProperty("keyAlias")
-            keyPassword = keystoreProperties.getProperty("keyPassword")
-            storeFile = file(keystoreProperties.getProperty("storeFile"))
-
-            storePassword = keystoreProperties.getProperty("storePassword")
-        }
-    }
-
     buildTypes {
         get("release").apply {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFile(getDefaultProguardFile("proguard-android.txt"))
             proguardFile(file("proguard-rules.pro"))
-            signingConfig = signingConfigs.getByName("release")
             isDebuggable = true
         }
         get("debug").apply {
@@ -82,16 +64,16 @@ dependencies {
     implementation(Libs.support_design)
     implementation("androidx.cardview:cardview:${Versions.support_version}")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation(Libs.firebase_core)
+//    implementation(Libs.firebase_core)
     implementation(Libs.kotlin_std)
-    implementation(Libs.crashlytics)
-    implementation(Libs.firebase_auth)
-    implementation(Libs.firebase_storage)
-    implementation(Libs.firebase_store)
-    implementation(Libs.firebase_messaging)
-    implementation(Libs.firebase_config)
+//    implementation(Libs.crashlytics)
+//    implementation(Libs.firebase_auth)
+//    implementation(Libs.firebase_storage)
+//    implementation(Libs.firebase_store)
+//    implementation(Libs.firebase_messaging)
+//    implementation(Libs.firebase_config)
 //    implementation(Libs.firebase_ml)
-    implementation(Libs.firebase_functions)
+//    implementation(Libs.firebase_functions)
     implementation("com.google.android.gms:play-services-auth:17.0.0")
     implementation(Libs.rx_java2)
     implementation(Libs.rx_android)
@@ -167,8 +149,4 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-}
-
-apply {
-    plugin("com.google.gms.google-services")
 }
