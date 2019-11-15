@@ -1,21 +1,13 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.captionStyle
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko._FrameLayout
-import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.singleLine
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.view
-import org.jetbrains.anko.wrapContent
+import org.jetbrains.anko.*
 
 class SecondarySubheaderView(context: Context) : _FrameLayout(context) {
     init {

@@ -1,6 +1,7 @@
 package com.alekseyvalyakin.roleplaysystem.data.sound
 
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
+import com.alekseyvalyakin.roleplaysystem.utils.getNonNullValue
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.BackpressureStrategy
@@ -24,11 +25,11 @@ class AudioFileInteractorImpl(
     private val maxProgress = 100
 
     override fun currentState(): AudioState {
-        return relay.value!!
+        return relay.getNonNullValue()
     }
 
     override fun playFile(file: File): Boolean {
-        if (relay.value.file == file) {
+        if (currentState().file == file) {
             resume()
             return true
         }
@@ -46,7 +47,7 @@ class AudioFileInteractorImpl(
     }
 
     override fun resume() {
-        val audioState = relay.value
+        val audioState = currentState()
         if (audioState.isPlaying) {
             return
         }
@@ -60,17 +61,17 @@ class AudioFileInteractorImpl(
     }
 
     override fun pause() {
-        if (!relay.value.isPlaying) {
+        if (!currentState().isPlaying) {
             return
         }
         Timber.d("audio: pause")
         disposable.dispose()
-        relay.accept(relay.value.copy(isPlaying = false))
+        relay.accept(currentState().copy(isPlaying = false))
         exoPlayerInteractor.pause()
     }
 
     override fun stop() {
-        if (relay.value.isEmpty()) {
+        if (currentState().isEmpty()) {
             return
         }
         Timber.d("audio: stop")
@@ -80,7 +81,7 @@ class AudioFileInteractorImpl(
     }
 
     override fun seekTo(progress: Int) {
-        if (relay.value.isEmpty()) {
+        if (currentState().isEmpty()) {
             return
         }
         exoPlayerInteractor.seekTo(progress)
@@ -92,7 +93,7 @@ class AudioFileInteractorImpl(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWithErrorLogging {
                     val currentProgress = exoPlayerInteractor.getProgress()
-                    val value = relay.value
+                    val value = currentState()
                     val ended = exoPlayerInteractor.isStateEnded()
                     if (value.currentProgress < maxProgress && ended) {
                         exoPlayerInteractor.pause()

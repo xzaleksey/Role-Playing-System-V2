@@ -7,15 +7,53 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.alekseyvalyakin.roleplaysystem.R
-import com.alekseyvalyakin.roleplaysystem.utils.*
 import com.alekseyvalyakin.roleplaysystem.utils.StringUtils.EMPTY_STRING
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import com.alekseyvalyakin.roleplaysystem.utils.getCompatDrawable
+import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getFloatDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
+import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBorderless
+import com.alekseyvalyakin.roleplaysystem.utils.getStatusBarHeight
+import com.alekseyvalyakin.roleplaysystem.utils.hideKeyboard
+import com.alekseyvalyakin.roleplaysystem.utils.setSanserifMediumTypeface
+import com.alekseyvalyakin.roleplaysystem.utils.setTextSizeFromRes
+import com.alekseyvalyakin.roleplaysystem.utils.showSoftKeyboard
+import com.alekseyvalyakin.roleplaysystem.utils.tintImageRes
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko._FrameLayout
+import org.jetbrains.anko.alignParentEnd
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.bottomPadding
+import org.jetbrains.anko.centerVertically
+import org.jetbrains.anko.editText
+import org.jetbrains.anko.frameLayout
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.imageView
+import org.jetbrains.anko.leftOf
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.padding
+import org.jetbrains.anko.relativeLayout
+import org.jetbrains.anko.rightOf
+import org.jetbrains.anko.singleLine
+import org.jetbrains.anko.textColor
+import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.textSizeDimen
+import org.jetbrains.anko.textView
+import org.jetbrains.anko.topPadding
+import org.jetbrains.anko.wrapContent
 
 
 @SuppressLint("ViewConstructor")
@@ -48,7 +86,7 @@ class SearchToolbar constructor(
                     id = R.id.toolbar_background_image_view
                     scaleType = ImageView.ScaleType.CENTER_CROP
                     imageResource = R.drawable.top_background
-                }.lparams(width = matchParent, height = 0)
+                }.lparams(width = matchParent, height = getIntDimen(R.dimen.dp_56))
 
                 searchContainer = relativeLayout {
                     id = R.id.top_toolbar_container
@@ -227,13 +265,10 @@ class SearchToolbar constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
         if (measuredHeight != bgImageView.measuredHeight) {
-            bgImageView.post {
-                bgImageView.layoutParams.height = measuredHeight
-                hiddenContainer.layoutParams.height = measuredHeight - getStatusBarHeight()
-                bgImageView.requestLayout()
-            }
+            bgImageView.layoutParams.height = measuredHeight
+            hiddenContainer.layoutParams.height = measuredHeight - getStatusBarHeight()
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
     }
 
@@ -241,7 +276,7 @@ class SearchToolbar constructor(
         searchEditText.setText("")
         tvTitle.visibility = View.VISIBLE
         searchEditText.visibility = View.INVISIBLE
-        leftIcon.hideKeyboard()
+        leftIcon.hideKeyboard(0L)
         leftIcon.setImageDrawable(getCompatDrawable(R.drawable.ic_search))
         if (mode == Mode.HIDDEN) {
             searchContainer.visibility = View.INVISIBLE

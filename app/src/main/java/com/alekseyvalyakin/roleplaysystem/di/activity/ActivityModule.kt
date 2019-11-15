@@ -3,6 +3,8 @@ package com.alekseyvalyakin.roleplaysystem.di.activity
 import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.alekseyvalyakin.roleplaysystem.data.auth.GoogleSignInProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
+import com.alekseyvalyakin.roleplaysystem.ribs.dialogs.DialogDelegate
+import com.alekseyvalyakin.roleplaysystem.ribs.dialogs.DialogDelegateImpl
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProvider
 import com.alekseyvalyakin.roleplaysystem.utils.image.LocalImageProviderImpl
 import com.alekseyvalyakin.roleplaysystem.utils.keyboard.KeyboardStateProvider
@@ -44,5 +46,11 @@ class ActivityModule(private val activity: MainActivity) {
     @ActivityScope
     fun provideKeyboardStateProvider(): KeyboardStateProvider {
         return KeyboardStateProviderImpl(activity)
+    }
+
+    @Provides
+    @ActivityScope
+    fun dialogDelegate(): DialogDelegate {
+        return DialogDelegateImpl(activity)
     }
 }

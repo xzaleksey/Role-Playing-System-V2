@@ -7,8 +7,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.app.MainActivity
 import com.alekseyvalyakin.roleplaysystem.data.sound.SoundPlayService
@@ -50,8 +50,8 @@ class NotificationInteractorImpl(
     }
 
 
-    private fun getMediaStyle(): android.support.v4.media.app.NotificationCompat.MediaStyle {
-        return android.support.v4.media.app.NotificationCompat.MediaStyle()
+    private fun getMediaStyle(): androidx.media.app.NotificationCompat.MediaStyle {
+        return androidx.media.app.NotificationCompat.MediaStyle()
     }
 
     override fun getSoundRecordNotification(caption: String, inProgress: Boolean): Notification {

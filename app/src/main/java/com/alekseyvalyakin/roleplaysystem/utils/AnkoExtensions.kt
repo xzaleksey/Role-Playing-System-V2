@@ -1,8 +1,5 @@
 package com.alekseyvalyakin.roleplaysystem.utils
 
-import android.support.design.chip.Chip
-import android.support.design.chip.ChipGroup
-import android.support.design.widget.FloatingActionButton
 import android.view.ViewManager
 import com.alekseyvalyakin.roleplaysystem.views.ButtonsView
 import com.alekseyvalyakin.roleplaysystem.views.SearchToolbar
@@ -11,6 +8,9 @@ import com.alekseyvalyakin.roleplaysystem.views.player.PlayerView
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.gms.common.SignInButton
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.jetbrains.anko.custom.ankoView
 
 @Suppress("NOTHING_TO_INLINE")

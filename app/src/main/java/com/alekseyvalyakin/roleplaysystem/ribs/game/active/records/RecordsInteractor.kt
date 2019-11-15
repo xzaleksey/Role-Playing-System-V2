@@ -13,7 +13,10 @@ import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.Relay
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.getSerializable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -133,7 +136,7 @@ class RecordsInteractor : BaseInteractor<RecordsPresenter, RecordsRouter>() {
             }
             is RecordsPresenter.UiEvent.SearchInput -> {
                 return Observable.fromCallable {
-                    filterRelay.accept(createFromFilterModel(filterRelay.value, uiEvent.text))
+                    filterRelay.accept(createFromFilterModel(filterRelay.value!!, uiEvent.text))
                 }
             }
             is RecordsPresenter.UiEvent.TogglePlay -> {

@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.formula
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import timber.log.Timber
 
 class FormulaEvaluator(

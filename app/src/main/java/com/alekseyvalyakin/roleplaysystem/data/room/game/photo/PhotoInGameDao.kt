@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.data.room.game.photo
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.alekseyvalyakin.roleplaysystem.data.room.game.photo.PhotoInGameUploadModel.Companion.TABLE_NAME
 import io.reactivex.Flowable
 

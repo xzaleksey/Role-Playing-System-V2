@@ -1,8 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.skills.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.GameSkill
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.skills.UserGameSkill
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes

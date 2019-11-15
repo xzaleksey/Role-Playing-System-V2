@@ -6,28 +6,35 @@ import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 
-@JvmOverloads
-fun Activity.hideKeyboard(delay: Long = 10L) {
-    val view = currentFocus
-    view?.postDelayed({
-        if (!view.isAttachedToWindow) {
+fun Activity.hideKeyboard(delay: Long = 10L, view: View?) {
+    val focusedView = view ?: currentFocus ?: return
+    if (delay == 0L) {
+        hideKeyboard(focusedView)
+        return
+    }
+    focusedView.postDelayed({
+        if (!focusedView.isAttachedToWindow) {
             return@postDelayed
         }
-        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        hideKeyboard(focusedView)
     }, delay)
+}
+
+private fun Activity.hideKeyboard(view: View) {
+    val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
 @JvmOverloads
 fun View.hideKeyboard(delay: Long = 10L) {
-    context.hideKeyboard(delay)
+    context.hideKeyboard(delay, this)
 }
 
 @JvmOverloads
-fun Context.hideKeyboard(delay: Long = 10L) {
-    when {
-        this is Activity -> this.hideKeyboard(delay)
-        this is ContextThemeWrapper -> baseContext?.hideKeyboard(delay)
+fun Context.hideKeyboard(delay: Long = 10L, view: View? = null) {
+    when (this) {
+        is Activity -> this.hideKeyboard(delay, view)
+        is ContextThemeWrapper -> baseContext?.hideKeyboard(delay, view)
     }
 }
 

@@ -2,7 +2,7 @@ package com.alekseyvalyakin.roleplaysystem.utils
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 
 fun Drawable.tint(@ColorInt color: Int): Drawable {
     this.setTint(color)

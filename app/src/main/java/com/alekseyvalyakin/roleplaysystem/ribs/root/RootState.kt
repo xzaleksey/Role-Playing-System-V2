@@ -12,10 +12,10 @@ sealed class RootState(val name: String, val navigationId: NavigationId) : Seria
         return name
     }
 
-    class AUTH : RootState("Auth", NavigationId.AUTH)
-    class MAIN : RootState("Main", NavigationId.MAIN)
-    class FEATURES : RootState("Features", NavigationId.FEATURES)
-    class LICENSE : RootState("License", NavigationId.LICENSE)
+    class AUTH : RootState(AUTH_NAME, NavigationId.AUTH)
+    class MAIN : RootState(MAIN_NAME, NavigationId.MAIN)
+    class FEATURES : RootState(FEATURES_NAME, NavigationId.FEATURES)
+    class LICENSE : RootState(LICENSE_NAME, NavigationId.LICENSE)
 
     class ActiveGame(private val activeGameParams: ActiveGameParams) : RootState("Active game", NavigationId.ACTIVE_GAME) {
         override fun getRestorableInfo(): Serializable? {
@@ -23,15 +23,25 @@ sealed class RootState(val name: String, val navigationId: NavigationId) : Seria
         }
     }
 
-    class CreateGame(val game: Game) : RootState("Create game", NavigationId.CREATE_GAME) {
+    class CreateGame(val game: Game) : RootState(CREATE_GAME_NAME, NavigationId.CREATE_GAME) {
         override fun getRestorableInfo(): Serializable? {
             return game
         }
     }
 
-    class PROFILE(val user: User) : RootState("Profile", NavigationId.PROFILE) {
+    class PROFILE(val user: User) : RootState(PROFILE_NAME, NavigationId.PROFILE) {
         override fun getRestorableInfo(): Serializable? {
             return user
         }
+    }
+
+    companion object {
+        const val AUTH_NAME = "Auth"
+        const val MAIN_NAME = "Main"
+        const val FEATURES_NAME = "Features"
+        const val LICENSE_NAME = "License"
+        const val CREATE_GAME_NAME = "Create game"
+        const val PROFILE_NAME = "Profile"
+        const val ACTIVE_GAME_NAME = "Active game"
     }
 }

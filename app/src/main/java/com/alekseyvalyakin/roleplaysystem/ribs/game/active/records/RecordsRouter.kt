@@ -4,7 +4,11 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.AudioBu
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.audio.AudioRouter
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.LogBuilder
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.records.log.LogRouter
-import com.uber.rib.core.*
+import com.uber.rib.core.AttachInfo
+import com.uber.rib.core.BaseRouter
+import com.uber.rib.core.BaseSerializableRouterNavigatorState
+import com.uber.rib.core.DefaultAttachTransition
+import com.uber.rib.core.DefaultDetachTransition
 import timber.log.Timber
 
 /**
@@ -32,16 +36,20 @@ class RecordsRouter(
         attachRib(AttachInfo(State.AUDIO))
     }
 
-    override fun attachRib(attachInfo: AttachInfo<State>) {
+    override fun attachRib(attachInfo: AttachInfo<State>):Boolean {
         Timber.d("attachRib %s", attachInfo.state)
-        when (attachInfo.state) {
+        return when (attachInfo.state) {
             State.LOG -> {
-                pushTransientState(attachInfo.state, logAttachTransition, logDetachTransition)
+                internalPushTransientState(attachInfo.state, logAttachTransition, logDetachTransition)
             }
             State.AUDIO -> {
-                pushTransientState(attachInfo.state, audioAttachTransition, audioDetachTransition)
+                internalPushTransientState(attachInfo.state, audioAttachTransition, audioDetachTransition)
             }
         }
+    }
+
+    override fun hasOwnContent(): Boolean {
+        return false
     }
 
     sealed class State : BaseSerializableRouterNavigatorState() {

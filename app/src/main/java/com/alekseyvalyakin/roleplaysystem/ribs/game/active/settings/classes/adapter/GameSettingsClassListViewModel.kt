@@ -1,8 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.classes.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.GameClass
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.classes.UserGameClass
 import com.alekseyvalyakin.roleplaysystem.flexible.FlexibleLayoutTypes

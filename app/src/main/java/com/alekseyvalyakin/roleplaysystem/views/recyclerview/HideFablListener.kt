@@ -1,9 +1,9 @@
 package com.alekseyvalyakin.roleplaysystem.views.recyclerview
 
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.ribs.main.FabEnabledProvider
 import com.alekseyvalyakin.roleplaysystem.utils.checkFabShow
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class HideFablListener(private val fab: FloatingActionButton, private val fabEnabledProvider: FabEnabledProvider) : RecyclerView.OnScrollListener() {
 

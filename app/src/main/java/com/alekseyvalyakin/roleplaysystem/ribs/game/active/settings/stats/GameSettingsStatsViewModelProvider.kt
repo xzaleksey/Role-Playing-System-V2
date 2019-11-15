@@ -2,7 +2,11 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.stats
 
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
-import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.*
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultGameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.DefaultSettingStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStat
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.GameStatsRepository
+import com.alekseyvalyakin.roleplaysystem.data.firestore.game.setting.def.stats.UserGameStat
 import com.alekseyvalyakin.roleplaysystem.data.repo.ResourcesProvider
 import com.alekseyvalyakin.roleplaysystem.data.repo.StringRepository
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
@@ -57,7 +61,7 @@ class GameSettingsStatsViewModelProviderImpl(
                     when (event) {
                         is GameSettingsStatPresenter.UiEvent.CollapseFront -> {
                             activeGameEventRelay.accept(ActiveGameEvent.HideBottomBar)
-                            if (statViewModel.value.selectedModel == null) {
+                            if (statViewModel.value!!.selectedModel == null) {
                                 updateNewStatModel()
                             }
                         }
@@ -69,7 +73,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
                         is GameSettingsStatPresenter.UiEvent.TitleInput -> {
                             val value = statViewModel.value
-                            if (value.backModel.titleText != event.text) {
+                            if (value!!.backModel.titleText != event.text) {
                                 statViewModel.accept(value.copy(backModel = value.backModel.copy(
                                         titleText = event.text
                                 )))
@@ -78,7 +82,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
                         is GameSettingsStatPresenter.UiEvent.SubtitleInput -> {
                             val value = statViewModel.value
-                            if (value.backModel.subtitleText != event.text) {
+                            if (value!!.backModel.subtitleText != event.text) {
                                 statViewModel.accept(value.copy(backModel = value.backModel.copy(
                                         subtitleText = event.text
                                 )))
@@ -202,7 +206,7 @@ class GameSettingsStatsViewModelProviderImpl(
                             presenter.chooseIcon(
                                     { iconViewModel ->
                                         statViewModel.value.let {
-                                            statViewModel.accept(it.copy(
+                                            statViewModel.accept(it!!.copy(
                                                     backModel = it.backModel.copy(iconModel = iconViewModel)
                                             ))
                                         }
@@ -232,7 +236,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun updateShowStatsModel() {
         val value = statViewModel.value
-        statViewModel.accept(value.copy(toolBarModel = getShowStatToolbarModel(),
+        statViewModel.accept(value!!.copy(toolBarModel = getShowStatToolbarModel(),
                 step = GameSettingsStatViewModel.Step.EXPANDED,
                 frontModel = value.frontModel.copy(headerModel = value.frontModel.headerModel?.copy(icon = getAddDrawable())),
                 selectedModel = null))
@@ -242,7 +246,7 @@ class GameSettingsStatsViewModelProviderImpl(
         val customStat = !GameStat.INFO.isSupported(userGameStat)
 
         val value = statViewModel.value
-        statViewModel.accept(value.copy(toolBarModel = CustomToolbarView.Model(
+        statViewModel.accept(value!!.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     presenter.expandFront()
@@ -250,7 +254,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 },
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
-                    val backModel = statViewModel.value.backModel
+                    val backModel = statViewModel.value!!.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
                         disposable.add(gameGameStatsRepository.setDocumentWithId(
@@ -260,7 +264,7 @@ class GameSettingsStatsViewModelProviderImpl(
                                         description = backModel.subtitleText,
                                         icon = backModel.iconModel.id)
                         ).subscribeWithErrorLogging { gameStat ->
-                            statViewModel.value.frontModel.items.asSequence().map {
+                            statViewModel.value!!.frontModel.items.asSequence().map {
                                 it as GameSettingsStatListViewModel
                             }.toMutableList().apply {
                                 val element = gameSettingsStatListViewModel(gameStat)
@@ -290,7 +294,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun updateNewStatModel() {
         val initialValue = statViewModel.value
-        statViewModel.accept(initialValue.copy(toolBarModel = CustomToolbarView.Model(
+        statViewModel.accept(initialValue!!.copy(toolBarModel = CustomToolbarView.Model(
                 leftIcon = resourcesProvider.getDrawable(R.drawable.ic_close),
                 leftIconClickListener = {
                     expandFront()
@@ -299,7 +303,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 rightIcon = resourcesProvider.getDrawable(R.drawable.ic_done),
                 rightIconClickListener = {
                     val value = statViewModel.value
-                    val backModel = value.backModel
+                    val backModel = value!!.backModel
                     if (backModel.titleText.isNotBlank() && backModel.subtitleText.isNotBlank()) {
                         expandFront()
                         val userGameStat = UserGameStat(backModel.titleText,
@@ -324,7 +328,7 @@ class GameSettingsStatsViewModelProviderImpl(
                 },
                 title = stringRepository.getMyStat()
         ),
-                backModel = statViewModel.value.backModel.copy(
+                backModel = statViewModel.value!!.backModel.copy(
                         titleText = StringUtils.EMPTY_STRING,
                         subtitleText = StringUtils.EMPTY_STRING,
                         titleVisible = true,
@@ -338,7 +342,7 @@ class GameSettingsStatsViewModelProviderImpl(
     }
 
     override fun handleBackPress(): Boolean {
-        if (statViewModel.value.step == GameSettingsStatViewModel.Step.COLLAPSED) {
+        if (statViewModel.value!!.step == GameSettingsStatViewModel.Step.COLLAPSED) {
             presenter.expandFront()
             updateShowStatsModel()
             return true
@@ -353,7 +357,7 @@ class GameSettingsStatsViewModelProviderImpl(
 
     private fun updateItemsInList() {
         statViewModel.accept(statViewModel.value.let {
-            it.copy(frontModel = it.frontModel.copy(items = defaultGameStats.value))
+            it!!.copy(frontModel = it.frontModel.copy(items = defaultGameStats.value!!))
         })
     }
 }

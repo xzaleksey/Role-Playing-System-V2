@@ -3,6 +3,22 @@ package com.alekseyvalyakin.roleplaysystem.data.repo
 import com.alekseyvalyakin.roleplaysystem.R
 
 class StringRepositoryImpl(private val resourcesProvider: ResourcesProvider) : StringRepository {
+    override fun getRestart(): String {
+        return getString(R.string.restart)
+    }
+
+    override fun getAppUpdateRestartQuestion(): String {
+        return getString(R.string.app_update_restart_question)
+    }
+
+    override fun getAppUpdateDownloaded(): String {
+        return getString(R.string.app_update_downloaded)
+    }
+
+    override fun getAppUpdateFailed(): String {
+        return getString(R.string.app_update_failed)
+    }
+
     override fun getMySkill(): String {
         return getString(R.string.my_skill)
     }
@@ -259,4 +275,8 @@ interface StringRepository {
     fun getToday(): String
     fun getNewSkill(): String
     fun getMySkill(): String
+    fun getAppUpdateFailed(): String
+    fun getAppUpdateDownloaded(): String
+    fun getAppUpdateRestartQuestion(): String
+    fun getRestart(): String
 }

@@ -1,10 +1,10 @@
 package com.alekseyvalyakin.roleplaysystem.views
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceType
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceCollectionViewModel

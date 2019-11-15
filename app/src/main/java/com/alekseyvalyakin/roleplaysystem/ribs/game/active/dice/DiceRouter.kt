@@ -24,11 +24,11 @@ class DiceRouter(
     private val resultDetachTransition = DefaultDetachTransition<DiceResultRouter, State>(view)
 
     fun attachDiceResult(diceCollectionResult: DiceCollectionResult) {
-        attachRib(AttachInfo(DiceRouter.State.RESULT(diceCollectionResult)))
+        attachRib(AttachInfo(State.RESULT(diceCollectionResult)))
     }
 
-    override fun attachRib(attachInfo: AttachInfo<State>) {
-        pushTransientState(attachInfo.state,
+    override fun attachRib(attachInfo: AttachInfo<State>):Boolean {
+        return internalPushTransientState(attachInfo.state,
                 DiceResultAttachTransition(diceResultBuilder, view, attachInfo.state.getRestorableInfo() as DiceCollectionResult),
                 resultDetachTransition)
     }

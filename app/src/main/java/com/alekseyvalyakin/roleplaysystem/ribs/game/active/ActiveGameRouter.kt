@@ -22,7 +22,6 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.transition.DefaultAct
 import com.uber.rib.core.AttachInfo
 import com.uber.rib.core.BaseRouter
 import com.uber.rib.core.SerializableRouterNavigatorState
-import timber.log.Timber
 
 /**
  * Adds and removes children of {@link ActiveGameBuilder.ActiveGameScope}.
@@ -59,29 +58,28 @@ class ActiveGameRouter(
 
     private val gameMenuAttachTransition = BaseActiveGameInternalAttachTransition(menuBuilder, view)
     private val gameMenuDetachTransition = object : DefaultActiveGameInternalDetachTransition<MenuRouter, State>(view) {}
-    private val navigator = mutableMapOf<NavigationId, (AttachInfo<State>) -> Unit>()
 
     private var canBeClosed = false
     private var fullSizePhotoRouter: FullSizePhotoRouter? = null
 
-    init {
-        navigator[NavigationId.DICES] = {
-            pushRetainedState(State.DICES(), dicesAttachTransition, dicesDetachTransition)
+    override fun initNavigator(navigator: MutableMap<String, (AttachInfo<State>) -> Boolean>) {
+        navigator[DICES] = {
+            internalPushRetainedState(State.DICES(), dicesAttachTransition, dicesDetachTransition)
         }
-        navigator[NavigationId.PHOTOS] = {
-            pushRetainedState(State.PHOTOS(), photoAttachTransition, photoDetachTransition)
+        navigator[PHOTOS] = {
+            internalPushRetainedState(State.PHOTOS(), photoAttachTransition, photoDetachTransition)
         }
-        navigator[NavigationId.SETTINGS] = {
-            pushRetainedState(State.SETTINGS(), gameSettingsAttachTransition, gameSettingsDetachTransition)
+        navigator[SETTINGS] = {
+            internalPushRetainedState(State.SETTINGS(), gameSettingsAttachTransition, gameSettingsDetachTransition)
         }
-        navigator[NavigationId.MENU] = {
-            pushRetainedState(State.MENU(), gameMenuAttachTransition, gameMenuDetachTransition)
+        navigator[MENU] = {
+            internalPushRetainedState(State.MENU(), gameMenuAttachTransition, gameMenuDetachTransition)
         }
-        navigator[NavigationId.CHARACTERS] = {
-            pushRetainedState(State.CHARACTERS(), gameCharactersAttachTransition, gameCharacterssDetachTransition)
+        navigator[CHARACTERS] = {
+            internalPushRetainedState(State.CHARACTERS(), gameCharactersAttachTransition, gameCharacterssDetachTransition)
         }
-        navigator[NavigationId.RECORDS] = {
-            pushRetainedState(State.RECORDS(), gameLogAttachTransition, gameLogsDetachTransition)
+        navigator[RECORDS] = {
+            internalPushRetainedState(State.RECORDS(), gameLogAttachTransition, gameLogsDetachTransition)
         }
     }
 
@@ -158,13 +156,12 @@ class ActiveGameRouter(
         return peekState() != null
     }
 
-    fun setCanBeClosed() {
-        canBeClosed = true
+    override fun onBackPressed(): Boolean {
+        return false
     }
 
-    override fun attachRib(attachInfo: AttachInfo<State>) {
-        Timber.d("attach Rib ${attachInfo.state.navigationId}")
-        navigator[attachInfo.state.navigationId]?.invoke(attachInfo)
+    fun setCanBeClosed() {
+        canBeClosed = true
     }
 
     fun getCurrentNavigationId(): NavigationId {
@@ -172,12 +169,12 @@ class ActiveGameRouter(
     }
 
     sealed class State(val name: String, val navigationId: NavigationId) : SerializableRouterNavigatorState {
-        class DICES : State("DICES", NavigationId.DICES)
-        class PHOTOS : State("PHOTOS", NavigationId.PHOTOS)
-        class SETTINGS : State("SETTINGS", NavigationId.SETTINGS)
-        class CHARACTERS : State("CHARACTERS", NavigationId.CHARACTERS)
-        class RECORDS : State("RECORDS", NavigationId.RECORDS)
-        class MENU : State("MENU", NavigationId.MENU)
+        class DICES : State(DICES, NavigationId.DICES)
+        class PHOTOS : State(PHOTOS, NavigationId.PHOTOS)
+        class SETTINGS : State(SETTINGS, NavigationId.SETTINGS)
+        class CHARACTERS : State(CHARACTERS, NavigationId.CHARACTERS)
+        class RECORDS : State(RECORDS, NavigationId.RECORDS)
+        class MENU : State(MENU, NavigationId.MENU)
 
         override fun name(): String {
             return name
@@ -200,5 +197,14 @@ class ActiveGameRouter(
             result = 31 * result + navigationId.hashCode()
             return result
         }
+    }
+
+    companion object {
+        const val DICES = "DICES"
+        const val PHOTOS = "PHOTOS"
+        const val SETTINGS = "SETTINGS"
+        const val CHARACTERS = "CHARACTERS"
+        const val RECORDS = "RECORDS"
+        const val MENU = "MENU"
     }
 }

@@ -1,6 +1,6 @@
 package com.alekseyvalyakin.roleplaysystem.ribs.game.active.settings.def
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem
 
 abstract class GameSettingsDefaultItemViewModel<T : RecyclerView.ViewHolder>(

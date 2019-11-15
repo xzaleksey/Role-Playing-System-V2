@@ -8,10 +8,14 @@ import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollec
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.DiceCollectionResult
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.model.SingleDiceCollection
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.dice.viewmodel.DiceViewModelProvider
+import com.alekseyvalyakin.roleplaysystem.utils.getNonNullValue
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.uber.rib.core.*
+import com.uber.rib.core.BaseInteractor
+import com.uber.rib.core.Bundle
+import com.uber.rib.core.RibInteractor
+import com.uber.rib.core.getSerializable
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import timber.log.Timber
@@ -62,13 +66,13 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
             is DicePresenter.UiEvent.IncrementSingleDice -> {
                 Observable.fromCallable {
                     uiEvent.singleDiceCollection.addDices(1)
-                    relay.accept(relay.value)
+                    relay.accept(dicesInteractorModel())
                 }
             }
             is DicePresenter.UiEvent.DecrementSingleDice -> {
                 Observable.fromCallable {
                     uiEvent.singleDiceCollection.removeDices(1)
-                    relay.accept(relay.value)
+                    relay.accept(dicesInteractorModel())
                 }
             }
             is DicePresenter.UiEvent.Cancel -> {
@@ -80,7 +84,7 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
             is DicePresenter.UiEvent.Save -> {
                 analyticsReporter.logEvent(GameDiceAnalyticsEvent.CreateDiceCollection(game))
                 val diceCollection = DiceCollection.createDiceCollectionFromSingleDiceCollections(
-                        relay.value.dices
+                        dicesInteractorModel().dices
                 )
                 val firebaseDiceCollection = FirestoreDiceCollection.newInstance(diceCollection)
                 return diceRepository.createDocument(
@@ -111,7 +115,7 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
             is DicePresenter.UiEvent.Throw -> {
                 Observable.fromCallable {
                     analyticsReporter.logEvent(GameDiceAnalyticsEvent.ThrowDice(game))
-                    router.attachDiceResult(DiceCollectionResult.createResult(relay.value.dices))
+                    router.attachDiceResult(DiceCollectionResult.createResult(dicesInteractorModel().dices))
                 }
             }
 
@@ -119,6 +123,8 @@ class DiceInteractor : BaseInteractor<DicePresenter, DiceRouter>() {
             Timber.e(it)
         }
     }
+
+    private fun dicesInteractorModel() = relay.getNonNullValue()
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

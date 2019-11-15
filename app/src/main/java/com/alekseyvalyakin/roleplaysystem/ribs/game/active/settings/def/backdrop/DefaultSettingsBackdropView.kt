@@ -32,9 +32,7 @@ abstract class DefaultSettingsBackdropView<T : CustomToolbarView,
 ), DefaultBackDropView {
 
     init {
-        isClickable = true
         backgroundColorResource = R.color.colorPrimary
-        setOnClickListener { }
     }
 
     override fun updateStartEndScrollPositions(adapterPosition: Int) {

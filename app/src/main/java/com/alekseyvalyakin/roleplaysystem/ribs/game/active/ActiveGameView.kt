@@ -3,15 +3,15 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.active
 import android.animation.LayoutTransition
 import android.content.Context
 import android.content.res.ColorStateList
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.base.model.NavigationId
 import com.alekseyvalyakin.roleplaysystem.ribs.game.active.model.ActiveGameViewModel
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.jetbrains.anko.*

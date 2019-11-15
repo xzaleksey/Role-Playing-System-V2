@@ -15,9 +15,10 @@ class ProfileUserProviderImpl(
     private val relay = BehaviorRelay.createDefault<User>(user)
 
     override fun onNameChanged(name: String): Completable {
-        relay.accept(relay.value.copy(displayName = name))
+        relay.accept(getCurrentUser().copy(displayName = name))
         return userRepository.onDisplayNameChanged(name)
     }
+
 
     override fun observeCurrentUser(): Flowable<User> {
         return userRepository.observeCurrentUser()
@@ -27,7 +28,7 @@ class ProfileUserProviderImpl(
     }
 
     override fun getCurrentUser(): User {
-        return relay.value
+        return relay.value!!
     }
 
     override fun isCurrentUser(id: String): Boolean {

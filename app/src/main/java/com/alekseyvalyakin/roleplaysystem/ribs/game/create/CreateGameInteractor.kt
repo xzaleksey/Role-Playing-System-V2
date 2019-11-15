@@ -3,6 +3,7 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 import com.alekseyvalyakin.roleplaysystem.data.firestore.game.Game
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityListener
 import com.alekseyvalyakin.roleplaysystem.ribs.game.create.model.CreateGameProvider
+import com.alekseyvalyakin.roleplaysystem.utils.getNonNullValue
 import com.alekseyvalyakin.roleplaysystem.utils.reporter.AnalyticsReporter
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -10,11 +11,9 @@ import com.uber.rib.core.BaseInteractor
 import com.uber.rib.core.Bundle
 import com.uber.rib.core.RibInteractor
 import com.uber.rib.core.getSerializable
-import com.uber.rib.core.putSerializable
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import java.io.Serializable
 import javax.inject.Inject
 
 /**
@@ -59,17 +58,17 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
                 .subscribeWithErrorLogging { }
                 .addToDisposables()
 
-        presenter.updateView(model.value)
+        presenter.updateView(model.getNonNullValue())
     }
 
     private fun handleEvent(event: CreateGameUiEvent): Observable<*> {
         val value = model.value
         when (event) {
             is CreateGameUiEvent.InputChange -> {
-                model.accept(value.copy(inputText = event.text))
+                model.accept(value!!.copy(inputText = event.text))
             }
             is CreateGameUiEvent.ClickNext -> {
-                return handleClickNext(value, event)
+                return handleClickNext(value!!, event)
             }
             is CreateGameUiEvent.BackPress -> {
                 activityListener.backPress()
@@ -80,7 +79,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
             is CreateGameUiEvent.ConfirmDeleteGame -> {
                 analyticsReporter.logEvent(CreateGameAnalyticsEvent.DeleteGame(game))
                 return createGameProvider.deleteGame().doOnComplete {
-                    model.accept(model.value.copy(isDeleted = true))
+                    model.accept(model.value!!.copy(isDeleted = true))
                     activityListener.backPress()
                 }.toObservable<Any>()
             }
@@ -110,7 +109,7 @@ class CreateGameInteractor : BaseInteractor<CreateGameInteractor.CreateGamePrese
 
     override fun handleBackPress(): Boolean {
         val value = model.value
-        val previousStep = value.step.getPreviousStep()
+        val previousStep = value!!.step.getPreviousStep()
 
         if (value.isDeleted || previousStep == CreateGameStep.NONE) {
             return false

@@ -36,21 +36,20 @@ class MenuRouter(
         private val relay: Relay<ActiveGameEvent>
 ) : BaseRouter<MenuView, MenuInteractor, MenuRouter.State, MenuBuilder.Component>(view, interactor, component), ProfileListener, CreateGameListener {
 
-    private val navigator = mutableMapOf<NavigationId, (AttachInfo<State>) -> Unit>()
     private val profileDetachTransition = DefaultDetachTransition<ProfileRouter, State>(view)
     private val createGameDetachTransition = DefaultDetachTransition<CreateGameRouter, State>(view)
     private val activeGameDetachTransition = DefaultDetachTransition<ActiveGameRouter, State>(view)
 
-    init {
-        navigator[NavigationId.PROFILE] = {
-            pushRetainedState(it.state, ProfileAttachTransition(profileBuilder, view, it.state.getRestorableInfo() as User), profileDetachTransition)
+    override fun initNavigator(navigator: MutableMap<String, (AttachInfo<State>) -> Boolean>) {
+        navigator[PROFILE] = {
+            internalPushRetainedState(it.state, ProfileAttachTransition(profileBuilder, view, it.state.getRestorableInfo() as User), profileDetachTransition)
         }
-        navigator[NavigationId.CREATE_GAME] = {
-            pushRetainedState(it.state, CreateGameAttachTransition(createGameBuilder, view, it.state.getRestorableInfo() as Game),
+        navigator[CREATE_GAME] = {
+            internalPushRetainedState(it.state, CreateGameAttachTransition(createGameBuilder, view, it.state.getRestorableInfo() as Game),
                     createGameDetachTransition)
         }
-        navigator[NavigationId.ACTIVE_GAME] = {
-            pushRetainedState(it.state, ActiveGameAttachTransition(activeGameBuilder, view, it.state.getRestorableInfo() as ActiveGameParams), activeGameDetachTransition)
+        navigator[ACTIVE_GAME] = {
+            internalPushRetainedState(it.state, ActiveGameAttachTransition(activeGameBuilder, view, it.state.getRestorableInfo() as ActiveGameParams), activeGameDetachTransition)
         }
     }
 
@@ -58,9 +57,9 @@ class MenuRouter(
         attachRib(AttachInfo(State.Profile(user)))
     }
 
-    override fun attachRib(attachInfo: AttachInfo<State>) {
+    override fun attachRib(attachInfo: AttachInfo<State>): Boolean {
         relay.accept(ActiveGameEvent.HideBottomBar)
-        navigator[attachInfo.state.navigationId]?.invoke(attachInfo)
+        return super.attachRib(attachInfo)
     }
 
     override fun openGame(game: Game) {
@@ -101,23 +100,29 @@ class MenuRouter(
             return name
         }
 
-        class Profile(val user: User) : State("Profile", NavigationId.PROFILE) {
+        class Profile(val user: User) : State(PROFILE, NavigationId.PROFILE) {
             override fun getRestorableInfo(): Serializable? {
                 return user
             }
         }
 
-        class ActiveGame(private val activeGameParams: ActiveGameParams) : State("Active game", NavigationId.ACTIVE_GAME) {
+        class ActiveGame(private val activeGameParams: ActiveGameParams) : State(ACTIVE_GAME, NavigationId.ACTIVE_GAME) {
             override fun getRestorableInfo(): Serializable? {
                 return activeGameParams
             }
         }
 
-        class CreateGame(val game: Game) : State("Create game", NavigationId.CREATE_GAME) {
+        class CreateGame(val game: Game) : State(CREATE_GAME, NavigationId.CREATE_GAME) {
             override fun getRestorableInfo(): Serializable? {
                 return game
             }
         }
+    }
+
+    companion object {
+        private const val PROFILE = "Profile"
+        private const val ACTIVE_GAME = "Active game"
+        private const val CREATE_GAME = "Create game"
     }
 
     enum class NavigationId {

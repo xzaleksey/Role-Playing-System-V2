@@ -3,10 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.StateListDrawable
-import android.support.v4.content.ContextCompat
 import android.util.StateSet
 import android.view.Gravity
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen
 import com.alekseyvalyakin.roleplaysystem.utils.getSelectableItemBackGround

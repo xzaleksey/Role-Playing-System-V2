@@ -2,16 +2,16 @@ package com.alekseyvalyakin.roleplaysystem.ribs.game.create
 
 import android.app.Dialog
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay

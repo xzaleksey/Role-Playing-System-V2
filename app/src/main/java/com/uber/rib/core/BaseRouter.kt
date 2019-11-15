@@ -1,21 +1,24 @@
 package com.uber.rib.core
 
 import android.annotation.SuppressLint
-import android.support.annotation.IntRange
 import android.view.View
+import com.alekseyvalyakin.roleplaysystem.utils.removeIfFiltered
 import timber.log.Timber
 import java.io.Serializable
 import java.util.*
 
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA", "LeakingThis")
-open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : SerializableRouterNavigatorState,
-        C : InteractorBaseComponent<I>>(view: V, interactor: I, component: C
+open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>,
+        StateT : SerializableRouterNavigatorState,
+        C : InteractorBaseComponent<I>
+        >(view: V, interactor: I, component: C
 ) : ViewRouter<V, I, C>(view, interactor, component), RouterNavigator<StateT> {
     private val myTag = "MyModernRouter"
     private val tempBundle = Bundle()
     private val navigationStack = ArrayDeque<RouterNavigator.RouterAndState<StateT>>()
     private val hostRouterName: String = javaClass.simpleName
     private var currentTransientRouterAndState: RouterNavigator.RouterAndState<StateT>? = null
+    private val navigator = mutableMapOf<String, (AttachInfo<StateT>) -> Boolean>()
 
     @SuppressLint("VisibleForTests")
     override fun saveInstanceState(outState: Bundle) {
@@ -34,6 +37,7 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
     }
 
     override fun dispatchAttach(savedInstanceState: Bundle?, tag: String?) {
+        initNavigator(navigator)
         super.dispatchAttach(savedInstanceState, tag)
         if (savedInstanceState != null) {
             restoreState(savedInstanceState)
@@ -41,15 +45,16 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
 
         if (savedInstanceState == null) {
             currentTransientRouterAndState?.router?.run {
-                if (!this.interactor.isAttached) {
-                    this.dispatchAttach(savedInstanceState, getRouterTag(this))
-                }
-
+                attachChildRouter(this, savedInstanceState)
             } ?: navigationStack.peek()?.router?.run {
-                if (!this.interactor.isAttached) {
-                    this.dispatchAttach(savedInstanceState, getRouterTag(this))
-                }
+                attachChildRouter(this, savedInstanceState)
             }
+        }
+    }
+
+    private fun attachChildRouter(router: Router<*, *>, savedInstanceState: Bundle?) {
+        if (!router.interactor.isAttached) {
+            router.dispatchAttach(savedInstanceState, getRouterTag(router))
         }
     }
 
@@ -64,8 +69,24 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         super.detachChild(childRouter)
     }
 
-    open fun attachRib(attachInfo: AttachInfo<StateT>) {
+    open fun attachRibForState(state: StateT, isTransient: Boolean = true): Boolean {
+        return navigateToRib(AttachInfo(state, isTransient))
+    }
 
+    open fun attachRib(attachInfo: AttachInfo<StateT>): Boolean {
+        return navigateToRib(attachInfo)
+    }
+
+    open fun initNavigator(navigator: MutableMap<String, (AttachInfo<StateT>) -> Boolean>) {
+
+    }
+
+    private fun navigateToRib(attachInfo: AttachInfo<StateT>): Boolean {
+        return navigator[attachInfo.state.name()]?.invoke(attachInfo) ?: fallbackNavigateToRib(attachInfo)
+    }
+
+    protected open fun fallbackNavigateToRib(attachInfo: AttachInfo<StateT>): Boolean {
+        return false
     }
 
     init {
@@ -118,25 +139,41 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
     override fun <R : Router<*, *>> pushRetainedState(
             newState: StateT,
             attachTransition: RouterNavigator.AttachTransition<R, StateT>,
-            detachTransition: RouterNavigator.DetachTransition<R, StateT>?) {
-        pushInternal(newState, attachTransition, detachTransition, false)
+            detachTransition: RouterNavigator.DetachTransition<R, StateT>?): R? {
+        return pushInternal(newState, attachTransition, detachTransition, false)
+    }
+
+    fun <R : Router<*, *>> internalPushRetainedState(
+            newState: StateT,
+            attachTransition: RouterNavigator.AttachTransition<R, StateT>,
+            detachTransition: RouterNavigator.DetachTransition<R, StateT>?
+    ): Boolean {
+        return pushInternal(newState, attachTransition, detachTransition, false) != null
     }
 
     override fun <R : Router<*, *>> pushRetainedState(
-            newState: StateT, attachTransition: RouterNavigator.AttachTransition<R, StateT>) {
-        pushRetainedState(newState, attachTransition, null)
+            newState: StateT, attachTransition: RouterNavigator.AttachTransition<R, StateT>): R? {
+        return pushRetainedState(newState, attachTransition, null)
+    }
+
+    fun <R : Router<*, *>> internalPushTransientState(
+            newState: StateT,
+            attachTransition: RouterNavigator.AttachTransition<R, StateT>,
+            detachTransition: RouterNavigator.DetachTransition<R, StateT>?
+    ): Boolean {
+        return pushInternal(newState, attachTransition, detachTransition, true) != null
     }
 
     override fun <R : Router<*, *>> pushTransientState(
             newState: StateT,
             attachTransition: RouterNavigator.AttachTransition<R, StateT>,
-            detachTransition: RouterNavigator.DetachTransition<R, StateT>?) {
-        pushInternal(newState, attachTransition, detachTransition, true)
+            detachTransition: RouterNavigator.DetachTransition<R, StateT>?): R? {
+        return pushInternal(newState, attachTransition, detachTransition, true)
     }
 
     override fun <R : Router<*, *>> pushTransientState(
-            newState: StateT, attachTransition: RouterNavigator.AttachTransition<R, StateT>) {
-        pushTransientState(newState, attachTransition, null)
+            newState: StateT, attachTransition: RouterNavigator.AttachTransition<R, StateT>): R? {
+        return pushTransientState(newState, attachTransition, null)
     }
 
     override fun peekRouter(): Router<*, *>? {
@@ -149,7 +186,6 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         return top.state
     }
 
-    @IntRange(from = 0)
     override fun size(): Int {
         val stackSize = if (currentTransientRouterAndState == null) 0 else 1
         return navigationStack.size + stackSize
@@ -265,7 +301,8 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
             newState: StateT,
             attachTransition: RouterNavigator.AttachTransition<R, StateT>,
             detachTransition: RouterNavigator.DetachTransition<R, StateT>?,
-            isTransient: Boolean) {
+            isTransient: Boolean
+    ): R? {
         val fromRouterAndState = peekCurrentRouterAndState()
         val fromState = peekCurrentState()
         if (fromState == null || fromState.name() != newState.name()) {
@@ -292,7 +329,9 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
             val routerTag = getRouterTag(newRouter)
             Timber.d("attached $routerTag")
             attachChild(newRouter, routerTag)
+            return newRouter
         }
+        return null
     }
 
     private fun getRoutersToSave(): Set<Router<*, *>> {
@@ -307,10 +346,10 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
         return result
     }
 
-    @SuppressLint("BinaryOperationInTimber")
+    @Suppress("UNCHECKED_CAST", "BinaryOperationInTimber")
     private fun restoreState(bundle: Bundle) {
         Timber.d("restore state")
-        val savedState: SavedState<StateT> = bundle.getSerializable(myTag)
+        val savedState: SavedState<StateT> = bundle.getSerializable(myTag) as SavedState<StateT>
         for (attachInfo in savedState.stack.reversed()) {
             attachRib(attachInfo)
         }
@@ -331,17 +370,61 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
 
     fun isEmptyStack() = navigationStack.isEmpty()
 
+    override fun handleBackPress(): Boolean {
+        val handleBackPress = this.interactor.handleBackPress()
+
+        if (handleBackPress) {
+            return true
+        }
+
+        if (onBackPressed()) {
+            return true
+        }
+
+        return handleBackPress
+    }
+
     open fun onBackPressed(): Boolean {
         val currentRouter = peekRouter()
         if (currentRouter != null && currentRouter.handleBackPress()) {
             return true
         }
 
-        val handled = peekState() != null
+        val isPoppedChild = peekState() != null
         popState()
-        return handled
+        if (isPoppedChild) {
+            if (peekState() != null || hasOwnContent()) {
+                return true
+            }
+        }
+
+        return false
     }
 
+    open fun hasOwnContent(): Boolean {
+        return true
+    }
+
+    fun closeAllChildren() {
+        while (peekCurrentState() != null) {
+            popState()
+        }
+    }
+
+    fun closeAllExceptFirst() {
+        while (navigationStack.size > 1) {
+            navigationStack.removeLast()
+        }
+    }
+
+    fun closeChild(name: String): Boolean {
+        if (peekCurrentState()?.name() == name) {
+            popState()
+            return true
+        }
+
+        return navigationStack.removeIfFiltered { it.state.name() == name }
+    }
 
     /** Writes out to the debug log.  */
     private fun log(text: String) {
@@ -352,4 +435,20 @@ open class BaseRouter<V : View, I : Interactor<*, out Router<I, C>>, StateT : Se
             val stack: List<AttachInfo<StateT>>,
             val currentTransientState: AttachInfo<StateT>? = null
     ) : Serializable
+
+    fun <R : Router<*, *>> MutableMap<String, (AttachInfo<StateT>) -> Boolean>.registerStateHandler(
+            state: StateT,
+            attachTransition: RouterNavigator.AttachTransition<R, StateT>,
+            detachTransition: RouterNavigator.DetachTransition<R, StateT>
+    ) {
+        this[state.name()] = { attachInfo ->
+            if (attachInfo.isTransient) {
+                internalPushTransientState(attachInfo.state, attachTransition, detachTransition)
+            } else {
+                internalPushRetainedState(attachInfo.state, attachTransition, detachTransition)
+            }
+        }
+    }
+
+
 }

@@ -10,5 +10,12 @@ class FrontViewContainer<T>(
         height: Int = matchParent
 ) : BaseViewContainer<T>(view, width, height) where T : View, T : FrontView {
 
+    init {
+        view.isFocusable = true
+        view.isFocusableInTouchMode = true
+        view.setOnClickListener { }
+    }
+
     fun getHeaderHeight() = view.getHeaderHeight()
+
 }

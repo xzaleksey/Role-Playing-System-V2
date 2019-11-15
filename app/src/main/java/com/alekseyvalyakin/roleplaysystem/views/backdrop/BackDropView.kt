@@ -3,10 +3,10 @@ package com.alekseyvalyakin.roleplaysystem.views.backdrop
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.support.design.widget.CoordinatorLayout
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.alekseyvalyakin.roleplaysystem.views.backdrop.back.BackView

@@ -2,9 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.flexible.twolineimage
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.alekseyvalyakin.roleplaysystem.R
 import com.alekseyvalyakin.roleplaysystem.utils.getCompatColor
 import com.alekseyvalyakin.roleplaysystem.utils.getIntDimen

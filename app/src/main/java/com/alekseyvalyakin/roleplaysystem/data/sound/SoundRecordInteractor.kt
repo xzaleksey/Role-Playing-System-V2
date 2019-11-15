@@ -9,7 +9,11 @@ import com.alekseyvalyakin.roleplaysystem.utils.StringUtils
 import com.alekseyvalyakin.roleplaysystem.utils.file.FileInfoProvider
 import com.alekseyvalyakin.roleplaysystem.utils.subscribeWithErrorLogging
 import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.Single
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import org.joda.time.DateTime
@@ -20,7 +24,7 @@ class SoundRecordInteractorImpl(
         private val fileInfoProvider: FileInfoProvider
 ) : SoundRecordInteractor {
 
-    private val relay = BehaviorRelay.createDefault<RecordInfo>(RecordInfo())!!
+    private val relay = BehaviorRelay.createDefault<RecordInfo>(RecordInfo())
     private var recordDisposable = Disposables.disposed()
     private var saveRecordDisposable = Disposables.disposed()
     private val sampleRate = RawSamples.SAMPLE_RATE
@@ -123,15 +127,17 @@ class SoundRecordInteractorImpl(
                     }
                 }
             } catch (e: Exception) {
-                emitter.onNext(relay.value.copy(e = e, inProgress = false, gameId = gameId))
+                emitter.onNext(recordInfo().copy(e = e, inProgress = false, gameId = gameId))
             } finally {
                 recorder?.release()
                 rs?.close()
-                relay.accept(relay.value.copy(inProgress = false, gameId = gameId))
+                relay.accept(recordInfo().copy(inProgress = false, gameId = gameId))
                 Timber.d("tempFile exists ${tempFile.exists()}")
             }
         }
     }
+
+    private fun recordInfo() = relay.value!!
 
     private fun isEndedRecording(emitter: ObservableEmitter<RecordInfo>) =
             !Thread.currentThread().isInterrupted && !emitter.isDisposed
@@ -152,7 +158,7 @@ class SoundRecordInteractorImpl(
         }
 
         recordDisposable.dispose()
-        val value = relay.value
+        val value = recordInfo()
         if (value.inProgress) {
             relay.accept(value.copy(inProgress = false))
         }
@@ -165,7 +171,7 @@ class SoundRecordInteractorImpl(
         }
 
         recordDisposable.dispose()
-        val value = relay.value
+        val value = recordInfo()
         if (value.gameId.isNotBlank()) {
             startRecordFile(value.gameId)
         }
@@ -203,7 +209,7 @@ class SoundRecordInteractorImpl(
                             }
                         } else {
                             Timber.e("No temp file")
-                            return@fromCallable (relay.value.copy(e = IllegalStateException("No temp file"), inProgress = false))
+                            return@fromCallable (recordInfo().copy(e = IllegalStateException("No temp file"), inProgress = false))
                         }
                     }
                 }.subscribeOn(Schedulers.newThread()).subscribeWithErrorLogging {

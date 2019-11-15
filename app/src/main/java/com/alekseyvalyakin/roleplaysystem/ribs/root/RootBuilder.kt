@@ -2,6 +2,9 @@ package com.alekseyvalyakin.roleplaysystem.ribs.root
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.alekseyvalyakin.roleplaysystem.app.MainActivity
+import com.alekseyvalyakin.roleplaysystem.data.update.AppUpdatesProvider
+import com.alekseyvalyakin.roleplaysystem.data.update.AppUpdatesProviderImpl
 import com.alekseyvalyakin.roleplaysystem.di.activity.ActivityComponent
 import com.alekseyvalyakin.roleplaysystem.di.rib.RibDependencyProvider
 import com.alekseyvalyakin.roleplaysystem.ribs.auth.AuthBuilder
@@ -136,6 +139,13 @@ class RootBuilder(dependency: ActivityComponent) : BaseViewBuilder<RootView, Roo
                         relay.accept(mainRibEvent)
                     }
                 }
+            }
+
+            @RootScope
+            @Provides
+            @JvmStatic
+            internal fun appUpdateProvider(mainActivity: MainActivity): AppUpdatesProvider {
+                return AppUpdatesProviderImpl(mainActivity)
             }
         }
 

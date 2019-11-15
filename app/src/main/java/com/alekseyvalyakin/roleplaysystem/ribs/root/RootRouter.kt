@@ -60,30 +60,29 @@ class RootRouter(
     private val licenseAttachTransition = object : DefaultAttachTransition<LicenseRouter, RootState, LicenseBuilder>(licenseBuilder, view) {}
     private val licenseDetachTransition = DefaultDetachTransition<LicenseRouter, RootState>(view)
 
-    private val navigator = mutableMapOf<NavigationId, (AttachInfo<RootState>) -> Unit>()
 
-    init {
-        navigator[NavigationId.PROFILE] = {
-            pushRetainedState(it.state, ProfileAttachTransition(profileBuilder, view, it.state.getRestorableInfo() as User), profileDetachTransition)
+    override fun initNavigator(navigator: MutableMap<String, (AttachInfo<RootState>) -> Boolean>) {
+        navigator[RootState.PROFILE_NAME] = {
+            internalPushRetainedState(it.state, ProfileAttachTransition(profileBuilder, view, it.state.getRestorableInfo() as User), profileDetachTransition)
         }
-        navigator[NavigationId.CREATE_GAME] = {
-            pushRetainedState(it.state, CreateGameAttachTransition(createGameBuilder, view, it.state.getRestorableInfo() as Game),
+        navigator[RootState.CREATE_GAME_NAME] = {
+            internalPushRetainedState(it.state, CreateGameAttachTransition(createGameBuilder, view, it.state.getRestorableInfo() as Game),
                     createGameDetachTransition)
         }
-        navigator[NavigationId.AUTH] = {
-            pushTransientState(it.state, authAttachTransition, authDetachTransition)
+        navigator[RootState.AUTH_NAME] = {
+            internalPushTransientState(it.state, authAttachTransition, authDetachTransition)
         }
-        navigator[NavigationId.MAIN] = {
-            pushRetainedState(it.state, mainAttachTransition, mainDetachTransition)
+        navigator[RootState.MAIN_NAME] = {
+            internalPushRetainedState(it.state, mainAttachTransition, mainDetachTransition)
         }
-        navigator[NavigationId.ACTIVE_GAME] = {
-            pushRetainedState(it.state, ActiveGameAttachTransition(activeGameBuilder, view, it.state.getRestorableInfo() as ActiveGameParams), activeGameDetachTransition)
+        navigator[RootState.ACTIVE_GAME_NAME] = {
+            internalPushRetainedState(it.state, ActiveGameAttachTransition(activeGameBuilder, view, it.state.getRestorableInfo() as ActiveGameParams), activeGameDetachTransition)
         }
-        navigator[NavigationId.LICENSE] = {
-            pushRetainedState(it.state, licenseAttachTransition, licenseDetachTransition)
+        navigator[RootState.LICENSE_NAME] = {
+            internalPushRetainedState(it.state, licenseAttachTransition, licenseDetachTransition)
         }
-        navigator[NavigationId.FEATURES] = {
-            pushRetainedState(it.state, featuresAttachTransition, featuresDetachTransition)
+        navigator[RootState.FEATURES_NAME] = {
+            internalPushRetainedState(it.state, featuresAttachTransition, featuresDetachTransition)
         }
     }
 
@@ -111,14 +110,8 @@ class RootRouter(
         attachRib(AttachInfo(RootState.PROFILE(user), false))
     }
 
-    override fun onBackPressed(): Boolean {
-        val currentRouter = peekRouter()
-        if (currentRouter != null && currentRouter.handleBackPress()) {
-            return true
-        }
-
-        popState()
-        return peekState() != null
+    override fun hasOwnContent(): Boolean {
+        return false
     }
 
     fun detachCreateGame() {
@@ -134,10 +127,6 @@ class RootRouter(
 
     fun attachLicense() {
         attachRib(AttachInfo(RootState.LICENSE(), false))
-    }
-
-    override fun attachRib(attachInfo: AttachInfo<RootState>) {
-        navigator[attachInfo.state.navigationId]?.invoke(attachInfo)
     }
 
 }

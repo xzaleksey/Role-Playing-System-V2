@@ -1,7 +1,8 @@
 package com.alekseyvalyakin.roleplaysystem.data.prefs;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 public class SharedPreferencesHelper implements LocalKeyValueStorage {
     private static final String LOGIN = "login";

@@ -2,18 +2,18 @@ package com.alekseyvalyakin.roleplaysystem.views.fabmenu
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.LinearLayoutCompat
 import android.view.Gravity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.BounceInterpolator
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.alekseyvalyakin.roleplaysystem.utils.getDoubleCommonDimen
 import com.alekseyvalyakin.roleplaysystem.views.animation.RotateLeftAnimator
 import com.alekseyvalyakin.roleplaysystem.views.animation.RotateRightAnimator
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.jetbrains.anko._LinearLayout
 import org.jetbrains.anko.margin
 import org.jetbrains.anko.verticalLayout
